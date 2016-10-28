@@ -4,6 +4,7 @@ import Joi from 'joi';
 import _ from 'lodash';
 import { Challenge } from '../models';
 import logger from '../common/logger';
+import socket from '../socket';
 
 // ------------------------------------
 // Exports
@@ -14,6 +15,7 @@ const ChallengeService = {
   updateChallenges,
   addActiveChallenges,
   search,
+  getChallenge,
 };
 
 decorate(ChallengeService, 'ChallengeService');
@@ -44,15 +46,19 @@ function _addNewChallenge(id) {
 
 async function addUserChallenges(handle) {
   await Promise.map(_.range(20), async (page) => {
-    const { body } = await request.get(`https://api.topcoder.com/v3/members/${handle}/challenges/`)
-      .query({
-        limit: 50,
-        offset: page * 50,
-      })
-      .endAsync();
+    try {
+      const { body } = await request.get(`https://api.topcoder.com/v3/members/${handle}/challenges/`)
+        .query({
+          limit: 50,
+          offset: page * 50,
+        })
+        .endAsync();
 
-    await Promise.map(body.result.content, (challenge) => _addNewChallenge(challenge.id));
-  }, { concurrency: 5 });
+      await Promise.map(body.result.content, (challenge) => _addNewChallenge(challenge.id));
+    } catch (e) {
+      logger.error(e);
+    }
+  }, { concurrency: 10 });
 }
 addUserChallenges.params = ['handle'];
 addUserChallenges.schema = {
@@ -64,7 +70,7 @@ async function updateChallenges(filter) {
   const challenges = await Challenge
     .find(filter)
     .sort({ _lastUpdate: 1 })
-    .limit(100);
+    .limit(200);
 
   await Promise.map(
     challenges,
@@ -75,8 +81,14 @@ async function updateChallenges(filter) {
         _.assignIn(challenge, _removeEmptyStrings(body), { _isComplete: true, _lastUpdate: new Date() });
         await challenge.save();
       } catch (e) {
+        const status = _.get(e, 'response.status');
         logger.error(challenge.id, e);
+        if (status === 404 || status === 401) {
+          challenge._invalid = true;
+          await challenge.save();
+        }
       }
+//      socket.notifyUpdate(challenge);
     }, { concurrency: 10 });
 }
 updateChallenges.params = ['filter'];
@@ -103,7 +115,7 @@ addActiveChallenges.schema = {};
 
 async function search(criteria) {
   const filter = _.pick(criteria, 'challengeType', 'currentStatus');
-  filter._isComplete = true;
+  filter._invalid = {$ne: true};
   if (criteria.registeredHandle) {
     filter.registrants = {
       $elemMatch: {
@@ -120,7 +132,7 @@ async function search(criteria) {
     };
   }
 
-  return await Promise.props({
+  const result = await Promise.props({
     count: Challenge.count(filter),
     items: Challenge
       .find(filter)
@@ -129,6 +141,17 @@ async function search(criteria) {
       .skip(criteria.offset)
       .limit(criteria.limit),
   });
+  _.forEach(result.items, (item) => {
+    if (!item._isComplete) {
+      item.challengeName = '<loading>';
+      item.platforms = [];
+      item.technology = [];
+      item.prize = [];
+      item.registrants = [];
+      item.submissions = [];
+    }
+  });
+  return result;
 }
 
 search.removeOutput = true;
@@ -143,4 +166,12 @@ search.schema = {
     offset: Joi.number().integer().min(0).default(0),
     limit: Joi.number().integer().min(1).max(1000).default(20),
   },
+};
+
+async function getChallenge(id) {
+  return await Challenge.findByIdOrError(id);
+}
+getChallenge.params = ['id'];
+getChallenge.schema = {
+  id: Joi.number().required(),
 };

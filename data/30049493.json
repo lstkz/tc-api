@@ -1,0 +1,475 @@
+{
+  "_id": 30049493,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:50:42.687Z",
+  "appealsEndDate": "2015-05-09T16:33:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Project Mom and Pop - Code Improvements assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><strong>Project Overview</strong></p>\n\n<p><span>The client for this project has decided to build a platform that will support the sale, exchange, and redemption of gift cards between businesses and individuals.&nbsp; The goal of this platform is to help small businesses expand, using both web and mobile layouts, by giving them a simple way to raise capital and acquire new customers using gift cards.</span></p>\n\n<p><span>The client needs to create a high quality platform that is easy-to-use even for business owners that don&rsquo;t have a lot of technical expertise.&nbsp; Many business owners are not technologically sophisticated, so creating a platform that is simple to understand and navigate is also a top priority.</span></p>\n\n<p><span>The main function of the platform will be to allow business to post virtual gift cards for sale on the platform.&nbsp; Individual users will be able to browse and buy these gift cards, as well as resell or trade gift cards they own.&nbsp; Using the mobile layout, users will be able to redeem their gift cards at the business, and the business will be able to process gift card redemption at their point of sale.</span></p>\n\n<div style=\"padding: 5px 10px; margin: 0px; color: rgb(102, 102, 102); font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif; font-size: 12.7272720336914px; line-height: 18.9090900421143px; border: 1px solid rgb(204, 204, 204); background: rgb(238, 238, 238);\"><span style=\"color:rgb(255, 0, 0)\"><span class=\"marker\"><strong>Time constraint</strong></span></span></div>\n\n<div style=\"padding: 5px 10px; margin: 0px; color: rgb(102, 102, 102); font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif; font-size: 12.7272720336914px; line-height: 18.9090900421143px; border: 1px solid rgb(204, 204, 204); background: rgb(238, 238, 238);\"><span style=\"color:rgb(255, 0, 0)\"><span class=\"marker\">This project has tight time line so</span></span></div>\n\n<div style=\"padding: 5px 10px; margin: 0px; color: rgb(102, 102, 102); font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif; font-size: 12.7272720336914px; line-height: 18.9090900421143px; border: 1px solid rgb(204, 204, 204); background: rgb(238, 238, 238);\"><span style=\"color:rgb(255, 0, 0)\"><span class=\"marker\">1) the review phase is only 24 hours</span></span></div>\n\n<div style=\"padding: 5px 10px; margin: 0px; color: rgb(102, 102, 102); font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif; font-size: 12.7272720336914px; line-height: 18.9090900421143px; border: 1px solid rgb(204, 204, 204); background: rgb(238, 238, 238);\"><span style=\"color:rgb(255, 0, 0)\"><span class=\"marker\">2) we would like to avoid any timeline extension, please ask questions early</span></span></div>\n\n<p>&nbsp;</p>\n\n<p><strong>Task overview</strong></p>\n\n<p>&nbsp;</p>\n\n<p>This assembly is responsible for making the following improvements in the provided codebase (attached). Both FE and BE architectures are attached for reference.</p>\n\n<p>&nbsp;</p>\n\n<p>1. Fix input validation in back-end methods. There must be consistency of data type and length (e.g. strings must be limited to 1024 chars, except for rich text fields which may be up to 16K). For &quot;range&quot; field the range start must not be greater than the range end. Most of business parameters must be non-negative.</p>\n\n<p><br />\n2. Fix permission check in the front-end controllers.&nbsp;For example: in&nbsp;<strong>PUT /businesses/me/employees/:id&nbsp;</strong>you can enter any :id and update any user. You can update any field in req.body.&nbsp;For example you can update the email address and reset password for that user. You will get a reset password link to your updated email, so you can hack this account.</p>\n\n<p>Such a vulnerability must be fixed. See the architect&#39;s solution for it below.</p>\n\n<p><em>The business admin can add/update the business employee, in current design, the admin can update any employee email and password, this need be updated, we only allow the admin can update his/her own business employees,&nbsp;we can define following method in BusinessController:</em></p>\n\n<p><em>+checkPermission(req: Request, userId:String, callback:function):void</em></p>\n\n<p><em>Parameters:</em></p>\n\n<p><em>- req : the request</em></p>\n\n<p><em>- userId: the id of user who will be updated or deleted</em></p>\n\n<p><em>- callback : the callback function</em></p>\n\n<p><em>Implementation:</em></p>\n\n<p><em>1) &nbsp;Get current user from session: &nbsp;currentUser = req.user</em></p>\n\n<p><em>2) &nbsp;iterate current user role via&nbsp;currentUser.userRoles</em></p>\n\n<p><em>3) Get the businessId if there is a role is&nbsp;BUSINESS_ADMIN</em></p>\n\n<p><em>4) Get the user info via UserService.get(userId)</em></p>\n\n<p><em>5) check the returned user have a user role with {businessId: the&nbsp;businessId in step 3, &nbsp; role:&nbsp;BUSINESS_EMPLOYEE}</em></p>\n\n<p><em>6) if found, &nbsp;callback(null, true);&nbsp;&nbsp;else&nbsp;callback(new Error(&#39;you are not permitted&#39;);</em></p>\n\n<p><em>BusinessController#deleteBusinessEmployee and&nbsp;BusinessController#updateBusinessEmployee need to call&nbsp;checkPermission firstly.</em></p>\n\n<div style=\"color: rgb(0, 0, 0); font-family: Arial, Tahoma, Verdana, sans-serif; line-height: 18.2000007629395px;\">The following use cases must also be considered:<br />\nFor Business, get/add/delete/update business employee should be only allowed by the business admin.&nbsp;<br />\nFor GiftCardOffer, create/delete/update/cancel should be allowed by the business employee or admin of that business, get/search GiftCardOffer are public.<br />\nFor GiftCard, search/get/purchase giftcard are public, resell/prepareForRedeem giftcard should be owner of the giftcard, redeem should be &nbsp;business employee or admin of the business of the gift card. get/add comment is public, delete comment should be the business employee or admin.</div>\n\n<p>&nbsp;</p>\n\n<p>3. Create unit tests + code coverage for the existing code.</p>\n\n<p><br />\n4. Fix documentation (now it&#39;s missing in many places and it&#39;s not consistent) as per TopCoder standards and the provided module architectures.</p>\n\n<p>&nbsp;</p>\n\n<p>5. Currently some sensitive data is logged. The logging configuration must be reset so that no crendetials and payment details (e.g. credit card data) are logged any longer.</p>\n\n<p>&nbsp;</p>\n\n<p>6.&nbsp;All operations that increase/decrease something (e.g. availableQuantity) must become&nbsp;<strong>atomic</strong>. Currently,&nbsp;you can make parallel requests and purchase single item more than availableQuantity which a major flaw. Mongodb supports atomic operations.</p>\n\n<p>&nbsp;</p>\n\n<p>7. Code naming updates:</p>\n\n<ul>\n\t<li>BusinessService#getByAccountId -&gt; BusinessService#getByBraintreeAccountId</li>\n\t<li>Business#Verify -&gt; Business#PayForVerification</li>\n</ul>\n\n<p>(all client&rsquo;s code in both back-end and front-end must be updated for both items above)</p>\n\n<p>&nbsp;</p>\n\n<p>8. User&rsquo;s files storage. Profile images/business logo and other assets uploaded by users must be stored in the file system (as opposed to the database). For the sake of scalability the file system will be implemented with AWS S3 bucket.</p>\n\n<p>The current code is inconsistent in this regard:</p>\n\n<p>- in create user logic, profile image / business profile is saved in file system.</p>\n\n<p>- in modify user logic, the profile image is saved in mongondb</p>\n\n<p>- there is no code to retrieve and show the profile image after create/modify.</p>\n\n<p>So your task to update the code so that all the images are stored in the file system and relevant DB fields stores URI to a file. For reference see&nbsp;<a href=\"http://www.bucketexplorer.com/documentation/amazon-s3--how-to-generate-url-for-amazon-s3-files.html\">http://www.bucketexplorer.com/documentation/amazon-s3--how-to-generate-url-for-amazon-s3-files.html</a>&nbsp;Signed url section about how to get url from S3.</p>\n\n<p>9. Business ID.</p>\n\n<p><span>Backend API expects us to submit a businessId when we register.&nbsp;</span><span>We don&#39;t submit it in the mobile app and API creates a userRole with empty&nbsp;businessId.</span></p>\n\n<p><span>This is wrong, because we should create a new Business record and associated it with new created user. So this shall be fixed here.</span></p>\n\n<p>&nbsp;</p>\n\n<p>10. P<span>rovide updated postman.json file.</span></p>\n\n<p>&nbsp;</p>\n\n<p><span>11.&nbsp;Implement error handling in services/controllers.</span></p>\n\n<p>&nbsp;</p>\n\n<p>12. Revamp profile history auditing in the back-end controllers using <span>ActionRecordService and&nbsp;ActionRecord entity</span>.</p>\n\n<p>ActionRecord is an item of individual/business&rsquo;s history shown at Profile-&gt;MyHistory page. This is a kind of audit.<br />\nREST API controllers at the backend will be responsible to call ActionRecordService to keep audit records (as per the system architecture). It was omitted at the level of Backend architect because audit requirement was postponed, however, during UI prototypes it partially returned as profile history.<br />\nE.g. GiftCardController#purchaseGiftCards must call this service to create an ActionRecord when user purchases a gift card but does not.<br />\nThe use cases are:<br />\n&nbsp;- gift card purchase<br />\n&nbsp;- gift card resale<br />\n&nbsp;- gift card redemption</p>\n\n<p><span>The use cases are:</span></p>\n\n<p>&nbsp;- gift card purchase</p>\n\n<p>&nbsp;- gift card resale</p>\n\n<p>&nbsp;- gift card redemption</p>\n\n<p>&nbsp;</p>\n\n<p>13. Some other misc issues must be brought up to the forum or via &quot;Contact managers&quot; and be fixed.</p>\n\n<p>E.g. in /helpers/helper.js</p>\n\n<p><em>// Global variable to store user coordinate for each request</em></p>\n\n<p><em>var userCoordinates = null;</em></p>\n\n<p><em>var isGiftCardFlag = true;</em></p>\n\n<p>We shouldn&#39;t store user state in global variables, because it won&#39;t work correct if there are parallel requests.</p>\n\n<p>&nbsp;</p>\n\n<p>14. If&nbsp;a business is <span>updated</span>, all its associated GiftCards and GiftCardOffers&nbsp;<span>should be changed automatically.</span></p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": 720,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30049493",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2015-05-10T07:54:00.000Z",
+  "finalSubmissionGuidelines": "<p><span>A complete list of deliverables can be found in the TopCoder Assembly competition Tutorial at:</span></p>\n\n<p><span><a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a></span></p>\n\n<p>You are to provide the Improved revamped working codebase as per the requirements and the deployment guide (if any updates there).</p>\n",
+  "forumId": 28784,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=28784",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 33,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-28T13:00:00.000Z",
+      "actualStartTime": "2015-04-28T13:00:00.000Z",
+      "scheduledEndTime": "2015-04-28T13:02:00.000Z",
+      "actualendTime": "2015-04-28T13:02:00.000Z",
+      "_id": "58123e72e0be5f30ae562d6d"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-28T13:02:00.000Z",
+      "actualStartTime": "2015-04-28T13:02:00.000Z",
+      "scheduledEndTime": "2015-04-28T15:04:00.000Z",
+      "actualendTime": "2015-04-28T15:04:00.000Z",
+      "_id": "58123e72e0be5f30ae562d6c"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-28T16:00:00.000Z",
+      "actualStartTime": "2015-04-28T16:00:00.000Z",
+      "scheduledEndTime": "2015-04-30T16:01:00.000Z",
+      "actualendTime": "2015-04-30T16:01:00.000Z",
+      "_id": "58123e72e0be5f30ae562d6b"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-28T16:05:00.000Z",
+      "actualStartTime": "2015-04-28T16:05:00.000Z",
+      "scheduledEndTime": "2015-05-04T16:05:00.000Z",
+      "actualendTime": "2015-05-04T16:05:00.000Z",
+      "_id": "58123e72e0be5f30ae562d6a"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-04T16:05:00.000Z",
+      "actualStartTime": "2015-05-04T16:05:00.000Z",
+      "scheduledEndTime": "2015-05-07T14:30:00.000Z",
+      "actualendTime": "2015-05-07T14:30:00.000Z",
+      "_id": "58123e72e0be5f30ae562d69"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-07T14:31:00.000Z",
+      "actualStartTime": "2015-05-07T14:31:00.000Z",
+      "scheduledEndTime": "2015-05-08T13:39:00.000Z",
+      "actualendTime": "2015-05-08T13:39:00.000Z",
+      "_id": "58123e72e0be5f30ae562d68"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-08T13:39:00.000Z",
+      "actualStartTime": "2015-05-08T13:39:00.000Z",
+      "scheduledEndTime": "2015-05-09T10:16:00.000Z",
+      "actualendTime": "2015-05-09T10:16:00.000Z",
+      "_id": "58123e72e0be5f30ae562d67"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-09T10:16:00.000Z",
+      "actualStartTime": "2015-05-09T10:16:00.000Z",
+      "scheduledEndTime": "2015-05-09T16:33:00.000Z",
+      "actualendTime": "2015-05-09T16:33:00.000Z",
+      "_id": "58123e72e0be5f30ae562d66"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-09T16:33:00.000Z",
+      "actualStartTime": "2015-05-09T16:33:00.000Z",
+      "scheduledEndTime": "2015-05-09T16:49:00.000Z",
+      "actualendTime": "2015-05-09T16:49:00.000Z",
+      "_id": "58123e72e0be5f30ae562d65"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-09T16:49:00.000Z",
+      "actualStartTime": "2015-05-09T16:49:00.000Z",
+      "scheduledEndTime": "2015-05-10T07:54:00.000Z",
+      "actualendTime": "2015-05-10T07:54:00.000Z",
+      "_id": "58123e72e0be5f30ae562d64"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-10T07:54:00.000Z",
+      "actualStartTime": "2015-05-10T07:54:00.000Z",
+      "scheduledEndTime": "2015-05-10T20:01:00.000Z",
+      "actualendTime": "2015-05-10T20:01:00.000Z",
+      "_id": "58123e72e0be5f30ae562d63"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-10T20:01:00.000Z",
+      "actualStartTime": "2015-05-10T20:01:00.000Z",
+      "scheduledEndTime": "2015-05-15T20:03:00.000Z",
+      "actualendTime": "2015-05-15T20:03:00.000Z",
+      "_id": "58123e72e0be5f30ae562d62"
+    }
+  ],
+  "platforms": [
+    "AWS"
+  ],
+  "postingDate": "2015-04-28T16:00:00.000Z",
+  "prize": [
+    1600,
+    800
+  ],
+  "projectId": 8087,
+  "registrants": [
+    {
+      "handle": "panoptimum",
+      "reliability": "6%",
+      "registrationDate": "2015-04-28T18:07:00.000Z",
+      "submissionDate": null,
+      "rating": "1318",
+      "colorStyle": "color: #6666FF",
+      "_id": "58123e72e0be5f30ae562d61"
+    },
+    {
+      "handle": "kbentoumi",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-28T16:00:00.000Z",
+      "submissionDate": null,
+      "rating": "605",
+      "colorStyle": "color: #999999",
+      "_id": "58123e72e0be5f30ae562d60"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "86%",
+      "registrationDate": "2015-04-28T16:03:00.000Z",
+      "submissionDate": "2015-05-04T11:23:00.000Z",
+      "rating": "1844",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58123e72e0be5f30ae562d5f"
+    },
+    {
+      "handle": "moulyg",
+      "reliability": "0%",
+      "registrationDate": "2015-04-28T16:15:00.000Z",
+      "submissionDate": null,
+      "rating": "848",
+      "colorStyle": "color: #999999",
+      "_id": "58123e72e0be5f30ae562d5e"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "13%",
+      "registrationDate": "2015-04-28T16:59:00.000Z",
+      "submissionDate": null,
+      "rating": "1052",
+      "colorStyle": "color: #00A900",
+      "_id": "58123e72e0be5f30ae562d5d"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-28T19:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562d5c"
+    },
+    {
+      "handle": "kcchiu",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-28T19:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562d5b"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2015-04-28T19:11:00.000Z",
+      "submissionDate": null,
+      "rating": "1053",
+      "colorStyle": "color: #00A900",
+      "_id": "58123e72e0be5f30ae562d5a"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-28T19:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562d59"
+    },
+    {
+      "handle": "swengko",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-28T20:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562d58"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2015-04-28T22:32:00.000Z",
+      "submissionDate": null,
+      "rating": "1387",
+      "colorStyle": "color: #6666FF",
+      "_id": "58123e72e0be5f30ae562d57"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2015-04-28T22:55:00.000Z",
+      "submissionDate": null,
+      "rating": "1104",
+      "colorStyle": "color: #00A900",
+      "_id": "58123e72e0be5f30ae562d56"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-29T00:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562d55"
+    },
+    {
+      "handle": "evilkyro1965",
+      "reliability": "6%",
+      "registrationDate": "2015-04-29T01:16:00.000Z",
+      "submissionDate": null,
+      "rating": "755",
+      "colorStyle": "color: #999999",
+      "_id": "58123e72e0be5f30ae562d54"
+    },
+    {
+      "handle": "xiufei",
+      "reliability": "0%",
+      "registrationDate": "2015-04-29T02:30:00.000Z",
+      "submissionDate": null,
+      "rating": "887",
+      "colorStyle": "color: #999999",
+      "_id": "58123e72e0be5f30ae562d53"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-29T02:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562d52"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-29T03:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562d51"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "26%",
+      "registrationDate": "2015-04-29T05:29:00.000Z",
+      "submissionDate": null,
+      "rating": "1158",
+      "colorStyle": "color: #00A900",
+      "_id": "58123e72e0be5f30ae562d50"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "26%",
+      "registrationDate": "2015-04-29T06:31:00.000Z",
+      "submissionDate": null,
+      "rating": "734",
+      "colorStyle": "color: #999999",
+      "_id": "58123e72e0be5f30ae562d4f"
+    },
+    {
+      "handle": "gpbencke",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-29T10:06:00.000Z",
+      "submissionDate": null,
+      "rating": "716",
+      "colorStyle": "color: #999999",
+      "_id": "58123e72e0be5f30ae562d4e"
+    },
+    {
+      "handle": "michael_tang",
+      "reliability": "0%",
+      "registrationDate": "2015-04-29T10:49:00.000Z",
+      "submissionDate": null,
+      "rating": "497",
+      "colorStyle": "color: #999999",
+      "_id": "58123e72e0be5f30ae562d4d"
+    },
+    {
+      "handle": "SPChoria",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-29T13:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562d4c"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2015-04-29T15:23:00.000Z",
+      "submissionDate": null,
+      "rating": "571",
+      "colorStyle": "color: #999999",
+      "_id": "58123e72e0be5f30ae562d4b"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2015-04-29T15:38:00.000Z",
+      "submissionDate": null,
+      "rating": "265",
+      "colorStyle": "color: #999999",
+      "_id": "58123e72e0be5f30ae562d4a"
+    },
+    {
+      "handle": "soe",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-29T15:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562d49"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-29T16:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562d48"
+    },
+    {
+      "handle": "Urmass",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-29T20:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562d47"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-30T03:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562d46"
+    },
+    {
+      "handle": "spanhawk",
+      "reliability": "6%",
+      "registrationDate": "2015-04-30T06:50:00.000Z",
+      "submissionDate": null,
+      "rating": "625",
+      "colorStyle": "color: #999999",
+      "_id": "58123e72e0be5f30ae562d45"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2015-04-30T09:01:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58123e72e0be5f30ae562d44"
+    },
+    {
+      "handle": "ohyan07",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-30T13:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562d43"
+    },
+    {
+      "handle": "mohhasbias",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-30T14:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562d42"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-30T14:48:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58123e72e0be5f30ae562d41"
+    }
+  ],
+  "registrationEndDate": "2015-04-30T16:01:00.000Z",
+  "reliabilityBonus": 320,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-05-04T16:05:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 94.85,
+      "finalScore": 95.44,
+      "points": 720,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-05-04T11:23:00.000Z",
+      "_id": "58123e72e0be5f30ae562d6e"
+    }
+  ],
+  "technology": [
+    "Angular.js",
+    "HTML5",
+    "HTTP",
+    "MongoDB",
+    "Node.js"
+  ]
+}

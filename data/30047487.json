@@ -1,0 +1,342 @@
+{
+  "_id": 30047487,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:48:25.525Z",
+  "appealsEndDate": "2014-12-09T18:42:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "MTurkification Web and API Update 2",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></span></h2>\n\n<p><span>Our client want to use Amazon mturk to invite game players to play set of games. Each Human Intelligence Task (HIT) will be for completing a &quot;task&quot; (analogous to a subset of levels in the game versions) in exchange for payment. Ideally, we would keep this as short and simple as possible - i.e. one &quot;task&quot; gets the payment (instead of multiple progressive levels).</span></p>\n\n<p>In this challenge we are making several changes and update to the mturk web dashboard, and mturk api to support associating qualifications to HITs, in addition to some other fixes in existing code base.</p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Challenge Requirements</span></h2>\n\n<p>You will address the following in this challenge :</p>\n\n<ul>\n\t<li>Managing Qualification Type API endpoints\n\t<ul>\n\t\t<li><span>Add new endpoints to mturk api to support manipulating qualification type</span></li>\n\t\t<li>It requires at least admin role to manage qualification type</li>\n\t\t<li><span>Create new model for these endpoints, called qualificationType :&nbsp;</span>\n\t\t<ul>\n\t\t\t<li><strong><span style=\"color:#FF0000\">(updated requirement!)</span> </strong>ID of created Qualification Type from Amazon API.</li>\n\t\t\t<li><s><span>AutoGranted will always be true. And AutoGrantedValue must be present in the create call always.</span></s></li>\n\t\t\t<li>DomainId (required) - store the domain ID used to create the qualification type</li>\n\t\t\t<li>Auditing fields - as we did in other models in the api</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Endpoints that changing the state of the qualification type should require at least admin role. Others any role can call it.</li>\n\t\t<li>We will create endpoints that wrap endpoints from Amazon API :&nbsp;\n\t\t<ul>\n\t\t\t<li><a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_UpdateQualificationTypeOperation.html\">UpdateQualificationType</a></li>\n\t\t\t<li><a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_SearchQualificationTypesOperation.html\">SearchQualificationTypes</a></li>\n\t\t\t<li><a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_GetQualificationTypeOperation.html\">GetQualificationType</a></li>\n\t\t\t<li><a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_DisposeQualificationTypeOperation.html\">DisposeQualificationType</a></li>\n\t\t\t<li><a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_CreateQualificationTypeOperation.html\">CreateQualificationType</a></li>\n\t\t\t<li>The endpoints will work as proxy to amazon api, it will accept<span> all fields from the amazon&nbsp;</span><a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_QualificationTypeDataStructureArticle.html\" style=\"line-height: 20.7999992370605px;\">QualificationType</a><span> as non-persistent fields (meaning that we don&#39;t persist them in DB), in addition to our qualificationType custom model.</span></li>\n\t\t\t<li>We will only support integer qualification type values.</li>\n\t\t\t<li>Update postman.json file to include the new endpoints</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li><strong><span style=\"color:#FF0000\">(Updated Requirement!)</span></strong> Managing HIT API :\n\t<ul>\n\t\t<li>Update the Task model (used to track created HITs) :\n\t\t<ul>\n\t\t\t<li>QualficationRequirements (optional) - Array/Map of <a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_QualificationRequirementDataStructureArticle.html\">qualification requirement</a> to be associated with created HIT (It is up to you not to store this field in db, as it will be available when we retrieve HIT information from amazon api).</li>\n\t\t\t<li>QualificaitonsToBeGranted (optional)- Array/Map of <a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_AssignQualificationOperation.html\">qualification types/values parameters to be assigned</a> to workers after accepting their assignments.</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Update the HIT API to create the new fields in amazon api and persist it in DB.</li>\n\t</ul>\n\t</li>\n\t<li><span style=\"color:#FF0000\"><strong>(New Requirements!)</strong></span> Accept Assignment API :\n\t<ul>\n\t\t<li>Update the assigment api to assign qualification to workers - when approving an assignment - using QualificationsToBeGranted from Task entry. Refer to <a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_AssignQualificationOperation.html\">this method for information about assigning qualifications.</a></li>\n\t</ul>\n\t</li>\n\t<li>Admin Dashboard changes :&nbsp;\n\t<ul>\n\t\t<li>Add &quot;Manage Qualification Types&quot; button in home page.</li>\n\t\t<li>We need two pages to manage qualification types\n\t\t<ul>\n\t\t\t<li>The mturk admin dashboard will delegate the creation to the mturk api</li>\n\t\t\t<li>First page will include a table that list all existing qualification types of the logged in domain\n\t\t\t<ul>\n\t\t\t\t<li>It will have actions to dispose/create/delete/update qualification type</li>\n\t\t\t\t<li>It should support pagination, note that amazon api enforces the pagination.</li>\n\t\t\t\t<li>It will list the qualification types of the user domain.&nbsp;</li>\n\t\t\t\t<li>There should also be a filter that let user view other qualification type from other domains associated with the user.</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>The second page will be used to create/update qualification type.\n\t\t\t<ul>\n\t\t\t\t<li>It should also contain buttons to dispose the qualification type.</li>\n\t\t\t\t<li>The qualification type will always be auto granted, so auto granted integer must be required in the form.</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>In /dashboard page we need ability to see the status of the HIT\n\t\t<ul>\n\t\t\t<li>Update API endpoint to support retrieving the information.</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Creating Hit :\n\t\t<ul>\n\t\t\t<li>Remove the &#39;standard question&#39; secton in create hit page (/hit/create), we will only allow &#39;external question&#39; to be created.</li>\n\t\t\t<li>Remove HIT ID column, we only need the &#39;hit name&#39; to link to hit details page.</li>\n\t\t\t<li>&nbsp;Add new panel to specify the &quot;qualification requirements&quot; with the HIT\n\t\t\t<ul>\n\t\t\t\t<li>It is optional.</li>\n\t\t\t\t<li>It should support adding one or more qualification requirements</li>\n\t\t\t\t<li>Use the name of the qualification types instead of it&#39;s IDs so it is easier for user to pick the correct qualification type id.\n\t\t\t\t<ul>\n\t\t\t\t\t<li>It should only list qualification types related to the domain the hit will be associated with.</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li>It should allow specifying one or more integer value per qualification requirement.</li>\n\t\t\t\t<li>It should list of supported comparators that work with IntegerValue.</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>There should be a button to manage qualification types from this page, it should take user to the manage qualification types page.</li>\n\t\t\t<li><span style=\"color:#FF0000\"><strong>(new requirement!) </strong></span>Add new panel to specify the &quot;qualification to be granted&quot; after accepting an assignment :\n\t\t\t<ul>\n\t\t\t\t<li>It is optional</li>\n\t\t\t\t<li>It should support adding one or more qualification type</li>\n\t\t\t\t<li>Use the name of the qualification types instead of the IDs so it is easier for user to pick the correct qualification type id, the form would look like this :<br />\n\t\t\t\t&lt;qualification type names pick list&gt; &lt;add button&gt; (below demonstrate how it looks like when adding an item from list) :<br />\n\t\t\t\t&lt;qualification type name 1&gt; &lt;input field represents an integer value (optional)&gt; &lt;x&gt; ( x icon is needed to remove the qualification type)<br />\n\t\t\t\t...<br />\n\t\t\t\t&lt;qualification type name n&gt; &lt;input field represents an integer value (optional)&gt; &lt;x&gt;</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>Update mturk api to support the changes (if needed!)</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li><span style=\"color:#FF0000\"><strong>(New Requirements!) </strong></span>Viewing Hit :\n\t\t<ul>\n\t\t\t<li>Update view hit details page to view the new qualification requirement and qualification types to be granted fields.</li>\n\t\t\t<li>Update mturk api to support the changes (if needed!)</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h2><span style=\"color:#FF0000\">Possible Scenarios<span style=\"color:rgb(255, 0, 0); font-size:13px\"> </span>(Updated!!)</span></h2>\n\n<ul>\n\t<li>(HIT A) Admin creates a HIT that has no qualification requirements, and Q1 as qualification to be granted (i.e. Play Game Tutorial Hit)\n\t<ul>\n\t\t<li>When worker apply for this hit without the need to obtain any qualification for it.</li>\n\t\t<li>When owner accept the submitted assignment from worker, backend will assign qualification (Q1) to that worker.</li>\n\t</ul>\n\t</li>\n\t<li>(HIT B) Admin creates a HIT with &#39;Q1&#39; must exist as qualification requirement, and Q2 as qualification to be granted.&nbsp;\n\t<ul>\n\t\t<li>Only workers who has completed Hit A successfully can apply to this HIT.</li>\n\t\t<li>When owner accept the submitted assignment from worker, backend will assign qualification (Q2) to that worker.</li>\n\t</ul>\n\t</li>\n\t<li>Admin creates a HIT that require Q1 and Q2 qualification requirements to exist, and Q3 with value 30 as qualification to be granted.\n\t<ul>\n\t\t<li>Workers who successfully completed Hit A and HIT B can work on this one.</li>\n\t\t<li>When owner accept the submitted assignment from worker, backend will assign qualification Q3 with value 30 to the worker.</li>\n\t</ul>\n\t</li>\n\t<li>Admin creates a HIT that both &#39;Q1&#39; and &#39;Q2&#39; qualification must exist in worker profile, and Q3 to be greater than 20, also it has Q3 with value 40 as qualification to be granted.\n\t<ul>\n\t\t<li>The workers who completd the previous HITs can apply here.</li>\n\t\t<li>Workers who complete the task will be assigned Q3 with value 40.</li>\n\t</ul>\n\t</li>\n\t<li>.. you can think of other scenarios but the mentioned above almost cover all cases.</li>\n</ul>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Testing</span></h2>\n\n<ul>\n\t<li>You will use mturk sandbox for testing.</li>\n\t<li>You can view created hit by navigation to worker sandbox search for the title of the hit.</li>\n\t<li>You will need to accept it and manually navigate to the website to simulate the player flow.</li>\n\t<li>Make sure you can complete the outlined flow above as described. Reviewers are expected to do the same.</li>\n</ul>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Github Repo</span></h2>\n\n<h2><span style=\"font-size:13px\">API exists in private repositories,</span><span style=\"font-size:13px\">&nbsp;request access in challenge forums if you don&#39;t have it already.</span></h2>\n\n<ul>\n\t<li><a href=\"https://github.com/topcoderinc/csfv_mturk_api\" style=\"color: rgb(102, 102, 102); font-size: 13px; line-height: 1.6; padding: 0px; margin: 0px;\">https://github.com/topcoderinc/csfv_mturk_api</a></li>\n\t<li><a href=\"https://github.com/topcoderinc/csfv_mturk_dashboard\">https://github.com/topcoderinc/csfv_mturk_dashboard</a></li>\n</ul>\n\n<p><span style=\"color:rgb(255, 0, 0)\">References</span></p>\n\n<ul>\n\t<li><a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/Welcome.html\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">Mturk Amazon API Documentation</a></li>\n</ul>\n",
+  "digitalRunPoints": 630,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30047487",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2014-12-10T13:17:00.000Z",
+  "finalSubmissionGuidelines": "<h2><span><strong><span style=\"color:rgb(255, 0, 0)\">Submission Deliverables</span></strong></span></h2>\n\n<p><span>Below is an overview of the deliverables:</span></p>\n\n<ul>\n\t<li>Git patch of the changes of each repository.</li>\n\t<li>Text file with notes to reviewer.</li>\n\t<li>Update README.md in the API and admin web dashboard git folders, this file should also be part of the patch file.</li>\n\t<li><span>You don&#39;t need to submit a word document for deployment guide. But you need to submit a very detailed document for all possible scenarios of the new feature, and how to test it.</span></li>\n</ul>\n\n<h2><span><span style=\"color:rgb(255, 0, 0)\"><strong>Final Submission</strong></span></span></h2>\n\n<p><span>For each member, the final submission should be uploaded via the challenge detail page on&nbsp;<a href=\"http://www.topcoder.com/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">topcoder.com</a>.</span></p>\n",
+  "forumId": 26938,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=26938",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 18,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-30T18:10:00.000Z",
+      "actualStartTime": "2014-11-30T18:10:00.000Z",
+      "scheduledEndTime": "2014-11-30T18:11:00.000Z",
+      "actualendTime": "2014-11-30T18:11:00.000Z",
+      "_id": "58123de90659262e95e00645"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-30T18:11:00.000Z",
+      "actualStartTime": "2014-11-30T18:11:00.000Z",
+      "scheduledEndTime": "2014-11-30T19:14:00.000Z",
+      "actualendTime": "2014-11-30T19:14:00.000Z",
+      "_id": "58123de90659262e95e00644"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-30T19:14:00.000Z",
+      "actualStartTime": "2014-11-30T19:14:00.000Z",
+      "scheduledEndTime": "2014-12-03T19:14:00.000Z",
+      "actualendTime": "2014-12-03T19:14:00.000Z",
+      "_id": "58123de90659262e95e00643"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-30T19:19:00.000Z",
+      "actualStartTime": "2014-11-30T19:19:00.000Z",
+      "scheduledEndTime": "2014-12-06T19:08:00.000Z",
+      "actualendTime": "2014-12-06T19:08:00.000Z",
+      "_id": "58123de90659262e95e00642"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-06T19:08:00.000Z",
+      "actualStartTime": "2014-12-06T19:08:00.000Z",
+      "scheduledEndTime": "2014-12-07T05:30:00.000Z",
+      "actualendTime": "2014-12-07T05:30:00.000Z",
+      "_id": "58123de90659262e95e00641"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-07T05:30:00.000Z",
+      "actualStartTime": "2014-12-07T05:30:00.000Z",
+      "scheduledEndTime": "2014-12-08T09:35:00.000Z",
+      "actualendTime": "2014-12-08T09:35:00.000Z",
+      "_id": "58123de90659262e95e00640"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-08T09:35:00.000Z",
+      "actualStartTime": "2014-12-08T09:35:00.000Z",
+      "scheduledEndTime": "2014-12-09T09:35:00.000Z",
+      "actualendTime": "2014-12-09T09:35:00.000Z",
+      "_id": "58123de90659262e95e0063f"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-09T09:35:00.000Z",
+      "actualStartTime": "2014-12-09T09:35:00.000Z",
+      "scheduledEndTime": "2014-12-09T18:42:00.000Z",
+      "actualendTime": "2014-12-09T18:42:00.000Z",
+      "_id": "58123de90659262e95e0063e"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-09T18:42:00.000Z",
+      "actualStartTime": "2014-12-09T18:42:00.000Z",
+      "scheduledEndTime": "2014-12-10T01:08:00.000Z",
+      "actualendTime": "2014-12-10T01:08:00.000Z",
+      "_id": "58123de90659262e95e0063d"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-10T01:08:00.000Z",
+      "actualStartTime": "2014-12-10T01:08:00.000Z",
+      "scheduledEndTime": "2014-12-10T13:17:00.000Z",
+      "actualendTime": "2014-12-10T13:17:00.000Z",
+      "_id": "58123de90659262e95e0063c"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-10T13:17:00.000Z",
+      "actualStartTime": "2014-12-10T13:17:00.000Z",
+      "scheduledEndTime": "2014-12-10T14:24:00.000Z",
+      "actualendTime": "2014-12-10T14:24:00.000Z",
+      "_id": "58123de90659262e95e0063b"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-10T14:24:00.000Z",
+      "actualStartTime": "2014-12-10T14:24:00.000Z",
+      "scheduledEndTime": "2014-12-15T14:25:00.000Z",
+      "actualendTime": "2014-12-15T14:25:00.000Z",
+      "_id": "58123de90659262e95e0063a"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2014-11-30T19:14:00.000Z",
+  "prize": [
+    1400,
+    700
+  ],
+  "projectId": 5104,
+  "registrants": [
+    {
+      "handle": "gjw99",
+      "reliability": "6%",
+      "registrationDate": "2014-12-03T02:40:00.000Z",
+      "submissionDate": null,
+      "rating": "1031",
+      "colorStyle": "color: #00A900",
+      "_id": "58123de90659262e95e00639"
+    },
+    {
+      "handle": "gonia_119",
+      "reliability": "0%",
+      "registrationDate": "2014-12-03T14:37:00.000Z",
+      "submissionDate": null,
+      "rating": "1009",
+      "colorStyle": "color: #00A900",
+      "_id": "58123de90659262e95e00638"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "100%",
+      "registrationDate": "2014-11-30T19:16:00.000Z",
+      "submissionDate": "2014-12-03T01:13:00.000Z",
+      "rating": "2088",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58123de90659262e95e00637"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-30T19:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123de90659262e95e00636"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2014-11-30T23:03:00.000Z",
+      "submissionDate": null,
+      "rating": "1088",
+      "colorStyle": "color: #00A900",
+      "_id": "58123de90659262e95e00635"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-30T23:33:00.000Z",
+      "submissionDate": null,
+      "rating": "717",
+      "colorStyle": "color: #999999",
+      "_id": "58123de90659262e95e00634"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-01T00:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123de90659262e95e00633"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-01T01:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123de90659262e95e00632"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-01T06:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123de90659262e95e00631"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-01T06:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123de90659262e95e00630"
+    },
+    {
+      "handle": "jol",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-01T07:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123de90659262e95e0062f"
+    },
+    {
+      "handle": "crim",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-01T07:25:00.000Z",
+      "submissionDate": null,
+      "rating": "675",
+      "colorStyle": "color: #999999",
+      "_id": "58123de90659262e95e0062e"
+    },
+    {
+      "handle": "gmagniez",
+      "reliability": "6%",
+      "registrationDate": "2014-12-01T09:24:00.000Z",
+      "submissionDate": null,
+      "rating": "661",
+      "colorStyle": "color: #999999",
+      "_id": "58123de90659262e95e0062d"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-01T11:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123de90659262e95e0062c"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-12-01T16:17:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58123de90659262e95e0062b"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-02T01:49:00.000Z",
+      "submissionDate": null,
+      "rating": "907",
+      "colorStyle": "color: #00A900",
+      "_id": "58123de90659262e95e0062a"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "6%",
+      "registrationDate": "2014-12-02T04:40:00.000Z",
+      "submissionDate": null,
+      "rating": "916",
+      "colorStyle": "color: #00A900",
+      "_id": "58123de90659262e95e00629"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-02T08:27:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58123de90659262e95e00628"
+    }
+  ],
+  "registrationEndDate": "2014-12-03T19:14:00.000Z",
+  "reliabilityBonus": 280,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-12-06T19:08:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 98.31,
+      "finalScore": 99.39,
+      "points": 630,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-12-03T01:13:00.000Z",
+      "_id": "58123de90659262e95e00646"
+    }
+  ],
+  "technology": [
+    "API",
+    "Angular.js",
+    "CSS",
+    "HTML",
+    "JavaScript",
+    "Node.js",
+    "PostgreSQL"
+  ]
+}

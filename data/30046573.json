@@ -1,0 +1,351 @@
+{
+  "_id": 30046573,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:48:11.037Z",
+  "appealsEndDate": "2014-10-29T08:48:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Release Assembly - Turkification API Part 2",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></span></h2>\n\n<p><span>Our client want to use Amazon mturk to invite game players to play set of games. Each Human Intelligence Task (HIT) will be for completing a &quot;task&quot; (analogous to a subset of levels in the game versions) in exchange for payment. Ideally, we would keep this as short and simple as possible - i.e. one &quot;task&quot; gets the payment (instead of multiple progressive levels).</span></p>\n\n<p><span>Game players will need to navigate to client website in order to play the games, client will user mturk API to login players, and to perform some other mturk operations. Also client wants to allow multiple teams to user same mturk account but with limited access. We will be launching multiple challenges to build the infrastructure to automate and simplify this process.</span></p>\n\n<h2><span><span style=\"color:rgb(255, 0, 0)\">Competition Task Overview</span></span></h2>\n\n<p><span>In this challenge we are adding more endpoints to the REST API.</span></p>\n\n<h3><span><span style=\"color:#FF0000\">API Requirements</span></span></h3>\n\n<p><span>We will implement the following API endpoints in this challenge :</span></p>\n\n<ul>\n\t<li>Retrieve List of Assignments of specific hit\n\t<ul>\n\t\t<li>route : &quot;GET /hit/:id/assignments&quot;</li>\n\t\t<li>Any role can access this endpoint</li>\n\t\t<li>The method will be wrapper of this API <a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_GetAssignmentsForHITOperation.html\">http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_GetAssignmentsForHITOperation.html</a></li>\n\t</ul>\n\t</li>\n\t<li>Retrieve Assignment\n\t<ul>\n\t\t<li>route : &quot;GET /assignment/:id&quot;</li>\n\t\t<li>Any role can access this endpoint</li>\n\t\t<li>The method is wrapper to this API <a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_GetAssignmentOperation.html\">http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_GetAssignmentOperation.html</a></li>\n\t</ul>\n\t</li>\n\t<li>Update Assignment Status\n\t<ul>\n\t\t<li>route : &quot;PUT /assignment/:id&quot;</li>\n\t\t<li>This endpoint requires at least &#39;admin&#39; role.</li>\n\t\t<li>This endpoint will approve, reject or approve rejected assignments.</li>\n\t\t<li>It requires two parameters :\n\t\t<ul>\n\t\t\t<li>assignment id : as path parameter</li>\n\t\t\t<li>status : enum value (REJECT, APPROVE)</li>\n\t\t\t<li>reason : a string represents the feedback</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Depends on the status, the logic should be as follow :\n\t\t<ul>\n\t\t\t<li>Retrieve the status of the assignment.</li>\n\t\t\t<li>If assignment status is Rejected :&nbsp;\n\t\t\t<ul>\n\t\t\t\t<li>if passed in status parameter is approve then use this API to approve the assignment <a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_ApproveRejectedAssignmentOperation.html\">http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_ApproveRejectedAssignmentOperation.html</a></li>\n\t\t\t\t<li>Otherwise, return error to use that assignment is already rejected.</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>If assignment status is Submitted\n\t\t\t<ul>\n\t\t\t\t<li>If passed in status parameter is approve use this api <a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_ApproveAssignmentOperation.html\">http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_ApproveAssignmentOperation.html</a></li>\n\t\t\t\t<li>If passed in status parameter is reject use this api <a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_RejectAssignmentOperation.html\">http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_RejectAssignmentOperation.html</a></li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>If assignment status is approved return error that assignment is already approved.</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li>Grant bounus\n\t<ul>\n\t\t<li>Route &quot;POST /assignment/:id/bonus&quot;</li>\n\t\t<li>This endpoint requires at least &#39;admin&#39; role.</li>\n\t\t<li>This method is wrapper for <a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_GrantBonusOperation.html\">http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_GrantBonusOperation.html</a></li>\n\t</ul>\n\t</li>\n\t<li>Notify worker.\n\t<ul>\n\t\t<li>Route &quot;POST /NotifyWorker/:workerId&quot;</li>\n\t\t<li>This endpoint requires ast least &#39;admin&#39; role.</li>\n\t\t<li>This method is wrapper for <a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_NotifyWorkersOperation.html\">http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_NotifyWorkersOperation.html</a></li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3><span><span style=\"color:#FF0000\">Postman REST Client</span></span></h3>\n\n<ul>\n\t<li><span><a href=\"http://www.getpostman.com/\">http://www.getpostman.com/</a></span></li>\n\t<li><span>Update a Postman json file with request for all operations in scope.</span></li>\n\t<li><span>Include sample requests</span></li>\n\t<li><span>Don&#39;t include sample environment data</span></li>\n</ul>\n\n<h3><span><span style=\"color:#FF0000\">Github Repository</span></span></h3>\n\n<p>API exists in private repository <a href=\"https://github.com/topcoderinc/csfv_mturk_api\">https://github.com/topcoderinc/csfv_mturk_api</a> request access in challenge forums if you don&#39;t have it already.</p>\n",
+  "digitalRunPoints": 450,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30046573",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2014-10-29T10:17:00.000Z",
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<h2><span><strong><span style=\"color:#FF0000\"><span>Submission Deliverables</span></span></strong></span></h2>\n\n<p><span><span style=\"font-size:12px\">Below is an overview of the deliverables:</span></span></p>\n\n<ul>\n\t<li>Git patch of the changes.</li>\n\t<li>Text file with notes to reviewer.</li>\n\t<li>Update README.md in the API git folder, this file should also be part of the patch file.</li>\n\t<li><span>You don&#39;t need to submit a word document for deployment guide.</span></li>\n\t<li><span>Submitting a video for how to setup and test api is a plus.</span></li>\n</ul>\n\n<h2><span><span style=\"color:#FF0000\"><strong>Final Submission</strong></span></span></h2>\n\n<p><span><span style=\"font-size:12px\">For each member, the final submission should be uploaded via the challenge detail page on <a href=\"http://www.topcoder.com\">topcoder.com</a>.</span></span></p>\n</div>\n",
+  "forumId": 26168,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=26168",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 17,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-20T13:12:00.000Z",
+      "actualStartTime": "2014-10-20T13:12:00.000Z",
+      "scheduledEndTime": "2014-10-20T13:13:00.000Z",
+      "actualendTime": "2014-10-20T13:13:00.000Z",
+      "_id": "58123ddb0659262e95e0052a"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-20T13:13:00.000Z",
+      "actualStartTime": "2014-10-20T13:13:00.000Z",
+      "scheduledEndTime": "2014-10-20T15:31:00.000Z",
+      "actualendTime": "2014-10-20T15:31:00.000Z",
+      "_id": "58123ddb0659262e95e00529"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-20T15:31:00.000Z",
+      "actualStartTime": "2014-10-20T15:31:00.000Z",
+      "scheduledEndTime": "2014-10-22T15:31:00.000Z",
+      "actualendTime": "2014-10-22T15:31:00.000Z",
+      "_id": "58123ddb0659262e95e00528"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-20T15:36:00.000Z",
+      "actualStartTime": "2014-10-20T15:36:00.000Z",
+      "scheduledEndTime": "2014-10-25T15:30:00.000Z",
+      "actualendTime": "2014-10-25T15:30:00.000Z",
+      "_id": "58123ddb0659262e95e00527"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-25T15:30:00.000Z",
+      "actualStartTime": "2014-10-25T15:30:00.000Z",
+      "scheduledEndTime": "2014-10-25T23:55:00.000Z",
+      "actualendTime": "2014-10-25T23:55:00.000Z",
+      "_id": "58123ddb0659262e95e00526"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-25T23:55:00.000Z",
+      "actualStartTime": "2014-10-25T23:55:00.000Z",
+      "scheduledEndTime": "2014-10-27T22:13:00.000Z",
+      "actualendTime": "2014-10-27T22:13:00.000Z",
+      "_id": "58123ddb0659262e95e00525"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-27T22:13:00.000Z",
+      "actualStartTime": "2014-10-27T22:13:00.000Z",
+      "scheduledEndTime": "2014-10-28T22:13:00.000Z",
+      "actualendTime": "2014-10-28T22:13:00.000Z",
+      "_id": "58123ddb0659262e95e00524"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-28T22:13:00.000Z",
+      "actualStartTime": "2014-10-28T22:13:00.000Z",
+      "scheduledEndTime": "2014-10-29T08:48:00.000Z",
+      "actualendTime": "2014-10-29T08:48:00.000Z",
+      "_id": "58123ddb0659262e95e00523"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-29T08:48:00.000Z",
+      "actualStartTime": "2014-10-29T08:48:00.000Z",
+      "scheduledEndTime": "2014-10-29T09:38:00.000Z",
+      "actualendTime": "2014-10-29T09:38:00.000Z",
+      "_id": "58123ddb0659262e95e00522"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-29T09:38:00.000Z",
+      "actualStartTime": "2014-10-29T09:38:00.000Z",
+      "scheduledEndTime": "2014-10-29T10:17:00.000Z",
+      "actualendTime": "2014-10-29T10:17:00.000Z",
+      "_id": "58123ddb0659262e95e00521"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-29T10:17:00.000Z",
+      "actualStartTime": "2014-10-29T10:17:00.000Z",
+      "scheduledEndTime": "2014-10-29T11:59:00.000Z",
+      "actualendTime": "2014-10-29T11:59:00.000Z",
+      "_id": "58123ddb0659262e95e00520"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-29T11:59:00.000Z",
+      "actualStartTime": "2014-10-29T11:59:00.000Z",
+      "scheduledEndTime": "2014-11-02T16:13:00.000Z",
+      "actualendTime": "2014-11-02T16:13:00.000Z",
+      "_id": "58123ddb0659262e95e0051f"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2014-10-20T15:31:00.000Z",
+  "prize": [
+    1000,
+    500
+  ],
+  "projectId": 5104,
+  "registrants": [
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-21T18:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123ddb0659262e95e0051e"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-21T20:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123ddb0659262e95e0051d"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "13%",
+      "registrationDate": "2014-10-22T06:43:00.000Z",
+      "submissionDate": null,
+      "rating": "1136",
+      "colorStyle": "color: #00A900",
+      "_id": "58123ddb0659262e95e0051c"
+    },
+    {
+      "handle": "amrsaqr",
+      "reliability": "50%",
+      "registrationDate": "2014-10-22T09:10:00.000Z",
+      "submissionDate": null,
+      "rating": "1147",
+      "colorStyle": "color: #00A900",
+      "_id": "58123ddb0659262e95e0051b"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "100%",
+      "registrationDate": "2014-10-20T15:33:00.000Z",
+      "submissionDate": "2014-10-21T15:16:00.000Z",
+      "rating": "2048",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58123ddb0659262e95e0051a"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "0%",
+      "registrationDate": "2014-10-20T16:01:00.000Z",
+      "submissionDate": null,
+      "rating": "1447",
+      "colorStyle": "color: #6666FF",
+      "_id": "58123ddb0659262e95e00519"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-20T16:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123ddb0659262e95e00518"
+    },
+    {
+      "handle": "smart_raghavan",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-20T17:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123ddb0659262e95e00517"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-20T23:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123ddb0659262e95e00516"
+    },
+    {
+      "handle": "OlinaRuan",
+      "reliability": "6%",
+      "registrationDate": "2014-10-21T00:09:00.000Z",
+      "submissionDate": null,
+      "rating": "1045",
+      "colorStyle": "color: #00A900",
+      "_id": "58123ddb0659262e95e00515"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-21T04:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123ddb0659262e95e00514"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-10-21T06:34:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58123ddb0659262e95e00513"
+    },
+    {
+      "handle": "LieutenantRoger",
+      "reliability": "20%",
+      "registrationDate": "2014-10-21T06:41:00.000Z",
+      "submissionDate": "2014-10-24T20:37:00.000Z",
+      "rating": "993",
+      "colorStyle": "color: #00A900",
+      "_id": "58123ddb0659262e95e00512"
+    },
+    {
+      "handle": "halbcoder",
+      "reliability": "33%",
+      "registrationDate": "2014-10-21T07:17:00.000Z",
+      "submissionDate": null,
+      "rating": "605",
+      "colorStyle": "color: #999999",
+      "_id": "58123ddb0659262e95e00511"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-10-21T07:48:00.000Z",
+      "submissionDate": null,
+      "rating": "1031",
+      "colorStyle": "color: #00A900",
+      "_id": "58123ddb0659262e95e00510"
+    },
+    {
+      "handle": "BharathMG",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-21T12:00:00.000Z",
+      "submissionDate": "2014-10-23T03:45:00.000Z",
+      "rating": "380",
+      "colorStyle": "color: #999999",
+      "_id": "58123ddb0659262e95e0050f"
+    },
+    {
+      "handle": "kuberpooja",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-21T12:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123ddb0659262e95e0050e"
+    }
+  ],
+  "registrationEndDate": "2014-10-22T15:31:00.000Z",
+  "reliabilityBonus": 200,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-10-25T15:30:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 98.42,
+      "finalScore": 98.67,
+      "points": 292.5,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-10-21T15:16:00.000Z",
+      "_id": "58123ddb0659262e95e0052d"
+    },
+    {
+      "handle": "BharathMG",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 96.03,
+      "finalScore": 97.86,
+      "points": 112.5,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-23T03:45:00.000Z",
+      "_id": "58123ddb0659262e95e0052c"
+    },
+    {
+      "handle": "LieutenantRoger",
+      "placement": 3,
+      "screeningScore": 100,
+      "initialScore": 87.42,
+      "finalScore": 96.23,
+      "points": 45,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-24T20:37:00.000Z",
+      "_id": "58123ddb0659262e95e0052b"
+    }
+  ],
+  "technology": [
+    "API",
+    "Node.js",
+    "PostgreSQL"
+  ]
+}

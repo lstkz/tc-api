@@ -1,0 +1,460 @@
+{
+  "_id": 30044674,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:47:58.569Z",
+  "appealsEndDate": "2014-08-11T06:02:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Sechi Integration Worker Apps Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></h2>\n\n<p>Create 3 (almost same) time-based background worker applications on Heroku platform to act as connector bridges to 3 vendor services (<a href=\"https://www.xero.com/\">Xero</a>, <a href=\"http://www.deputy.com/\">Deputy</a> and <a href=\"http://www.vendhq.com/\">Vend</a>). &nbsp;This Assembly will demonstrate how records created in Vendors can be automatically published to message broker.</p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Competition Task Overview</span></h2>\n\n<p>We had run one <a href=\"http://community.topcoder.com/tc?module=ProjectDetail&amp;pj=30044244\">PoC challenge</a> earlier, you can get concept from that but be care of many difference in this spec.</p>\n\n<p>Your task is to create 3 separate heroku apps for the 3 different vendor services&nbsp;(<a href=\"https://www.xero.com/\">Xero</a>,&nbsp;<a href=\"http://www.deputy.com/\">Deputy</a>&nbsp;and&nbsp;<a href=\"http://www.vendhq.com/\">Vend</a>), the 3 apps are almost same, see following required features for all:</p>\n\n<p><strong>1. Architecture</strong></p>\n\n<p style=\"margin-left:14.2pt\">1.1 Use Heroku and Node.js as main platform, refer <a href=\"http://community.topcoder.com/tc?module=DownloadDocument&amp;docid=27514201\">PoC winning submission code</a>.</p>\n\n<p style=\"margin-left:14.2pt\">1.2 No web UI but only one background worker to act all.</p>\n\n<div style=\"border: 1px solid rgb(204, 204, 204); padding: 5px 10px; margin-left: 40px; background: rgb(238, 238, 238);\">Note: For Heroku Free Plan, only can run one dyno, So<br />\nYou can config Procfile with &quot;worker: node worker.js&quot;<br />\nThen run &quot;heroku ps:scale web=0 worker=1&quot; command to start the worker.</div>\n\n<p style=\"margin-left:14.2pt\"><br />\n<span>1.3 OAuth are all long term access</span></p>\n\n<div style=\"border: 1px solid rgb(204, 204, 204); padding: 5px 10px; margin-left: 40px; background: rgb(238, 238, 238);\">Xero: <a href=\"http://developer.xero.com/documentation/getting-started/private-applications/\">Private Applications Token</a> (Enable Payroll API for this organisation)<br />\n<span>Deputy: </span><a href=\"http://api-doc.deputy.com/API/Authentication\" style=\"line-height: 1.6;\">Permanent Custom Token</a><br />\n<span>Vend: </span><a href=\"https://developers.vendhq.com/documentation/intro.html#authentication\" style=\"line-height: 1.6;\">No OAuth, just use Basic HTTP Authorization</a></div>\n\n<p style=\"margin-left:14.2pt\"><br />\n1.4 Config by env variables like PoC code done.</p>\n\n<p style=\"margin-left:14.2pt\">1.5 All data transferred(Poll, Publish) should be JSON.</p>\n\n<p style=\"margin-left:14.2pt\">1.6 Logging all request url/header(except common and Authorization, only log what you set, such as &quot;If-Modified-Since&quot; for Xero API)/body, response code/body, error and exception into console(logplex)</p>\n\n<p style=\"margin-left:14.2pt\">1.7 Use Heroku Toolbel commandline to start/stop worker and view logs. document to deployment guide.</p>\n\n<p style=\"margin-left:14.2pt\">&nbsp;</p>\n\n<p><strong>2. Worker</strong></p>\n\n<p>The worker will poll data periodically from vendor service to get new records and publish them to broker queue.</p>\n\n<p style=\"margin-left:14.2pt\"><strong>2.1</strong> Functions in worker can be scheduled by &quot;setInterval&quot;.</p>\n\n<div style=\"border: 1px solid rgb(204, 204, 204); padding: 5px 10px; margin-left: 40px; background: rgb(238, 238, 238);\">Note: interval configuration default value should be reasonable for API rate limits such as Xero is 1000/24hrs, Vend is 350s, no limits in deputy but set it more than 2 mins.</div>\n\n<p style=\"margin-left:14.2pt\"><br />\n<strong>2.2</strong> Poll data from API</p>\n\n<p style=\"margin-left:35.4pt\">2.2.1 Only Poll new data and don&#39;t publish repeat to queue. So each request should carry one timestamp (different format and position in APIs, see 2.2.3). ignore timestamp in first request to get all existing records.</p>\n\n<div style=\"border: 1px solid rgb(204, 204, 204); padding: 5px 10px; margin-left: 40px; background: rgb(238, 238, 238);\">Note: Using latest timestamp to request, the result maybe include previous latest record, if so, you need remember latest record id to avoid publish repeat to broker queue.<br />\nIf not and you confirmed all date not repeat, you can ignore this comment.</div>\n\n<p style=\"margin-left:35.4pt\"><br />\n<span>2.2.2 Integrate which object from which Vendor, should be generic and config in one JSON file(not env variables). such as</span><br />\n<em><span>xero:[receipts],</span></em><br />\n<span><em>xero.payroll:[employees,timesheets]</em></span><br />\n<span>These just mockup here, detail format is open to you.</span></p>\n\n<div style=\"border: 1px solid rgb(204, 204, 204); padding: 5px 10px; margin-left: 40px; background: rgb(238, 238, 238);\">Note you don&#39;t need handle all kinds of objects in APIs, just handle 2.2.3 objects, try best to reuse request handler and response handler in single Vendor integration.</div>\n\n<p style=\"margin-left:35.4pt\"><br />\n<span>2.2.3 Required objects</span><br />\n<span>See attachment <a href=\"http://community.topcoder.com/tc?module=DownloadDocument&amp;docid=27514205\">APIs.PDF</a></span></p>\n\n<p style=\"margin-left:35.4pt\">2.2.4 Keep state(timestamp, last object id if required?...) to <a href=\"https://addons.heroku.com/heroku-postgresql\">postgresql</a> to avoid broken when dyno restart. should check and read when worker dyno start.</p>\n\n<div style=\"border: 1px solid rgb(204, 204, 204); padding: 5px 10px; margin-left: 40px; background: rgb(238, 238, 238);\">Note: when worker start, should check both postgresql(queue-timestamp mapping) and object configuration JSON.&nbsp;<br />\nIf one queue/object exist in postgresql but not in configuration, remove it from postgresql and delete its queue.</div>\n\n<p style=\"margin-left:14.2pt\">&nbsp;</p>\n\n<p style=\"margin-left:14.2pt\"><strong>2.3</strong> Publish data to broker queue</p>\n\n<p style=\"margin-left:35.4pt\">2.3.1 Use heroku CloudAMQP add-on as broker. There&#39;s only one single broker for the 3 apps.</p>\n\n<div style=\"border: 1px solid rgb(204, 204, 204); padding: 5px 10px; margin-left: 40px; background: rgb(238, 238, 238);\">Following two approaches both are acceptable:</div>\n\n<div style=\"border: 1px solid rgb(204, 204, 204); padding: 5px 10px; margin-left: 40px; background: rgb(238, 238, 238);\">1. Create 1 new heroku app, add&nbsp;CloudAMQP add-on (Note this is free but requires verfication by creditcard) &nbsp;to it, get&nbsp;CLOUDAMQP_URL for using in other 3 apps.<br />\n<br />\n2. Use <a href=\"http://www.cloudamqp.com\">CloudAMQP</a> directly which not require creditcard, see <a href=\"http://apps.topcoder.com/forums/?module=Thread&amp;threadID=826549&amp;start=0&amp;mc=1#1906629\">detail about how to in forum</a>.</div>\n\n<p style=\"margin-left:35.4pt\"><br />\n2.3.2 One kind of object one Queue, Queue is named by &quot;vendor:object type&quot; format such as &quot;xero:receipts&quot;, &quot;xero.payroll:employees&quot;. Don&#39;t delete/recreate queue like PoC.</p>\n\n<p style=\"margin-left:35.4pt\">2.3.3 One object one message, don&#39;t publish collections which got from poll directly.</p>\n\n<p style=\"margin-left:35.4pt\"><span style=\"color:#FF0000\"><s>2.3.4 All datetime format should be converted to standard ISO-8601 format(2014-07-23T08:39:14Z) when publish to queue</s></span>.</p>\n\n<div style=\"border: 1px solid rgb(204, 204, 204); padding: 5px 10px; margin-left: 40px; background: rgb(238, 238, 238);\"><span style=\"color:#FF0000\">This requirement is deleted,&nbsp;Just publish original object json into queue and don&#39;t make convert. note this&#39;s different with PoC done.</span></div>\n\n<p style=\"margin-left:35.4pt\">2.3.5 Don&#39;t publish repeat record(<span style=\"color:rgb(255, 0, 0)\">except updated records</span>) to queue, see 2.2.1 Note.</p>\n\n<p style=\"margin-left:35.4pt\">2.3.6 Web UI to view data stored in the broker queue: Use CloudAMQP dashboard(Note it&#39;s very slow, need wait after clicking) to handle the queue on broker, Need document details in deployment guide like PoC done. If you use CloudAMQP directly, need describe clearly.</p>\n\n<p>&nbsp;</p>\n\n<p><strong>3. Setup Test Data</strong></p>\n\n<p style=\"margin-left:40px\">Xero: <a href=\"https://www.xero.com/\">https://www.xero.com/</a> (Create <strong>Australian</strong> organisation)<br />\n<span>Deputy: </span><a href=\"http://www.deputy.com/\" style=\"line-height: 1.6;\">http://www.deputy.com/</a><br />\n<span>Vend: </span><a href=\"http://www.vendhq.com/\" style=\"line-height: 1.6;\">http://www.vendhq.com/</a></p>\n\n<div style=\"border: 1px solid rgb(204, 204, 204); padding: 5px 10px; margin-left: 40px; background: rgb(238, 238, 238);\">You need register free trial on these websites and setup all corresponding data which required for upper functions verification. <strong>Don&#39;t use API to setup test data like which in PoC Deployment guide</strong>.<br />\n<br />\n<span style=\"background-color:#FFFF00\">If you meet any issue to setup date, please ask in forum.&nbsp;</span></div>\n\n<p style=\"margin-left:40px\">&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p>4.&nbsp;<strong>Deployment guide</strong></p>\n\n<p style=\"margin-left:40px\">Should be detailed about setup/config/validate the requirements.<br />\nEach app includes own deployment guide</p>\n\n<p>&nbsp;</p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Documentation Provided</span></h2>\n\n<table class=\"confluenceTable\" style=\"border-collapse:collapse; border:2px solid rgb(153, 153, 153); font-family:arial,helvetica,verdana,sans-serif; font-size:12px; line-height:16px; margin:0px 0px 10px; padding:0px; vertical-align:top\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<th style=\"background-color:rgb(229, 229, 229); vertical-align:middle\"><strong>Document Name</strong></th>\n\t\t\t<th style=\"background-color:rgb(229, 229, 229); vertical-align:middle\"><strong>Document Description &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</strong></th>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color:rgb(245, 245, 245); border-color:white; vertical-align:top\">APIs.PDF</td>\n\t\t\t<td style=\"background-color:rgb(245, 245, 245); border-color:white; vertical-align:top\">API details</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color:rgb(245, 245, 245); border-color:white; vertical-align:top\">PoC_ff2.zip</td>\n\t\t\t<td style=\"background-color:rgb(245, 245, 245); border-color:white; vertical-align:top\">PoC Source Code</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<h2>&nbsp;</h2>\n",
+  "digitalRunPoints": 810,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30044674",
+  "finalFixEndDate": "2014-08-11T13:06:00.000Z",
+  "finalSubmissionGuidelines": "<h2><strong><span style=\"color:#FF0000\">Submission Deliverables</span></strong></h2>\n\n<p><span style=\"font-size:12px\">A complete list of deliverables can be viewed in the TopCoder Assembly competition Tutorial at: <a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials&nbsp;</a></span></p>\n\n<p><span style=\"font-size:12px\">Below is an overview of the deliverables:</span></p>\n\n<ul>\n\t<li><span style=\"font-size:12px\">3 separate apps per requirement.</span></li>\n\t<li><span style=\"font-size:12px\">Each includes a complete and detailed deployment documented explaining how to deploy the application including configuration information.</span></li>\n</ul>\n\n<h2><span style=\"color:#FF0000\"><strong>Final Submission</strong></span></h2>\n\n<p><span style=\"font-size:12px\">For each member, the final submission should be uploaded to the Online Review Tool.</span></p>\n\n<h2><span style=\"color:#FF0000\"><strong>Development Environment</strong></span></h2>\n\n<p><span style=\"font-size:12px\"><a href=\"https://www.heroku.com\">Heroku</a><br />\nNodejs</span></p>\n",
+  "forumId": 24553,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=24553",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 32,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-31T22:33:00.000Z",
+      "actualStartTime": "2014-07-31T22:33:00.000Z",
+      "scheduledEndTime": "2014-07-31T22:34:00.000Z",
+      "actualendTime": "2014-07-31T22:34:00.000Z",
+      "_id": "58123dce0659262e95e00407"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-31T22:34:00.000Z",
+      "actualStartTime": "2014-07-31T22:34:00.000Z",
+      "scheduledEndTime": "2014-08-01T00:16:00.000Z",
+      "actualendTime": "2014-08-01T00:16:00.000Z",
+      "_id": "58123dce0659262e95e00406"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-01T00:25:00.000Z",
+      "actualStartTime": "2014-08-01T00:25:00.000Z",
+      "scheduledEndTime": "2014-08-04T00:25:00.000Z",
+      "actualendTime": "2014-08-04T00:25:00.000Z",
+      "_id": "58123dce0659262e95e00405"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-01T00:31:00.000Z",
+      "actualStartTime": "2014-08-01T00:31:00.000Z",
+      "scheduledEndTime": "2014-08-08T09:59:00.000Z",
+      "actualendTime": "2014-08-08T09:59:00.000Z",
+      "_id": "58123dce0659262e95e00404"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-08T09:59:00.000Z",
+      "actualStartTime": "2014-08-08T09:59:00.000Z",
+      "scheduledEndTime": "2014-08-08T15:28:00.000Z",
+      "actualendTime": "2014-08-08T15:28:00.000Z",
+      "_id": "58123dce0659262e95e00403"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-08T15:28:00.000Z",
+      "actualStartTime": "2014-08-08T15:28:00.000Z",
+      "scheduledEndTime": "2014-08-10T05:40:00.000Z",
+      "actualendTime": "2014-08-10T05:40:00.000Z",
+      "_id": "58123dce0659262e95e00402"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-10T05:40:00.000Z",
+      "actualStartTime": "2014-08-10T05:40:00.000Z",
+      "scheduledEndTime": "2014-08-11T05:40:00.000Z",
+      "actualendTime": "2014-08-11T05:40:00.000Z",
+      "_id": "58123dce0659262e95e00401"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-11T05:40:00.000Z",
+      "actualStartTime": "2014-08-11T05:40:00.000Z",
+      "scheduledEndTime": "2014-08-11T06:02:00.000Z",
+      "actualendTime": "2014-08-11T06:02:00.000Z",
+      "_id": "58123dce0659262e95e00400"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-11T06:02:00.000Z",
+      "actualStartTime": "2014-08-11T06:02:00.000Z",
+      "scheduledEndTime": "2014-08-11T06:11:00.000Z",
+      "actualendTime": "2014-08-11T06:11:00.000Z",
+      "_id": "58123dce0659262e95e003ff"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-11T06:11:00.000Z",
+      "actualStartTime": "2014-08-11T06:11:00.000Z",
+      "scheduledEndTime": "2014-08-11T13:06:00.000Z",
+      "actualendTime": "2014-08-11T13:06:00.000Z",
+      "_id": "58123dce0659262e95e003fe"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-11T13:06:00.000Z",
+      "actualStartTime": "2014-08-11T13:06:00.000Z",
+      "scheduledEndTime": "2014-08-11T13:41:00.000Z",
+      "actualendTime": "2014-08-11T13:41:00.000Z",
+      "_id": "58123dce0659262e95e003fd"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-11T13:41:00.000Z",
+      "actualStartTime": "2014-08-11T13:41:00.000Z",
+      "scheduledEndTime": "2014-08-16T13:41:00.000Z",
+      "actualendTime": "2014-08-16T13:41:00.000Z",
+      "_id": "58123dce0659262e95e003fc"
+    }
+  ],
+  "platforms": [
+    "Heroku",
+    "NodeJS"
+  ],
+  "postingDate": "2014-08-01T00:25:00.000Z",
+  "prize": [
+    1800,
+    900
+  ],
+  "projectId": 7612,
+  "registrants": [
+    {
+      "handle": "smart_raghavan",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-01T00:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e003fb"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "16%",
+      "registrationDate": "2014-08-01T02:06:00.000Z",
+      "submissionDate": null,
+      "rating": "696",
+      "colorStyle": "color: #999999",
+      "_id": "58123dce0659262e95e003fa"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-01T02:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e003f9"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-01T03:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e003f8"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "26%",
+      "registrationDate": "2014-08-01T03:24:00.000Z",
+      "submissionDate": null,
+      "rating": "1085",
+      "colorStyle": "color: #00A900",
+      "_id": "58123dce0659262e95e003f7"
+    },
+    {
+      "handle": "dezl",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-01T05:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e003f6"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "100%",
+      "registrationDate": "2014-08-01T05:23:00.000Z",
+      "submissionDate": "2014-08-07T11:30:00.000Z",
+      "rating": "2133",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58123dce0659262e95e003f5"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-01T05:27:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58123dce0659262e95e003f4"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "6%",
+      "registrationDate": "2014-08-01T05:54:00.000Z",
+      "submissionDate": null,
+      "rating": "1032",
+      "colorStyle": "color: #00A900",
+      "_id": "58123dce0659262e95e003f3"
+    },
+    {
+      "handle": "kerdosa",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-01T05:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e003f2"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-08-01T05:58:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58123dce0659262e95e003f1"
+    },
+    {
+      "handle": "michael_tang",
+      "reliability": "0%",
+      "registrationDate": "2014-08-01T07:32:00.000Z",
+      "submissionDate": null,
+      "rating": "497",
+      "colorStyle": "color: #999999",
+      "_id": "58123dce0659262e95e003f0"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-01T08:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e003ef"
+    },
+    {
+      "handle": "clocy",
+      "reliability": "0%",
+      "registrationDate": "2014-08-01T08:39:00.000Z",
+      "submissionDate": null,
+      "rating": "1307",
+      "colorStyle": "color: #6666FF",
+      "_id": "58123dce0659262e95e003ee"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "0%",
+      "registrationDate": "2014-08-01T08:54:00.000Z",
+      "submissionDate": null,
+      "rating": "1391",
+      "colorStyle": "color: #6666FF",
+      "_id": "58123dce0659262e95e003ed"
+    },
+    {
+      "handle": "jackchongs",
+      "reliability": "100%",
+      "registrationDate": "2014-08-01T09:32:00.000Z",
+      "submissionDate": null,
+      "rating": "879",
+      "colorStyle": "color: #999999",
+      "_id": "58123dce0659262e95e003ec"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-01T09:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e003eb"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "6%",
+      "registrationDate": "2014-08-01T11:36:00.000Z",
+      "submissionDate": null,
+      "rating": "895",
+      "colorStyle": "color: #999999",
+      "_id": "58123dce0659262e95e003ea"
+    },
+    {
+      "handle": "halbcoder",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-01T12:34:00.000Z",
+      "submissionDate": null,
+      "rating": "607",
+      "colorStyle": "color: #999999",
+      "_id": "58123dce0659262e95e003e9"
+    },
+    {
+      "handle": "swengko",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-01T14:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e003e8"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-01T15:10:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58123dce0659262e95e003e7"
+    },
+    {
+      "handle": "J2A",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-02T01:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e003e6"
+    },
+    {
+      "handle": "NoRKin",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-02T03:04:00.000Z",
+      "submissionDate": null,
+      "rating": "532",
+      "colorStyle": "color: #999999",
+      "_id": "58123dce0659262e95e003e5"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-08-02T07:25:00.000Z",
+      "submissionDate": null,
+      "rating": "1031",
+      "colorStyle": "color: #00A900",
+      "_id": "58123dce0659262e95e003e4"
+    },
+    {
+      "handle": "sweetu",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-02T08:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e003e3"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-02T08:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e003e2"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-02T11:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e003e1"
+    },
+    {
+      "handle": "seeef",
+      "reliability": "40%",
+      "registrationDate": "2014-08-02T23:51:00.000Z",
+      "submissionDate": null,
+      "rating": "1012",
+      "colorStyle": "color: #00A900",
+      "_id": "58123dce0659262e95e003e0"
+    },
+    {
+      "handle": "aks.coolhunk",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-03T06:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e003df"
+    },
+    {
+      "handle": "flytoj2ee",
+      "reliability": "40%",
+      "registrationDate": "2014-08-03T06:52:00.000Z",
+      "submissionDate": null,
+      "rating": "1574",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58123dce0659262e95e003de"
+    },
+    {
+      "handle": "bluenet",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-03T12:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e003dd"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2014-08-03T18:14:00.000Z",
+      "submissionDate": null,
+      "rating": "1373",
+      "colorStyle": "color: #6666FF",
+      "_id": "58123dce0659262e95e003dc"
+    }
+  ],
+  "registrationEndDate": "2014-08-04T00:25:00.000Z",
+  "reliabilityBonus": 360,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-08-08T09:59:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 97.37,
+      "finalScore": 98.72,
+      "points": 810,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-08-07T11:30:00.000Z",
+      "_id": "58123dce0659262e95e00408"
+    }
+  ],
+  "technology": [
+    "JSON",
+    "Node.js",
+    "REST"
+  ]
+}

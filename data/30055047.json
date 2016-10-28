@@ -1,0 +1,659 @@
+{
+  "_id": 30055047,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:50:59.022Z",
+  "appealsEndDate": "2016-08-27T00:57:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Brilliant Careers App - Essential Skills NodeJS API Code Challenge",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">We have a nodejs API and in this challenge we want to add new set of endpoints to it.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Read specification carefully and let us know if you have any questions.</span></p>\n\n<h1><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:26.6667px\">Challenge Requirements</span></h1>\n\n<h3><u>UI Prototype</u></h3>\n\n<p><u><a href=\"https://brilliant-careers-static.herokuapp.com/\" style=\"text-decoration:none;\">https://brilliant-careers-static.herokuapp.com/</a></u></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">We are building API Endpoints for the &ldquo;Essential Skills&rdquo; pages, it will contain:</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Set of Modules</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Each Module will contain set of Activities</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Each Activity will have one or more lessons where user need to interact and provide answers.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- User can view their progress of each Module and Activity.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Please check the UI prototype, you are welcome to propose any improvements to the API endpoints in scope.</span></p>\n\n<h3><u>Base Code</u></h3>\n\n<p>Base API code is provided in challenge forums as a git folder. Use it to submit a patch file.</p>\n\n<h3><u>Model Schema</u></h3>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">You are provided with ERD in challenge forums for the models in scope.</span></p>\n\n<h3><u>API Endpoints</u></h3>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">You will build the following endpoints in this challenge :</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- User Essential Skills Summary</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Route: GET /ES/summary</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Used in this page </span><a href=\"https://brilliant-careers-static.herokuapp.com/Essential_Skills.html\" style=\"text-decoration:none;\"><u>https://brilliant-careers-static.herokuapp.com/Essential_Skills.html</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> </span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This is protected endpoint (means user must be logged in)</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Logic</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Should return the following user information :</span></p>\n\n<p style=\"margin-left:108pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Last time user worked on the essential skills, this information is pulled by reading the last time we have a record for &nbsp;user_activities for this user of type &lsquo;started_lesson&rsquo;.</span></p>\n\n<p style=\"margin-left:108pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Max Potential Points User can accumulate, this information by sum the &lsquo;total_potential_points&rsquo; of all modules records.</span></p>\n\n<p style=\"margin-left:108pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- The badge earned when completing all modules, this is a configured badge id, we pull its information from table.</span></p>\n\n<p style=\"margin-left:108pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- User progress is calculated by sum number of all module activities divided by sum of user_activities#type == &lsquo;completed_lesson&rsquo; for the user.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- GET User Activities</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Route : GET /ES/activities</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Used in this page </span><a href=\"https://brilliant-careers-static.herokuapp.com/Essential_Skills.html\" style=\"text-decoration:none;\"><u>https://brilliant-careers-static.herokuapp.com/Essential_Skills.html</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> </span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This endpoint is protected</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Retrieves latest user_activities in Essential Skills area where display is 1 (true).</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Pagination parameters are input, if not provided, default values should be use.</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Retrieve the latest user activities in descending order with pagination enforced.</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Type of user activities</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Start_lesson : when user starts a lesson (display : 0)</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Completed_lesson: when user completes a lesson in activity and earn points (display : 0)</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- points_earned : when user earn new points from completing all activity lessons (display : 1)</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Badge_earned: when user earn a new badge (display : 1)</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Activity_completed: when user complete activity (display : 0)</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Essential Skills Leaderboard</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Route : GET /ES/leaderboard</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Used in this page </span><a href=\"https://brilliant-careers-static.herokuapp.com/Essential_Skills.html\" style=\"text-decoration:none;\"><u>https://brilliant-careers-static.herokuapp.com/Essential_Skills.html</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> </span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Retrieves the members leaderboard.</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This endpoint is protected</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Pagination parameters are input, if not provided, default values should be use.</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Sum the users_answer points, grouped by user_id, and ordered using aggregated points in descending order.</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Retrieve users who completed the modules using points in descending order with pagination enforced.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- User Essential Skills Modules</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Route :GET &nbsp;/ES/modules</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Used in this page </span><a href=\"https://brilliant-careers-static.herokuapp.com/Essential_Skills.html\" style=\"text-decoration:none;\"><u>https://brilliant-careers-static.herokuapp.com/Essential_Skills.html</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> </span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Used to retrieve list of modules</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This endpoint is protected.</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This will return the modules entries, it should include :</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Associated activities count, total potential points from all activities</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- The progress user completed of each module by sum number of lessons in the module activities divided by user_activities where type is &lsquo;lesson_completed&rsquo; of that module, so data should be grouped by module_id</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Total points earned per module for that user aggregate the points earned in user_activities of type &lsquo;lesson_completd&rsquo; group by module_id.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- User Module Summary</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Route : GET /ES/module/{id}</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Used in this screen </span><a href=\"https://brilliant-careers-static.herokuapp.com/Essential_Skills_Module.html\" style=\"text-decoration:none;\"><u>https://brilliant-careers-static.herokuapp.com/Essential_Skills_Module.html</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> &nbsp;</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Returns module details including user progress/summary for that module</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This endpoint is protected</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- The endpoint returns : </span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Module fields, including badge child populated</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Last time user worked on the module, this is by return the last time user started or completed a lesson in that module, from user_activities table.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- The user progress in module by sum number of module activities / completed lessons in the module (user_activities#type == &lsquo;lesson_completed&rsquo;)</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- User Module Activities Summary</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Route : GET /ES/module/{id}/activities</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Used in this screen </span><a href=\"https://brilliant-careers-static.herokuapp.com/Essential_Skills_Module.html\" style=\"text-decoration:none;\"><u>https://brilliant-careers-static.herokuapp.com/Essential_Skills_Module.html</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> </span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This endpoint is protected</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This endpoint returns :</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Activity record fields</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Total points user earned in this activity by aggregate it from user_activities where type is &lsquo;lesson_completed&rsquo;</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Total time user spent in this activity lessons by aggregate the time from user_answers table.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Return the first lesson ID of this activity where user has not started/completed yet, by reading activity_lessons#right_lesson_id of last completed lesson by user. If user completed all lessons this value will be first lesson id as user can redo the lessons from beginning.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Start a lesson</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Route : POST /ES/activity{id}/start_lesson/{id}</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Used in this screen </span><a href=\"https://brilliant-careers-static.herokuapp.com/Essential_Skills_Activity.html\" style=\"text-decoration:none;\"><u>https://brilliant-careers-static.herokuapp.com/Essential_Skills_Activity.html</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> </span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- We call this endpoint to track user starting to work on an activity/lesson.</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This will add new entry to user_activites of type &lsquo;start_lesson&rsquo;, it set date as current date, and set module_id and activity_id as well.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Get Activity lessons</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Route : GET /ES/activity/{id}/lessons</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Used in this screen </span><a href=\"https://brilliant-careers-static.herokuapp.com/Essential_Skills_Activity.html\" style=\"text-decoration:none;\"><u>https://brilliant-careers-static.herokuapp.com/Essential_Skills_Activity.html</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> </span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This endpoint is protected.</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Returns list of activity_lessons with possible answers values from lesson_answers.</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- If user already made answer for any question, then user response should be pulled from user_answers along with progress value (number of lessons / completed lessons), and the total time spent on the activity (aggregate user_answers#time).</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Submit Lesson Answers</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Route: POST /ES/lesson/{id}/answers</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Used in this screen </span><a href=\"https://brilliant-careers-static.herokuapp.com/Essential_Skills_Activity.html\" style=\"text-decoration:none;\"><u>https://brilliant-careers-static.herokuapp.com/Essential_Skills_Activity.html</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> </span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This endpoint is protected</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This will submit the answers selected by user, it will perform calculation for earned points by the activity. Assign badge if user completed the module activities.</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- So this endpoint should do the following :</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Validate answers is within the allowed range/type.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Insert answers in user_answers table of type &lsquo;lesson_completed&rsquo;, log time, and point earned by each answer, and date of inserted record.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Check if lesson has a right adjacent lesson then return it, if not, then activity is completed, then :</span></p>\n\n<p style=\"margin-left:108pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Insert new record in user_activities of type &lsquo;activity_completed&rsquo;, </span></p>\n\n<p style=\"margin-left:108pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Get right adjacent activity id of current activity and return it in response.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- If user completed the activities of the module, then :</span></p>\n\n<p style=\"margin-left:108pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Assign user module badge, and return it in response.</span></p>\n\n<p style=\"margin-left:108pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Log user_activities of type &lsquo;module_completed&rsquo; with all proper information needed.</span></p>\n\n<p style=\"margin-left:108pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Return right adjacent module id.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Response should also include :</span></p>\n\n<p style=\"margin-left:108pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Total points user earned from completing the lesson</span></p>\n\n<p style=\"margin-left:108pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Total points user earned from completing the activity</span></p>\n\n<h3><u>User Answers Validation and Points Calculation</u></h3>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">The Angluarjs app will have the activity lessons templates created in the angularjs app as html templates. The backend in this phase only require to pull the question answers if user already done the lesson earlier, and to store user answers of the lessons.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Before storing the answers, we need to perform validation for the answers, there is no right or wrong, it is only validation that answer is valid and in range of possible answers of the lesson in scope.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">After validating answers, backend will assign points to each answer and store in user_answers.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">We are going to provide you with 3 sample documents of the first 3 modules, each activity in these modules has completely unique lessons. You are required to suggest a solution for how to validate the answers, assign points, and ability to retrieve these answers.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">The suggested approach is to hard code the validation by implementing a custom validator for each lesson, where validator name can be configured in activity_lessons table, so when submitting the answers it will delegate to the validator class of that lesson to validate answers, and return calculated points for the answers.</span></p>\n\n<h2><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:21.3333px\">Module Documents</span></h2>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">You are provided with three documents, each represents a module with multiple activities, use them to write a realistic api tests calls. We want to see your api works with this content as it will be used in production.</span></p>\n\n<h2><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:21.3333px\">Notes</span></h2>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Prefix for api routes : /api/</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- All api endpoints input parameters should be properly validated.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Error messages should be in json format, with fields : message, error code, and error flag (true).</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Postman file should be updated with proper endpoints and test cases.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Proper logging should be added for all endpoints.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- All code must be linted using eslint.com</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- All code must be properly documented.</span></p>\n\n<h2><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:21.3333px\">Technology Stack</span></h2>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- NodeJS 4.x</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Postgres 9.4</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Heroku</span></p>\n\n<h2><span style=\"font-size:13px\">���</span></h2>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30055047",
+  "finalSubmissionGuidelines": "<h2><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:21.3333px\">Deliverables</span></h2>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Git patch file that include all changes.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Deployment guide should be the README filed updated with all required steps to deploy and test your app locally and on heroku.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Verification document.</span></p>\n",
+  "forumId": 33844,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33844",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 59,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-19T13:50:00.000Z",
+      "actualStartTime": "2016-08-19T13:50:00.000Z",
+      "scheduledEndTime": "2016-08-24T13:51:00.000Z",
+      "actualendTime": "2016-08-24T13:51:00.000Z",
+      "_id": "58123e83e0be5f30ae56355a"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-19T13:55:00.000Z",
+      "actualStartTime": "2016-08-19T13:55:00.000Z",
+      "scheduledEndTime": "2016-08-24T13:51:00.000Z",
+      "actualendTime": "2016-08-24T13:51:00.000Z",
+      "_id": "58123e83e0be5f30ae563559"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-24T13:51:00.000Z",
+      "actualStartTime": "2016-08-24T13:51:00.000Z",
+      "scheduledEndTime": "2016-08-26T13:59:00.000Z",
+      "actualendTime": "2016-08-26T13:59:00.000Z",
+      "_id": "58123e83e0be5f30ae563558"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-26T13:59:00.000Z",
+      "actualStartTime": "2016-08-26T13:59:00.000Z",
+      "scheduledEndTime": "2016-08-26T22:10:00.000Z",
+      "actualendTime": "2016-08-26T22:10:00.000Z",
+      "_id": "58123e83e0be5f30ae563557"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-26T22:10:00.000Z",
+      "actualStartTime": "2016-08-26T22:10:00.000Z",
+      "scheduledEndTime": "2016-08-27T00:57:00.000Z",
+      "actualendTime": "2016-08-27T00:57:00.000Z",
+      "_id": "58123e83e0be5f30ae563556"
+    }
+  ],
+  "platforms": [
+    "NodeJS"
+  ],
+  "postingDate": "2016-08-19T13:50:00.000Z",
+  "prize": [
+    1400,
+    700
+  ],
+  "projectId": 10343,
+  "registrants": [
+    {
+      "handle": "Sky_",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T13:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563555"
+    },
+    {
+      "handle": "veshu",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T14:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563554"
+    },
+    {
+      "handle": "ecavalier313",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T14:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563553"
+    },
+    {
+      "handle": "sharvit",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T15:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563552"
+    },
+    {
+      "handle": "halbcoder",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T15:29:00.000Z",
+      "submissionDate": "2016-08-24T11:26:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563551"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T15:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563550"
+    },
+    {
+      "handle": "Sumeet.Khirwal",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T16:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56354f"
+    },
+    {
+      "handle": "quotemridul",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T17:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56354e"
+    },
+    {
+      "handle": "jackchongs",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T19:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56354d"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T19:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56354c"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T19:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56354b"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T19:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56354a"
+    },
+    {
+      "handle": "uttpal25993",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T20:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563549"
+    },
+    {
+      "handle": "anjik",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T21:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563548"
+    },
+    {
+      "handle": "ecampbell565",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T21:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563547"
+    },
+    {
+      "handle": "smatsumoto",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T23:05:00.000Z",
+      "submissionDate": "2016-08-24T13:13:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563546"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T23:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563545"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T23:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563544"
+    },
+    {
+      "handle": "zsudraco",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T01:25:00.000Z",
+      "submissionDate": "2016-08-23T09:18:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563543"
+    },
+    {
+      "handle": "TopG",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T02:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563542"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T03:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563541"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T03:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563540"
+    },
+    {
+      "handle": "xiufei",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T03:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56353f"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T04:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56353e"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T04:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56353d"
+    },
+    {
+      "handle": "krishna_b",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T04:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56353c"
+    },
+    {
+      "handle": "twds",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T06:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56353b"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T06:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56353a"
+    },
+    {
+      "handle": "kiril.kartunov",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T07:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563539"
+    },
+    {
+      "handle": "sapila",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T07:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563538"
+    },
+    {
+      "handle": "pnomarev",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T07:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563537"
+    },
+    {
+      "handle": "Indemar",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T07:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563536"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T09:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563535"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T10:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563534"
+    },
+    {
+      "handle": "daga_sumit",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T11:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563533"
+    },
+    {
+      "handle": "prastowo.arie",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T13:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563532"
+    },
+    {
+      "handle": "zaixiang",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T15:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563531"
+    },
+    {
+      "handle": "mayank1892",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T16:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563530"
+    },
+    {
+      "handle": "DimaKorn",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T17:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56352f"
+    },
+    {
+      "handle": "mehblahwhatever",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T17:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56352e"
+    },
+    {
+      "handle": "iiegor",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T19:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56352d"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T21:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56352c"
+    },
+    {
+      "handle": "Amith",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-21T01:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56352b"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-21T03:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56352a"
+    },
+    {
+      "handle": "okuni",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-21T06:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563529"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-21T06:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563528"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-21T10:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563527"
+    },
+    {
+      "handle": "wudi123",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-21T13:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563526"
+    },
+    {
+      "handle": "Colossalfy",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-21T14:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563525"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-22T03:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563524"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-22T07:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563523"
+    },
+    {
+      "handle": "tippingcoder",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-22T10:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563522"
+    },
+    {
+      "handle": "mbis",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-22T15:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563521"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-22T21:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563520"
+    },
+    {
+      "handle": "thkang91",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-23T07:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56351f"
+    },
+    {
+      "handle": "dodoldol",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-23T08:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56351e"
+    },
+    {
+      "handle": "Aysun",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-23T12:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56351d"
+    },
+    {
+      "handle": "rtty",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-23T12:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56351c"
+    },
+    {
+      "handle": "zeasratwde",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-23T13:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56351b"
+    }
+  ],
+  "registrationEndDate": "2016-08-24T13:51:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-08-24T13:51:00.000Z",
+  "submissions": [
+    {
+      "handle": "zsudraco",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 95,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-08-23T09:18:00.000Z",
+      "_id": "58123e83e0be5f30ae56355d"
+    },
+    {
+      "handle": "halbcoder",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 91.25,
+      "finalScore": 91.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-08-24T11:26:00.000Z",
+      "_id": "58123e83e0be5f30ae56355c"
+    },
+    {
+      "handle": "smatsumoto",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 86.25,
+      "finalScore": 86.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-08-24T13:13:00.000Z",
+      "_id": "58123e83e0be5f30ae56355b"
+    }
+  ],
+  "technology": [
+    "API",
+    "Node.js",
+    "PostgreSQL"
+  ]
+}

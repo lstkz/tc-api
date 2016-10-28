@@ -1,0 +1,1328 @@
+{
+  "_id": 30052933,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:51:40.205Z",
+  "appealsEndDate": "2016-02-26T03:59:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Python Spark Recommendation Engine for Broadcaster",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Topcoder has a client that is developing their ability to provide television and online program recommendations to their viewing public. &nbsp;In order to do this, they are building a recommendation engine by implementing Collaborative Filtering based on Apache Spark using a Python interface. &nbsp;This client is hoping that the Topcoder community can help them refine their recommendation engine and also develop some visualizations that provide intuitions about the viewing habits of their customers.</span></span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">In this challenge, we&rsquo;re going to be laying the groundwork for future work by implementing a Collaborative Filtering Application based on the Spark mlib library:</span></p>\n\n<p><a href=\"http://spark.apache.org/docs/latest/mllib-collaborative-filtering.html\" style=\"line-height: 1.6; text-decoration: none;\"><u>http://spark.apache.org/docs/latest/mllib-collaborative-filtering.html</u></a></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">This library uses the alternating least squares algorithm to learn latent factors. &nbsp;&nbsp;Fortunately, we don&rsquo;t have to start from ground zero when we&rsquo;re developing our solution. &nbsp;There is a movie recommendation system which has been developed as a tutorial for mlib collaborative filtering which we can use as a starting point for this system:</span></p>\n\n<p><a href=\"https://databricks-training.s3.amazonaws.com/movie-recommendation-with-mllib.html\" style=\"line-height: 1.6; text-decoration: none;\"><u>https://databricks-training.s3.amazonaws.com/movie-recommendation-with-mllib.html</u></a></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">The goal of this challenge provide a program recommendation system using the movie-recommendation system as a starting point. &nbsp;&nbsp;Of course, you won&rsquo;t simply be able to cut and paste code and get this to work. &nbsp;The datasets are similar but not the same. &nbsp;The original data set for the tutorial can be found </span><a href=\"https://s3-us-west-2.amazonaws.com/databricks-meng/usb.zip\" style=\"line-height: 1.6; text-decoration: none;\"><u>here</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">. &nbsp;The format of the movie-recommendation files can be found in the &lt;installation directory&gt;/usb/data/movielens/medium. &nbsp;</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">The data for the new collaborative filtering system has been set up to make the transition as straightforward as possible. &nbsp;Just as in the movie-recommendation tutorial, we&rsquo;ve created three files for you:</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">programs.csv - lists the programs and the corresponding genres associated with the shows</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">viewers.csv - list the anonymized viewer data along with their gender and birth dates</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">views.csv - lists the viewer ids along with the number of times each viewer has watched a show</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Here is the data dictionary for the files:</span></p>\n\n<p dir=\"ltr\"><span><strong>Programs.csv</strong></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">ProgramId: Integer - &nbsp;PK for the Program</span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">ProgramName: String - Name of the Program</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Genre: &nbsp;Name of the Genre -- these have been obfuscated but the original values where strings such as &lsquo;Comedy&rsquo;, &lsquo;Drama&rsquo;, etc.</span></p>\n\n<p dir=\"ltr\"><span><strong>Viewers.csv</strong></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">ViewerId: &nbsp;Integer - PK for a viewer</span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Gender: &nbsp;Enum (&lsquo;m&rsquo;, &lsquo;f&rsquo;, &lsquo;u&rsquo;) Male, Female, Unknown</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">DateOfBirth: &nbsp;Date - Viewer Birth Date</span></p>\n\n<p dir=\"ltr\"><span><strong>Views.csv</strong></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">ViewerId: Integer - FK to Viewer</span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Source: Enum(&lsquo;Source 1&rsquo;, &lsquo;Source 2&rsquo;, &lsquo;Source 3&rsquo;, &lsquo;Source 4&rsquo;) - these values have been obfuscated but they represent the viewing mechanism/channel the viewers used to watch the show such as a web interface or through a mobile device.</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">MostRecentLocalDateKey: &nbsp;Date of most recent view</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">MostRecentTimeOfVisit: &nbsp;Timestamp of most recent view</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">ProgramId: &nbsp;Integer - FK to Program</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">NumberOfViews: Number of times a viewer watch a particular program on a particular source in the year 2015.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">You&rsquo;ll need to adjust the data input processes to parse .csv files rather than working with the &ldquo;::&rdquo; delimiter that is used in the movie recommendation tutorial.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Our client has more ambitious goals for this application than simply providing a set of program recommendations for an individual viewer. &nbsp;&nbsp;Here are the requirements for the application:</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Requirement #1: &nbsp;As part of this challenge, you should write a function which displays a listing of shows sorted in descending order by potential audience size. &nbsp;The list should display the show name, the genres, and the number of viewers which have might have a preference for each show. &nbsp;Please also display the median viewer for each show in terms of gender and birth date. &nbsp;If this is computationally prohibitive, you can limit the list to the top X shows.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Requirement #2: &nbsp;It would also be interesting to display the actual audience viewing statistics as well as the potential ones. &nbsp;Can you also write a function which displays the lists of shows based on the actual viewing statistics? &nbsp;&nbsp;The list should display the show name, the genres, and the number of viewers which have might viewed each program. &nbsp;Please also display the median viewer for each show in terms of gender and birth date. &nbsp;&nbsp;If this is computationally prohibitive, you can limit the list to the top X shows.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Requirement #3: &nbsp;As part of your submission you should discuss what steps you&rsquo;ve taken to minimize Root Mean Squared Error and how the submission compares to naive baseline. &nbsp;For example, you could explain the data partitioning process you completed for your training, validation, and testing sets and how that process generated different error results.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Requirement #4: &nbsp;(Optional) &nbsp;Create a new function which measures </span><a href=\"https://en.wikipedia.org/wiki/Information_retrieval\" style=\"line-height: 1.6; text-decoration: none;\"><u>Mean Average Precision</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> for the various data sets. &nbsp;</span><a href=\"http://fastml.com/what-you-wanted-to-know-about-mean-average-precision/\" style=\"line-height: 1.6; text-decoration: none;\"><u>Here</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> is another article which describes Mean Average Precision in more user-friendly terms.</span></p>\n\n<p><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Requirement #5: &nbsp;(Optional) &nbsp;The core requirement here is to implement a recommendation engine using Python. &nbsp;You may use technologies other than the Python Spark mlib library and sample code. &nbsp;Of course, the recommendation engine must still process the data provided.</span></span></p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30052933",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.6667px\">You should develop this application with the Python programming language.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.6667px\">Please include all source code including data manipulation scripts with your submission zip file.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.6667px\">If you&rsquo;ve created test, training and validation files please provide a URL where those files can be downloaded. &nbsp;You don&rsquo;t need to provide those in the submission itself, but you should provide a submission.txt file in the root directory of your submission where links to your data files can be found.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.6667px\">Please document your solution including analysis of the optimizations requested in Requirement #3 above.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p><span><span style=\"background-color:transparent; font-size:14.6667px\">(Optional) If you decide to implement a MAP function and display those results, please include a description of how this was implemented in your documentation.</span></span></p>\n\t</li>\n</ol>\n",
+  "forumId": 31938,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=31938",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 123,
+  "numberOfSubmissions": 11,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-11T17:00:00.000Z",
+      "actualStartTime": "2016-02-11T17:00:00.000Z",
+      "scheduledEndTime": "2016-02-17T14:00:00.000Z",
+      "actualendTime": "2016-02-17T14:00:00.000Z",
+      "_id": "58123eace0be5f30ae566495"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-11T17:05:00.000Z",
+      "actualStartTime": "2016-02-11T17:05:00.000Z",
+      "scheduledEndTime": "2016-02-18T13:59:00.000Z",
+      "actualendTime": "2016-02-18T13:59:00.000Z",
+      "_id": "58123eace0be5f30ae566494"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-18T13:59:00.000Z",
+      "actualStartTime": "2016-02-18T13:59:00.000Z",
+      "scheduledEndTime": "2016-02-22T12:47:00.000Z",
+      "actualendTime": "2016-02-22T12:47:00.000Z",
+      "_id": "58123eace0be5f30ae566493"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-22T12:47:00.000Z",
+      "actualStartTime": "2016-02-22T12:47:00.000Z",
+      "scheduledEndTime": "2016-02-25T15:59:00.000Z",
+      "actualendTime": "2016-02-25T15:59:00.000Z",
+      "_id": "58123eace0be5f30ae566492"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-25T15:59:00.000Z",
+      "actualStartTime": "2016-02-25T15:59:00.000Z",
+      "scheduledEndTime": "2016-02-26T03:59:00.000Z",
+      "actualendTime": "2016-02-26T03:59:00.000Z",
+      "_id": "58123eace0be5f30ae566491"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-02-11T17:00:00.000Z",
+  "prize": [
+    2000,
+    1000,
+    500
+  ],
+  "projectId": 9454,
+  "registrants": [
+    {
+      "handle": "Sky_",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-11T17:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566490"
+    },
+    {
+      "handle": "albertwang",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-11T17:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56648f"
+    },
+    {
+      "handle": "ketzjs09",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-11T17:21:00.000Z",
+      "submissionDate": "2016-02-18T13:57:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56648e"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-11T17:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56648d"
+    },
+    {
+      "handle": "rajrkrish",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-11T17:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56648c"
+    },
+    {
+      "handle": "samlighty",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-11T17:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56648b"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-11T19:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56648a"
+    },
+    {
+      "handle": "TheLoneRanger14",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-11T19:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566489"
+    },
+    {
+      "handle": "cjalmeida",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-11T19:29:00.000Z",
+      "submissionDate": "2016-02-18T03:57:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566488"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-11T19:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566487"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-11T20:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566486"
+    },
+    {
+      "handle": "klo86min",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-11T20:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566485"
+    },
+    {
+      "handle": "avbngera",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-11T20:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566484"
+    },
+    {
+      "handle": "gondzo",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-11T20:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566483"
+    },
+    {
+      "handle": "abhicloudstalk",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-11T20:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566482"
+    },
+    {
+      "handle": "jaindsonvs",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-11T21:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566481"
+    },
+    {
+      "handle": "gpaes",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T02:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566480"
+    },
+    {
+      "handle": "ananthhh",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T02:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56647f"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T03:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56647e"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T05:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56647d"
+    },
+    {
+      "handle": "Rushikesh.Deshp",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T05:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56647c"
+    },
+    {
+      "handle": "a9108tc",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T05:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56647b"
+    },
+    {
+      "handle": "talesforce",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T05:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56647a"
+    },
+    {
+      "handle": "alokkulkarni",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T07:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566479"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T07:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566478"
+    },
+    {
+      "handle": "parapluplu",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T07:43:00.000Z",
+      "submissionDate": "2016-02-18T07:53:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566477"
+    },
+    {
+      "handle": "Mariselvam11986",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T07:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566476"
+    },
+    {
+      "handle": "twds",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T08:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566475"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T11:49:00.000Z",
+      "submissionDate": "2016-02-18T10:56:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566474"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T12:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566473"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T13:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566472"
+    },
+    {
+      "handle": "morotalp_ivanov",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T13:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566471"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T14:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566470"
+    },
+    {
+      "handle": "geek_geek",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T14:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56646f"
+    },
+    {
+      "handle": "kumar.virakta",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T15:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56646e"
+    },
+    {
+      "handle": "Yacino",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T15:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56646d"
+    },
+    {
+      "handle": "poletaev",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T16:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56646c"
+    },
+    {
+      "handle": "jhykes",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T17:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56646b"
+    },
+    {
+      "handle": "GameTheory",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T18:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56646a"
+    },
+    {
+      "handle": "sribharathi1427",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T19:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566469"
+    },
+    {
+      "handle": "zaleslaw",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T19:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566468"
+    },
+    {
+      "handle": "davidmbillie",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T22:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566467"
+    },
+    {
+      "handle": "kubapb",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T00:28:00.000Z",
+      "submissionDate": "2016-02-18T12:24:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566466"
+    },
+    {
+      "handle": "jkf",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T00:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566465"
+    },
+    {
+      "handle": "iainlbc",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T00:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566464"
+    },
+    {
+      "handle": "jomak73",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T00:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566463"
+    },
+    {
+      "handle": "lionelc",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T01:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566462"
+    },
+    {
+      "handle": "ajing",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T01:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566461"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T02:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566460"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T03:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56645f"
+    },
+    {
+      "handle": "deas",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T03:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56645e"
+    },
+    {
+      "handle": "moshu",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T05:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56645d"
+    },
+    {
+      "handle": "vrancic",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T06:44:00.000Z",
+      "submissionDate": "2016-02-18T12:52:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56645c"
+    },
+    {
+      "handle": "freegod",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T06:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56645b"
+    },
+    {
+      "handle": "vlad_D",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T07:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56645a"
+    },
+    {
+      "handle": "manavender.623",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T07:21:00.000Z",
+      "submissionDate": "2016-02-18T09:43:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566459"
+    },
+    {
+      "handle": "Motiur",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T08:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566458"
+    },
+    {
+      "handle": "pedro007",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T09:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566457"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T10:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566456"
+    },
+    {
+      "handle": "puneetg",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T11:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566455"
+    },
+    {
+      "handle": "lordnikonMac",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T12:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566454"
+    },
+    {
+      "handle": "linzili",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T14:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566453"
+    },
+    {
+      "handle": "devdragon",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T14:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566452"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T14:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566451"
+    },
+    {
+      "handle": "rixiac",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T15:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566450"
+    },
+    {
+      "handle": "yuchien302",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T16:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56644f"
+    },
+    {
+      "handle": "ramli",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T17:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56644e"
+    },
+    {
+      "handle": "notiv",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T20:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56644d"
+    },
+    {
+      "handle": "ashishbelokar",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T20:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56644c"
+    },
+    {
+      "handle": "bandishankar",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T22:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56644b"
+    },
+    {
+      "handle": "haipt81",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-14T04:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56644a"
+    },
+    {
+      "handle": "nickandross",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-14T05:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566449"
+    },
+    {
+      "handle": "BrainScorn",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-14T05:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566448"
+    },
+    {
+      "handle": "ptarunn",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-14T08:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566447"
+    },
+    {
+      "handle": "otanet123",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-14T09:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566446"
+    },
+    {
+      "handle": "chaman.s.toor",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-14T09:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566445"
+    },
+    {
+      "handle": "jvanet",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-14T12:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566444"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-14T13:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566443"
+    },
+    {
+      "handle": "wyj1998",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-14T14:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566442"
+    },
+    {
+      "handle": "wajih",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-14T14:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566441"
+    },
+    {
+      "handle": "bernovie",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-14T17:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566440"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-14T18:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56643f"
+    },
+    {
+      "handle": "email.kdeepak",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-14T22:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56643e"
+    },
+    {
+      "handle": "kp983",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-15T01:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56643d"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-15T01:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56643c"
+    },
+    {
+      "handle": "azael.arauz",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-15T02:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56643b"
+    },
+    {
+      "handle": "michael3lyb",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-15T05:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56643a"
+    },
+    {
+      "handle": "aprilinparis",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-15T05:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566439"
+    },
+    {
+      "handle": "miuc",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-15T05:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566438"
+    },
+    {
+      "handle": "aplavin",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-15T05:43:00.000Z",
+      "submissionDate": "2016-02-18T13:54:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566437"
+    },
+    {
+      "handle": "relativity",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-15T06:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566436"
+    },
+    {
+      "handle": "Awcrr",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-15T08:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566435"
+    },
+    {
+      "handle": "d3adbeef",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-15T08:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566434"
+    },
+    {
+      "handle": "rakesh1994",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-15T10:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566433"
+    },
+    {
+      "handle": "shubhamgarg1",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-15T10:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566432"
+    },
+    {
+      "handle": "SpeedEX",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-15T11:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566431"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-15T15:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566430"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-15T15:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56642f"
+    },
+    {
+      "handle": "doomsfearreturn",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-15T18:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56642e"
+    },
+    {
+      "handle": "cobbey",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-15T21:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56642d"
+    },
+    {
+      "handle": "mac007",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-16T00:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56642c"
+    },
+    {
+      "handle": "kalip",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-16T04:36:00.000Z",
+      "submissionDate": "2016-02-17T12:59:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56642b"
+    },
+    {
+      "handle": "svnay",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-16T08:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56642a"
+    },
+    {
+      "handle": "yunyun123",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-16T08:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566429"
+    },
+    {
+      "handle": "dianluxiaozi",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-16T08:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566428"
+    },
+    {
+      "handle": "codezhunter",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-16T09:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566427"
+    },
+    {
+      "handle": "tpcder",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-16T12:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566426"
+    },
+    {
+      "handle": "DEAugustine",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-16T15:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566425"
+    },
+    {
+      "handle": "pyrosnack",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-16T15:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566424"
+    },
+    {
+      "handle": "nekrald",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-16T15:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566423"
+    },
+    {
+      "handle": "Shugubatzul",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-16T17:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566422"
+    },
+    {
+      "handle": "a4blue",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-16T19:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566421"
+    },
+    {
+      "handle": "dcunit3d",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-16T21:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566420"
+    },
+    {
+      "handle": "paulocezar",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-17T00:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56641f"
+    },
+    {
+      "handle": "viniciusmalloc",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-17T00:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56641e"
+    },
+    {
+      "handle": "kretes",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-17T01:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56641d"
+    },
+    {
+      "handle": "tesfagabir2004",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-17T06:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56641c"
+    },
+    {
+      "handle": "republic82",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-17T07:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56641b"
+    },
+    {
+      "handle": "chetanK",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-17T07:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae56641a"
+    },
+    {
+      "handle": "AndreM",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-17T08:05:00.000Z",
+      "submissionDate": "2016-02-18T12:02:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566419"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-17T10:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566418"
+    },
+    {
+      "handle": "ogajames",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-17T13:23:00.000Z",
+      "submissionDate": "2016-02-17T13:24:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566417"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-17T13:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123eace0be5f30ae566416"
+    }
+  ],
+  "registrationEndDate": "2016-02-17T14:00:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-02-18T13:59:00.000Z",
+  "submissions": [
+    {
+      "handle": "cjalmeida",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-02-18T03:57:00.000Z",
+      "_id": "58123eace0be5f30ae5664a0"
+    },
+    {
+      "handle": "aplavin",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 96.88,
+      "finalScore": 98.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-02-18T13:54:00.000Z",
+      "_id": "58123eace0be5f30ae56649f"
+    },
+    {
+      "handle": "ketzjs09",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 88.75,
+      "finalScore": 95.63,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-02-18T13:57:00.000Z",
+      "_id": "58123eace0be5f30ae56649e"
+    },
+    {
+      "handle": "parapluplu",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 93.13,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-02-18T07:53:00.000Z",
+      "_id": "58123eace0be5f30ae56649d"
+    },
+    {
+      "handle": "manavender.623",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 93.13,
+      "finalScore": 94.38,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-02-18T09:43:00.000Z",
+      "_id": "58123eace0be5f30ae56649c"
+    },
+    {
+      "handle": "kubapb",
+      "placement": 6,
+      "screeningScore": null,
+      "initialScore": 88.75,
+      "finalScore": 93.13,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-02-18T12:24:00.000Z",
+      "_id": "58123eace0be5f30ae56649b"
+    },
+    {
+      "handle": "AndreM",
+      "placement": 7,
+      "screeningScore": null,
+      "initialScore": 63.75,
+      "finalScore": 63.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-02-18T12:02:00.000Z",
+      "_id": "58123eace0be5f30ae56649a"
+    },
+    {
+      "handle": "vrancic",
+      "placement": 8,
+      "screeningScore": null,
+      "initialScore": 60,
+      "finalScore": 63.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-02-18T12:52:00.000Z",
+      "_id": "58123eace0be5f30ae566499"
+    },
+    {
+      "handle": "testXuSanping",
+      "placement": 9,
+      "screeningScore": null,
+      "initialScore": 46.25,
+      "finalScore": 46.25,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-02-18T10:56:00.000Z",
+      "_id": "58123eace0be5f30ae566498"
+    },
+    {
+      "handle": "kalip",
+      "placement": 10,
+      "screeningScore": null,
+      "initialScore": 23.75,
+      "finalScore": 23.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-02-17T12:59:00.000Z",
+      "_id": "58123eace0be5f30ae566497"
+    },
+    {
+      "handle": "ogajames",
+      "placement": 11,
+      "screeningScore": null,
+      "initialScore": 23.75,
+      "finalScore": 23.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-02-17T13:24:00.000Z",
+      "_id": "58123eace0be5f30ae566496"
+    }
+  ],
+  "technology": [
+    "Data Science",
+    "Python"
+  ]
+}

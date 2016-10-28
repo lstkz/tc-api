@@ -1,0 +1,483 @@
+{
+  "_id": 30051499,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:51:10.932Z",
+  "appealsEndDate": "2015-10-07T17:30:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "NASA Search Portal - Integrate Frontend Code with Solr Cloud",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h3>Project Overview</h3>\n\n<p>NASA needs your help building an enterprise search portal. NASA &amp; Topcoder have completed the design and frontend code for a search interface that is intuitive for beginner to advanced users which allows users to search against NASA intranet as well as public internet data sets.&nbsp;</p>\n\n<p>As part of this project, we are integrating a new search engine (Solr Cloud) which will serve as a backend to the Enterprise Search User Interface and seek to expand the capabilities of the existing application. Please see below for contest specific requirements.</p>\n\n<h3>Challenge Overview</h3>\n\n<p>We have already completed the frontend design + prototype for the search portal. We also have a Solr Cloud search platform (backend) with data.</p>\n\n<p>As part of this challenge, you will need to create a web application server to host the frontend and integrate it with the Solr Cloud Platform to allow users to execute search queries.</p>\n\n<h3>Submission Guidelines</h3>\n\n<p>----Deployment Guide. Please use this <a href=\"http://apps.topcoder.com/wiki/download/attachments/22249797/DeploymentGuideTemplate.doc?version=1\">template</a>.<br />\n----The frontend and the server code hosting it.</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30051499",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalFixEndDate": "2015-10-08T16:03:00.000Z",
+  "finalSubmissionGuidelines": "<p dir=\"ltr\"><span>----Deployment Guide. Please use this&nbsp;</span><a href=\"http://apps.topcoder.com/wiki/download/attachments/22249797/DeploymentGuideTemplate.doc?version=1\" style=\"line-height: 20.8px;\">template</a><span>.</span><br />\n<span>----The frontend and the server code hosting it.</span></p>\n\n<h3>Technology Background</h3>\n\n<p>The existing UI Prototype for the challenge can be found here. Check it out and familiarize yourself with the front end for this application. There&rsquo;s also a demo of this app, running here.&nbsp;</p>\n\n<p>We are using Apache Solr Cloud for our enterprise search needs. NASA has provided us with a Docker image in which Solr Cloud has been installed. You can find the Docker image link in the contest forum.&nbsp;You will find the installation steps at the end of this document.</p>\n\n<p>We are providing this to allow you to familiarize yourself with the kind of dataset that the application will be dealing with.</p>\n\n<p>With this background, you should now be able to proceed with the requirements for the integration which are as follows:<br />\n----Host the UI Prototype in a web application server. Use Node.js (v4.1.1) for this.<br />\n<span>----</span>Organize and update the UI Prototype with AngularJS. Update the views and create controllers using AngularJS wherever appropriate.<br />\n<span>----</span>The main search in the UI should work. User should be able to enter a query and your application should interface with Solr Cloud to use the query to search and respond with the data returned by Solr Cloud.<br />\n<span>----</span>Filter in the UI should work. User should be able to exclude words and exclude domains. For excluding domains, you will refer to the &ldquo;host&rdquo; field in the data schema.<br />\n<span>----</span>User should be able to save their search query. In the UI Prototype, you can find this after the search results are displayed - on the left sidebar at the bottom. You can store this using the HTML5 local storage.<br />\n<span>----</span>On displaying the results, user should be able to restrict the number of results shown - Display n items / page feature which you will find at the bottom of the User Interface.<br />\n<span>----</span>On displaying the results, you should show the total number of results returned - you can find this just above the results display section in the UI Prototype.<br />\n<span>----</span>Finally, you should specify the amount of time taken to search for the query - this is located next to the total number of results in the UI Prototype. Note that this should indicate the time taken for Solr to search and not the time taken for the HTTP request -&gt; response cycle.</p>\n\n<p>Your application should take care of the following:<br />\n<span>----</span>Your application design should allow the application to scale - as you can see in the UI Prototype, we will be integrating many more feature such as location based filtering, date based filtering, result type based filtering etc in future challenges. Separate the controllers and services and follow the DRY principle. It should be easy for any user or developer to take the application and update it. Thus, follow best practices and &nbsp;conventions and use your best judgement.<br />\n<span>----</span>You are expected to use gulp or grunt. Have lint checks and HTML5 compatibility checks. Provide two environments - one for development and one for production. While the production version will minify any frontend scripts, the development version should not. Essentially, it should be easy to start the application in production and development modes.<br />\n<span>----</span>Make sure that you provide the Solr Cloud URL as a configuration.</p>\n\n<h3>Contest Resources</h3>\n\n<p><span>----</span>Solr Cloud: <a href=\"http://lucene.apache.org/solr/\">http://lucene.apache.org/solr/</a><br />\n<span>----</span>Frontend Code: <a href=\"https://github.com/NASA-Tournament-Lab/Search-User-Interface\">https://github.com/NASA-Tournament-Lab/Search-User-Interface</a><br />\n<span>----</span>Fronend Demo Link: <a href=\"https://demo.topcoder.com/OPM/NSP/prototype/index.html\">https://demo.topcoder.com/OPM/NSP/prototype/index.html&nbsp;</a></p>\n\n<h3>Installation of the Solr Docker image</h3>\n\n<p>To install this image, make sure that you have Docker installed and running successfully. Installation steps for Docker is out-of-scope. Your best approach is to visit the official Docker website and get the installation steps for your environment.</p>\n\n<p>Once you have downloaded the image, you can import and run it as follows (run the commands in the same location where the image was downloaded / located):</p>\n\n<p><code>$ docker import nasasolr.gz<br />\n$ docker run -d -p 8983:8983 -p 9983:9983 {image name} /bin/bash -c &quot;/opt/solr/bin/solr/ -c -m 2G; while true; do sleep 3600; done;&quot;</code></p>\n\n<p>You can now visit http://localhost:8983/solr to get the Solr interface. You will find that this contains only one core / collection which you can work with.</p>\n",
+  "forumId": 30615,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=30615",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 32,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-09-29T05:04:00.000Z",
+      "actualStartTime": "2015-09-29T05:04:00.000Z",
+      "scheduledEndTime": "2015-09-29T05:06:00.000Z",
+      "actualendTime": "2015-09-29T05:06:00.000Z",
+      "_id": "58123e8ee0be5f30ae564a8a"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-09-29T05:06:00.000Z",
+      "actualStartTime": "2015-09-29T05:06:00.000Z",
+      "scheduledEndTime": "2015-09-29T07:55:00.000Z",
+      "actualendTime": "2015-09-29T07:55:00.000Z",
+      "_id": "58123e8ee0be5f30ae564a89"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-09-29T07:56:00.000Z",
+      "actualStartTime": "2015-09-29T07:56:00.000Z",
+      "scheduledEndTime": "2015-10-01T07:57:00.000Z",
+      "actualendTime": "2015-10-01T07:57:00.000Z",
+      "_id": "58123e8ee0be5f30ae564a88"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-09-29T08:01:00.000Z",
+      "actualStartTime": "2015-09-29T08:01:00.000Z",
+      "scheduledEndTime": "2015-10-04T07:54:00.000Z",
+      "actualendTime": "2015-10-04T07:54:00.000Z",
+      "_id": "58123e8ee0be5f30ae564a87"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-04T07:54:00.000Z",
+      "actualStartTime": "2015-10-04T07:54:00.000Z",
+      "scheduledEndTime": "2015-10-04T15:04:00.000Z",
+      "actualendTime": "2015-10-04T15:04:00.000Z",
+      "_id": "58123e8ee0be5f30ae564a86"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-04T15:04:00.000Z",
+      "actualStartTime": "2015-10-04T15:04:00.000Z",
+      "scheduledEndTime": "2015-10-06T11:21:00.000Z",
+      "actualendTime": "2015-10-06T11:21:00.000Z",
+      "_id": "58123e8ee0be5f30ae564a85"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-06T11:21:00.000Z",
+      "actualStartTime": "2015-10-06T11:21:00.000Z",
+      "scheduledEndTime": "2015-10-07T07:33:00.000Z",
+      "actualendTime": "2015-10-07T07:33:00.000Z",
+      "_id": "58123e8ee0be5f30ae564a84"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-07T07:33:00.000Z",
+      "actualStartTime": "2015-10-07T07:33:00.000Z",
+      "scheduledEndTime": "2015-10-07T17:30:00.000Z",
+      "actualendTime": "2015-10-07T17:30:00.000Z",
+      "_id": "58123e8ee0be5f30ae564a83"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-07T17:30:00.000Z",
+      "actualStartTime": "2015-10-07T17:30:00.000Z",
+      "scheduledEndTime": "2015-10-08T01:06:00.000Z",
+      "actualendTime": "2015-10-08T01:06:00.000Z",
+      "_id": "58123e8ee0be5f30ae564a82"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-08T01:06:00.000Z",
+      "actualStartTime": "2015-10-08T01:06:00.000Z",
+      "scheduledEndTime": "2015-10-08T11:10:00.000Z",
+      "actualendTime": "2015-10-08T11:10:00.000Z",
+      "_id": "58123e8ee0be5f30ae564a81"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-08T11:10:00.000Z",
+      "actualStartTime": "2015-10-08T11:10:00.000Z",
+      "scheduledEndTime": "2015-10-08T15:00:00.000Z",
+      "actualendTime": "2015-10-08T15:00:00.000Z",
+      "_id": "58123e8ee0be5f30ae564a80"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-08T16:04:00.000Z",
+      "actualStartTime": "2015-10-08T16:04:00.000Z",
+      "scheduledEndTime": "2015-10-09T13:21:00.000Z",
+      "actualendTime": "2015-10-09T13:21:00.000Z",
+      "_id": "58123e8ee0be5f30ae564a7f"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-08T15:01:00.000Z",
+      "actualStartTime": "2015-10-08T15:01:00.000Z",
+      "scheduledEndTime": "2015-10-08T16:03:00.000Z",
+      "actualendTime": "2015-10-08T16:03:00.000Z",
+      "_id": "58123e8ee0be5f30ae564a7e"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-08T16:03:00.000Z",
+      "actualStartTime": "2015-10-08T16:03:00.000Z",
+      "scheduledEndTime": "2015-10-08T16:04:00.000Z",
+      "actualendTime": "2015-10-08T16:04:00.000Z",
+      "_id": "58123e8ee0be5f30ae564a7d"
+    }
+  ],
+  "platforms": [
+    "NodeJS",
+    "Other"
+  ],
+  "postingDate": "2015-09-29T07:56:00.000Z",
+  "prize": [
+    1400,
+    700
+  ],
+  "projectId": 9149,
+  "registrants": [
+    {
+      "handle": "Sky_",
+      "reliability": "100%",
+      "registrationDate": "2015-09-29T07:58:00.000Z",
+      "submissionDate": "2015-10-02T14:38:00.000Z",
+      "rating": "1705",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58123e8ee0be5f30ae564a7c"
+    },
+    {
+      "handle": "karthiks416",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-29T08:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564a7b"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2015-09-29T11:57:00.000Z",
+      "submissionDate": null,
+      "rating": "972",
+      "colorStyle": "color: #00A900",
+      "_id": "58123e8ee0be5f30ae564a7a"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-29T08:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564a79"
+    },
+    {
+      "handle": "ShindouHikaru",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-29T09:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564a78"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-29T09:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564a77"
+    },
+    {
+      "handle": "igraphic",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-29T09:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564a76"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "0%",
+      "registrationDate": "2015-09-29T10:11:00.000Z",
+      "submissionDate": null,
+      "rating": "1221",
+      "colorStyle": "color: #6666FF",
+      "_id": "58123e8ee0be5f30ae564a75"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-29T12:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564a74"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-29T12:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564a73"
+    },
+    {
+      "handle": "DerekLoveCC",
+      "reliability": "13%",
+      "registrationDate": "2015-09-29T13:08:00.000Z",
+      "submissionDate": null,
+      "rating": "574",
+      "colorStyle": "color: #999999",
+      "_id": "58123e8ee0be5f30ae564a72"
+    },
+    {
+      "handle": "zeasratwde",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-29T13:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564a71"
+    },
+    {
+      "handle": "Luckyodell",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-29T14:06:00.000Z",
+      "submissionDate": null,
+      "rating": "834",
+      "colorStyle": "color: #999999",
+      "_id": "58123e8ee0be5f30ae564a70"
+    },
+    {
+      "handle": "andrei-yanovich",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-29T14:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564a6f"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-29T14:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564a6e"
+    },
+    {
+      "handle": "Urmass",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-29T15:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564a6d"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-29T15:17:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58123e8ee0be5f30ae564a6c"
+    },
+    {
+      "handle": "rajeshk87",
+      "reliability": "0%",
+      "registrationDate": "2015-09-29T15:47:00.000Z",
+      "submissionDate": null,
+      "rating": "860",
+      "colorStyle": "color: #999999",
+      "_id": "58123e8ee0be5f30ae564a6b"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-29T15:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564a6a"
+    },
+    {
+      "handle": "callmekatootie",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-29T16:10:00.000Z",
+      "submissionDate": null,
+      "rating": "381",
+      "colorStyle": "color: #999999",
+      "_id": "58123e8ee0be5f30ae564a69"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-30T01:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564a68"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-30T06:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564a67"
+    },
+    {
+      "handle": "sabbirhs",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-30T06:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564a66"
+    },
+    {
+      "handle": "wsobolewski",
+      "reliability": "0%",
+      "registrationDate": "2015-09-30T07:29:00.000Z",
+      "submissionDate": null,
+      "rating": "975",
+      "colorStyle": "color: #00A900",
+      "_id": "58123e8ee0be5f30ae564a65"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-30T09:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564a64"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-30T12:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564a63"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-30T12:31:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58123e8ee0be5f30ae564a62"
+    },
+    {
+      "handle": "son4moon",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-30T14:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564a61"
+    },
+    {
+      "handle": "kuchiki14",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-30T20:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564a60"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-01T04:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564a5f"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "0%",
+      "registrationDate": "2015-10-01T07:07:00.000Z",
+      "submissionDate": null,
+      "rating": "618",
+      "colorStyle": "color: #999999",
+      "_id": "58123e8ee0be5f30ae564a5e"
+    },
+    {
+      "handle": "twds",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-01T07:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564a5d"
+    }
+  ],
+  "registrationEndDate": "2015-10-01T07:57:00.000Z",
+  "reliabilityBonus": 280,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-10-04T07:54:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 95.75,
+      "finalScore": 97.21,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-10-02T14:38:00.000Z",
+      "_id": "58123e8ee0be5f30ae564a8b"
+    }
+  ],
+  "technology": [
+    "Angular.js",
+    "Express",
+    "Node.js"
+  ]
+}

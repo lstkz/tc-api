@@ -1,0 +1,322 @@
+{
+  "_id": 30046446,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:47:58.837Z",
+  "appealsEndDate": "2014-10-22T14:02:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Release Assembly - CSFV Registration Flow and Functionality Improvement",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2 dir=\"ltr\"><strong>Project Overview</strong></h2>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:12px\">This project, the CSFV Community Gaming website project will provide the web site infrastructure and integration of the games. This will be a web site that is available on the Internet, and also will be delivered in a form where the server and the games can be installed and used behind a firewall.</span></p>\n\n<h2 dir=\"ltr\"><strong>Challenge Task Overview</strong></h2>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">In this challenge we are making few imrpovements to Registration flow and related functionality. Also some other areas affected by registration will be updated as well.</span></p>\n\n<p dir=\"ltr\"><br />\n<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">We are addressing the following in this challenge : </span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Force checking terms of use before registering via social network.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Allow users to skip filling registration form with registering using social networks (google, twitter, and facebook)</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Add &lsquo;Resend Activation code&rsquo; email functionality.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">A</span><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">llow users to use the website without verifying their email or without having email associated with their accounts.</span></p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><strong>Simplify the Register Email Verification requirement</strong></h3>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">We want to allow users to use the website even if they have not verified their email. This needs to be updated as follow : </span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">When </span><a href=\"https://github.com/topcoderinc/csfv_socialnetwork_module/blob/master/controllers/Registration.js#L646\" style=\"text-decoration:none;\"><u>register</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> method is execute or when completing registration in general we will execute the steps in </span><a href=\"https://github.com/topcoderinc/csfv_socialnetwork_module/blob/master/controllers/Registration.js#L844-L874\" style=\"text-decoration:none;\"><u>verifyEmail</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">, it will create a user, associate it with RegistrationRequest, associate with social networks, and initiate friends.</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The above steps should exclude setting registration request entry as verified, it will remain false. Until user verify his/her email.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Email should not be set in created User. It should be null.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Update csfv_misc_module#NotificationService to exist method silently when email is not provided.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span>&nbsp;</span><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The steps we move to #register method should be no more executed in verifyEmail.</span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">User who has not verified his email cannot update his profile and will not receive any notification email as no email is set in his profile, When user click &ldquo;Edit Profile&rdquo; in his/her profile we need to add logic to check if user has verified the email, if not, we need to show a page same as screenshot </span><br />\n\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"><img src=\"https://lh5.googleusercontent.com/myDJ8teOg4WP161kdEs40mMArDxpGjrQtx1fQ940PSXNDLUqoxu5uG5sN1ADU2dnKmJghXhThCyUuV-yxNslMdt2r6SuvOi-60NB6fOR2uwPwx_hb6tTtrWFsmX153xm8A\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:213px; transform:rotate(0.00rad); width:624px\" /></span></p>\n\n\t<ul>\n\t\t<li>\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Clicking on the link will send user verification email same as the one sent during registration. The logic should check if there is email associated with the user, if not, then we show the resend activation link page (check Re-send activation link section below).</span></p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The following routes should have a validation check if user has activated account or not, if NOT then redirect user to the page as in screenshot above : </span></p>\n\n\t\t<ul>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&quot;GET /userPrivateProfile&quot;: &quot;UserPrivateProfile#viewPrivateProfile&quot;,</span></p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&quot;GET /userPrivateProfile/basicData&quot;: &quot;UserPrivateProfile#viewBasicProfile&quot;,</span></p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&quot;GET /userPrivateProfile/configuration&quot;: &quot;UserPrivateProfile#viewProfileConfiguration&quot;,</span></p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&quot;GET /userPrivateProfile/notifications&quot;: &quot;UserPrivateProfile#viewNotificationData&quot;,</span></p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&quot;GET /userPrivateProfile/privacySettings&quot;: &quot;UserPrivateProfile#viewPrivacySettings&quot;,</span></p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&quot;GET /userPrivateProfile/connections&quot;: &quot;UserPrivateProfile#viewProfileConnections&quot;,</span></p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&quot;GET /userPrivateProfile/unregister&quot;: &quot;UserPrivateProfile#viewProfileUnregistration&quot;,</span></p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&quot;POST /userPrivateProfile/saveBasicData&quot;: &quot;UserPrivateProfile#saveBasicProfile&quot;, </span></p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&quot;POST /userPrivateProfile/saveConfiguration&quot;: &quot;UserPrivateProfile#saveProfileConfiguration&quot;,</span></p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&quot;POST /userPrivateProfile/saveNotifications&quot;: &quot;UserPrivateProfile#saveNotificationsData&quot;,</span></p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&quot;POST /userPrivateProfile/savePrivacySettings&quot;: &quot;UserPrivateProfile#savePrivacySettings&quot;,</span></p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&quot;DELETE /userPrivateProfile/removeProfilePicture/:id&quot;: &quot;UserPrivateProfile#removeProfilePicture&quot;,</span></p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&quot;GET /userPrivateProfile/getProfilePicture/:username&quot;: &quot;UserPrivateProfile#getProfilePicture&quot;,</span></p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&quot;GET /userPrivateProfile/getProfilePicture/:username/:width/:height&quot;: &quot;UserPrivateProfile#getProfilePicture&quot;</span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><strong>Register via Google/Twitter/Facebook</strong></h3>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Right now when user register via Google/Twitter/Facebook we take him/her back to Register Form to accept terms of use and fill remaining fields. This should be changed as follow : </span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">When user click on any of the three social icons (google, facebook or twitter), a js function should check that terms of use is checked, if not then display error message that user must check terms of use. If the terms of use checkbox is checked then users can click on any social icon and it will take user to social network website to authorize the app and continue registration.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">You need to add a new session variable to check if terms of use was checked before proceed in any social network registration flow.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">When user register via Facebook/Google the logic should register the user and send activation email directly. We need to update logic in </span><a href=\"https://github.com/topcoderinc/csfv_socialnetwork_module/blob/master/controllers/Registration.js\" style=\"text-decoration:none;\"><u>Registration.js</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> to address this : </span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Update social networks strategies to set valid username when populating socialNetworkConnDTO entity </span><a href=\"https://github.com/topcoderinc/csfv_socialnetwork_module/blob/master/controllers/Registration.js#L240-L299\" style=\"text-decoration:none;\"><u>here</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">. If username retrieved from social network already exists then append digit incrementally to the username until the username generated is valid and available</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><a href=\"https://github.com/topcoderinc/csfv_socialnetwork_module/blob/master/controllers/Registration.js#L494\" style=\"text-decoration:none;\"><u>Facebook</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> and </span><a href=\"https://github.com/topcoderinc/csfv_socialnetwork_module/blob/master/controllers/Registration.js#L602\" style=\"text-decoration:none;\"><u>Google</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> callback functions should be updated to create registration request and send verification email </span><a href=\"https://github.com/topcoderinc/csfv_socialnetwork_module/blob/master/controllers/Registration.js#L692\" style=\"text-decoration:none;\"><u>as done here</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> instead of redirecting user to registration form page.</span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">When user register via twitter, then we will not be able to send user activation email, so the logic change should be same as </span><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">google/facebook as mentioned above but we will not send email notification, since we are silently skipping sending email if provided email is null to notification service, then no further action or changes to logic is needed here.</span></p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><strong>Register Form</strong></h3>\n\n<ul dir=\"ltr\">\n\t<li>Remove confirm password field from form.</li>\n\t<li>Update related code.</li>\n</ul>\n\n<h3 dir=\"ltr\"><strong>Re-Send Activation Link</strong></h3>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Right now we don&#39;t have a logic/functionality that allow user to send activation link again, there can be many reasons why a user would not be able to activate his email right after registration, we are implementing the following to enable this feature :</span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Add &#39;Resend Account Activation Link?&#39; link to Login page and Login windows modal : </span><br />\n\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"><img src=\"https://lh5.googleusercontent.com/hr5CDhZ01qgYSp77pSHlWAo8Xhbz-qmwLWhwI-HJzNfq-6spAZ5ObY9F986_lhZi6VKjqdMmrKYwVTYuCuojV115P-WY4pgLsyzmKF1_6RrBgPiM12lmaPja08nUAy9iNg\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:368px; transform:rotate(0.00rad); width:594px\" /></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The styling should match the screenshot above.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The views you are updating are :</span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><a href=\"https://github.com/topcoderinc/csfv_frontend_module/blob/master/views/login/LoginPage.jade\" style=\"text-decoration:none;\"><u>LoginPage.jade</u></a></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><a href=\"https://github.com/topcoderinc/csfv_frontend_module/blob/master/views/login/ShortLogin.jade\" style=\"text-decoration:none;\"><u>ShortLogin.jade</u></a></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Add &lsquo;Resend Activation Link&rsquo; to Registration pages </span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Add it to Informed Consent and Terms Of Use pages</span><br />\n\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"><img src=\"https://lh4.googleusercontent.com/JsDlcWc-XWWEx3sLpOsJdoyqLgLL5ZtNUBDkapwRfG1mB5FPAi4QZF0QhVfMeyJG-fcS2YK_xow38tWOgKibX4H0AoGES0sFZN_3EvU9jZR8AngZELb2fn_2lRdwlDADqA\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:147px; transform:rotate(0.00rad); width:624px\" /></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Add it to Registration form header</span><br />\n\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"><img src=\"https://lh4.googleusercontent.com/T38UQiNtnyial_5dbxbyezumOvMpE-OuXKhs7ryGs-rSli8cTDnqGUO_yUmHBSFatJ1GBhG7RNx6FsTPcAMlXZMsP4tNOSR2r1gB2Uc3y5PTTZadhsKQ00wenQ1vB2H7og\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:290px; transform:rotate(0.00rad); width:579px\" /></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The views you are updating for this change are : </span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><a href=\"https://github.com/topcoderinc/csfv_frontend_module/blob/master/views/login/InformedConsent.jade\" style=\"text-decoration:none;\"><u>InformedConsent.jade</u></a></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><a href=\"https://github.com/topcoderinc/csfv_frontend_module/blob/master/views/login/RegistrationForm.jade\" style=\"text-decoration:none;\"><u>RegistrationForm.jade</u></a></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Add new controller method and view to handle the &lsquo;Resend Activation Link&rsquo; request :</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Send Activation page</span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">This page is the </span><a href=\"https://github.com/topcoderinc/csfv_frontend_module/blob/master/views/login/RecoverForgottenPassword.jade\" style=\"text-decoration:none;\"><u>RecoverForgettenPassword.jade</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> but it will have different route, metadata and title : </span><br />\n\t\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"><img src=\"https://lh5.googleusercontent.com/Ka9bouYioenPpW9fKBS9weZOQEvq6hwSoFN3FLra--ZUrT1oSHp-YuqP74nO3D8fzu1XE1znDagehnHecnl1oj4n7MaETcIBfh9BLvCdiDww-S2PW0bpPMB75EkN5feamQ\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:199px; transform:rotate(0.00rad); width:497px\" /></span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Route to the page is /login/activate</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The page will have same JS frontend validation as recover password page.</span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Send activation controller method : </span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Add it to </span><a href=\"https://github.com/topcoderinc/csfv_socialnetwork_module/blob/master/controllers/Registration.js\" style=\"text-decoration:none;\"><u>csfv_social_network_module/Registration.js</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> controller.</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">New method name : sendActivationEmail</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The logic flow is as follow : </span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Ensure valid email is provided</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Retrieve record with provided email from &lsquo;RegisterationRequest&rsquo; model</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">If user already activated, then redirect user to </span><a href=\"https://github.com/topcoderinc/csfv_frontend_module/blob/master/views/login/emailAlreadyVerified.jade\" style=\"text-decoration:none;\"><u>login/emailAlreadyVerified</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> , this is same logic as </span><a href=\"https://github.com/topcoderinc/csfv_socialnetwork_module/blob/master/controllers/Registration.js#L823\" style=\"text-decoration:none;\"><u>here</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">.</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">If user is not activated, then send email verification again. Same logic as </span><a href=\"https://github.com/topcoderinc/csfv_socialnetwork_module/blob/master/controllers/Registration.js#L715-L741\" style=\"text-decoration:none;\"><u>here</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">.</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">If no user exists with provided email, send email to email notifying that no user associated with provided email. Same as we are doing it in forget password flow </span><a href=\"https://github.com/topcoderinc/csfv_frontend_module/blob/master/controllers/Login.js#L736-L738\" style=\"text-decoration:none;\"><u>here</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">.</span></p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<h3 dir=\"ltr\"><strong>Forgot Password Flow</strong></h3>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">During reset password flow, if user (registerationRequest) entry is not verified, we change it to be verified.</span></p>\n\n<h3 dir=\"ltr\"><strong>Notification Service</strong></h3>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Update csfv_misc_module to silently ignore sending email if the provided email is null/undefined.</span></p>\n\n<h3 dir=\"ltr\"><strong>Test Scenarios</strong></h3>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Update the attached test scenario to include all new scenarios implemented in this challenge.</span></p>\n\n<h3 dir=\"ltr\"><strong>General Notes</strong></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">When adding new styling, you must place in proper css file as outlined </span><a href=\"https://github.com/topcoderinc/csfv_frontend_module#csfv-frontend-module-css-changes\" style=\"text-decoration:none;\"><u>here</u></a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">When adding new rule, it should follow naming convention defined </span><a href=\"http://apps.topcoder.com/wiki/display/docs/CSFV+Forums+UI+Prototype#CSFVForumsUIPrototype-uiprototype\" style=\"text-decoration:none;\"><u>here</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">. (Ignore lint requirements)</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">When you create a view that is identical to existing view, DO NOT COPY/PASTE it, create it from scratch so you don&rsquo;t include useless or incorrect css rules or js classes that would trigger js frontend functions.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">If you are not sure about implementing any specific functionality, post in challenge forums and Copilot will give you some high level overview of what needed to be done.</span></p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><strong>Testing</strong></h3>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">For registration test scenarios not affected by this update, you need to check them against your submission before submitting to make sure you have not broken any functionality.</span></p>\n\n<h2 dir=\"ltr\"><strong>Source Code</strong></h2>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Source code exists in private github repo</span><a href=\"https://github.com/topcoderinc/\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> </span><u>https://github.com/topcoderinc/</u></a></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">If you get 404 then you need permission to access it. Request it in challenge forums, copilot will add you to the repository and you should receive email about you being added to github. Post your *github* account name when requesting access.</span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><a href=\"https://github.com/topcoderinc/csfv_frontend_module\" style=\"text-decoration:none;\"><u>csfv_frontend_module</u></a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">csfv_socialnetwork_module</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">csfv_cms_module</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">csfv_misc_module</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Other CSFV dependencies are listed in package.json of csfv_frontend_module, you can also search the topcoderinc repository to search for them.</span></p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\"><strong>Deploying the apps</strong></h2>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Post in challenge forums if you have any issue during deploying the apps.</span></p>\n",
+  "digitalRunPoints": 630,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30046446",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2014-10-23T10:42:00.000Z",
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<h2><span><strong><span style=\"color:#FF0000\"><span>Submission Deliverables</span></span></strong></span></h2>\n\n<p><span><span style=\"font-size:12px\">Below is an overview of the deliverables:</span></span></p>\n\n<ul>\n\t<li><span><span style=\"font-size:12px\">Patch file of changes.</span></span></li>\n\t<li><span>Detailed document about structure of CMS posts and metadata, and configuration needed by the page.</span></li>\n\t<li><span>Deployment document with verification screens for reviewers.</span></li>\n\t<li><span>Updated csfv_test_data_generator module if needed.</span></li>\n</ul>\n\n<h2><span><span style=\"color:#FF0000\"><strong>Final Submission</strong></span></span></h2>\n\n<p><span><span style=\"font-size:12px\">For each member, the final submission should be uploaded to the Online Review Tool.</span></span></p>\n</div>\n",
+  "forumId": 26078,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=26078",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 16,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-14T12:17:00.000Z",
+      "actualStartTime": "2014-10-14T12:17:00.000Z",
+      "scheduledEndTime": "2014-10-14T12:18:00.000Z",
+      "actualendTime": "2014-10-14T12:18:00.000Z",
+      "_id": "58123dce0659262e95e004a4"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-14T12:18:00.000Z",
+      "actualStartTime": "2014-10-14T12:18:00.000Z",
+      "scheduledEndTime": "2014-10-14T14:30:00.000Z",
+      "actualendTime": "2014-10-14T14:30:00.000Z",
+      "_id": "58123dce0659262e95e004a3"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-14T14:30:00.000Z",
+      "actualStartTime": "2014-10-14T14:30:00.000Z",
+      "scheduledEndTime": "2014-10-16T14:31:00.000Z",
+      "actualendTime": "2014-10-16T14:31:00.000Z",
+      "_id": "58123dce0659262e95e004a2"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-14T14:35:00.000Z",
+      "actualStartTime": "2014-10-14T14:35:00.000Z",
+      "scheduledEndTime": "2014-10-19T14:31:00.000Z",
+      "actualendTime": "2014-10-19T14:31:00.000Z",
+      "_id": "58123dce0659262e95e004a1"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-19T14:31:00.000Z",
+      "actualStartTime": "2014-10-19T14:31:00.000Z",
+      "scheduledEndTime": "2014-10-20T01:30:00.000Z",
+      "actualendTime": "2014-10-20T01:30:00.000Z",
+      "_id": "58123dce0659262e95e004a0"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-20T01:30:00.000Z",
+      "actualStartTime": "2014-10-20T01:30:00.000Z",
+      "scheduledEndTime": "2014-10-22T00:43:00.000Z",
+      "actualendTime": "2014-10-22T00:43:00.000Z",
+      "_id": "58123dce0659262e95e0049f"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-22T00:43:00.000Z",
+      "actualStartTime": "2014-10-22T00:43:00.000Z",
+      "scheduledEndTime": "2014-10-22T07:39:00.000Z",
+      "actualendTime": "2014-10-22T07:39:00.000Z",
+      "_id": "58123dce0659262e95e0049e"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-22T07:39:00.000Z",
+      "actualStartTime": "2014-10-22T07:39:00.000Z",
+      "scheduledEndTime": "2014-10-22T14:02:00.000Z",
+      "actualendTime": "2014-10-22T14:02:00.000Z",
+      "_id": "58123dce0659262e95e0049d"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-22T14:02:00.000Z",
+      "actualStartTime": "2014-10-22T14:02:00.000Z",
+      "scheduledEndTime": "2014-10-22T14:27:00.000Z",
+      "actualendTime": "2014-10-22T14:27:00.000Z",
+      "_id": "58123dce0659262e95e0049c"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-22T14:27:00.000Z",
+      "actualStartTime": "2014-10-22T14:27:00.000Z",
+      "scheduledEndTime": "2014-10-23T10:42:00.000Z",
+      "actualendTime": "2014-10-23T10:42:00.000Z",
+      "_id": "58123dce0659262e95e0049b"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-23T10:42:00.000Z",
+      "actualStartTime": "2014-10-23T10:42:00.000Z",
+      "scheduledEndTime": "2014-10-23T14:28:00.000Z",
+      "actualendTime": "2014-10-23T14:28:00.000Z",
+      "_id": "58123dce0659262e95e0049a"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-23T14:28:00.000Z",
+      "actualStartTime": "2014-10-23T14:28:00.000Z",
+      "scheduledEndTime": "2014-10-28T11:50:00.000Z",
+      "actualendTime": "2014-10-28T11:50:00.000Z",
+      "_id": "58123dce0659262e95e00499"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2014-10-14T14:30:00.000Z",
+  "prize": [
+    1400,
+    700
+  ],
+  "projectId": 5104,
+  "registrants": [
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-14T16:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e00498"
+    },
+    {
+      "handle": "BharathMG",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-14T17:22:00.000Z",
+      "submissionDate": null,
+      "rating": "607",
+      "colorStyle": "color: #999999",
+      "_id": "58123dce0659262e95e00497"
+    },
+    {
+      "handle": "smart_raghavan",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-14T17:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e00496"
+    },
+    {
+      "handle": "jayacdm",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-14T18:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e00495"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-14T18:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e00494"
+    },
+    {
+      "handle": "rajeshk87",
+      "reliability": "0%",
+      "registrationDate": "2014-10-14T18:31:00.000Z",
+      "submissionDate": null,
+      "rating": "600",
+      "colorStyle": "color: #999999",
+      "_id": "58123dce0659262e95e00493"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "100%",
+      "registrationDate": "2014-10-14T19:37:00.000Z",
+      "submissionDate": "2014-10-19T09:18:00.000Z",
+      "rating": "2048",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58123dce0659262e95e00492"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "0%",
+      "registrationDate": "2014-10-15T00:59:00.000Z",
+      "submissionDate": null,
+      "rating": "1391",
+      "colorStyle": "color: #6666FF",
+      "_id": "58123dce0659262e95e00491"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T04:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e00490"
+    },
+    {
+      "handle": "samlighty",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T05:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e0048f"
+    },
+    {
+      "handle": "selvaa89",
+      "reliability": "0%",
+      "registrationDate": "2014-10-15T07:13:00.000Z",
+      "submissionDate": null,
+      "rating": "1123",
+      "colorStyle": "color: #00A900",
+      "_id": "58123dce0659262e95e0048e"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-10-15T08:55:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58123dce0659262e95e0048d"
+    },
+    {
+      "handle": "amrsaqr",
+      "reliability": "50%",
+      "registrationDate": "2014-10-15T11:41:00.000Z",
+      "submissionDate": null,
+      "rating": "1147",
+      "colorStyle": "color: #00A900",
+      "_id": "58123dce0659262e95e0048c"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "0%",
+      "registrationDate": "2014-10-16T02:59:00.000Z",
+      "submissionDate": null,
+      "rating": "1256",
+      "colorStyle": "color: #6666FF",
+      "_id": "58123dce0659262e95e0048b"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-16T09:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e0048a"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-16T10:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dce0659262e95e00489"
+    }
+  ],
+  "registrationEndDate": "2014-10-16T14:31:00.000Z",
+  "reliabilityBonus": 280,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-10-19T14:31:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 97.71,
+      "finalScore": 98.53,
+      "points": 630,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-10-19T09:18:00.000Z",
+      "_id": "58123dce0659262e95e004a5"
+    }
+  ],
+  "technology": [
+    "CSS",
+    "HTML",
+    "JavaScript",
+    "MongoDB",
+    "Node.js"
+  ]
+}

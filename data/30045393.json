@@ -1,0 +1,269 @@
+{
+  "_id": 30045393,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:45:09.994Z",
+  "appealsEndDate": "2014-09-04T03:13:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "CSFV Sitemaps Generator",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></h2>\n\n<p>This project, the CSFV Community Gaming website project will provide the web site infrastructure and integration of the games. This will be a web site that is available on the Internet, and also will be delivered in a form where the server and the games can be installed and used behind a firewall.</p>\n\n<p>We are building sitemap generator in this challenge.</p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Competition Task Overview</span></h2>\n\n<p>We need to build a new nodejs tool using expressjs framework to generate sitemap xml for all csfv websites, we have 6 websites that currently don&#39;t have sitemaps. Sitemaps are important for SEO.</p>\n\n<p><span style=\"font-size:12px\">Build a flexiable sitemap generator tool that address the following : </span></p>\n\n<ul>\n\t<li><span style=\"font-size:12px\">It should be built using <a href=\"http://expressjs.com/\">expressjs</a> framework.</span></li>\n\t<li>It should have a job schedular that run the sitemap periodically. We should have a job schedular for each website, and each job will load it&#39;s own cofiguration.\n\t<ul>\n\t\t<li><span style=\"font-size:12px\">We need the ability to generate multiple sitemaps for multiple sites at the same run</span>.</li>\n\t\t<li><span style=\"font-size:12px\">The base url of the sitemap should be configurable for each job schedular.</span></li>\n\t\t<li>The name of sitemap file to be generated should be configurable.</li>\n\t</ul>\n\t</li>\n\t<li>The generator utility should be pluggable, you should build service for each area to generate links for it, and inject the generator to the utility via configuration. We need this flexibilty to adjust generators and add new ones without the need to recode the tool.</li>\n\t<li><span style=\"font-size:12px\">The generator services needed for the following areas :</span>\n\t<ul>\n\t\t<li><span style=\"font-size:12px\">Fixed URLs generator: </span>\n\t\t<ul>\n\t\t\t<li><span style=\"font-size:12px\">It should include any url that is hardcoded and not dynamically generated i.e. home pages, faq, terms of use, about us, contact us, privacy .. etc.</span></li>\n\t\t\t<li>Here is a list of pages that we scanned in the website :\n\t\t\t<ul>\n\t\t\t\t<li>landing page : usually accessed as *.verigeames.com/</li>\n\t\t\t\t<li>Home page : usually accessed as *.verigames.com/home in all websites</li>\n\t\t\t\t<li>My Home : this is in main website http://verigames.com/myHome</li>\n\t\t\t\t<li>news : this is news listing page http://*.verigames.com/news</li>\n\t\t\t\t<li>privacy page</li>\n\t\t\t\t<li>about us page</li>\n\t\t\t\t<li>FAQ page</li>\n\t\t\t\t<li>terms of use page</li>\n\t\t\t\t<li>login page</li>\n\t\t\t\t<li>Forgot password page</li>\n\t\t\t\t<li>wiki home page</li>\n\t\t\t\t<li>wiki favorite page</li>\n\t\t\t\t<li>games page : this is in main website http://verigames.com/games</li>\n\t\t\t\t<li>play page : this page exists in mininsites http://verigames.com/play</li>\n\t\t\t\t<li>play game page : this is specific for each game</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>The above urls varies from page to page, so it is preferred if the fixed URLS are configured as array of relative urls in configuration and loaded by generator, this will give us flexibility to specify which fixed urls to be used for each website.</li>\n\t\t\t<li>It is preferred to crawl the page to generate it&#39;s title.</li>\n\t\t\t<li>It is preffered that url prioirty is configured with the fixed URLs in configuration file.</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>News dynamic pages generator :\n\t\t<ul>\n\t\t\t<li>This will generate URLs for news details pages and news filtered by categories pages.</li>\n\t\t\t<li>Relative paths are :\n\t\t\t<ul>\n\t\t\t\t<li>GET /newsDetails/:id or GET /static/newsDetails/:id - this is news details page</li>\n\t\t\t\t<li>GET /news/filter/:categoryName - this is the news listing page filtered by category</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>You can refer to the csfv_frontend_module to understand how these URLs should be constructured</li>\n\t\t\t<li>You can crawl the page to retrieve it&#39;s title</li>\n\t\t\t<li>Use 0.8 as priority for the urls, make it configurable parameter.</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Forums dynamic pages generator :\n\t\t<ul>\n\t\t\t<li>This will generate the forum threads listing pages filtered by categories, and forums posts pages URLs.</li>\n\t\t\t<li>Forums paths are :\n\t\t\t<ul>\n\t\t\t\t<li>GET /forums/:category?/:subcategory? - this is used to generate forums threads listing page filtered by category, you will populate the urls recursively for each cateogry</li>\n\t\t\t\t<li>GET /forums/threads/:id - this is the thread posts page</li>\n\t\t\t\t<li>GET /forums/post/:id/edit-history - this is the history page of specified forum post :id</li>\n\t\t\t\t<li>GET /forumHistory/:id - this show the forum history of specified user - :id represents username here, you can refer to the corresponding method in frontend module to understand how it works.</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>Root category shoudl be configured and when generating it&#39;s thread listing page it should not include the name in the path.</li>\n\t\t\t<li>We need to generate url for no categories selected option, usually the url is http://verigames.com/- or http://verigames.com/flowjam/- which will list threads that are associated with root categories.</li>\n\t\t\t<li>You can refer to csfv_frontend_module and csfv_forums_module to understand how the URLs above are constructured</li>\n\t\t\t<li>You can crawl the page to retrieve it&#39;s title</li>\n\t\t\t<li>Use 0.8 as priority for the urls, make it configurable parameter.</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Wiki dynamic pages generator :\n\t\t<ul>\n\t\t\t<li>This will generate urls of dynamic wiki pages.</li>\n\t\t\t<li>Wiki paths are :\n\t\t\t<ul>\n\t\t\t\t<li>GET /wiki/sp/:spaceKey - this is the wiki space page of the specified space key.</li>\n\t\t\t\t<li>GET /wiki/sp/:spaceKey/ti/:title - this is the wiki article page of the specified space key and title</li>\n\t\t\t\t<li>GET /wiki/sp/:spaceKey/ti/:title/history - this page show edit history of wiki article</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>You can refer to csfv_frontend_module and csfv_wiki_module to understand how the URLs above are constructured</li>\n\t\t\t<li>You can crawl the page to retrieve it&#39;s title</li>\n\t\t\t<li>Use 0.5 as priority for the urls, make it configurable parameter.</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>User and user activity pages generator :\n\t\t<ul>\n\t\t\t<li>This is generator for users and their activity pages in mainwebsite and minisites\n\t\t\t<ul>\n\t\t\t\t<li>Paths are :\n\t\t\t\t<ul>\n\t\t\t\t\t<li>GET /userPublicProfileData/:id - this is the url for user info in profile page, the id represents username.</li>\n\t\t\t\t\t<li>GET /social/friends/:id - this is url of the friends list in user profile page, the id represents username.</li>\n\t\t\t\t\t<li>GET /userPublicProfile/:id - this is the url of landing page of user profile page, the id represents username.</li>\n\t\t\t\t\t<li>GET /activity/:id - this display the activity page, the ID represents the activity id.</li>\n\t\t\t\t\t<li>GET /profile/:username - this is only specific to stormbound, (i.e. http://stormbound.verigames.com/profile/elkhawajah)</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>You can refer to frontend and minisite frontend modules/applications to understand how these urls are constructed.</li>\n\t\t\t<li>You can crawl the page to retrieve it&#39;s title</li>\n\t\t\t<li>Use 0.6 as priority for the urls, make it configurable parameter.</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Robots.txt generator :\n\t\t<ul>\n\t\t\t<li>This will generate robots txt file for each website</li>\n\t\t\t<li><span style=\"font-size:12px\">Other URL paths not listed above should be added to disallow</span>. You can refer to config/configuration.js of each website for rest of URLs</li>\n\t\t\t<li><span style=\"font-size:12px\">All rules to be added in robots should be applied to all websites to be generated.</span></li>\n\t\t\t<li>Sitemap should be added to robots file.</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li>All generated sitemap files and robots files should be placed under public/ directory of express.js, practically, in production we will configure nginx to forward requests to robots and sitemap to this /public folder of this application.</li>\n</ul>\n\n<h2><span><span style=\"color:rgb(255, 0, 0)\">Github Code</span></span></h2>\n\n<p><span>CSFV websites code exists in private github repository <a href=\"http://github.com/topcoderinc\">http://github.com/topcoderinc</a></span></p>\n\n<ul>\n\t<li><span><a href=\"https://github.com/topcoderinc/csfv_frontend_module\">CSFV Mainsite</a></span></li>\n\t<li><span><a href=\"https://github.com/topcoderinc/csfv_minisite_frontend_module\">CSFV Minisites</a> (we have 5 branches, each website exists in a branch, the branches are minisite1, minisite2, minisite3, minisite4 and minisite5)</span></li>\n\t<li><span><a href=\"https://github.com/topcoderinc/csfv_cms_module\">CSFV CMS</a></span></li>\n\t<li><span><a href=\"https://github.com/topcoderinc/csfv_test_data_generator\">CSFV Test Data Generator</a></span></li>\n\t<li>Dependencies CSFV node modules are configured in package.json in minisites and mainsite.</li>\n</ul>\n\n<h2><span><span style=\"color:rgb(255, 0, 0)\">Deployment Guide</span></span></h2>\n\n<p><span>Each website repository has details about deploying the code in README.md file, if you are still not sure specific deployment you can refer to docs folder under each repository in github as it contains deployment guides from past challenges, or you can post to challenge forums directly and Copilot will help asnwering questions.</span></p>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": 450,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30045393",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2014-09-05T09:13:00.000Z",
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<h2><span><strong><span style=\"color:#FF0000\"><span>Submission Deliverables</span></span></strong></span></h2>\n\n<p><span><span style=\"font-size:12px\">Below is an overview of the deliverables:</span></span></p>\n\n<ul>\n\t<li>Express.js application with following structure :\n\t<ul>\n\t\t<li>app.js - main file to run the application</li>\n\t\t<li>cofig/ - contains configuration files.</li>\n\t\t<li>loader.js - in case needed you can take it from csfv_frontend_moodule</li>\n\t\t<li>generator/ - contains the generator source code</li>\n\t\t<li>public/ - public folder that will host the generated sitemap and robots files.</li>\n\t\t<li>README.md - should be compatiable with github readme markup language, it should include in details how to setup and run the tool.</li>\n\t\t<li>any other files or folders needed can be added as well.</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h2><span><span style=\"color:#FF0000\"><strong>Final Submission</strong></span></span></h2>\n\n<p><span><span style=\"font-size:12px\">For each member, the final submission should be uploaded to the Online Review Tool.</span></span></p>\n</div>\n",
+  "forumId": 25171,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=25171",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 10,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-27T21:36:00.000Z",
+      "actualStartTime": "2014-08-27T21:36:00.000Z",
+      "scheduledEndTime": "2014-08-27T21:36:00.000Z",
+      "actualendTime": "2014-08-27T21:36:00.000Z",
+      "_id": "58123d256fc1ab2d92718d6e"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-27T21:36:00.000Z",
+      "actualStartTime": "2014-08-27T21:36:00.000Z",
+      "scheduledEndTime": "2014-08-28T00:15:00.000Z",
+      "actualendTime": "2014-08-28T00:15:00.000Z",
+      "_id": "58123d256fc1ab2d92718d6d"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-28T00:15:00.000Z",
+      "actualStartTime": "2014-08-28T00:15:00.000Z",
+      "scheduledEndTime": "2014-08-30T00:15:00.000Z",
+      "actualendTime": "2014-08-30T00:15:00.000Z",
+      "_id": "58123d256fc1ab2d92718d6c"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-28T00:20:00.000Z",
+      "actualStartTime": "2014-08-28T00:20:00.000Z",
+      "scheduledEndTime": "2014-09-02T00:15:00.000Z",
+      "actualendTime": "2014-09-02T00:15:00.000Z",
+      "_id": "58123d256fc1ab2d92718d6b"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-02T00:15:00.000Z",
+      "actualStartTime": "2014-09-02T00:15:00.000Z",
+      "scheduledEndTime": "2014-09-02T11:50:00.000Z",
+      "actualendTime": "2014-09-02T11:50:00.000Z",
+      "_id": "58123d256fc1ab2d92718d6a"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-02T11:50:00.000Z",
+      "actualStartTime": "2014-09-02T11:50:00.000Z",
+      "scheduledEndTime": "2014-09-03T15:47:00.000Z",
+      "actualendTime": "2014-09-03T15:47:00.000Z",
+      "_id": "58123d256fc1ab2d92718d69"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-03T15:47:00.000Z",
+      "actualStartTime": "2014-09-03T15:47:00.000Z",
+      "scheduledEndTime": "2014-09-03T16:41:00.000Z",
+      "actualendTime": "2014-09-03T16:41:00.000Z",
+      "_id": "58123d256fc1ab2d92718d68"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-03T16:42:00.000Z",
+      "actualStartTime": "2014-09-03T16:42:00.000Z",
+      "scheduledEndTime": "2014-09-04T03:13:00.000Z",
+      "actualendTime": "2014-09-04T03:13:00.000Z",
+      "_id": "58123d256fc1ab2d92718d67"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-04T03:13:00.000Z",
+      "actualStartTime": "2014-09-04T03:13:00.000Z",
+      "scheduledEndTime": "2014-09-04T04:25:00.000Z",
+      "actualendTime": "2014-09-04T04:25:00.000Z",
+      "_id": "58123d256fc1ab2d92718d66"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-04T04:25:00.000Z",
+      "actualStartTime": "2014-09-04T04:25:00.000Z",
+      "scheduledEndTime": "2014-09-05T09:13:00.000Z",
+      "actualendTime": "2014-09-05T09:13:00.000Z",
+      "_id": "58123d256fc1ab2d92718d65"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-05T09:13:00.000Z",
+      "actualStartTime": "2014-09-05T09:13:00.000Z",
+      "scheduledEndTime": "2014-09-05T11:32:00.000Z",
+      "actualendTime": "2014-09-05T11:32:00.000Z",
+      "_id": "58123d256fc1ab2d92718d64"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-05T11:32:00.000Z",
+      "actualStartTime": "2014-09-05T11:32:00.000Z",
+      "scheduledEndTime": "2014-09-06T15:58:00.000Z",
+      "actualendTime": "2014-09-06T15:58:00.000Z",
+      "_id": "58123d256fc1ab2d92718d63"
+    }
+  ],
+  "platforms": [
+    "NodeJS"
+  ],
+  "postingDate": "2014-08-28T00:15:00.000Z",
+  "prize": [
+    1000,
+    500
+  ],
+  "projectId": 5104,
+  "registrants": [
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-28T03:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d256fc1ab2d92718d62"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-28T05:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d256fc1ab2d92718d61"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-28T05:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d256fc1ab2d92718d60"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "100%",
+      "registrationDate": "2014-08-28T06:33:00.000Z",
+      "submissionDate": "2014-08-29T17:26:00.000Z",
+      "rating": "1859",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58123d256fc1ab2d92718d5f"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-08-28T07:43:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58123d256fc1ab2d92718d5e"
+    },
+    {
+      "handle": "billthu",
+      "reliability": "0%",
+      "registrationDate": "2014-08-28T10:18:00.000Z",
+      "submissionDate": null,
+      "rating": "635",
+      "colorStyle": "color: #999999",
+      "_id": "58123d256fc1ab2d92718d5d"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-28T11:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d256fc1ab2d92718d5c"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-28T14:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d256fc1ab2d92718d5b"
+    },
+    {
+      "handle": "jol",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-28T19:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d256fc1ab2d92718d5a"
+    },
+    {
+      "handle": "shubhendus",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-29T03:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d256fc1ab2d92718d59"
+    }
+  ],
+  "registrationEndDate": "2014-08-30T00:15:00.000Z",
+  "reliabilityBonus": 200,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-09-02T00:15:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 93.95,
+      "finalScore": 98.74,
+      "points": 450,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-08-29T17:26:00.000Z",
+      "_id": "58123d256fc1ab2d92718d6f"
+    }
+  ],
+  "technology": [
+    "CSS",
+    "HTML",
+    "JavaScript",
+    "MongoDB",
+    "Node.js",
+    "XML"
+  ]
+}

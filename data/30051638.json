@@ -1,0 +1,530 @@
+{
+  "_id": 30051638,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:50:39.414Z",
+  "appealsEndDate": "2015-11-30T14:43:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Sunshot - OneOakSystems NodeJS API",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\">The goal of this challenge is to build NodeJS REST API for a home automation phonegap application.</p>\n\n<h1 dir=\"ltr\">Challenge Requirements</h1>\n\n<h2 dir=\"ltr\"><u>General Notes</u></h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Prefix all endpoints with /api/</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- You will use MongoDB, NodeJS, ExpressJS stack in this challenge.</p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\"><u>Mongo Collections Definition</u></h2>\n\n<p dir=\"ltr\">You will define the following collections :</p>\n\n<h3 dir=\"ltr\"><u>User</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- full_name (string)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- email (valid email address)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- password (salted)</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>House</u></h3>\n\n<p dir=\"ltr\">Stores house basic metadata</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- name (string)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- image (this full URL to the house image)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- user_id</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>House_users</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- house_id</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- user_id</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- role (admin, operator, user, viewer)</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>House_info</u></h3>\n\n<p dir=\"ltr\">Stores the savings setup</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- house_id (reference House)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- type (one of the values : homeowner, landlord, resident) (required)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- number_of_resident (integer) (optional)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- resident_type (one of the values : student, family, senior, shared house) (optional)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- room_type - array of json objects, each item will have two fields (optional)</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- type (one of the values : very small, small, medium, large, very large)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- quantity (integer)</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- building_type (one of the values : Apartment, Dorm, Family Home ) (optional)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- unit_type - (used when type == landlord) array of json objects, each item will have following fields (optional)</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- unity_type (one of the values : efficiency, 1br, 2br, 3br, 4br)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- number_of_units (integer)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- people (integer)</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- temperature_unit (Celsius or Fahrenheit, by default Fahrenheit)</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>House_stats</u></h3>\n\n<p dir=\"ltr\">Stores house stats</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- house_id</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- timestamp</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- predicted_next_month_savings (will be % between 0% and 100%)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- last_month_savings (will be % between 0% and 100%)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- current_temperature</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- outside_temperature</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- current_humidity</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Room</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- house_id</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- name (represents the room name)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- image (this is full URL to the room image)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- description</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- size (one of the values : very small, small, medium, large, very large)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- vents_count</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- windows_count</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- current_tempreture</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Room_schedule</u></h3>\n\n<p dir=\"ltr\">Stores room schedule</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- items : array of 24hrs values, each object has following fields :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- start_time : range between 00:00 to 23:59</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- end_time : range between 00:00 to 23:59 (must be larger than start_time)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- value : the desired temperature value in that particular time period</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- create_date (used to pull latest schedule)</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Room_tempreture</u></h3>\n\n<p dir=\"ltr\">Store room temperature</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- room_id</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- user_comfort_level (cold/cool/perfect/warm/hot/custom)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- target_temperature_value (float value)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- create_date (used to pull latest room temperature)</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Room_plot</u></h3>\n\n<p dir=\"ltr\">Store room historical data :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- year (YYYY): The year of the sample</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- month (MM): The month of the sample</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- day (DD): The day of the sample</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- hour (HH): The hour of the sample (0-24)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- minute (MM): The minute of the sample</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- second (float): The second of the sample</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- inDST (0/1): Daylight Savings Time flag. 1 is true (data collected in DST), 0 is false (data collected not in DST)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- timetamp : this is the timestamp value of collected sample data, broken down values are in year/month/day/hour/minute/second fields</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- light (ohms): Float value. Ranges from &ldquo;infinite&rdquo; (99999999) to 0, &ldquo;pitch black&rdquo; to very bright</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- temp_analog (Fahrenheit): Float value. Analog temperature sensor</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- IR: Float value. Values for infrared or motion range from 0 (no activity) to 3.34 (sensor tripped).</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- temp_digital (Fahrenheit): Float value. Digital temperature sensor</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- current_temp : float value</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- outside_temp : float value</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- desired_temp : float value</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- fast_humidity (%): Float value. The sensor&rsquo;s quick calculation of humidity</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- slow_humidity (%) : Float value. The sensor&rsquo;s slower calculation of humidity</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Room_alerts</u></h3>\n\n<p dir=\"ltr\">Store alerts per room</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- room_id</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- type : warning/error</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- timestamp</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- details (string)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- status : current/resolved</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Room_energy_savings</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- room_id</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- pre_system_energy_expenditure (float): Energy per day expended before sys install</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- post-system_energy_expenditure (float): Energy per day expended after sys install</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- energy_savings (float): Energy saved per day</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- timestamp</p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\"><u>API Endpoint</u></h2>\n\n<h3 dir=\"ltr\"><u>Role Authorization</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Admin : can change the permissions/roles of other users, in addition to the roles below.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User : can set temperatures, addition to the roles below.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Operator : can set up the houses, rooms, enter details (cannot set temperatures)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Viewer : can view the data, the plots, the setup, but cannot change anything.</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\">We need the following API Endpoints :</p>\n\n<h3 dir=\"ltr\"><u>Signup</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Route : POST /signup</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- input parameters are :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- fullname (required)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- password (required)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- email (required)</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- create new user model, password should be hashed.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- no role will be set for signed up user.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- response should be the created document.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Login</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Route : POST /signin</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Input parameters :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- email</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- password</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Validate username/password and login the user.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- If the authorization are valid, then use JWT to generate token, with configurable expiration date, then return generated authorization token in response.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The token is required by all endpoints except login, signup, forgot password, reset password.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Me</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Returns current logged in user information</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Route : GET /me</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logic :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Return the user document (excluding password) of the current logged in user</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Get Houses</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This endpoint is used to return houses of the user.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Route : GET /houses</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logic :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Retrieve all houses where house#user_id == logged in user</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Return response in json format.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Get House Details</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This endpoint is used to return house information</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Route : GET /houses/{id}</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Input parameter :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- id : represents house id</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Logic :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Retrieve house document of the passed id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Retrieve the house_info document of the passed id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Retrieve the house_stats document of the passed id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Add house_info and house_stats as child objects to house document and return it in json format.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>House Current Stats</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Used to retrieve the current stats displayed in <a href=\"https://drive.google.com/file/d/0BxNVnWK-ZGA6VW1CUkFURVVwVTg/view?usp=sharing\">02A ~ Initial Screen.jpg</a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Route : GET /house/{id}/stats</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Input parameters :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- id : represents the house id</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logic :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Retrieve the house_stats of the passed house id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Retrieve the house#temperature_unit of the passed house id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Return the information in json format</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Response fields :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- house_stats fields</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- house#temperature_unit</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Set Room</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Used to add or update room.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Route : POST /rooms</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Input parameter :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- room_id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- house_id (for a given house)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- bundle_id (represents room name)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- description (name of the room)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- size</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- vents_count</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- windows_count</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- schedule : array of json objects with following fields :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- start_time : range between 00:00 to 23:59</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- end_time : range between 00:00 to 23:59 (must be larger than start_time)</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- value : the temperature value</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- All fields are optional if update operation, excluding room_id.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- All fields are required if create operation, excluding room_id.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logic :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Validate input parameters</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- If room_id is provided then validate room exists, otherwise, return error.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- If room_id not provided : Create new &lsquo;room&rsquo; document.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- If room_id is provided then update the room document.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- &lsquo;Create new &lsquo;room_schedule&rsquo; document</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- schedule array will be stored in room_schedule#items array</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- create_date : set to current date</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Return the created/updated room and schedule object in json format</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Get Room</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This endpoint is used to get room details</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Route : GET /rooms/{id}</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Input parameter :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- id : represents the room id</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logic :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Retrieve room document of the passed id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Retrieve latest room_schedule document of the passed id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Retrieve latest room_tempreture document of the passed id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Add room_schedule and room_tempreture as child objects of house document and return it in json format.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Get Alerts</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This retrieves Alerts of selected rooms</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Route : GET /alerts</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Input parameter :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- ids (required) : array of room ids, if missing</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- status (optional) : corresponds to room_alerts#status, if missing, we return all alerts</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logic :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Retrieve the room_alerts documents of the passed in ids and status, and populate the room name of each document.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Return documents in json format.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Set Room Temperature</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This endpoint is used to handle saving changes made in <a href=\"https://drive.google.com/file/d/0BxNVnWK-ZGA6ZHl0VDEtUWJBeTQ/view?usp=sharing\">04 ~ Set Temperature.jpg</a> screen.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Route : POST /room/{id}/temperature</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Input parameter :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- id (path parameter): represents the room id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- user_comfort_level (required)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- target_temperature_value &nbsp;(required)</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logic :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Insert new Room_temperature document using the provided values</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Set create_date to current date.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Return created document as response in json format.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Get Room Temperature</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Used to retrieve room latest temperature value.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Route : GET /room/{id}/temperature</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Input Parameter :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- id : the room id</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logic :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Retrieve latest room_temperature record of the passed room id</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Response will be in json format.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Get Room Temperature Plot Data</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Used to retrieve plot data for chart in <a href=\"https://drive.google.com/file/d/0BxNVnWK-ZGA6cC1tZHEySWZGNkE/view?usp=sharing\">05A ~ View Data.jpg</a> screen.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Route : GET /rooms/plot</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Input parameters :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- ids (required) : comma separated room ids</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- start_date (optional)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- end_date (optional)</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logic :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Validate dates parameters and id.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- If start_date and end_date are not set then it should return data of the past 24hrs.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Aggregate Room_plot of the passed room ids (compute the average for the groups of data, grouping as below), depends on the start/end date range group the data :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- 1 day : group by hour</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- 3 days : group by 6 hrs</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- 7 days : group by 12 hours</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- &lt; 30 days : group by day</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- &gt; 30 days : group by week</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Calculate the average Room_energy_savings values for the passed rooms and start/end date range and return the fields &nbsp;:</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- avg_pre_system_energy_expenditure</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- avg_post-system_energy_expenditure</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- avg_energy_savings</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Response will be 3 arrays :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- 1st array : current_temp/timestamp values</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- 2nd array : outside_temp/timestamp values</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- 3rd array : desired_temp/timestamp values</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Set Rooms Schedule</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This is used to set multiple rooms schedules</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Route : POST /schedules</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Input parameter :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- room_schedules (required) : it will be an array of array items, each item will contain these fields :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- room_id</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- schedule : an array of json objects with following fields :</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- start_time : range between 00:00 to 23:59</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- end_time : range between 00:00 to 23:59 (must be larger than start_time)</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- value : the temperature value</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logic :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Validate parameters</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- &nbsp;Create new &lsquo;room_schedule&rsquo; document for each room_id</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- schedule array will be stored in room_schedule#items array</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- create_date : set to current date</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Return created schedules in response in json format.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Get Rooms Schedule</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This endpoint is used to get latest rooms schedule</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Route : GET /schedules</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Input parameter :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- ids : comma separated room ids</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logic :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Using create_date return latest room_schedule record of each room_id</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Return the information in response in json format.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Set House User</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This endpoint used to edit or add new user.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Route : POST /users</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Input parameters :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- house_id (required always)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- user_id (required if we want to add existing user to house)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- full_name (required if we want to add new user)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- email (required if we want to add new user)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- role (required always)</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logic :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- If new user, then create new user record</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Send email the user</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Store association in house_user collection.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Return created user with associated house id in response.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Get User</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Get User information</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Route : GET /users/{id}</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Input parameter :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- id : the user id</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logic :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Retrieve the user of the provided id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Return the user document in response in json format.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Get House Users</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Get users of specific house</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Route : GET /houses/{id}/users</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Input parameter :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- id : the house id</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logic :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Retrieve the users of the passed house from house_user</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Populate all users (exclude password)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Return the users list in json format</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Get Users</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Get list of all users in the application</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Route : GET /users</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logic :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Return list of all users in the application</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The response should exclude users passwords.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Remove House User</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Remove user association with a house</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Route : DELETE /house/{id}/users/{user-id}</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Input parameters :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- id : house id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- user-id : the user id to be removed</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logic : Remove the house_user document of the provided parameters</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Calculate Savings</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Used to calculate savings in screen <a href=\"https://drive.google.com/file/d/0BxNVnWK-ZGA6U09HMERUTXdnWlU/view?usp=sharing\">07A ~ Savings Setup.jpg</a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Route : GET /houses/{id}/calculate</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Input parameter :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- id : the house id</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logic :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Return json object with two fields :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- savings_percentage : i.e. 20</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- savings_per_day: i.e. 100</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Pagination</u></h3>\n\n<p dir=\"ltr\">In all get-all endpoints we need to enforce pagination, these endpoints should have the following parameters :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- offset (default 0)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- limit (default 10)</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\">The parameters should be returned in the response with the total count of matching records as well, It is preferred if the default values are configurable.</p>\n\n<h3 dir=\"ltr\"><u>Test Data</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Provide sample test data to feed the mongo database for testing purpose, specifically the room_plot collection.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Postman Client JSON</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Create postman json file listing all calls and sample data.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Provide description for endpoints (recent postman version support endpoint descriptions)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Get Started with Postman : <a href=\"http://www.getpostman.com/\">http://www.getpostman.com/</a></p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Documentation</u></h3>\n\n<p dir=\"ltr\">Provide a detailed README documentation for how to setup and configure the application.</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30051638",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<h1 dir=\"ltr\">Deliverable</h1>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- All source code that implement the requirement.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- README in markup language</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Verification document contains steps to verify your solution.</p>\n\t</li>\n</ul>\n",
+  "forumId": 30750,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=30750",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 44,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-20T16:15:00.000Z",
+      "actualStartTime": "2015-11-20T16:15:00.000Z",
+      "scheduledEndTime": "2015-11-26T16:16:00.000Z",
+      "actualendTime": "2015-11-26T16:16:00.000Z",
+      "_id": "58123e6fe0be5f30ae562761"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-20T16:20:00.000Z",
+      "actualStartTime": "2015-11-20T16:20:00.000Z",
+      "scheduledEndTime": "2015-11-26T17:15:00.000Z",
+      "actualendTime": "2015-11-26T17:15:00.000Z",
+      "_id": "58123e6fe0be5f30ae562760"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-26T17:15:00.000Z",
+      "actualStartTime": "2015-11-26T17:15:00.000Z",
+      "scheduledEndTime": "2015-11-29T08:49:00.000Z",
+      "actualendTime": "2015-11-29T08:49:00.000Z",
+      "_id": "58123e6fe0be5f30ae56275f"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-29T08:49:00.000Z",
+      "actualStartTime": "2015-11-29T08:49:00.000Z",
+      "scheduledEndTime": "2015-11-30T08:49:00.000Z",
+      "actualendTime": "2015-11-30T08:49:00.000Z",
+      "_id": "58123e6fe0be5f30ae56275e"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-30T08:49:00.000Z",
+      "actualStartTime": "2015-11-30T08:49:00.000Z",
+      "scheduledEndTime": "2015-11-30T14:43:00.000Z",
+      "actualendTime": "2015-11-30T14:43:00.000Z",
+      "_id": "58123e6fe0be5f30ae56275d"
+    }
+  ],
+  "platforms": [
+    "NodeJS"
+  ],
+  "postingDate": "2015-11-20T16:15:00.000Z",
+  "prize": [
+    1800,
+    750
+  ],
+  "projectId": 9163,
+  "registrants": [
+    {
+      "handle": "Sky_",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-20T16:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae56275c"
+    },
+    {
+      "handle": "son4moon",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-20T18:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae56275b"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-20T18:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae56275a"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-20T18:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562759"
+    },
+    {
+      "handle": "Anthony.Eden",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T15:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562758"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-20T23:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562757"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T00:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562756"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T00:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562755"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T02:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562754"
+    },
+    {
+      "handle": "Shadrach",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T04:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562753"
+    },
+    {
+      "handle": "zaixiang",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T04:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562752"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T06:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562751"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T08:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562750"
+    },
+    {
+      "handle": "xiufei",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T08:47:00.000Z",
+      "submissionDate": "2015-11-26T14:31:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae56274f"
+    },
+    {
+      "handle": "ptarunn",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T08:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae56274e"
+    },
+    {
+      "handle": "veshu",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T14:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae56274d"
+    },
+    {
+      "handle": "alexdglover",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T14:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae56274c"
+    },
+    {
+      "handle": "jaindsonvs",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T15:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae56274b"
+    },
+    {
+      "handle": "devboy",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T23:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae56274a"
+    },
+    {
+      "handle": "rakeshk_87",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T16:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562749"
+    },
+    {
+      "handle": "spanhawk",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T18:21:00.000Z",
+      "submissionDate": "2015-11-26T17:11:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562748"
+    },
+    {
+      "handle": "571555",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T22:24:00.000Z",
+      "submissionDate": "2015-11-26T16:11:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562747"
+    },
+    {
+      "handle": "vimrc",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T22:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562746"
+    },
+    {
+      "handle": "arylio",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T01:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562745"
+    },
+    {
+      "handle": "Amith",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T06:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562744"
+    },
+    {
+      "handle": "chtbharti",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T07:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562743"
+    },
+    {
+      "handle": "danshafie",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T08:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562742"
+    },
+    {
+      "handle": "rajrkrish",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T13:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562741"
+    },
+    {
+      "handle": "zeasratwde",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T13:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562740"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T14:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae56273f"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T16:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae56273e"
+    },
+    {
+      "handle": "idev247",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T20:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae56273d"
+    },
+    {
+      "handle": "sgodwin424",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-23T02:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae56273c"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-23T03:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae56273b"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-23T11:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae56273a"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-23T17:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562739"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-23T18:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562738"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-24T08:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562737"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-24T08:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562736"
+    },
+    {
+      "handle": "Colossalfy",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-24T14:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562735"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-24T16:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562734"
+    },
+    {
+      "handle": "jzh08",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-26T08:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562733"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-26T08:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562732"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-26T13:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6fe0be5f30ae562731"
+    }
+  ],
+  "registrationEndDate": "2015-11-26T16:16:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-11-26T17:15:00.000Z",
+  "submissions": [
+    {
+      "handle": "spanhawk",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 93.75,
+      "finalScore": 97.5,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-11-26T17:11:00.000Z",
+      "_id": "58123e6fe0be5f30ae562764"
+    },
+    {
+      "handle": "xiufei",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 93.75,
+      "finalScore": 93.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-26T14:31:00.000Z",
+      "_id": "58123e6fe0be5f30ae562763"
+    },
+    {
+      "handle": "571555",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 83.75,
+      "finalScore": 86.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-26T16:11:00.000Z",
+      "_id": "58123e6fe0be5f30ae562762"
+    }
+  ],
+  "technology": [
+    "API",
+    "MongoDB",
+    "Node.js",
+    "REST"
+  ]
+}

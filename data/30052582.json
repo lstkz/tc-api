@@ -1,0 +1,870 @@
+{
+  "_id": 30052582,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:50:30.286Z",
+  "appealsEndDate": "2016-01-20T01:06:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Build Corn Stalk Manager Node.js Backend Application",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\"><u><em><strong>Note - We&#39;ve made some changes to the data model and API endpoints based on the discussions in forum. Please make sure you follow all forum discussions for the relevant discussions.</strong></em></u></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(34, 34, 34); font-family:arial; font-size:14.6667px\">This is the second challenge in this series. In our earlier </span><a href=\"http://www.topcoder.com/challenge-details/30052354/?type=develop&amp;noncache=true\" style=\"text-decoration:none;\"><u>challenge</u></a><span style=\"color:rgb(34, 34, 34); font-family:arial; font-size:14.6667px\">, we built a tool which allows users to look at overhead images of corn stalks as they grow and mark each corn stalk on the image.</span></span></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(34, 34, 34); font-family:arial; font-size:14.6667px\">The source code from the first challenge is provided in the challenge assets. We encourage you to go through the earlier challenge requirements to understand the use cases for this app.</span></span></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(34, 34, 34); font-family:arial; font-size:14.6667px\">Now, we would like to proceed with implementing the authentication module and backend APIs to support the tool that we&rsquo;ve built.</span></span></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><strong>Overview</strong></span></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(34, 34, 34); font-family:arial; font-size:14.6667px\">The backend application will be written in node.js (v5) and will do the following</span></span></p>\n\n<p>&nbsp;</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Authentication</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Authorisation for admin and normal users</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Provide API endpoints for storing marker coordinates for images</span></span></p>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><strong>User Types</strong></span></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(34, 34, 34); font-family:arial; font-size:14.6667px\">The Corn Stalk application has 2 types of users</span></span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Administrator</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Normal Users (plant counter)</span></span></p>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(34, 34, 34); font-family:arial; font-size:14.6667px\">As you can see in the UI, the admin user has the ability to upload multiple images of corn stalks. The admin user can also mark stalks on any image as well as add comments on the image.</span></span></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(34, 34, 34); font-family:arial; font-size:14.6667px\">When a plant counter (normal user) loads the site, randomly display one of the crop row images for them to mark. A normal user can only mark stalks on the image and comment on it. They can not upload any new image.</span></span></p>\n\n<p><br />\n&nbsp;</p>\n\n<p dir=\"ltr\"><span><strong>Data Model</strong></span></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(34, 34, 34); font-family:arial; font-size:14.6667px\">Please build the following data model in mongodb. We&rsquo;ve analysed the data model for this application to contain the following entities. Feel free to suggest improvements or point out any pitfalls that you foresee.</span></span></p>\n\n<p>&nbsp;</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Users</span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">id</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">First Name</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Last Name</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Username (email)</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">isAdmin</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">isActivated</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Last Logged In Date, Time</span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Image</span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Id</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Path</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">ThumbnailPath</span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">User-Image-Markers - represents which all users place markers on which images</span></span></p>\n\n\t<p>&nbsp;</p>\n\n\t<p>&nbsp;</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">UserId</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">ImageId</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">MarkerPos (array of stalk #, [x,y] coordinates where the markers are put)</span></span></p>\n\t\t</li>\n\t</ul>\n\n\t<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\"><span style=\"font-size:14.6667px\">* User-Image-Comments</span></div>\n\n\t<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">&nbsp;</div>\n\n\t<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">\n\t<ul>\n\t\t<li>\n\t\t<p><span><span style=\"font-size:14.6667px\">UserId</span></span></p>\n\t\t</li>\n\t\t<li>\n\t\t<p><span><span style=\"font-size:14.6667px\">ImageId</span></span></p>\n\t\t</li>\n\t\t<li>\n\t\t<p><span><span style=\"font-size:14.6667px\">Comments</span></span></p>\n\t\t</li>\n\t</ul>\n\t</div>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(34, 34, 34); font-family:arial; font-size:14.6667px\">Note that each image is expected to have upto 5 sets of markers and 5 user names (1 for each marker). A set of markers is basically one or more stalk coordinates (x,y) positions.</span></span></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><strong>Configuration</strong></span></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(34, 34, 34); font-family:arial; font-size:14.6667px\">- All email server settings must be read from a configuration file.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(34, 34, 34); font-family:arial; font-size:14.6667px\">- The limit of markers for each image (5 by default) must be kept configurable.</span></span></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><strong>API Endpoints Needed</strong></span></p>\n\n<p>- Please use Express to implement all API endpoints</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">register</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">login</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong><span><span style=\"font-size:14.6667px\">logout</span></span></strong></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">forgotpassword</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Add image</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Get all Images</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Get images for processing for user</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Update info (markers/ comment) for image</span></span></p>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><strong>Detailed API definition</strong></span></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(34, 34, 34); font-family:arial; font-size:14.6667px\">All APIs are expected to return a JSON payload</span></span></p>\n\n<p>&nbsp;</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">register(First Name, Last Name, Username, isAdmin)</span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">returns success if user is created successfully. Send an email to user&rsquo;s email address for successful registration. The registration email must contain a link to activate the user</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">handle error scenarios like first name/ last name/ username null or combination already exists</span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">login(username, password)</span></span></p>\n\n\t<p><br />\n\t&nbsp;</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">returns success if credentials are correct</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">return error if invalid or null params specified</span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li><strong><span style=\"font-size:14.6667px\">logout()</span></strong>\n\t<ul>\n\t\t<li><strong><span style=\"font-size:14.6667px\">���Clear current user sesion and return success</span></strong></li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">forgotpassword(username)</span></span></p>\n\n\t<ul>\n\t\t<li>\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Should trigger an email to user&rsquo;s email address returning the user&rsquo;s password.</span></span></p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Return error if username is invalid</span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">addImage(file) - This will only be called by the admin user</span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">If successful, store the image locally and populate the path</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Return error if the image could not be uploaded</span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\">&nbsp;</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">getAllImages - This will return all images for the admin view.</span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">For each image, return id, name, thumbnail path and comments</span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">getImagesForUserProcessing - This will return only images which </span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">have not been already marked by the current user</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">do not have all 5 (or the actual limit) sets of markers marked</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Input argument - user id</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">For each image, return id, name, image path, the markers which have been plotted already and comments</span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">updateImageInformation - This will be used to update the information associated with each image</span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Input arguments - user id, image id</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Return the updated marker coordinates and comments (if any)</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\"><span><span style=\"font-size:14.6667px\">(Optional) Send an email to a pre-configured email id if all 5 markers have been marked for this image</span></span></li>\n\t</ul>\n\t</li>\n</ul>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30052582",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Provide your code and documentation (configuraiton + verification) in a single zip file. Make sure you include steps to deploy to Heroku as well as your Heroku instance URL in your submission.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Provide a postman file which demonstrates all API endpoints in action. It is strongly preferred that the postman file shows both positive and negative scenarios</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Provide a video (mandatory) of your solution showing all features in action.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.6667px\">Deploy your solution to Heroku and make sure to include your working Heroku instance URL as part of your documentation</span></span></p>\n\t</li>\n</ul>\n",
+  "forumId": 31631,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=31631",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 77,
+  "numberOfSubmissions": 7,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-01-11T14:46:00.000Z",
+      "actualStartTime": "2016-01-11T14:46:00.000Z",
+      "scheduledEndTime": "2016-01-15T14:41:00.000Z",
+      "actualendTime": "2016-01-15T14:41:00.000Z",
+      "_id": "58123e66e0be5f30ae561a16"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-01-11T14:51:00.000Z",
+      "actualStartTime": "2016-01-11T14:51:00.000Z",
+      "scheduledEndTime": "2016-01-15T14:41:00.000Z",
+      "actualendTime": "2016-01-15T14:41:00.000Z",
+      "_id": "58123e66e0be5f30ae561a15"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-01-15T14:42:00.000Z",
+      "actualStartTime": "2016-01-15T14:42:00.000Z",
+      "scheduledEndTime": "2016-01-18T15:42:00.000Z",
+      "actualendTime": "2016-01-18T15:42:00.000Z",
+      "_id": "58123e66e0be5f30ae561a14"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-01-18T15:42:00.000Z",
+      "actualStartTime": "2016-01-18T15:42:00.000Z",
+      "scheduledEndTime": "2016-01-19T15:42:00.000Z",
+      "actualendTime": "2016-01-19T15:42:00.000Z",
+      "_id": "58123e66e0be5f30ae561a13"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-01-19T15:42:00.000Z",
+      "actualStartTime": "2016-01-19T15:42:00.000Z",
+      "scheduledEndTime": "2016-01-20T01:06:00.000Z",
+      "actualendTime": "2016-01-20T01:06:00.000Z",
+      "_id": "58123e66e0be5f30ae561a12"
+    }
+  ],
+  "platforms": [
+    "NodeJS"
+  ],
+  "postingDate": "2016-01-11T14:46:00.000Z",
+  "prize": [
+    1000,
+    500
+  ],
+  "projectId": 9319,
+  "registrants": [
+    {
+      "handle": "code56Life",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T15:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae561a11"
+    },
+    {
+      "handle": "MonicaMuranyi",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T20:15:00.000Z",
+      "submissionDate": "2016-01-15T12:04:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae561a10"
+    },
+    {
+      "handle": "superastrom",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T16:48:00.000Z",
+      "submissionDate": "2016-01-15T13:23:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae561a0f"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T14:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae561a0e"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T14:55:00.000Z",
+      "submissionDate": "2016-01-15T10:08:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae561a0d"
+    },
+    {
+      "handle": "zsudraco",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T15:00:00.000Z",
+      "submissionDate": "2016-01-15T08:02:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae561a0c"
+    },
+    {
+      "handle": "PeterBest",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T15:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae561a0b"
+    },
+    {
+      "handle": "hash3r",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T15:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae561a0a"
+    },
+    {
+      "handle": "GSTVAC",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T15:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae561a09"
+    },
+    {
+      "handle": "Amith",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T15:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae561a08"
+    },
+    {
+      "handle": "ChrisZ",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T15:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae561a07"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T15:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae561a06"
+    },
+    {
+      "handle": "ananthhh",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T15:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae561a05"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T15:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae561a04"
+    },
+    {
+      "handle": "diogenesjcs",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T16:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae561a03"
+    },
+    {
+      "handle": "tombohm",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T16:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae561a02"
+    },
+    {
+      "handle": "Mentar0s",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T16:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae561a01"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T16:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae561a00"
+    },
+    {
+      "handle": "sri02",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T17:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619ff"
+    },
+    {
+      "handle": "fultonm",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T17:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619fe"
+    },
+    {
+      "handle": "killtur",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T17:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619fd"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T17:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619fc"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T17:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619fb"
+    },
+    {
+      "handle": "klothr",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T17:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619fa"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T18:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619f9"
+    },
+    {
+      "handle": "charlie09",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T19:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619f8"
+    },
+    {
+      "handle": "chuxy111",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T19:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619f7"
+    },
+    {
+      "handle": "veshu",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T19:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619f6"
+    },
+    {
+      "handle": "isv",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T19:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619f5"
+    },
+    {
+      "handle": "vimrc",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T19:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619f4"
+    },
+    {
+      "handle": "chok68",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T19:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619f3"
+    },
+    {
+      "handle": "karthiks416",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T19:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619f2"
+    },
+    {
+      "handle": "fmarcos83",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T20:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619f1"
+    },
+    {
+      "handle": "maxali",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T23:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619f0"
+    },
+    {
+      "handle": "ShindouHikaru",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T23:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619ef"
+    },
+    {
+      "handle": "npcdoom",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T23:39:00.000Z",
+      "submissionDate": "2016-01-15T13:57:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619ee"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T23:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619ed"
+    },
+    {
+      "handle": "toode",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-11T23:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619ec"
+    },
+    {
+      "handle": "zaixiang",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T01:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619eb"
+    },
+    {
+      "handle": "rixiac",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T01:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619ea"
+    },
+    {
+      "handle": "sabbirhs",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T01:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619e9"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T02:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619e8"
+    },
+    {
+      "handle": "evilkyro1965",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T02:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619e7"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T04:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619e6"
+    },
+    {
+      "handle": "codebump",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T04:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619e5"
+    },
+    {
+      "handle": "ouyangki",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T05:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619e4"
+    },
+    {
+      "handle": "twds",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T05:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619e3"
+    },
+    {
+      "handle": "dingjian",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T05:34:00.000Z",
+      "submissionDate": "2016-01-15T14:29:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619e2"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T06:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619e1"
+    },
+    {
+      "handle": "crim",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T09:03:00.000Z",
+      "submissionDate": "2016-01-15T13:49:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619e0"
+    },
+    {
+      "handle": "Luckyodell",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T09:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619df"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T09:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619de"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T14:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619dd"
+    },
+    {
+      "handle": "matheusgs05",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T14:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619dc"
+    },
+    {
+      "handle": "l3nnys",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T15:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619db"
+    },
+    {
+      "handle": "Colossalfy",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T19:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619da"
+    },
+    {
+      "handle": "spanhawk",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T19:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619d9"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T20:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619d8"
+    },
+    {
+      "handle": "son4moon",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T21:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619d7"
+    },
+    {
+      "handle": "Parikh",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-12T21:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619d6"
+    },
+    {
+      "handle": "jaindsonvs",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-13T00:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619d5"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-13T03:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619d4"
+    },
+    {
+      "handle": "CrazyCoderLZB",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-13T04:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619d3"
+    },
+    {
+      "handle": "e06widu",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-13T06:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619d2"
+    },
+    {
+      "handle": "dlimws",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-13T06:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619d1"
+    },
+    {
+      "handle": "lav.kumar.dev",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-13T07:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619d0"
+    },
+    {
+      "handle": "BrainScorn",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-13T11:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619cf"
+    },
+    {
+      "handle": "eduardomelendez",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-13T13:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619ce"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-13T19:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619cd"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-13T20:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619cc"
+    },
+    {
+      "handle": "solokop",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T04:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619cb"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T06:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619ca"
+    },
+    {
+      "handle": "h5jack",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T08:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619c9"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T14:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619c8"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T17:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619c7"
+    },
+    {
+      "handle": "rakeshk_87",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T19:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619c6"
+    },
+    {
+      "handle": "aparajita.pur",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-15T13:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e66e0be5f30ae5619c5"
+    }
+  ],
+  "registrationEndDate": "2016-01-15T14:41:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-01-15T14:41:00.000Z",
+  "submissions": [
+    {
+      "handle": "peakpado",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 98.75,
+      "finalScore": 98.75,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-01-15T10:08:00.000Z",
+      "_id": "58123e66e0be5f30ae561a1d"
+    },
+    {
+      "handle": "MonicaMuranyi",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 98.75,
+      "finalScore": 98.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-01-15T12:04:00.000Z",
+      "_id": "58123e66e0be5f30ae561a1c"
+    },
+    {
+      "handle": "zsudraco",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 95.63,
+      "finalScore": 98.13,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-01-15T08:02:00.000Z",
+      "_id": "58123e66e0be5f30ae561a1b"
+    },
+    {
+      "handle": "crim",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 94.38,
+      "finalScore": 94.38,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-01-15T13:49:00.000Z",
+      "_id": "58123e66e0be5f30ae561a1a"
+    },
+    {
+      "handle": "superastrom",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 93.75,
+      "finalScore": 93.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-01-15T13:23:00.000Z",
+      "_id": "58123e66e0be5f30ae561a19"
+    },
+    {
+      "handle": "dingjian",
+      "placement": 6,
+      "screeningScore": null,
+      "initialScore": 90,
+      "finalScore": 90,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-01-15T14:29:00.000Z",
+      "_id": "58123e66e0be5f30ae561a18"
+    },
+    {
+      "handle": "npcdoom",
+      "placement": 7,
+      "screeningScore": null,
+      "initialScore": 81.25,
+      "finalScore": 81.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-01-15T13:57:00.000Z",
+      "_id": "58123e66e0be5f30ae561a17"
+    }
+  ],
+  "technology": [
+    "JavaScript",
+    "MongoDB",
+    "Node.js"
+  ]
+}

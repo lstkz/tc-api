@@ -1,0 +1,568 @@
+{
+  "_id": 30055105,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:51:03.558Z",
+  "appealsEndDate": "2016-09-06T16:03:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Brilliant Careers App - External Services NodeJS API Code Challenge",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">The goal of this challenge is to build a set of scripts that cache a local copy of external APIs, and build set of APIs to expose these cached data.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">What you are addressing in this challenge :</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Script to cache O*Net data in mongodb (caching layer)</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- API endpoints to pull data from the caching layer</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- API endpoints to handle assessment flow</span></p>\n\n<h2><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:21.3333px\">Challenge Requirements</span></h2>\n\n<h3><span style=\"background-color:transparent; color:rgb(67, 67, 67); font-family:arial; font-size:18.6667px\">UI Prototype</span><span style=\"font-size:13px\">&nbsp;</span></h3>\n\n<p><a href=\"https://brilliant-careers-static.herokuapp.com/\" style=\"text-decoration:none;\"><u>https://brilliant-careers-static.herokuapp.com/</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> </span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">We are addressing the Assessment and Career Exploration pages in this challenge.</span></p>\n\n<h3><span style=\"background-color:transparent; color:rgb(67, 67, 67); font-family:arial; font-size:18.6667px\">Existing API</span></h3>\n\n<h3><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">The source code is provided in challenge forums.</span><br />\n<br />\n<span style=\"background-color:transparent; color:rgb(67, 67, 67); font-family:arial; font-size:18.6667px\">External API</span></h3>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">We are integrating with ONet API.</span></p>\n\n<h4><u>O*Net</u></h4>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">API Documentation:</span></p>\n\n<p><a href=\"https://services.onetcenter.org/reference/\" style=\"text-decoration:none;\"><u>https://services.onetcenter.org/reference/</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> </span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Endpoint: </span><br />\n<u><a href=\"https://services.onetcenter.org/ws/\" style=\"text-decoration:none;\">https://services.onetcenter.org/ws/</a></u>&nbsp;</p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Terms of Service:</span><br />\n<a href=\"https://services.onetcenter.org/terms\" style=\"text-decoration:none;\"><u>https://services.onetcenter.org/terms</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> &nbsp;</span></p>\n\n<h3><span style=\"background-color:transparent; color:rgb(67, 67, 67); font-family:arial; font-size:18.6667px\">Caching Scripts and Services</span></h3>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">As there are limits to access these external api, we need to build a cache layer that copy the data we need to serve in the website, and have a script to regularly updating this cached version.</span>&nbsp;</p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">What we need to address this requirement:</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- A script for each external API that can regularly run to pull data and update existing data (it is important that script works properly with existing data update)</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- The script will use Mongodb. We will flatten the pulled data into collections as much as possible instead of maintaining same structure from the external APIs. </span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- The services to expose access these cached data should be decoupled from the API we will build in the challenge, the reason that in future we might switch the mongodb to use a memcache or redis caching services or move to indexing service such as apache solr, we want to make this transition without refactoring any API code, we only update the services, input/output should remain the same. So you need to add another level beneath the service you will write to talk to this caching service.</span></p>\n\n<h4><u>O*Net Integration</u></h4>\n\n<p><u>Assessment Page</u></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Reference: </span><a href=\"https://brilliant-careers-static.herokuapp.com/Assessment.html\" style=\"text-decoration:none;\"><u>https://brilliant-careers-static.herokuapp.com/Assessment.html</u></a><u> </u></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This page takes user to O*Net assessment flow, it is a 60 questions form. </span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- The questions are pulled from </span><a href=\"https://services.onetcenter.org/reference/mnm#ip_questions\" style=\"text-decoration:none;\"><u>https://services.onetcenter.org/reference/mnm#ip_questions</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> </span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- The questions and possible answers should be stored in a single collection (assessment_questions) in DB.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This mongo collection will be used to pull questions every time user plays the assessment flow.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This mongodb collection will always have additional fields such as image and any other fields that needed but not present in the O*Net questions information.</span>&nbsp;</p>\n\n<p><u>Career Exploration</u></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Reference: </span><a href=\"https://brilliant-careers-static.herokuapp.com/Career_Exploration.html\" style=\"text-decoration:none;\"><u>https://brilliant-careers-static.herokuapp.com/Career_Exploration.html</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> </span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- In this page we want to address the recommended careers areas, including filtering/searching which is not supported by ONet API.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- The recommended careers will fall into 4 categories only : match, technology, science, and engineering.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- The caching script should pull all careers that can be found in O*Net for each category of the 4 categories.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- To pull careers : </span><a href=\"https://services.onetcenter.org/reference/mnm#search\" style=\"text-decoration:none;\"><u>https://services.onetcenter.org/reference/mnm#search</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> by passing the category as keyword.</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- For each response there will be pagination links to iterate through all careers to pull.</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Each career you need to use the api URL in the response to pull the career information, then recursively access all API URLs in the career xml response and cache them as well excluding </span><strong>check_out_my_state </strong><span style=\"color:rgb(0, 0, 0); font-family:verdana; font-size:13.3333px\">and </span><strong>explore_more.</strong></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:verdana; font-size:13.3333px\">- The db collection can be single one where each document contains all the information pulled about the career including the nested URLs pulled content. Again information should be flattened as much as possible.</span></p>\n\n<p><u>API Endpoints</u></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">You will build the following endpoints in this challenge :</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Assessment Leaderboard</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- GET /assessment/leaderboard</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Used in this page </span><a href=\"https://brilliant-careers-static.herokuapp.com/Assessment.html\" style=\"text-decoration:none;\"><u>https://brilliant-careers-static.herokuapp.com/Assessment.html</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> (bottom right)</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This is public endpoint.</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Logic : </span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Retrieve users who completed the assessment using points in descending order with pagination enforced.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Pagination parameters are input, if not provided, default values should be use.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Sum the assessment_answer points, grouped by user_id, and ordered using aggregated points in descending order.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- The response should include the pagination parameters used, and the total matching value without pagination.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Start Assessment</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- POST /assessment</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Used in this page </span><a href=\"https://brilliant-careers-static.herokuapp.com/Assessment_Test.html\" style=\"text-decoration:none;\"><u>https://brilliant-careers-static.herokuapp.com/Assessment_Test.html</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> </span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This is protected endpoint.</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Logic</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- We call this endpoint to track user starting to work on the assessment.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This will add new entry to user_activites of type &lsquo;start_assessment&rsquo;, it set date as current date, and object should store a counter attribute to indicate the number of tries.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- If user already have an active assessment, then return it instead of creating new one.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Submit Assessment answers</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- PUT /assessment/answers</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Used when user finish the assessment questions.</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Logic</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Check if user has active assessment, otherwise, return error.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Store the answers in postgres DB assessment answers table.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- User can redo assessment, so we need to keep track of retries in the history, so the assessment answer table might have multiple records for same user.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- The table should store answers in single field concatenated.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Assign user the assessment module badge (should be configurable) if not already assigned.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Calculate answers using O*Net ans</span><em>wers api </em><a href=\"https://services.onetcenter.org/ws/mnm/interestprofiler/results?answers=\" style=\"text-decoration:none;\"><u>https://services.onetcenter.org/ws/mnm/interestprofiler/results?answers=</u></a><em> </em></p>\n\n<p style=\"margin-left:72pt\"><span style=\"color:rgb(0, 0, 0); font-family:verdana; font-size:13.3333px\">- Store the response in assessment answer table, in a field called &lsquo;results&rsquo;</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"color:rgb(0, 0, 0); font-family:verdana; font-size:13.3333px\">- Sum the scores user get from results, and store it in UserActivity with type &lsquo;assessment_completed&rsquo;.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"color:rgb(0, 0, 0); font-family:verdana; font-size:13.3333px\">- Return the badge, and score to be displayed here &nbsp;</span><a href=\"https://brilliant-careers-static.herokuapp.com/Assessment_Test.html\" style=\"text-decoration:none;\"><u>https://brilliant-careers-static.herokuapp.com/Assessment_Test.html</u></a><span style=\"color:rgb(0, 0, 0); font-family:verdana; font-size:13.3333px\"> </span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Cancel Assessment</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- DELETE /assessment</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Used in this page </span><a href=\"https://brilliant-careers-static.herokuapp.com/Assessment_Test.html\" style=\"text-decoration:none;\"><u>https://brilliant-careers-static.herokuapp.com/Assessment_Test.html</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> </span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- User can cancel the assessment, so we need to cancel tracking it in backend.</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Logic</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Check if user has active assessment.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Insert new record &lsquo;assessment_cancelled&rsquo; and use same as the corresponding &lsquo;start_assessment&rsquo; counter attribute value.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Return error if no assessment active to cancel.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Get Assessment Questions</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- GET /assessment/questions</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This is public endpoint</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Logic</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Return the 60 questions from cached O*Net service, and possible answers.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Get Assessment Results</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- GET /assessment/results</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This is protected endpoint because we need user identity to pull user results.</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Logic</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Pull the latest assessment answer record and return the results attribute.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Get Recommended Careers</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- &nbsp;Get /careers/recommended/[topic-slug]?filter=&lt;filter-parameters&gt;&amp;search=&lt;search-keyword&gt;</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Will be used at this page (at bottom) </span><a href=\"https://brilliant-careers-static.herokuapp.com/Career_Exploration.html\" style=\"text-decoration:none;\"><u>https://brilliant-careers-static.herokuapp.com/Career_Exploration.html</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> </span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Public endpoint</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- The [topic-slug] will be one of the four categories : math, technology, science, and engineering. It is optional parameter.</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Logic</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Pull a set of recommended careers using the passed slug with pagination enforced.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- If slug not passed then we pull random careers data.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- If filter parameters are passed or search keyword, it should be applied to the search. The mongo DB should enable the text indexes so we search the full DB.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- The data needed to be returned</span></p>\n\n<p style=\"margin-left:108pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Career image</span></p>\n\n<p style=\"margin-left:108pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Career title</span></p>\n\n<p style=\"margin-left:108pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Career median annual salary</span></p>\n\n<p style=\"margin-left:108pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- The ID to link with &lsquo;learn more&rsquo; section</span></p>\n\n<p style=\"margin-left:108pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Pagination information (size, offset, and total)</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Get Skills</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- GET /careers/skills</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This is public endpoint to be used in the filter drop down in the filter section in Career Exploration page</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Logic</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This is a lookup table, you can reuse the existing one.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This lookup table should be populated during caching O*Net data to put unique (no duplicate) skills.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Get Career Details</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Get /career/&lt;career-id&gt;</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Public endpoint</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This endpoint will be used to populate the following areas :</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- The top area in this page </span><a href=\"https://marvelapp.com/10hc7ec#14071106\" style=\"text-decoration:none;\"><u>https://marvelapp.com/10hc7ec#14071106</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> </span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Essential Functions and Responsibilities </span><a href=\"https://marvelapp.com/10hc7ec#14071107\" style=\"text-decoration:none;\"><u>https://marvelapp.com/10hc7ec#14071107</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> </span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- What skills do I need for the job </span><a href=\"https://marvelapp.com/10hc7ec#14071108\" style=\"text-decoration:none;\"><u>https://marvelapp.com/10hc7ec#14071108</u></a></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Logic</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Pull the needed fields from cached O*Net data.</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- If anything not clear about specific field/section please ask in forums, you can simply map UI fields with the O*Net data by looking at the responses from the O*Net API.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Get Similar Careers</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- GET /careers/similar</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Public endpoint</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Logic</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Using the career associated slug pull similar careers with pagination parameters, if no pagination parameters, then default values should be used.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Favorite a Career</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- POST /career/&lt;id&gt;/favorite</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This is protected endpoint</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Will be used to Save career to Profile option in career details page.</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Logic</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Add new table to store user favorited careers</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Get Favorited Careers</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- GET /careers/favorite</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- This is protected endpoint</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Logic</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Using pagination parameters, return the user favorite careers</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- If pagination missing then use default value</span></p>\n\n<p style=\"margin-left:72pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- If no favorite then return empty array</span></p>\n&nbsp;\n\n<h2><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:21.3333px\">Notes</span></h2>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Prefix for api routes : /api/</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Gives command to run the scripts as cron jobs to verify the cache update works without any problems.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- All api endpoints input parameters should be properly validated.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Error messages should be in json format, with fields : message, error code, and error flag (true).</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Postman file should be updated with proper endpoints and test cases.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Proper logging should be added for all endpoints.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- All code must be linted using eslint.com</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- All code must be properly documented.</span></p>\n\n<h2><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:21.3333px\">Technology Stack</span></h2>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- NodeJS 4.x</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Postgres 9.4</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Heroku</span></p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30055105",
+  "finalSubmissionGuidelines": "<h2><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:21.3333px\">Deliverables</span></h2>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Git patch file that include all changes.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Deployment guide should be the README filed updated with all required steps to deploy and test your app locally and on heroku.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Verification document.</span></p>\n\n<div>&nbsp;</div>\n",
+  "forumId": 33900,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33900",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 50,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-30T13:00:00.000Z",
+      "actualStartTime": "2016-08-30T13:00:00.000Z",
+      "scheduledEndTime": "2016-09-04T13:00:00.000Z",
+      "actualendTime": "2016-09-04T13:00:00.000Z",
+      "_id": "58123e87e0be5f30ae563ec7"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-30T13:05:00.000Z",
+      "actualStartTime": "2016-08-30T13:05:00.000Z",
+      "scheduledEndTime": "2016-09-04T13:00:00.000Z",
+      "actualendTime": "2016-09-04T13:00:00.000Z",
+      "_id": "58123e87e0be5f30ae563ec6"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-04T13:00:00.000Z",
+      "actualStartTime": "2016-09-04T13:00:00.000Z",
+      "scheduledEndTime": "2016-09-06T12:01:00.000Z",
+      "actualendTime": "2016-09-06T12:01:00.000Z",
+      "_id": "58123e87e0be5f30ae563ec5"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-06T12:02:00.000Z",
+      "actualStartTime": "2016-09-06T12:02:00.000Z",
+      "scheduledEndTime": "2016-09-06T15:28:00.000Z",
+      "actualendTime": "2016-09-06T15:28:00.000Z",
+      "_id": "58123e87e0be5f30ae563ec4"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-06T15:28:00.000Z",
+      "actualStartTime": "2016-09-06T15:28:00.000Z",
+      "scheduledEndTime": "2016-09-06T16:03:00.000Z",
+      "actualendTime": "2016-09-06T16:03:00.000Z",
+      "_id": "58123e87e0be5f30ae563ec3"
+    }
+  ],
+  "platforms": [
+    "Heroku"
+  ],
+  "postingDate": "2016-08-30T13:00:00.000Z",
+  "prize": [
+    1400,
+    700
+  ],
+  "projectId": 10343,
+  "registrants": [
+    {
+      "handle": "jackyzhangjb",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T07:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563ec2"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T13:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563ec1"
+    },
+    {
+      "handle": "gopalrmd90",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T13:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563ec0"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T13:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563ebf"
+    },
+    {
+      "handle": "code56Life",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T13:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563ebe"
+    },
+    {
+      "handle": "utkarshkukreti",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T14:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563ebd"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T14:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563ebc"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T14:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563ebb"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T14:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563eba"
+    },
+    {
+      "handle": "zsudraco",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T14:27:00.000Z",
+      "submissionDate": "2016-09-03T12:16:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563eb9"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T14:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563eb8"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T14:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563eb7"
+    },
+    {
+      "handle": "ananthhh",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T14:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563eb6"
+    },
+    {
+      "handle": "moagi.anela",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T14:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563eb5"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T14:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563eb4"
+    },
+    {
+      "handle": "gvir",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T15:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563eb3"
+    },
+    {
+      "handle": "Colinh84",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T15:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563eb2"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T15:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563eb1"
+    },
+    {
+      "handle": "Amith",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T15:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563eb0"
+    },
+    {
+      "handle": "mehblahwhatever",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T15:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563eaf"
+    },
+    {
+      "handle": "isv",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T16:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563eae"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T16:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563ead"
+    },
+    {
+      "handle": "ecampbell565",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T17:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563eac"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T17:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563eab"
+    },
+    {
+      "handle": "chuxy111",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T18:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563eaa"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T18:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563ea9"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T18:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563ea8"
+    },
+    {
+      "handle": "demo.b",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T19:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563ea7"
+    },
+    {
+      "handle": "ShindouHikaru",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T20:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563ea6"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-30T23:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563ea5"
+    },
+    {
+      "handle": "smatsumoto",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T00:12:00.000Z",
+      "submissionDate": "2016-09-04T09:25:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563ea4"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T01:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563ea3"
+    },
+    {
+      "handle": "ngoctay",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T02:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563ea2"
+    },
+    {
+      "handle": "dodoldol",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T02:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563ea1"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T03:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563ea0"
+    },
+    {
+      "handle": "jackchongs",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T04:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563e9f"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T05:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563e9e"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T08:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563e9d"
+    },
+    {
+      "handle": "ajaivgeorge",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T12:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563e9c"
+    },
+    {
+      "handle": "ecavalier313",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T12:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563e9b"
+    },
+    {
+      "handle": "karthsharma",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T15:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563e9a"
+    },
+    {
+      "handle": "rtty",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T17:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563e99"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T18:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563e98"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T02:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563e97"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T04:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563e96"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T13:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563e95"
+    },
+    {
+      "handle": "kvsatya",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T18:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563e94"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T07:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563e93"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T15:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563e92"
+    },
+    {
+      "handle": "anachary",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-03T15:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e87e0be5f30ae563e91"
+    }
+  ],
+  "registrationEndDate": "2016-09-04T13:00:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-09-04T13:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "zsudraco",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 94.38,
+      "finalScore": 94.38,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-09-03T12:16:00.000Z",
+      "_id": "58123e87e0be5f30ae563ec9"
+    },
+    {
+      "handle": "smatsumoto",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 80,
+      "finalScore": 80,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-09-04T09:25:00.000Z",
+      "_id": "58123e87e0be5f30ae563ec8"
+    }
+  ],
+  "technology": [
+    "API",
+    "MongoDB",
+    "Node.js",
+    "PostgreSQL"
+  ]
+}

@@ -14,4 +14,10 @@ export default {
       public: true,
     },
   },
+  '/challenges/:id': {
+    get: {
+      method: ChallengesController.getChallenge,
+      public: true,
+    },
+  },
 };

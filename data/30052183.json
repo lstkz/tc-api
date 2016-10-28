@@ -1,0 +1,412 @@
+{
+  "_id": 30052183,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:49:00.866Z",
+  "appealsEndDate": "2015-11-26T02:23:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "SunShot - EnerWise NodeJS Application",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<div style=\"background:#eee;border:1px solid #ccc;padding:5px 10px;\">\n<h3 dir=\"ltr\" style=\"text-align: center;\"><strong><span style=\"color:rgb(255, 0, 0)\">If there is only one passing submission for this challenge, we will grant the second place prize money to the first place winner too. Else, the first place winner gets a $200 bonus.</span></strong></h3>\n</div>\n\n<p dir=\"ltr\"><span>EnerWise is your personal energy concierge. It is also a web application that guides a homeowner / home buyer through the process of analyzing their home&rsquo;s current/expected energy usage and potential savings from adding solar and performing energy efficiency upgrades. We then connect the homeowner to the best source of capital and qualified installers to maximize their investment.</span></p>\n\n<p dir=\"ltr\">For this challenge, the goal is to implement a REST API backend and wire it up the provided AngularJS HTML prototype.</p>\n\n<h2 dir=\"ltr\">Challenge Requirements</h2>\n\n<p dir=\"ltr\">You will address the following :</p>\n\n<h3 dir=\"ltr\"><u>Technology Stack</u></h3>\n\n<p dir=\"ltr\">You will use the follow stack in this challenge</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Express.JS 4.0</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Postgres (latest stable version)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- AngularJS</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Node.JS (latest stable version)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Nginx (as reverse proxy)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Async module is a must.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Use Underscorejs if needed</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Nodemailer for sending emails</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- S3 for uploading images</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Model Definition</u></h3>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- user</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- id (primary id)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- role : home_owner, financier, realtor, energy_installer, or admin</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- email</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- password (hashed and salted)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- first_name</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- last_name</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- company (optional)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- utility_name</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- utility_referral_id : this is the utilityAPI referral token retrieved from authorization flow</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- utility_account_id : this is the utilityAPI#account#uid</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- utility_service_id : this is the UtilityAPI#service#uid</p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- user_social_account</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- user_id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- type (facebook, twitter, g+)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- token</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- identifier</p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- houses</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- house_id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- address</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- city (lookup)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- state (lookup)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- zip</p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- house_info</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">primary (house_id)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">houses_of_interest (array of house_id&rsquo;s)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">number_of_adults (optional)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">number_of_children (optional)</p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- user_house</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- user_id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- house_info_id</p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- house_analysis</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- house_id (reference id)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- sell-rate</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- system-cost</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- image</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- solar_production (array of 12 items, each item represents a month of the year set in the record, the value is the production in kWh)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- solar_production#image.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- status : (pending/completed)</p>\n\n\t\t<ol>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Pending : It means the house_analysis of this house is not populated yet.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Completed : It means the house_analysis of this house is populated by admin and ready for user to view it.</p>\n\t\t\t</li>\n\t\t</ol>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- financier_customer</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- financier_user_id (reference to financier user)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- user_id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- house_info_id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- authorizedAccess (false/true)</p>\n\n\t\t<ol>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- This becomes true only if user authorized access to financier to see the primary house information.</p>\n\t\t\t</li>\n\t\t</ol>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- utilities (lookup)</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Name</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- service_type (electricity,gas,water,fuel_oil, other)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- URL - not set for &lsquo;other&rsquo; service_type</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- otherDetails - json object.</p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- state_tax (lookup)</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- state</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- tax_percentage (between 0.00 - 1.00)</p>\n\t\t</li>\n\t</ol>\n\t</li>\n</ol>\n\n<p dir=\"ltr\">Note the following :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">You can add more models as needed, and suggest changes to the models above.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Roles : in this portal only Homeowners, Financiers and Admins can login. Realtors and Installers will have their own UI soon. Your solution is preferred to be flexible to add more roles in future.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>NodeJS API</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The backend will be REST API communicating with AngularJS in frontend.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The code must be organized into controllers, each controller/endpoint should be a self-contained functionality (i.e. controller for user management (login, signup, .. etc), controller for homeowner dashboard .. etc).</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Add proper role authorization validation to access each endpoint.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logging, validation, and error handling must be properly implemented.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Follow <a href=\"http://blog.mwaysolutions.com/2014/06/05/10-best-practices-for-better-restful-api/\">best practices</a> in REST API.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Backend and Pages Requirements</u></h3>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Landing Page</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- page : <a href=\"https://dl.dropboxusercontent.com/u/9747230/enerwise/index.html#/landing\">#/landing</a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The four widget&rsquo;s &lsquo;Create Account&rsquo; takes user to Signup page.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Sign in in header takes user to login page.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Signup</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- page: <a href=\"https://dl.dropboxusercontent.com/u/9747230/enerwise/index.html#/signup/energy\">#/signup</a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- If navigation to page came from Homepage then type should be selected based on selection from Homepage.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- User can select a type from the page.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Implement validation in frontend and backend as done in the UI prototype.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Backend will create new user record and redirect user to <a href=\"https://dl.dropboxusercontent.com/u/9747230/enerwise/index.html#/thankyou\">#/thankyou</a> page</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Send user welcome email :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- nodemailer options should be configurable.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- email template should be configurable.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Login</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Page : <a href=\"https://dl.dropboxusercontent.com/u/9747230/enerwise/index.html#/signin\">#/signin</a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Implement validation as done in UI prototype in both frontend and backend.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- User should be able to login using social network accounts.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- User passport.js to implement login functionality</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- For facebook/google :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- If user with identifier exists then login the user.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- else If user with email exists then create new user_social_account record</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- else if user with email does not exist redirect user to sign up and pre-fill signup form from data pulled from the social network, on successful registration user and user_social_account should be created</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- redirect user to proper dashboard based on user type.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- For twitter</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- if user with identifier exists then login the user.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- else redirect user to sign up form, pre-fill form with data pulled from twitter, on successful registration user and user_social_account should be created</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- redirect user to proper dashboard based on user type.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- For failed attempts, lockout after 10 login attempts and log that.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logout</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Hovering on top right corner will open a div with logout button.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Implement logout functionality, it will redirect user to landing page.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Forgot Password</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Page : <a href=\"https://dl.dropboxusercontent.com/u/9747230/enerwise/index.html#/reset\">#/reset</a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Add proper validation for email as done in the UI prototype in both frontend and backend.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Use nodemailer to send emails.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The templates should be configurable.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The nodemailer options should be configurable.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- If user with email exists it should send reset password email.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- There should be an expiration date &gt;= 48 hrs for the reset password functionality.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- If user with email does not exists then return error and display popup same as done in the UI prototype.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- On successful forgot password flow redirect user to a page similar to &nbsp;<a href=\"https://dl.dropboxusercontent.com/u/9747230/enerwise/index.html#/thankyou\">#/thankyou</a> &nbsp;page with message stating that &ldquo;Email has been successfully sent, check your email.&rdquo; and add link to Login page.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Reset Password</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- This page should look like Forgot Password page.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- It should contain two input fields to provide a new password and to re-type new password.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Validation for the reset password link and it&rsquo;s expiry date must be applied here.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- On successful execution redirect user to login page.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- If link is invalid or expired return user to page similar to <a href=\"https://dl.dropboxusercontent.com/u/9747230/enerwise/index.html#/thankyou\">#/thankyou</a> with proper message displayed &ldquo;Reset password is invalid&rdquo; or &ldquo;Reset password link has expired&rdquo;.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Homeowner Dashboard</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Page : <a href=\"https://dl.dropboxusercontent.com/u/9747230/enerwise/index.html#/homeowner\">#/homeowner</a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Home Info Tab</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Personal Info tab</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- It will load content from User table</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- User should be able to update information</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Validation for email and password should be applied here, same rules as in signup form.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Create/Update to backend will be applied when clicking &ldquo;Next&rdquo;</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Utility Info tab</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Refer to HomeOwner Utility Information section below understand changes to this tab.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- The collected info should be created/updated in User on clicking &ldquo;next&rdquo;.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Primary Home Address tab</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Information will be populated/stored from/in house_info#primary.</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- If there is a primary house address for customer it should be populated.</p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Display &ldquo;View Analysis&rdquo; only if existing house analysis status is Completed.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- User can change the primary house address</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- When user change primary address we move the old house to house of interest and we create new house entry and add store it in house_info#primary</p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- State/City drop down lists should be loaded from lookup table, so add two GET endpoints to return list of cities and states, there are nodejs modules and api you can reuse here.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Add validation for Zipcode in frontend/backend.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Call to backend to create/update information will be done when clicking &ldquo;Next&rdquo;.</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- The house information will be stored in house_info.primary field.</p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- House Of Interest Tab</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- User can provide zero or more house addresses in this tab.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- This tab list all house addresses associated with the User from house_info#houses_of_interest field.</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- &ldquo;View Analysis&rdquo; button only displayed for Completed house addresses entries.</p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- For new user this page will be empty with only &ldquo;Add House&rdquo; button, clicking on the button will add new House form.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Users can add as many Houses as they want.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Houses will be stored in backend when user click on &ldquo;Update Information&rdquo;.</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- The houses will be stored in house_info#houses_of_interest array field.</p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- House Analysis Tab</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- This tab display house analysis information for selected house address.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Add Financing and Potential Payback of Loan sections in Financier House Analysis Tab to this Tab, we want to user to see financing information and potential payback loan information as well.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- On this tab, user will have the option to change the address of what analysis to view by selecting from the dropdown field. This drop down will only display completed house addresses associated with that user.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- If selected House analysis is Pending then display a bootstrap alert message with statement &ldquo;Report is not yet finished, it can take up to 48 hours to complete. You&rsquo;ll receive an email when it&rsquo;s done.&rdquo;</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- user same message styling as in &ldquo;House Info&rdquo; tab.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- For &ldquo;Completed&rdquo; house, render the house_analysis data in the page.</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Retrieve house_analysis record of the home address.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Retrieve house_analysis#solar_production array.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Set image from retrieved house_analysis#image field.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- The column bar chart should be changed to side-by-side column instead of stacked columns.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- The bar chart will calculate utilityapi electricity usage only for primary house if the user of the house has referral_id associated with her account, house of interest we will only render the solar_production array data.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- The column bar chart data will be calculated as follow (calculation should be done in server side):</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- Retrieve the current year house data (12 months) for both utility api and the electricity rate.</p>\n\n\t\t\t\t\t<ul>\n\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t<p dir=\"ltr\">- Use utilityAPI <a href=\"https://utilityapi.com/docs#intervals\">#/intervals endpoint</a> to get electricity usage, where &lt;uid&gt; is the user#utility_service_uid</p>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t<p dir=\"ltr\">- We only retrieve two days interval in the demo account provided by utility api, refer to Interval Data Workaround section below to implement a workaround.</p>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t<p dir=\"ltr\">- Aggregate data by month for the last 12 months</p>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t<p dir=\"ltr\">- Use utilityAPI <a href=\"https://utilityapi.com/docs#bills\">bills endpoint</a> to get user bills.</p>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t<p dir=\"ltr\">- Group bills information by date and get the last 12 months bills and calculate bill_total for each month.</p>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t</ul>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- Retrieve the current year data (12 months) for both solar production and the seller rate.</p>\n\n\t\t\t\t\t<ul>\n\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t<p dir=\"ltr\">- Multiply each month by the seller-rate.</p>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t</ul>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- Return the data in two dimensional array.</p>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- The blue column represents the solar data, while the green represents the utility data.</p>\n\n\t\t\t\t\t<ul>\n\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t<p dir=\"ltr\">- Usage is aggregated monthly utilityapi interval data in green, and the blue is the calculated solar_production data.</p>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t</ul>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- The &ldquo;Annual Savings&rdquo; div will be calculated as = total earnings in that year - total bills from utility api in that year.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Clicking on &ldquo;Find vendors and financing for me&rdquo; will send email for support.</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- It sends email to configurable email address</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Email body will be the following text &ldquo;&lt;user#firstname&gt; &lt;user#lastname&gt; at &lt;house#address&gt; is interested in adding solar to their roof. Their email address is &lt;user#email_address&gt;. &rdquo;</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- It sends email to homeowner with the following text &ldquo;Dear &lt;first_name&gt;, We are looking for the best installers and financing sources for you right now and will be in touch shortly with more information and/or question. Best regards, The EnerWise Team&rdquo;</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- The sender (contact information) should be included in the email.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Store the request in database, this requires new table.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Financing section</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- The system cost is pulled from database.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Federal tax is configurable value in percentage, set it to 30% for testing.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Lookup State tax from state_tax table where state equals to house address.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Multiply system cost by federal tax and render the value.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Multiple system cost by state tax and render the value.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Estimated cost after incentives will be the system cost subtracted by the calculated federal/state tax values.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Potential Payback of Loan section</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Above the &ldquo;Potential Payback of Loan section&rdquo; there are set of range input fields for two loan scenarios:</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- System Cost in $ from 0 to 50,000 with initial value set to SYSTEM COST from database.</p>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- Yearly interest rate in % from 0 to 10 (add % unit to label)</p>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- Loan term in years from 0 to 30 (years unit to label)</p>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- Percentage savings applied to loan payments in % from 0 to 100</p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- The D3 chart with 2 line graphs, one for loan scenario 1 and one for loan scenario 2</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- Chart x and y axis :</p>\n\n\t\t\t\t\t<ul>\n\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t<p dir=\"ltr\">- Y-axis is Remaining Value of the loan</p>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t<p dir=\"ltr\">- X-Axis is Time from beginning of loan</p>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t</ul>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- To calculate the graph data :</p>\n\n\t\t\t\t\t<ul>\n\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t<p dir=\"ltr\">- Variables :</p>\n\n\t\t\t\t\t\t<ol>\n\t\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t\t<p dir=\"ltr\">- Estimated System cost = SYS</p>\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t\t<p dir=\"ltr\">- Annual Percentage Rate = APR</p>\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t\t<p dir=\"ltr\">- Monthly Percentage Rate (MPR) = APR/12</p>\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t\t<p dir=\"ltr\">- Loan Term = LTR</p>\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t\t<p dir=\"ltr\">- Monthly Savings from Solar = SAV</p>\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t\t<p dir=\"ltr\">- % Savings applied to loan = SAL</p>\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t\t<p dir=\"ltr\">- X = Month from start of Loan</p>\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t\t<p dir=\"ltr\">- Y = Remaining balance of loan</p>\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t</ol>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t<p dir=\"ltr\">- Formula : Y = SYS(1 - X*( MPR + (MPR/((1+MPR)^(LTR*12)-1)) - (SAV * SAL)*X</p>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t<p dir=\"ltr\">- You are provided with sample document that show you the calculations.</p>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t</ul>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- The table below the D3 chart for the loan scenarios will summarize the loans scenario, it will display the time to payoff the loan and the total of 25 year value of installation.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Export to PDF</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Should export the same page without header/footer to PDF with same look and feel on a white background.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- User open source node module to support this functionality.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Financier Dashboard</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Page : <a href=\"https://dl.dropboxusercontent.com/u/9747230/enerwise/index.html#/financier\">#/financier</a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Your Info Tab</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Form will be populated from User model for currently logged in user.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- User can update the form with information.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Validation should be done in frontend/backend as in UI prototype.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Validating existing email already exist should be done as well.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Customers tab</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- User will use this page to manage Customers.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- The functionality for adding houses is same as the one done in Homeowner dashboard.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- The page will manipulate users and will create association between financing user and the customer user by storing it in financier_customer model.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- For each customer, the backend will create a user with &lsquo;home_owner&rsquo; type, create houses records, and create house_info record for the addresses to be associated with the user, then associate the user with currently logged in financier in financier_customer table.</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Show autocomplete list in the customer email, financier can select a user or insert new email. If financier select an existing user we will populate the primary address of that selected user in the primary address field in READONLY mode.</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- Send email to the customer indicating that &ldquo;&lt;financier name&gt; want to access your house information, please approve it &lt;here&gt;&rdquo;.</p>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- The email will contain a link that will take user to a page that state to &ldquo;approve&rdquo; or &ldquo;deny&rdquo; access.</p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- If financier added new customer email, then</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- Send email to customer asking them to provide utility information for their primary house. User will click on link and will be redirected to a page to reset their password, since we already have an account for the user, then user will login and will be taken to the Personal Info Tab to provide utility api information.</p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Display &lsquo;view analysis&rsquo; button only for &lsquo;complete&rsquo; house addresses.</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Display &ldquo;View Analysis&rdquo; button for primary house ONLY if customer &lsquo;authorized&rsquo; it.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Implement endpoint to support adding/removing house addresses.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Status columns represent the house analysis status (Pending/Completed)</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Analysis Tab</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- This will be same as Homeowner Analysis tab except that we don&rsquo;t display &ldquo;Find Vendor and Financier for Home&rdquo; button.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Admin Dashboard</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Page : <a href=\"https://dl.dropboxusercontent.com/u/9747230/enerwise/index.html#/admin\">#/admin</a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- This page accessed by &lsquo;admin&rsquo; user only.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- It will list all houses with house analysis status &ldquo;pending&rdquo;.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- All the fields are manually inserted, take into consideration the comma separator, and the dollar sign ($) for money field.</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Proper validation for digits should be added in backend, user don&rsquo;t need to add the dollar sign for money fields, it should be appended automatically.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Implement Upload Image functionality, it will store images to a configurable folder over a network.</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- User can upload multiple times for same house to replace images.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Upload should be done automatically once user click on &ldquo;Done&rdquo;.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Clicking &ldquo;Done&rdquo; will update house_analysis record in backend with status from &ldquo;pending&rdquo; to &ldquo;completed&rdquo;.</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Validation is needed to verify image is provided, all fields are filled, and data is populated for that house.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- On successful storing of data a successful popup will be displayed and record will be removed from the page.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Use Amazon S3 to store the image and serve it.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ol>\n\n<h2 dir=\"ltr\"><u>HomeOwner Utility Information</u></h2>\n\n<p dir=\"ltr\">We will make the following changes to the HomeOwner Utility Information tab :</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Remove existing form fields.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Add new field &ldquo;Select Utility&rdquo; drop down field :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Populate it from &lsquo;utilities&rsquo; lookup table.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Render iframe beneath the Dropdown field on what user select from drop down, you will use the selected Utility#URL to render the iFrame content.</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- If other is selected then we display Utility Name and store it in otherDetails as json object.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The Utility#URL will be UtilityAPI Widget Token URL that is used to authorize UtilityAPI to pull the users information on their behalf. &nbsp;The url is something <a href=\"https://utilityapi.com/portal/elkhawaja_gmail?demo&amp;utility=DEMO\">like this</a>.</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Open UtilityAPI.com</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Login and navigate to customer portal <a href=\"https://utilityapi.com/form-builder\">https://utilityapi.com/form-builder</a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Update the Settings in that customer portal page to use redirect to url that your application will handle. We are interested in &lsquo;referral&rsquo; parameter returned from authorization flow. Store that &lsquo;referral&rsquo; in user record.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User will fill the form in the iFrame and authorize utilityapi app, then utilityapi.com will redirect by calling the configured redirect to URL in the customer portal.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Implement callback GET endpoint to handle successful callback, we will capture &lsquo;referral&rsquo; and associate it with current user.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- On successful authorization</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Render user account using utilityAPI and render it in page, api call looks like this &nbsp;(this call should be done in server side) <a href=\"about:blank\">https://utilityapi.com/api/accounts.json?access_token=&lt;access-token&gt;&amp;referrals=&lt;referrals&gt;</a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Then retrieve user services (this is server side call) and display them in drop down list.</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Use <a href=\"about:blank\">https://utilityapi.com/api/services.json?access_token=&lt;access-token&gt;</a> and filter the services using the &lt;account_uid&gt; == account#uid from previous call.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Display dropdown with list of services, user should select a service in drop down.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- When user click &ldquo;Next&rdquo; we will store the collected information in the backend, and we activate the user service selected by calling <a href=\"https://utilityapi.com/docs#services-modify\">https://utilityapi.com/docs#services-modify</a> endpoint by setting active_until to a date in future (i.e. January 2100).</p>\n\t</li>\n</ol>\n\n<h2 dir=\"ltr\"><u>Interval Data Workaround</u></h2>\n\n<p dir=\"ltr\">As we are using demo account to test integration with UtilityAPI.com, it does not return enough interval range information for the demo accounts, it only return 1-2 days interval. And we need 12 days interval to aggregate and calculate past 12 months usage of the house.</p>\n\n<p dir=\"ltr\">You will do the following workaround when retrieving usage information :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- All UtilityAPI endpoint URLs should be configurable.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The interval endpoint url should have same format as the one needed by utility api i.e. /services/&lt;uid&gt;/intervals but it will point to local hosting for the interval json file.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- You are provided with JSON file that has 12 months intervals.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Implement the /services/&lt;uid&gt;/intervals in your application and return the sample json file as response. so basically the configurable UtiltiyAPI endpoint for interval will be something like <a href=\"http://localhost:8080/services/\">http://localhost:8080/services/&lt;uid&gt;/intervals</a> which is an endpoint you are implementing in your app.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- In production we will replace the configured URL with the actual UtilityAPI interval URL, and it should work without any problems.</p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Test Scenarios</h2>\n\n<p dir=\"ltr\">Listing here the scenarios that you will test your solution against :</p>\n\n<h3 dir=\"ltr\"><u>Test Scenario 1</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User create a homeowner account.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User provide personal information.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User provide UtilityAPI account information</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User set primary address</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User set multiple house of interests</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Admin logs in and fill the houses solar production information</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- All houses are marked completed</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User next time login can see &lsquo;View Analysis&rsquo; button in all houses.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User open &ldquo;Analysis&rdquo; tab and view the house analysis, and navigate between completed houses.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Test Scenario 2</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User create a homeowner account.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User provide personal information.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User provide UtilityAPI account information</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User set primary address</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User set Zero house of interests</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Admin logs in and fill the houses solar production information</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- All houses are marked completed</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User next time login can see &lsquo;View Analysis&rsquo; button in primary house.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User open &ldquo;Analysis&rdquo; tab and view the house analysis, and navigate between completed houses.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Test Scenario 3</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User create a homeowner account.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User provide personal information.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User DOES NOT provide UtilityAPI account information</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User set primary address</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User set house of interests</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Admin logs in and fill the houses solar production information</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- All houses are marked completed</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User next time login can see &lsquo;View Analysis&rsquo; button in all houses.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User open &ldquo;Analysis&rdquo; tab and view the house analysis for primary house, the bar chart will only display solar_production information, since user did not provide UtilityAPI information.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Test Scenario 4</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User create a financier account.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User provide personal information.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User create customer with non existing email. (customer is a home owner)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User add primary house and house of interests.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Customer receives an email to provide utility api information.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Customer navigate to the website using the link in the email.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Customer gets a reset password page, customer provide a password and get redirected to login page.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Customer login</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Customer view Personal Information tab, can update it.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Customer view UtilityAPI Information tab and provide information.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Customer can view and update primary house and house of interests information.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Admin logs in and fill the houses solar production information</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- All houses are marked completed.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Financier and customer next time login can see &lsquo;View Analysis&rsquo; button in all houses.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Financier and customer open &ldquo;Analysis&rdquo; tab and view the completed houses information.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Test Scenario 5</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User create a financier account.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User provide personal information.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User create customer with non existing email. (customer is a home owner)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User add primary house and house of interests.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Customer receives an email to provide utility api information.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Customer ignores the email.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Admin logs in and fill the houses solar production information</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- All houses are marked completed.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Financier next time login can see &lsquo;View Analysis&rsquo; button in all houses.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Financier open &ldquo;Analysis&rdquo; tab and view the completed houses information, the financier can only see the solar_production information of the house since user did not provie UtilityAPI information.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Test Scenario 6</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User create a financier account.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User provide personal information.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User create customer with an existing email. (customer is a home owner)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Page will load the associated primary house of the customer as read only.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User creates house of interests.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Customer receives an email to approve financier to access primary house information.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Customer get redirected to website using link in the email to approve/deny access for that financier.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Financier next time login can see &lsquo;View Analysis&rsquo; button in primary house if authorized, otherwise, we display &ldquo;UnAuthorized&rdquo; or &ldquo;Pending Authorization&rdquo; access.</p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">General Notes</h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The UI prototype is responsive, so your solution must work on responsive views as well, you should not break any UI styling or functionality in responsive views.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Provide a readme file for details about deploying the application, configuring it, and testing locally.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- UtilityAPI api access token and widget token URL should be configurable.</p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Heroku Hosting</h2>\n\n<p dir=\"ltr\">The application will be hosted in heroku. You must test your solution in Heroku and provide required scripts and instructions to deploy there.</p>\n\n<h2 dir=\"ltr\">Documents</h2>\n\n<p dir=\"ltr\">Provided in challenge forums :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The UI prototype</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Calculation document for the plot chart.</p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Folder Structure</h2>\n\n<p dir=\"ltr\">Root directory &nbsp;&nbsp;&nbsp;&nbsp;</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- env-sample (this will be a sample of .env file)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- app.js</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- models</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- views</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- controllers</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- public &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- angularjs</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- css</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- js</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- i &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- .gitignore</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- config/ folder</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- READ.md</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- anything else needed.</p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">&nbsp;</h2>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30052183",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<h2 dir=\"ltr\">Deliverables</h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- All source code files and scripts that implement above requirements.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- A readme.md file detailing all information needed to setup, configure, and run the app. Use github flavored markup text. It should be part of the git folder submitted</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span>- You don&#39;t need to submit a word document for deployment guide.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span>- Word document for verification steps.</span></p>\n\t</li>\n</ul>\n",
+  "forumId": 30733,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=30733",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 31,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-17T18:13:00.000Z",
+      "actualStartTime": "2015-11-17T18:13:00.000Z",
+      "scheduledEndTime": "2015-11-22T18:12:00.000Z",
+      "actualendTime": "2015-11-22T18:12:00.000Z",
+      "_id": "58123e0c0659262e95e00c29"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-17T18:18:00.000Z",
+      "actualStartTime": "2015-11-17T18:18:00.000Z",
+      "scheduledEndTime": "2015-11-22T18:13:00.000Z",
+      "actualendTime": "2015-11-22T18:13:00.000Z",
+      "_id": "58123e0c0659262e95e00c28"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-22T18:13:00.000Z",
+      "actualStartTime": "2015-11-22T18:13:00.000Z",
+      "scheduledEndTime": "2015-11-24T15:18:00.000Z",
+      "actualendTime": "2015-11-24T15:18:00.000Z",
+      "_id": "58123e0c0659262e95e00c27"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-24T15:18:00.000Z",
+      "actualStartTime": "2015-11-24T15:18:00.000Z",
+      "scheduledEndTime": "2015-11-25T15:18:00.000Z",
+      "actualendTime": "2015-11-25T15:18:00.000Z",
+      "_id": "58123e0c0659262e95e00c26"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-25T15:18:00.000Z",
+      "actualStartTime": "2015-11-25T15:18:00.000Z",
+      "scheduledEndTime": "2015-11-26T02:23:00.000Z",
+      "actualendTime": "2015-11-26T02:23:00.000Z",
+      "_id": "58123e0c0659262e95e00c25"
+    }
+  ],
+  "platforms": [
+    "NodeJS"
+  ],
+  "postingDate": "2015-11-17T18:13:00.000Z",
+  "prize": [
+    2000,
+    1000
+  ],
+  "projectId": 9143,
+  "registrants": [
+    {
+      "handle": "Sky_",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-17T18:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c24"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-17T18:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c23"
+    },
+    {
+      "handle": "hash3r",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-17T18:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c22"
+    },
+    {
+      "handle": "571555",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-17T21:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c21"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-17T23:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c20"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-18T00:08:00.000Z",
+      "submissionDate": "2015-11-22T14:46:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c1f"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-18T01:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c1e"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-18T01:26:00.000Z",
+      "submissionDate": "2015-11-22T17:01:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c1d"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-18T05:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c1c"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-18T05:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c1b"
+    },
+    {
+      "handle": "Wes.Gilliland",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-18T06:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c1a"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-18T06:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c19"
+    },
+    {
+      "handle": "son4moon",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-18T08:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c18"
+    },
+    {
+      "handle": "chuxy111",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-18T08:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c17"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-18T10:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c16"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-18T11:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c15"
+    },
+    {
+      "handle": "frozenfx",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-18T12:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c14"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-18T16:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c13"
+    },
+    {
+      "handle": "shankarkamble",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-18T17:04:00.000Z",
+      "submissionDate": "2015-11-22T17:49:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c12"
+    },
+    {
+      "handle": "sidthekid",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-18T17:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c11"
+    },
+    {
+      "handle": "moulyg",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-18T18:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c10"
+    },
+    {
+      "handle": "zaixiang",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-19T01:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c0f"
+    },
+    {
+      "handle": "harsh157",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-19T10:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c0e"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-19T13:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c0d"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-19T18:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c0c"
+    },
+    {
+      "handle": "fish00",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-19T19:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c0b"
+    },
+    {
+      "handle": "chrislee8",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-20T16:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c0a"
+    },
+    {
+      "handle": "Colossalfy",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-20T18:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c09"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-20T18:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c08"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T16:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c07"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T12:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e0c0659262e95e00c06"
+    }
+  ],
+  "registrationEndDate": "2015-11-22T18:12:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-11-22T18:13:00.000Z",
+  "submissions": [
+    {
+      "handle": "peakpado",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 87.5,
+      "finalScore": 87.5,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-11-22T14:46:00.000Z",
+      "_id": "58123e0c0659262e95e00c2c"
+    },
+    {
+      "handle": "stevenfrog",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 70,
+      "finalScore": 70,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-11-22T17:01:00.000Z",
+      "_id": "58123e0c0659262e95e00c2b"
+    },
+    {
+      "handle": "shankarkamble",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 57.5,
+      "finalScore": 57.5,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-11-22T17:49:00.000Z",
+      "_id": "58123e0c0659262e95e00c2a"
+    }
+  ],
+  "technology": [
+    "Angular.js",
+    "Node.js",
+    "PostgreSQL"
+  ]
+}

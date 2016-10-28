@@ -1,0 +1,716 @@
+{
+  "_id": 30053186,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:50:37.141Z",
+  "appealsEndDate": "2016-03-17T01:48:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Visualization for Python Spark Recommendation Engine for Broadcaster",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Topcoder recently developed a </span><a href=\"http://www.topcoder.com/challenge-details/30052933/?type=develop&amp;noncache=true\" style=\"text-decoration:none;\"><u>Recommendation Engine</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> for a client by implementing &nbsp;&nbsp;Collaborative Filtering based on Apache Spark using a Python interface. &nbsp;We received a number of very impressive submissions. &nbsp;The next step in this program it to develop some visualizations that provide intuitions about the viewing habits of their customers and can illustrate how programs are related by common groups of viewers.</span></span></p>\n\n<p><strong style=\"line-height:1.6\">Background</strong></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\">In the previous challenge, we used the Collaborative Filtering Application based on the Spark mlib library as the basis for our application.</span></p>\n\n<p><a href=\"http://spark.apache.org/docs/latest/mllib-collaborative-filtering.html\" style=\"line-height: 1.6; text-decoration: none;\"><u>http://spark.apache.org/docs/latest/mllib-collaborative-filtering.html</u></a></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\">This library uses an alternating least squares algorithm to learn latent factors. &nbsp;&nbsp;Fortunately, we didn&rsquo;t have to start from ground zero when we were developing our solution. &nbsp;There is a movie recommendation system which has been developed as a tutorial for mlib collaborative filtering which we used as a starting point for this system:</span></p>\n\n<p><a href=\"https://databricks-training.s3.amazonaws.com/movie-recommendation-with-mllib.html\" style=\"line-height: 1.6; text-decoration: none;\"><u>https://databricks-training.s3.amazonaws.com/movie-recommendation-with-mllib.html</u></a></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">In our previous challenge, </span><a href=\"https://www.topcoder.com/tc?module=MemberProfile&amp;cr=40140100\" style=\"line-height: 1.6; text-decoration: none;\"><u>cjalmeida</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> built a compelling solution upon these technologies. &nbsp;One of the outcomes of the previous challenge is that we&rsquo;ve discovered that Mean Average Precision is a much better predictor of viewings habits with the current structure of the data set rather than using Mean Squared Error. &nbsp;&nbsp;To understand the underlying algorithms associated with the Collaborative Filtering mechanism and the calculation of the latent factors involved, I would strongly recommend you spend some time with evaluation.html document provided in the &ldquo;doc&rdquo; folder of the winning submission. &nbsp;The code and data from the previous challenge will be provided in the Code Documents portion of the forum attached to this challenge.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\">The data for the new collaborative filtering system has been organized in three files for you:</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\">- programs.csv - lists the programs and the corresponding genres associated with the shows</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\">- viewers.csv - list the anonymized viewer data along with their gender and birth dates</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\">- views.csv - lists the viewer ids along with the number of times each viewer has watched a show</span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Here is the data dictionaries files:</span></span></p>\n\n<p dir=\"ltr\"><span><strong>Programs.csv</strong></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">ProgramId: Integer - &nbsp;PK for the Program</span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\">ProgramName: String - Name of the Program</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\">Genre: &nbsp;Name of the Genre -- these have been obfuscated but the original values where strings such as &lsquo;Comedy&rsquo;, &lsquo;Drama&rsquo;, etc.</span></p>\n\n<p dir=\"ltr\"><span><strong>Viewers.csv</strong></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">ViewerId: &nbsp;Integer - PK for a viewer</span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\">Gender: &nbsp;Enum (&lsquo;m&rsquo;, &lsquo;f&rsquo;, &lsquo;u&rsquo;) Male, Female, Unknown</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\">DateOfBirth: &nbsp;Date - Viewer Birth Date</span></p>\n\n<p><strong style=\"line-height:1.6\">Views.csv</strong></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">ViewerId: Integer - FK to Viewer</span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\">Source: Enum(&lsquo;Source 1&rsquo;, &lsquo;Source 2&rsquo;, &lsquo;Source 3&rsquo;, &lsquo;Source 4&rsquo;) - these values have been obfuscated but they represent the viewing mechanism/channel the viewers used to watch the show such as a web interface or through a mobile device.</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\">MostRecentLocalDateKey: &nbsp;Date of most recent view</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\">MostRecentTimeOfVisit: &nbsp;Timestamp of most recent view</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\">ProgramId: &nbsp;Integer - FK to Program</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\">NumberOfViews: Number of times a viewer watch a particular program on a particular source in the year 2015.</span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Docker files and deployment documentation are provided to help with the configuration and setup of the existing application.</span></span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\">Here are the requirements for visualization application. &nbsp;In high level terms what we&rsquo;re trying to do here is to put a user-friendly wrapper -- a Python desktop application -- around recommendation engine that we&rsquo;ve built. &nbsp;&nbsp;This wrapper is going to be used by management and development staff to demonstrate how recommendation engines and collaborative filtering algorithms work. &nbsp;</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\"><strong>Requirement #1: </strong>&nbsp;As part of the previous challenge, we developed a function to display actual audience viewing statistics as well as the potential ones. &nbsp;&nbsp;The list should display the show name, the genres, and the number of viewers which have viewed each program. &nbsp;Please also display the median viewer for each show in terms of gender and birth date. &nbsp;&nbsp;Please also display the median viewer for each show in terms of gender and birth date. &nbsp;This list is limited to the top X shows. &nbsp;We should allow users to pick logical values for the number of shows to display (5,10, 25, 50). &nbsp;Please create a button in the User Interface which will initiate the calculations and can display the information requested. &nbsp;We can label the button &lsquo;Top Programs&rsquo;.</span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"><strong>Requirement #2:</strong> &nbsp;As part of the previous challenge, we developed a function which displays a listing of shows sorted in descending order by potential audience size. &nbsp;The list should display the show name, the genres, and the number of viewers which have might have a preference for each show. &nbsp;Please also display the median viewer for each show in terms of gender and birth date. &nbsp;This list is limited to the top X shows. &nbsp;We should allow users to pick logical values for the number of shows to display (5,10, 25, 50). &nbsp;&nbsp;Please create a button in the User Interface which will initiate the calculations and can display the information requested. &nbsp;&nbsp;&nbsp;The button can be labeled &lsquo;Top Programs by Potential Audience&rsquo;</span></span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\"><strong>Requirement #3:</strong> &nbsp;We want to allow users to see how shows are related by their users. &nbsp;Please create a dropdown in the user interface of all the shows in the programs.csv. &nbsp;By selecting a show, and selecting an actual vs. potential audience setting we should display a list of other shows which have common viewers (or common potential viewers). &nbsp;The list of shows should be ranked in descending order of popularity. &nbsp;&nbsp;&nbsp;Ideally, we will give users the ability to show this relationship for X number of shows (5,10, 25, 50). &nbsp;The list of show can be accompanied by a button which will initialize the display of the visualization discussed below. &nbsp;&nbsp;This can be labeled &ldquo;Display Related Programs&rdquo;. &nbsp;Mean Average Precision should be used to calculate the potential audience.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\"><strong>Requirement #4:</strong> &nbsp;Please create an interactive visualization which displays how the programs are related after a single program is selected in the dropdown. &nbsp;One idea -- suggestive not prescriptive -- is to make the selected program the hub at the center of a graphic and the associated titles the spokes. &nbsp;By clicking on one of the spokes, we should repeat the process -- the new show should display a new wheel and show the shows related to it as well. &nbsp;&nbsp;You have creative license here to display how the shows are related by viewing habit. &nbsp;The point here is to be be able to track from one show to the next in terms of common viewers. &nbsp;The client would like to be able to visualize the journey from start program to end program. &nbsp;&nbsp;There will obviously be some depth limit where we run out screen real estate but if can capture a path of at least 3 shows in depth this will be acceptable and 5 shows would be outstanding.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\"><strong>Requirement #5:</strong> &nbsp;&nbsp;Please display the genre information for each program displayed in the visualization. &nbsp;</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\"><strong>Requirement #6:</strong> Requirements #3-5 are the high priority requirements for the application. &nbsp;The visualization/graphic should be the most prominent feature in the application.</span></p>\n\n<div>&nbsp;</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30053186",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.6667px\">Please use the provided application, build scripts, and docker files as the basis for your submission.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.6667px\">Please include all source code and build scripts with your submission.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.6667px\">If you&rsquo;ve created test, training and validation files please provide a URL where those files can be downloaded. &nbsp;You don&rsquo;t need to provide those in the submission itself, but you should provide a submission.txt file in the root directory of your submission where links to your data files can be found.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.6667px\">Please update the provided docker files as required to keep the system working including your additions to the app.</span></span></p>\n\t</li>\n</ol>\n",
+  "forumId": 32171,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=32171",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 66,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-04T17:53:00.000Z",
+      "actualStartTime": "2016-03-04T17:53:00.000Z",
+      "scheduledEndTime": "2016-03-11T17:53:00.000Z",
+      "actualendTime": "2016-03-11T17:53:00.000Z",
+      "_id": "58123e6de0be5f30ae5622f6"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-04T17:58:00.000Z",
+      "actualStartTime": "2016-03-04T17:58:00.000Z",
+      "scheduledEndTime": "2016-03-12T17:52:00.000Z",
+      "actualendTime": "2016-03-12T17:52:00.000Z",
+      "_id": "58123e6de0be5f30ae5622f5"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-12T17:52:00.000Z",
+      "actualStartTime": "2016-03-12T17:52:00.000Z",
+      "scheduledEndTime": "2016-03-15T17:51:00.000Z",
+      "actualendTime": "2016-03-15T17:51:00.000Z",
+      "_id": "58123e6de0be5f30ae5622f4"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-15T17:51:00.000Z",
+      "actualStartTime": "2016-03-15T17:51:00.000Z",
+      "scheduledEndTime": "2016-03-16T17:51:00.000Z",
+      "actualendTime": "2016-03-16T17:51:00.000Z",
+      "_id": "58123e6de0be5f30ae5622f3"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-16T17:52:00.000Z",
+      "actualStartTime": "2016-03-16T17:52:00.000Z",
+      "scheduledEndTime": "2016-03-17T01:48:00.000Z",
+      "actualendTime": "2016-03-17T01:48:00.000Z",
+      "_id": "58123e6de0be5f30ae5622f2"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-03-04T17:53:00.000Z",
+  "prize": [
+    1800,
+    900
+  ],
+  "projectId": 9454,
+  "registrants": [
+    {
+      "handle": "deedee",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-05T05:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622f1"
+    },
+    {
+      "handle": "paulocezar",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-05T13:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622f0"
+    },
+    {
+      "handle": "ShindouHikaru",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-04T19:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622ef"
+    },
+    {
+      "handle": "SlicedBread",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-04T20:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622ee"
+    },
+    {
+      "handle": "rajrkrish",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-04T22:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622ed"
+    },
+    {
+      "handle": "abhicloudstalk",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-04T22:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622ec"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-05T00:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622eb"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-05T00:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622ea"
+    },
+    {
+      "handle": "d_jash",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-05T01:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622e9"
+    },
+    {
+      "handle": "freegod",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-05T01:51:00.000Z",
+      "submissionDate": "2016-03-12T14:36:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622e8"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-05T02:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622e7"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-05T02:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622e6"
+    },
+    {
+      "handle": "poletaev",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-05T05:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622e5"
+    },
+    {
+      "handle": "cjalmeida",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-05T05:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622e4"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-05T06:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622e3"
+    },
+    {
+      "handle": "michael3lyb",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-05T06:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622e2"
+    },
+    {
+      "handle": "deas",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-05T07:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622e1"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-05T08:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622e0"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-05T10:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622df"
+    },
+    {
+      "handle": "jhc2120",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-05T14:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622de"
+    },
+    {
+      "handle": "Gangbaolede.Li",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-05T19:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622dd"
+    },
+    {
+      "handle": "ChenXiaoTemp",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-06T02:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622dc"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-06T03:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622db"
+    },
+    {
+      "handle": "Shizhouxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-06T10:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622da"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-06T10:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622d9"
+    },
+    {
+      "handle": "kamardinis",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-06T10:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622d8"
+    },
+    {
+      "handle": "ludvigsen",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-06T10:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622d7"
+    },
+    {
+      "handle": "Alan.Brooks",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-06T12:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622d6"
+    },
+    {
+      "handle": "hyeongmoklee",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-06T12:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622d5"
+    },
+    {
+      "handle": "Acyn",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-06T13:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622d4"
+    },
+    {
+      "handle": "mehblahwhatever",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-06T14:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622d3"
+    },
+    {
+      "handle": "ogajames",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-06T17:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622d2"
+    },
+    {
+      "handle": "CrazyCoderLZB",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-06T21:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622d1"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-06T22:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622d0"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-07T02:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622cf"
+    },
+    {
+      "handle": "ananthhh",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-07T05:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622ce"
+    },
+    {
+      "handle": "uuutty",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-07T05:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622cd"
+    },
+    {
+      "handle": "chok68",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-07T07:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622cc"
+    },
+    {
+      "handle": "ketzjs09",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-07T12:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622cb"
+    },
+    {
+      "handle": "zamini",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-07T18:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622ca"
+    },
+    {
+      "handle": "tomsihap",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-07T20:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622c9"
+    },
+    {
+      "handle": "shane.kirkbride",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-07T21:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622c8"
+    },
+    {
+      "handle": "frozar",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-07T23:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622c7"
+    },
+    {
+      "handle": "vrancic",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-08T07:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622c6"
+    },
+    {
+      "handle": "moshu",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-08T07:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622c5"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-08T10:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622c4"
+    },
+    {
+      "handle": "virakta",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-08T10:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622c3"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-08T13:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622c2"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-08T14:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622c1"
+    },
+    {
+      "handle": "republic82",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-08T15:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622c0"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-08T17:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622bf"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-08T19:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622be"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-09T00:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622bd"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-09T02:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622bc"
+    },
+    {
+      "handle": "mac007",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-09T05:51:00.000Z",
+      "submissionDate": "2016-03-12T17:29:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622bb"
+    },
+    {
+      "handle": "vladkorotkevich",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-09T06:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622ba"
+    },
+    {
+      "handle": "manavender.623",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-09T19:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622b9"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-09T20:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622b8"
+    },
+    {
+      "handle": "ronball",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-10T07:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622b7"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-10T20:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622b6"
+    },
+    {
+      "handle": "farazyasrobi",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-10T20:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622b5"
+    },
+    {
+      "handle": "ohyan07",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-11T15:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622b4"
+    },
+    {
+      "handle": "944093680",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-11T09:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622b3"
+    },
+    {
+      "handle": "joshy89",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-11T13:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622b2"
+    },
+    {
+      "handle": "kczxl",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-11T15:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622b1"
+    },
+    {
+      "handle": "Zyan",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-11T15:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e6de0be5f30ae5622b0"
+    }
+  ],
+  "registrationEndDate": "2016-03-11T17:53:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-03-12T17:52:00.000Z",
+  "submissions": [
+    {
+      "handle": "freegod",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 83.13,
+      "finalScore": 85.63,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-03-12T14:36:00.000Z",
+      "_id": "58123e6de0be5f30ae5622f8"
+    },
+    {
+      "handle": "mac007",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 23.75,
+      "finalScore": 23.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-03-12T17:29:00.000Z",
+      "_id": "58123e6de0be5f30ae5622f7"
+    }
+  ],
+  "technology": [
+    "Data Science",
+    "JavaScript",
+    "Python"
+  ]
+}

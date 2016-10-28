@@ -1,0 +1,371 @@
+{
+  "_id": 30044496,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:47:45.916Z",
+  "appealsEndDate": "2014-08-04T12:50:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Release Assembly - Brivo Labs Web Dashboard Improvement",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></h2>\n\n<p><span><span><a href=\"http://www.brivolabs.com/sam-api/\" rel=\"nofollow\">BrivoLabs<sup><img alt=\"\" class=\"rendericon\" src=\"http://apps.topcoder.com/wiki/images/icons/linkext7.gif\" style=\"height:7px; width:7px\" /></sup></a></span> has a beta version of a node.js/coffeescript application that is called Social Access Management (SAM) API. It uses postgres database, runs on heroku, consists of both a web and a worker process, and uses a redis-based message queue to communicate between them.</span></p>\n\n<p>We have a web dashboard <span><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\">that allows a user to manage their domains in SAM</span></span>.</span> In this challenge we are a<span>dding the ability to manage aspects of an individual domain, specifically user roles and access reservations</span>.</p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Competition Task Overview</span></h2>\n\n<p>You will address the following in this challenge :</p>\n\n<ul>\n\t<li>Update &#39;Domain management&#39; landinag page (/dashboard page) to have the following changes :\n\t<ul>\n\t\t<li><span>For each domain in the list, add a &ldquo;manage&rdquo; button that will trigger the following flow :&nbsp;</span>\n\n\t\t<ul>\n\t\t\t<li><span>Clicking on the button will negotiate a new OAuth token for that domain</span>\n\n\t\t\t<ul>\n\t\t\t\t<li>Note : check how we are doing it for Login in the landing page, you will do the same thing here.</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li><span>After the user agrees to authorize the OAuth access, navigate to back to the &#39;domain management&#39; landing page</span></li>\n\t\t\t<li><span>The page should display the name of the Domain, and the current user&rsquo;s roles</span>\n\t\t\t<ul>\n\t\t\t\t<li>Note : the page already implemented this logic.</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li><span>If the user has &ldquo;admin&rdquo; role then display two buttons to the management features : &ldquo;Manage Users&rdquo; and &ldquo;Download Activity Log&rdquo;</span> (that should be a new column in the domain table with two buttons), &quot;Manage Users&quot; will take user to new page.\n\t\t\t<ul>\n\t\t\t\t<li>Note : You can check use role by calling /me/domains endpoint</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li><span>&ldquo;Manage Users&rdquo; page - this is a new page that has the following :</span>\n\t<ul>\n\t\t<li><span>It includes a table that lists all users (domain accounts), including the values: account.username, account.firstName, account.lastName, and a comma-delimited list of their roles</span>.\n\t\t<ul>\n\t\t\t<li>Note : You can use&nbsp; &quot;GET /domainAccounts&quot; to get these information for all users under that domain</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li><span>The table should be sortable by each column (using a standard javascript sortable table module)</span></li>\n\t\t<li><span>The user list should also allow roles to be added and removed</span>. This should open up a popup or page to assign/deassign roles.\n\t\t<ul>\n\t\t\t<li>Note : endpoints to add/remove roles are &quot;POST /domainAccount/{:id}/role&quot; and &quot;DELETE /domainAccount/{:id}/role&quot;, respectively.</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li><span>The table should also include a &ldquo;manage access&rdquo; button for each user/row.&nbsp; </span>C<span>licking this will open a separate page (create new page &#39;Manage User Access&#39; ):</span>\n\t\t<ul>\n\t\t\t<li><span>The page has table of all active (or future) Access Reservations for that user </span>\n\t\t\t<ul>\n\t\t\t\t<li><span>For each Access Reservation, display the list of the door(s) (Access Targets : name) and the list of schedule(s)</span> (Start and End dates)</li>\n\t\t\t\t<li><span>Note : Use /domainAccount/:id/accessReservations/now</span> for each user</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li><span>Add button to allow an Access Reservation to be created. This should open up a popup or page, it should also allow the user to choose one or more Access Targets (based on a pre-populated list, by name), and define one or more schedules</span>.\n\t\t\t<ul>\n\t\t\t\t<li>Note : to create use &quot;POST /accessReservations&quot;, to update use &quot;PUT /accessReservations&quot;, to retrieve ATs list &quot;GET /site/:id/accessTargets&quot;, to add/remove schedules &quot;POST /accessReservation/:id/schedules&quot; &quot;DELETE /accessReservation/:id/schedule/:id&quot;, respecitvely.</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li><span>Add button in each row to allow an Access Reservation to be deleted</span>.\n\t\t\t<ul>\n\t\t\t\t<li>Note : endpoint to delete is &quot;DELETE /accessReservation/:id&quot;</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li><span>&ldquo;Download Activity Log&rdquo; should open a modal dialog box which allow start/stop dates to be input (defaulting to null, which leaves it up to SAM)</span> which will <span>send the resultant CSV file to the browser for download</span>.\n\t<ul>\n\t\t<li>Note : endpoint to be used is &quot;GET /events/report&quot;</li>\n\t</ul>\n\t</li>\n\t<li><span>Application should run on Heroku</span>.</li>\n\t<li><span>Update readme file for details about deploying the application, configuring it, and testing locally or in Heroku.</span></li>\n</ul>\n\n<h3><span style=\"color:rgb(255, 0, 0)\">General Notes</span></h3>\n\n<ul>\n\t<li>Use Angular.js Framework to build the pages, you also need to update &quot;Domain Management&quot; landinag page to be based on Angular.js.</li>\n\t<li>You will keep using Boostrap. The pages MUST be updated to be <strong>reponsive</strong>, it should work in the 4 grid systems supported by boostrap 3.2.0 <a href=\"http://getbootstrap.com/css/#grid\">http://getbootstrap.com/css/#grid</a></li>\n\t<li>Use date picker for date fields (i.e. schedule start/end date, or event report dates) <a href=\"http://www.eyecon.ro/bootstrap-datepicker/?utm_source=twitterfeed&amp;utm_medium=twitter\">http://www.eyecon.ro/bootstrap-datepicker/?utm_source=twitterfeed&amp;utm_medium=twitter</a></li>\n\t<li><span>Some API orchestration may be done server-side (such as creating an Access Reservation which requires multiple SAM API calls)</span>.</li>\n</ul>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Development Environment</span></h2>\n\n<p>You are provided with Brivo Labs SAM API source code, you can set it up locally following the readme file included in the source code folder. If you don&#39;t want to set up SAM API you can use the following Heroku setup :</p>\n\n<ul>\n\t<li>The API deployed to : <a href=\"http://brivolabs-sam-cs.herokuapp.com\">http://brivolabs-sam-cs.herokuapp.com</a></li>\n\t<li>The domain id, client id and client secret will be provided in challenge forums. You will use them to login using the provided domain id.\n\t<ul>\n\t\t<li>You <strong>must</strong> use the dashboard app itself to generate your own domain in -cs, for testing (which will give you &#39;admin&#39; role)</li>\n\t</ul>\n\t</li>\n\t<li>You can access iodocs-cs heroku app to see the latest API docs, and do test calls : <a href=\"http://brivolabs-iodocs-cs.herokuapp.com/\">http://brivolabs-iodocs-cs.herokuapp.com/</a></li>\n</ul>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Documentation Provided</span></h2>\n\n<p><span>Brivo Labs API Code Base and Brivo Labs Web Dashboad are provided in forums.</span></p>\n\n<p><span>You can also refer to </span>Brivo Labs Mashery portal at the &quot;getting started&quot; guide <a href=\"http://developer.brivolabs.com/docs\">developer.brivolabs.com/docs</a></p>\n",
+  "digitalRunPoints": 630,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30044496",
+  "finalFixEndDate": "2014-08-04T14:49:00.000Z",
+  "finalSubmissionGuidelines": "<p>&nbsp;</p>\n\n<h2><span><strong><span style=\"color:#FF0000\"><span>Submission Deliverables</span></span></strong></span></h2>\n\n<p><span><span style=\"font-size:12px\">Below is an overview of the deliverables:</span></span></p>\n\n<ul>\n\t<li><span><span style=\"font-size:12px\">Fully Implemented Express.js web application of the outlied requirements above.</span></span></li>\n\t<li><span><span style=\"font-size:12px\">A complete and detailed deployment documented explaining how to deploy the application including configuration information.</span></span></li>\n</ul>\n\n<h2><span><span style=\"color:#FF0000\"><strong>Final Submission</strong></span></span></h2>\n\n<p><span><span style=\"font-size:12px\">For each member, the final submission should be uploaded to the Online Review Tool.</span></span></p>\n",
+  "forumId": 24404,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=24404",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 20,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-23T21:35:00.000Z",
+      "actualStartTime": "2014-07-23T21:35:00.000Z",
+      "scheduledEndTime": "2014-07-23T21:36:00.000Z",
+      "actualendTime": "2014-07-23T21:36:00.000Z",
+      "_id": "58123dc10659262e95e00254"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-23T21:36:00.000Z",
+      "actualStartTime": "2014-07-23T21:36:00.000Z",
+      "scheduledEndTime": "2014-07-24T00:56:00.000Z",
+      "actualendTime": "2014-07-24T00:56:00.000Z",
+      "_id": "58123dc10659262e95e00253"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-24T00:56:00.000Z",
+      "actualStartTime": "2014-07-24T00:56:00.000Z",
+      "scheduledEndTime": "2014-07-26T00:56:00.000Z",
+      "actualendTime": "2014-07-26T00:56:00.000Z",
+      "_id": "58123dc10659262e95e00252"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-24T01:01:00.000Z",
+      "actualStartTime": "2014-07-24T01:01:00.000Z",
+      "scheduledEndTime": "2014-07-30T01:57:00.000Z",
+      "actualendTime": "2014-07-30T01:57:00.000Z",
+      "_id": "58123dc10659262e95e00251"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-30T01:57:00.000Z",
+      "actualStartTime": "2014-07-30T01:57:00.000Z",
+      "scheduledEndTime": "2014-08-01T09:04:00.000Z",
+      "actualendTime": "2014-08-01T09:04:00.000Z",
+      "_id": "58123dc10659262e95e00250"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-01T09:04:00.000Z",
+      "actualStartTime": "2014-08-01T09:04:00.000Z",
+      "scheduledEndTime": "2014-08-03T08:53:00.000Z",
+      "actualendTime": "2014-08-03T08:53:00.000Z",
+      "_id": "58123dc10659262e95e0024f"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-03T08:53:00.000Z",
+      "actualStartTime": "2014-08-03T08:53:00.000Z",
+      "scheduledEndTime": "2014-08-04T08:53:00.000Z",
+      "actualendTime": "2014-08-04T08:53:00.000Z",
+      "_id": "58123dc10659262e95e0024e"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-04T08:53:00.000Z",
+      "actualStartTime": "2014-08-04T08:53:00.000Z",
+      "scheduledEndTime": "2014-08-04T12:50:00.000Z",
+      "actualendTime": "2014-08-04T12:50:00.000Z",
+      "_id": "58123dc10659262e95e0024d"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-04T12:50:00.000Z",
+      "actualStartTime": "2014-08-04T12:50:00.000Z",
+      "scheduledEndTime": "2014-08-04T14:29:00.000Z",
+      "actualendTime": "2014-08-04T14:29:00.000Z",
+      "_id": "58123dc10659262e95e0024c"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-04T14:29:00.000Z",
+      "actualStartTime": "2014-08-04T14:29:00.000Z",
+      "scheduledEndTime": "2014-08-04T14:49:00.000Z",
+      "actualendTime": "2014-08-04T14:49:00.000Z",
+      "_id": "58123dc10659262e95e0024b"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-04T14:49:00.000Z",
+      "actualStartTime": "2014-08-04T14:49:00.000Z",
+      "scheduledEndTime": "2014-08-04T15:01:00.000Z",
+      "actualendTime": "2014-08-04T15:01:00.000Z",
+      "_id": "58123dc10659262e95e0024a"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-04T15:01:00.000Z",
+      "actualStartTime": "2014-08-04T15:01:00.000Z",
+      "scheduledEndTime": "2014-08-10T15:01:00.000Z",
+      "actualendTime": "2014-08-10T15:01:00.000Z",
+      "_id": "58123dc10659262e95e00249"
+    }
+  ],
+  "platforms": [
+    "NodeJS",
+    "Brivo Labs"
+  ],
+  "postingDate": "2014-07-24T00:56:00.000Z",
+  "prize": [
+    1400,
+    700
+  ],
+  "projectId": 7163,
+  "registrants": [
+    {
+      "handle": "norcimo5",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-24T01:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dc10659262e95e00248"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-24T02:49:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58123dc10659262e95e00247"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-24T03:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dc10659262e95e00246"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-24T03:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dc10659262e95e00245"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "100%",
+      "registrationDate": "2014-07-24T07:44:00.000Z",
+      "submissionDate": "2014-07-29T17:52:00.000Z",
+      "rating": "2036",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58123dc10659262e95e00244"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-07-24T09:29:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58123dc10659262e95e00243"
+    },
+    {
+      "handle": "michael_tang",
+      "reliability": "0%",
+      "registrationDate": "2014-07-24T10:19:00.000Z",
+      "submissionDate": null,
+      "rating": "497",
+      "colorStyle": "color: #999999",
+      "_id": "58123dc10659262e95e00242"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "6%",
+      "registrationDate": "2014-07-24T11:31:00.000Z",
+      "submissionDate": null,
+      "rating": "1411",
+      "colorStyle": "color: #6666FF",
+      "_id": "58123dc10659262e95e00241"
+    },
+    {
+      "handle": "sweetu",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-24T12:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dc10659262e95e00240"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-24T13:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dc10659262e95e0023f"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-24T16:20:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58123dc10659262e95e0023e"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "6%",
+      "registrationDate": "2014-07-24T18:25:00.000Z",
+      "submissionDate": null,
+      "rating": "1055",
+      "colorStyle": "color: #00A900",
+      "_id": "58123dc10659262e95e0023d"
+    },
+    {
+      "handle": "kr00tki",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-24T21:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dc10659262e95e0023c"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-25T05:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dc10659262e95e0023b"
+    },
+    {
+      "handle": "dezl",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-25T07:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dc10659262e95e0023a"
+    },
+    {
+      "handle": "jackchongs",
+      "reliability": "100%",
+      "registrationDate": "2014-07-25T11:51:00.000Z",
+      "submissionDate": "2014-07-30T01:36:00.000Z",
+      "rating": "879",
+      "colorStyle": "color: #999999",
+      "_id": "58123dc10659262e95e00239"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-25T12:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dc10659262e95e00238"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2014-07-25T16:47:00.000Z",
+      "submissionDate": null,
+      "rating": "585",
+      "colorStyle": "color: #999999",
+      "_id": "58123dc10659262e95e00237"
+    },
+    {
+      "handle": "leonprou",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-25T18:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dc10659262e95e00236"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-26T00:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dc10659262e95e00235"
+    }
+  ],
+  "registrationEndDate": "2014-07-26T00:56:00.000Z",
+  "reliabilityBonus": 280,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-07-30T01:57:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 94.79,
+      "finalScore": 99.25,
+      "points": 441,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-07-29T17:52:00.000Z",
+      "_id": "58123dc10659262e95e00256"
+    },
+    {
+      "handle": "jackchongs",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 88.27,
+      "finalScore": 88.27,
+      "points": 189,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-07-30T01:36:00.000Z",
+      "_id": "58123dc10659262e95e00255"
+    }
+  ],
+  "technology": [
+    "API",
+    "Bootstrap",
+    "CSS",
+    "CoffeeScript",
+    "Express",
+    "HTML",
+    "JavaScript",
+    "Node.js",
+    "PostgreSQL",
+    "REST",
+    "Web Services"
+  ]
+}

@@ -1,0 +1,213 @@
+{
+  "_id": 30048030,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:48:37.379Z",
+  "appealsEndDate": "2014-12-24T12:49:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "topcoder challenges listing endpoints translation/proxy to RSS",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<div class=\"previewMask\">\n<p><span>We&#39;re going to enhance <a href=\"https://www.topcoder.com/challenges/feed?list=upcoming&amp;contestType=develop\">new topcoder challenges listing RSS</a> page. Currently it is proxied by through wordpress and between php&#39;s poor proxying capabilities and issues with the rss endpoints on the API it is&nbsp;causing problems on the API server.</span></p>\n\n<p><span><strong>Project Location</strong></span></p>\n\n<p><span><span><span><strong>Description</strong></span></span><br />\nWe need to create a topcoder RSS feed service. The service should be a node express service which is capable of running on heroku with one endpoint, /challenges/feed (responds to GET with no authentication), which behaves externally identically to https://www.topcoder.com/challenges/feed page (run by&nbsp;https://gitlab.com/topcoderinc/tc-site/blob/master/wp-content/themes/tcs-responsive/rss-challenges.php). The data for this should not consume the api.topcoder.com/v2/challenges/rss&nbsp;path, but use the challenge listing API (<span>/challenges/past etc, see below)</span></span></p>\n\n<p><span><span>The other important thing is it should store response in memory cache with a configurable cache length and have the capability to serve from that cache if the API is unresponsive (time out, return errors,etc).</span></span></p>\n\n<p><span><span style=\"color:#696969\"><strong>Translation JSON to RSS</strong></span><br />\n- This new service will retrieve content from endpoint (described below) then return the response as RSS<br />\n- This will be hosted on heroku but proxied through our server so it will be <a href=\"http://www.topcoder.com/challenges/feed\" target=\"_blank\">www.topcoder.com/challenges/feed</a>, so the path should still be /challenges/feed in the nodejs app<br />\n- The returned RSS should be ordered by <code><span><span>registration start date</span></span></code>.<br />\n- This new service should return RSS format should follow current format, e.g. :&nbsp; <a href=\"https://www.topcoder.com/challenges/feed?list=upcoming&amp;contestType=develop\">https://www.topcoder.com/challenges/feed?list=upcoming&amp;contestType=develop</a><br />\n- The returned RSS <span><span>should pass the validation </span></span>http://validator.w3.org/feed/<br />\n- This new service will be used to list all three tracks (design, develop, data) for All list type (active, past, upcoming), as descibed below :</span></p>\n\n<ol>\n\t<li><span>All Challenges Track : <a href=\"https://api.topcoder.com/v2/challenges\">https://api.topcoder.com/v2/challenges</a></span></li>\n\t<li><span>Design : <a href=\"https://api.topcoder.com/v2/challenges/active?type=design\">https://api.topcoder.com/v2/challenges/active?type=design</a></span></li>\n\t<li><span>Develop : <a href=\"https://api.topcoder.com/v2/challenges/active?type=develop\">https://api.topcoder.com/v2/challenges/active?type=develop</a></span></li>\n\t<li><span>Data :<a href=\"http://https://api.topcoder.com/v2/data/marathon/challenges/?listType=active\"> https://api.topcoder.com/v2/data/marathon/challenges/?listType=active</a></span></li>\n\t<li><span>Active Challenges : https://api.topcoder.com/v2/challenges/<u>active</u>?type=develop</span></li>\n\t<li><span>Upcoming Challenges : https://api.topcoder.com/v2/challenges/<u>upcoming</u>?type=develop</span></li>\n\t<li><span>Past Challenges : https://api.topcoder.com/v2/challenges/<u>past</u>?type=develop</span></li>\n</ol>\n\n<p><span>- Filter/query by <span style=\"background-color:#FFD700\">technology and platform</span> should work as well as existing RSSS feed, e.g. : <a href=\"https://www.topcoder.com/challenges/feed?list=active&amp;contestType=develop&amp;technologies=Angular.js&amp;platforms=Wordpress\">https://www.topcoder.com/challenges/feed?list=active&amp;contestType=develop&amp;technologies=Angular.js&amp;platforms=Wordpress</a>. this is the endpoint call example : <a href=\"https://api.topcoder.com/v2/challenges/upcoming?type=develop&amp;technologies=Angular.js&amp;platforms=HTML\">https://api.topcoder.com/v2/challenges/upcoming?type=develop&amp;technologies=Angular.js&amp;platforms=HTML</a><br />\n- guid value should be as challengeID and&nbsp; isPermaLink is &quot;false&quot;</span></p>\n\n<p><span><span style=\"color:#696969\"><strong>Caching</strong></span><br />\n- Serve from the cache if it has been requested within a configurable cache expiration time (default 30 minutes)<br />\n- If the expiration time has been reached or no content is in the cache it should proxy request by calling the challenge details API.<br />\n- For long calls (like past challenges), as items are received from the challenge details API, they should be translated to RSS xml and passed to the client so the client doesn&#39;t timeout.<br />\n- If 10 seconds (configurable timeout) has passed and no data has been received from the API:</span></p>\n\n<ul>\n\t<li><span>If there is an expired value in the cache, serve it, otherwise response with an empty 202 Accepted response.</span></li>\n\t<li><span>The service should maintain the connection to the API and refresh the cache even after responding to the client.</span></li>\n</ul>\n\n<p><span><u><span style=\"color:#696969\"><strong>Configuration</strong></span></u></span></p>\n\n<p><span><span>There should be three config values (with defaults):</span></span></p>\n\n<ul>\n\t<li><span><span>Cache time (30 minutes)</span></span></li>\n\t<li><span><span>API timeout (10 seconds)</span></span></li>\n\t<li><span><span>API host (https://api.topcoder.com)</span></span></li>\n</ul>\n\n<p><span><u><span style=\"color:#696969\"><strong>Javascript Standards</strong></span></u><br />\nAll the code should pass <a href=\"http://www.jslint.com\">jslint</a>, You may use &#39;nomem: true&#39;, or if jslint is forcing you to do something non standard in your code to comply, please note in submission doc and we can allow it.</span></p>\n\n<p><span><span><span><strong>Test Cases</strong><br />\n- A GET call to /</span><span style=\"background-color:transparent\">challenges/feed including </span></span><span style=\"color:#000000\"><span style=\"background-color:#FFD700\">query strings(listType, type, challengeType, technologies, platforms)</span></span><span><span style=\"background-color:transparent\"> </span><span>should return RSS format. All query strings should be optional so by default it will return all active challenges.</span></span><br />\n<span><span>- Reading using RSS my.yahoo.com<strong>, </strong>currently it can&#39;t be displayed on my.yahoo.com<br />\n- Response time should be fast to ensure caching process works fine<br />\n<strong>- </strong>Clicking on challenge name should links to challenge detail page, and please ensure &#39;type&#39; is set correctly, e.g.: </span></span><a href=\"https://www.topcoder.com/challenge-details/30029852/?type=develop\">https://www.topcoder.com/challenge-details/30029852/?type=develop</a><span><span><a href=\"https://www.topcoder.com/challenge-details/30029852/?type=develop\"> </a></span></span><br />\n- Visit https://www.topcoder.com/challenges - all parameters for filtering challanges (except challenge date ranges) should be available from the new RSS API, even if the UI layer is not yet passing the parameter on to the existing /feeds path.</span></p>\n</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30048030",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<div class=\"previewMask\">\n<ul>\n\t<li><span><span>Upload complete nodejs express app. All dependencies should be in package.json and preferred start method in the file as as well, so I should be able to do &#39;npm install&#39; and &#39;npm start&#39; to test.</span></span></li>\n\t<li><span><span>Please export your server&#39;s functionality as an init function and call the init function during startup so it can be started with a variety of methods, see index.js and server.js here:&nbsp;</span>https://github.com/appirio-tech/lc1-user-settings-service</span></li>\n</ul>\n</div>\n</div>\n",
+  "forumId": 27411,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=27411",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 9,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-16T07:01:00.000Z",
+      "actualStartTime": "2014-12-16T07:01:00.000Z",
+      "scheduledEndTime": "2014-12-21T07:02:00.000Z",
+      "actualendTime": "2014-12-21T07:02:00.000Z",
+      "_id": "58123df50659262e95e0083b"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-16T07:06:00.000Z",
+      "actualStartTime": "2014-12-16T07:06:00.000Z",
+      "scheduledEndTime": "2014-12-21T07:02:00.000Z",
+      "actualendTime": "2014-12-21T07:02:00.000Z",
+      "_id": "58123df50659262e95e0083a"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-21T07:02:00.000Z",
+      "actualStartTime": "2014-12-21T07:02:00.000Z",
+      "scheduledEndTime": "2014-12-23T07:27:00.000Z",
+      "actualendTime": "2014-12-23T07:27:00.000Z",
+      "_id": "58123df50659262e95e00839"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-23T07:27:00.000Z",
+      "actualStartTime": "2014-12-23T07:27:00.000Z",
+      "scheduledEndTime": "2014-12-24T07:28:00.000Z",
+      "actualendTime": "2014-12-24T07:28:00.000Z",
+      "_id": "58123df50659262e95e00838"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-24T07:28:00.000Z",
+      "actualStartTime": "2014-12-24T07:28:00.000Z",
+      "scheduledEndTime": "2014-12-24T12:49:00.000Z",
+      "actualendTime": "2014-12-24T12:49:00.000Z",
+      "_id": "58123df50659262e95e00837"
+    }
+  ],
+  "platforms": [
+    "NodeJS"
+  ],
+  "postingDate": "2014-12-16T07:01:00.000Z",
+  "prize": [
+    800,
+    400
+  ],
+  "projectId": 7320,
+  "registrants": [
+    {
+      "handle": "gmagniez",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-16T10:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123df50659262e95e00836"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-16T12:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123df50659262e95e00835"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-16T17:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123df50659262e95e00834"
+    },
+    {
+      "handle": "kiri4a",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-17T06:07:00.000Z",
+      "submissionDate": "2014-12-20T13:05:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123df50659262e95e00833"
+    },
+    {
+      "handle": "pnomarev",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-17T06:32:00.000Z",
+      "submissionDate": "2014-12-21T06:56:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123df50659262e95e00832"
+    },
+    {
+      "handle": "sabbirhs",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-18T16:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123df50659262e95e00831"
+    },
+    {
+      "handle": "karthiks416",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-19T03:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123df50659262e95e00830"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-20T15:59:00.000Z",
+      "submissionDate": "2014-12-20T22:53:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123df50659262e95e0082f"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-21T03:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123df50659262e95e0082e"
+    }
+  ],
+  "registrationEndDate": "2014-12-21T07:02:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2014-12-21T07:02:00.000Z",
+  "submissions": [
+    {
+      "handle": "kiri4a",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 87.5,
+      "finalScore": 87.5,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-12-20T13:05:00.000Z",
+      "_id": "58123df50659262e95e0083e"
+    },
+    {
+      "handle": "pnomarev",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 78.75,
+      "finalScore": 82.5,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-12-21T06:56:00.000Z",
+      "_id": "58123df50659262e95e0083d"
+    },
+    {
+      "handle": "TMALBONPH",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 27.5,
+      "finalScore": 27.5,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-12-20T22:53:00.000Z",
+      "_id": "58123df50659262e95e0083c"
+    }
+  ],
+  "technology": [
+    "Express",
+    "Node.js"
+  ]
+}

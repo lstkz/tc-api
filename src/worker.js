@@ -8,6 +8,7 @@ const _updateNewChallenges = new Timer({
   fn: async() => {
     await ChallengeService.updateChallenges({
       _isComplete: false,
+      _invalid: { $ne: true },
     });
   },
 });
@@ -19,6 +20,7 @@ const _updateRunningChallenges = new Timer({
     await ChallengeService.updateChallenges({
       _isComplete: true,
       currentStatus: { $ne: 'Completed' },
+      _invalid: { $ne: true },
     });
   },
 });

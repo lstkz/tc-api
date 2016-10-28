@@ -13,6 +13,7 @@ import './bootstrap';
 import routes from './routes';
 import loadRoutes from './common/loadRoutes';
 import logger from './common/logger';
+import socket from './socket';
 import './worker';
 
 const app = express();
@@ -46,6 +47,7 @@ if (!module.parent) {
   server.listen(app.get('port'), () => {
     logger.info(`Express server listening on port ${app.get('port')} in ${process.env.NODE_ENV} mode`);
   });
+  socket.startUp(server);
 }
 
 export default app;

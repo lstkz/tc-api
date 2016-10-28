@@ -1,0 +1,404 @@
+{
+  "_id": 30045340,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:45:09.820Z",
+  "appealsEndDate": "2014-09-02T00:51:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "CrowdReason - Engrafa Service Enhancements Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px; line-height:normal\">Welcome to the</span><strong style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px; line-height:normal\">&nbsp;<a href=\"http://crowdreason.com/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">CrowdReason</a>&nbsp;- Engrafa Service Enhancements</strong><span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px; line-height:normal\">&nbsp;Challenge. &nbsp;This challenge is part of the&nbsp;</span><strong style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px; line-height:normal\">CrowdReason Engrafa</strong><span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px; line-height:normal\">&nbsp;project.</span></p>\n\n<div class=\"previewMask\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif; line-height: normal; font-size: 12px !important;\">\n<h2 dir=\"ltr\"><span>Overview</span></h2>\n\n<p dir=\"ltr\"><span>The Engrafa Service helps clients extract highly confident, structured data from PDF documents. Instead of using OCR, the service crowdsources the data extraction. &nbsp;The Engrafa Service acts as a Workflow Manager to automate the process of sending PDFs through segmented jobs and aggregating the results into a complete data set.</span></p>\n\n<p dir=\"ltr\"><span>Presently, the service monitors an online cloud storage for new documents to process. &nbsp;Then each document goes through a series of worker tasks to determine or verify details about the document. &nbsp;The Engrafa Service accumulates each response and by the end of the workflow, key data has been extrapolated from the PDF.</span></p>\n\n<p dir=\"ltr\"><span>For this challenge, we have a list of improvements for the existing service. &nbsp;We&rsquo;re looking to you to help update our solution to fit our new workflow, and to improve the functionality of the service.</span></p>\n\n<h2 dir=\"ltr\"><span>Detailed Requirements</span></h2>\n\n<h3 dir=\"ltr\"><span>Configuration File (insert.js)</span></h3>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span>Update the service to support entry conditions at the task level (currently, this is only supported at the group level).</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span>Update the configuration to support a streamlined workflow file for complex dependencies. &nbsp;Current implementation requires multiple groups per phase to support complex entry conditions (see current&nbsp;<strong>insert.js</strong>). &nbsp;We would like to have one group per phase instead (see&nbsp;<strong>target-insert-expert.js</strong>&nbsp;for example).</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span>Update the service to support multiple workflow configurations.</span></p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span>Currently, we run insert.js to add the configuration to the database for the service. &nbsp;If we want to change this configuration, it&rsquo;s recommended to drop the database so that you can insert a new configuration.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span>We&rsquo;d like to support multiple configurations. &nbsp;For example, I run insert.js now and start running the service. &nbsp;A few documents get started in the workflow. Then I want to make a change to the workflow configuration. &nbsp;I update the config and want any new docs to follow the new workflow; previous documents already in progress should continue to use the original workflow.</span></p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span>Add support to specify &ldquo;input&rdquo; fields at the task level. &nbsp;These will be field names collected from previous tasks. &nbsp;Currently we send&nbsp;<em>ALL</em>&nbsp;evaluationContext properties, and this is overkill.</span></p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span>E.g. &ldquo;input&rdquo; : [&ldquo;validstate&rdquo;, &ldquo;state&rdquo;, &ldquo;collectorname&rdquo;] or something similar.</span></p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span>Add support to transform output at task level.</span></p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span>Example use case is we might collect a field &ldquo;pobox&rdquo; as a number (e.g. { &ldquo;pobox&rdquo;: 514 }). &nbsp;Instead of a number output field, we might want to transform this to a separate new field, appended to some default text, e.g. &ldquo;address1&rdquo;: &ldquo;PO Box 514&rdquo;.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span>Add some way to be able to specify output transformation, e.g. pobox -&gt; address1 as &ldquo;PO Box &ldquo; + pobox.value.</span></p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span>Allow Taxonomy properties to be used in entry conditions for the workflow configuration (both at task level and group level), in addition to current support for previously gathered document data. &nbsp;This would be used for the Extraction task group. &nbsp;For example: taxonomy.hasaccountnumber == &ldquo;No&rdquo; and taxonomy.paymentschedule = &ldquo;one&rdquo;</span></p>\n\t</li>\n</ol>\n\n<h3 dir=\"ltr\"><span>Output File</span></h3>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span>Update output.xml to include which job a value came from (e.g. &lt;field name=&rdquo;state&rdquo; value=&rdquo;WA&rdquo; jobname=&rdquo;CLASSIFICATION_STATE_BASIC&rdquo;/&gt;)</span></p>\n\t</li>\n</ol>\n\n<h3 dir=\"ltr\"><span>Bug Fixes</span></h3>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span>A valid refresh token is not always retrieved. Our access tokens expire after an hour for our online cloud storage. &nbsp;Upon starting the EngrafaServiceApp, the service successfully gets an updated refresh_token. &nbsp;However, if the service runs for hours, it sometimes doesn&rsquo;t get a new refresh_token and fails to post items back to the online storage. &nbsp;We get the error &ldquo;Invalid access token&rdquo; but no attempt is made to refresh the token.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span>Remove files from &ldquo;public&rdquo; folder after moved to the &ldquo;output&rdquo; folder.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span>Update log management so we&rsquo;re not building one long log file. &nbsp;Also make sure exceptions are included (some exceptions appear to only be thrown to the console and not the logs).</span></p>\n\t</li>\n</ol>\n\n<h2 dir=\"ltr\"><span>Technology Overview</span></h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span>Node.js</span></p>\n\t</li>\n\t<li dir=\"ltr\"><span>MongoDB</span></li>\n</ul>\n</div>\n",
+  "digitalRunPoints": 540,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30045340",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2014-09-02T09:30:00.000Z",
+  "finalSubmissionGuidelines": "<h2 dir=\"ltr\">Submission Deliverables</h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong>Source Code&nbsp;</strong>- Zip of updated source files.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong>Deployment guide</strong></p>\n\t</li>\n</ul>\n",
+  "forumId": 25132,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=25132",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 23,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-24T23:59:00.000Z",
+      "actualStartTime": "2014-08-24T23:59:00.000Z",
+      "scheduledEndTime": "2014-08-25T00:00:00.000Z",
+      "actualendTime": "2014-08-25T00:00:00.000Z",
+      "_id": "58123d256fc1ab2d92718d43"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-25T00:00:00.000Z",
+      "actualStartTime": "2014-08-25T00:00:00.000Z",
+      "scheduledEndTime": "2014-08-25T01:51:00.000Z",
+      "actualendTime": "2014-08-25T01:51:00.000Z",
+      "_id": "58123d256fc1ab2d92718d42"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-25T02:00:00.000Z",
+      "actualStartTime": "2014-08-25T02:00:00.000Z",
+      "scheduledEndTime": "2014-08-27T02:00:00.000Z",
+      "actualendTime": "2014-08-27T02:00:00.000Z",
+      "_id": "58123d256fc1ab2d92718d41"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-25T02:05:00.000Z",
+      "actualStartTime": "2014-08-25T02:05:00.000Z",
+      "scheduledEndTime": "2014-08-29T02:00:00.000Z",
+      "actualendTime": "2014-08-29T02:00:00.000Z",
+      "_id": "58123d256fc1ab2d92718d40"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-29T02:00:00.000Z",
+      "actualStartTime": "2014-08-29T02:00:00.000Z",
+      "scheduledEndTime": "2014-08-29T13:27:00.000Z",
+      "actualendTime": "2014-08-29T13:27:00.000Z",
+      "_id": "58123d256fc1ab2d92718d3f"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-29T13:27:00.000Z",
+      "actualStartTime": "2014-08-29T13:27:00.000Z",
+      "scheduledEndTime": "2014-08-31T13:58:00.000Z",
+      "actualendTime": "2014-08-31T13:58:00.000Z",
+      "_id": "58123d256fc1ab2d92718d3e"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-31T13:58:00.000Z",
+      "actualStartTime": "2014-08-31T13:58:00.000Z",
+      "scheduledEndTime": "2014-09-01T13:58:00.000Z",
+      "actualendTime": "2014-09-01T13:58:00.000Z",
+      "_id": "58123d256fc1ab2d92718d3d"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-01T13:58:00.000Z",
+      "actualStartTime": "2014-09-01T13:58:00.000Z",
+      "scheduledEndTime": "2014-09-02T00:51:00.000Z",
+      "actualendTime": "2014-09-02T00:51:00.000Z",
+      "_id": "58123d256fc1ab2d92718d3c"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-02T00:51:00.000Z",
+      "actualStartTime": "2014-09-02T00:51:00.000Z",
+      "scheduledEndTime": "2014-09-02T01:39:00.000Z",
+      "actualendTime": "2014-09-02T01:39:00.000Z",
+      "_id": "58123d256fc1ab2d92718d3b"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-02T01:39:00.000Z",
+      "actualStartTime": "2014-09-02T01:39:00.000Z",
+      "scheduledEndTime": "2014-09-02T09:30:00.000Z",
+      "actualendTime": "2014-09-02T09:30:00.000Z",
+      "_id": "58123d256fc1ab2d92718d3a"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-02T09:30:00.000Z",
+      "actualStartTime": "2014-09-02T09:30:00.000Z",
+      "scheduledEndTime": "2014-09-02T10:58:00.000Z",
+      "actualendTime": "2014-09-02T10:58:00.000Z",
+      "_id": "58123d256fc1ab2d92718d39"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-02T10:58:00.000Z",
+      "actualStartTime": "2014-09-02T10:58:00.000Z",
+      "scheduledEndTime": "2014-09-11T02:56:00.000Z",
+      "actualendTime": "2014-09-11T02:56:00.000Z",
+      "_id": "58123d256fc1ab2d92718d38"
+    }
+  ],
+  "platforms": [
+    "NodeJS"
+  ],
+  "postingDate": "2014-08-25T02:00:00.000Z",
+  "prize": [
+    1200,
+    600
+  ],
+  "projectId": 7719,
+  "registrants": [
+    {
+      "handle": "mhykol",
+      "reliability": "6%",
+      "registrationDate": "2014-08-25T02:19:00.000Z",
+      "submissionDate": null,
+      "rating": "705",
+      "colorStyle": "color: #999999",
+      "_id": "58123d256fc1ab2d92718d37"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-25T02:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d256fc1ab2d92718d36"
+    },
+    {
+      "handle": "rajeshk87",
+      "reliability": "0%",
+      "registrationDate": "2014-08-25T02:44:00.000Z",
+      "submissionDate": null,
+      "rating": "600",
+      "colorStyle": "color: #999999",
+      "_id": "58123d256fc1ab2d92718d35"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-25T02:53:00.000Z",
+      "submissionDate": "2014-08-29T01:55:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d256fc1ab2d92718d34"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-25T03:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d256fc1ab2d92718d33"
+    },
+    {
+      "handle": "billthu",
+      "reliability": "0%",
+      "registrationDate": "2014-08-25T03:58:00.000Z",
+      "submissionDate": null,
+      "rating": "635",
+      "colorStyle": "color: #999999",
+      "_id": "58123d256fc1ab2d92718d32"
+    },
+    {
+      "handle": "D.R.MC",
+      "reliability": "100%",
+      "registrationDate": "2014-08-25T05:00:00.000Z",
+      "submissionDate": "2014-08-28T09:45:00.000Z",
+      "rating": "1096",
+      "colorStyle": "color: #00A900",
+      "_id": "58123d256fc1ab2d92718d31"
+    },
+    {
+      "handle": "dezl",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-25T05:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d256fc1ab2d92718d30"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-08-25T05:49:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58123d256fc1ab2d92718d2f"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-25T05:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d256fc1ab2d92718d2e"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-25T06:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d256fc1ab2d92718d2d"
+    },
+    {
+      "handle": "isv",
+      "reliability": "0%",
+      "registrationDate": "2014-08-25T07:25:00.000Z",
+      "submissionDate": null,
+      "rating": "1210",
+      "colorStyle": "color: #6666FF",
+      "_id": "58123d256fc1ab2d92718d2c"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "100%",
+      "registrationDate": "2014-08-25T07:52:00.000Z",
+      "submissionDate": "2014-08-28T11:22:00.000Z",
+      "rating": "1859",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58123d256fc1ab2d92718d2b"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "6%",
+      "registrationDate": "2014-08-25T07:55:00.000Z",
+      "submissionDate": null,
+      "rating": "1032",
+      "colorStyle": "color: #00A900",
+      "_id": "58123d256fc1ab2d92718d2a"
+    },
+    {
+      "handle": "Muneem",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-25T10:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d256fc1ab2d92718d29"
+    },
+    {
+      "handle": "michael_tang",
+      "reliability": "0%",
+      "registrationDate": "2014-08-25T12:50:00.000Z",
+      "submissionDate": null,
+      "rating": "497",
+      "colorStyle": "color: #999999",
+      "_id": "58123d256fc1ab2d92718d28"
+    },
+    {
+      "handle": "Robin F",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-25T14:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d256fc1ab2d92718d27"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2014-08-25T15:06:00.000Z",
+      "submissionDate": null,
+      "rating": "895",
+      "colorStyle": "color: #999999",
+      "_id": "58123d256fc1ab2d92718d26"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-08-26T00:16:00.000Z",
+      "submissionDate": null,
+      "rating": "1031",
+      "colorStyle": "color: #00A900",
+      "_id": "58123d256fc1ab2d92718d25"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-26T02:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d256fc1ab2d92718d24"
+    },
+    {
+      "handle": "vokie",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-26T05:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d256fc1ab2d92718d23"
+    },
+    {
+      "handle": "firemanphil",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-26T13:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d256fc1ab2d92718d22"
+    },
+    {
+      "handle": "md.irfanm",
+      "reliability": "100%",
+      "registrationDate": "2014-08-26T17:22:00.000Z",
+      "submissionDate": null,
+      "rating": "1345",
+      "colorStyle": "color: #6666FF",
+      "_id": "58123d256fc1ab2d92718d21"
+    }
+  ],
+  "registrationEndDate": "2014-08-27T02:00:00.000Z",
+  "reliabilityBonus": 240,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-08-29T02:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 91.52,
+      "finalScore": 99.82,
+      "points": 351,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-08-28T11:22:00.000Z",
+      "_id": "58123d256fc1ab2d92718d46"
+    },
+    {
+      "handle": "D.R.MC",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 94.64,
+      "finalScore": 99.74,
+      "points": 135,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-08-28T09:45:00.000Z",
+      "_id": "58123d256fc1ab2d92718d45"
+    },
+    {
+      "handle": "mulish",
+      "placement": 3,
+      "screeningScore": 100,
+      "initialScore": 69.47,
+      "finalScore": 69.47,
+      "points": 54,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-08-29T01:55:00.000Z",
+      "_id": "58123d256fc1ab2d92718d44"
+    }
+  ],
+  "technology": [
+    "MongoDB",
+    "Node.js"
+  ]
+}

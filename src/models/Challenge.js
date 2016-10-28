@@ -4,6 +4,7 @@ export default new Schema({
 
   _lastUpdate: Date,
   _isComplete: Boolean,
+  _invalid: Boolean,
 
   _id: Number,
   challengeType: String,

@@ -1,0 +1,384 @@
+{
+  "_id": 30051911,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:44:46.126Z",
+  "appealsEndDate": "2016-01-01T05:54:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "WS4 Data Import Update",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<div class=\"previewMask\">\n<p><span><span><span><strong>Overview</strong></span></span></span></p>\n\n<p><span>This<strong><em> </em></strong>is the one of several challenges of Alamasato project build services for Sugar Cane growers app. In this challenge we&#39;d like to update</span><span> existing Heroku scheduler process to export data from external SQLServer database and import data into Heroku Postgres DB. This is only a one way integration, the SQLServer data is </span><strong>read only</strong><span> and this process never updates or delete any data from SQLServer database. Current Import process inserts duplicate records due to database key, so our objective here is to fix the import </span><strong>NOT to insert duplicated records for Sample - labtransactions data</strong><span>.&nbsp;</span></p>\n\n<p><span>You need to fix/ recreate existing test data generator test-data.js process for import so there are no duplicates. Note that our data generator exists as separate node module to create some test data for QA purpose. All data is then linked with grower ID and for QA testing, we use gorwer A900-A920 that is accessible to topcoder test users in the system. The Test data module when executed needs to read set of existing data records and copy this data for new test growers with current date.</span></p>\n\n<p><span>This is needed so that our QA test and develpment can continue in a simulation mode&nbsp;even without live data feed (as if the data feed was live).</span></p>\n\n<p><span>This process will run on separate Heroku app dedicated only for this data import. It will use Heroku Scheduler addon to run the Node.js program on schedule base, the frequency be as often as every 1hr to 30 min.</span></p>\n\n<p><span><strong>Detailed Requirements</strong></span></p>\n\n<p><span>- Update existing import Node.js app to avoid inserting duplicated data. The workflow is as follows</span></p>\n\n<p><span>* The <em>LabTransaction</em> table data has a process that creates sample records in SQL Server initially with 0 data as placeholder but valid sample ID. </span></p>\n\n<p><span>* The sample are taken to the lab for analysis and results are available after 3-4 hour period. </span></p>\n\n<p><span>* As results arrive from the lab they are inserted as new rows in the SQL Server db with existing Sample ID row is filled with values. Our import prcess runs at a 30 min interval, that pick up same Samples and duplicates them because SQL Serve extid is used as unique key.</span></p>\n\n<p><strong><span>We need to change import to use Sample ID as the external key as it is unique data value for each sample.</span></strong></p>\n\n<p><span>The following requirements must be met</span></p>\n\n<p><span>- Deploy on Heroku to run as Heroku Scheduler (free addon) process to import data one-way SQLServer -&gt; Postrges DB.</span><span>This app will run Heroku app on sheduler every 30min to read from SQLServer and insert records in Postgres DB. Note that our&nbsp;</span><span>data Volume is low, estimate 800 records per day across 3 tables.</span></p>\n\n<p><em><span>Tables: Quota, LabTransaction, CropToDateGrowers, CropToDateMill</span></em></p>\n\n<p><span>NOTE: We disabled import for LoadDetails this table is not used for this app for now and removed from configuration. This may be enabled later on.</span></p>\n\n<p><span>You need to make sure that the database connection information must be configurable through Heroku environment variables, ensure to close all open connections at the end of the process.</span></p>\n\n<p><span><strong>Error Handling</strong></span></p>\n\n<p><span>If error occured on single record insert/update write a system log entry and continue import for other records.</span></p>\n\n<p><span>Assume that data error are possible on some records but shiould be rare cases.</span></p>\n\n<p><span><strong>Sample Postgres DB</strong></span></p>\n\n<p><span>*This is shared database with limited number of available connections (total 20) it can have outages due to overload. It is recomended to create a seperate free copy of this database for development. SQL for table creatiuon and sample data is provided.</span></p>\n\n<p><span>Note SQLServer is single copy shared DB for this challenge.</span></p>\n\n<p><span>Postgres DB connection: </span><span style=\"background-color:rgb(255, 255, 255); color:rgb(63, 63, 68); font-family:benton-sans,helvetica neue,helvetica,arial,sans-serif; font-size:14px\">postgres://mmczoddjtzsyfa:BRFZ95MJig_wai2wDzomGVgQbR@ec2-54-83-53-120.compute-1.amazonaws.com:5432/d2ejsilvqs141e</span><br />\n<br />\n<span><span style=\"background-color:rgb(255, 255, 255); color:rgb(63, 63, 68); font-family:benton-sans,helvetica neue,helvetica,arial,sans-serif; font-size:14px\">External Test SQLServer environment connection information:</span><br />\n<span><strong>Database Name:</strong></span><span>&nbsp; DB_76059_alma&nbsp;&nbsp;</span><br />\n<span><strong>Version:</strong></span><span>&nbsp; MS SQL 2014&nbsp;&nbsp;&nbsp;&nbsp;</span><br />\n<span><strong>Database Server:</strong></span><span>&nbsp; <a href=\"http://s11.winhost.com\" target=\"_blank\">s11.winhost.com</a></span><br />\n<span><strong>Database User:</strong></span><span>&nbsp; DB_76059_alma_user&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br />\n<span><strong>Database Password:</strong></span><span>&nbsp; @lm@DB1!&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br />\n<span><strong>Connection String:</strong></span><span>&nbsp; &quot;Data Source=tcp:<a href=\"http://s11.winhost.com\" target=\"_blank\">s11.winhost.com</a>;Initial Catalog=DB_76059_alma;User ID=DB_76059_alma_user;Password=******;Integrated Security=False;&quot;&nbsp;&nbsp;</span></span></p>\n</div>\n\n<p>&nbsp;</p>\n\n<div class=\"bottom_spec\">&nbsp;</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30051911",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<p><span><span><span><span><strong>Guidelines</strong>:</span></span></span></span></p>\n\n<ul>\n\t<li><span><span><span><span>Heroku Scheduler -Heroku addon</span></span></span></span></li>\n\t<li><span><span><span><span>Deployment on <a href=\"https://www.heroku.com/home\">Heroku platform</a></span></span></span></span></li>\n\t<li><span><span><span><span>Postgres DB - Heroku addon</span></span></span></span></li>\n\t<li><span><span><span><span>SQLServer database</span></span></span></span></li>\n</ul>\n\n<h4><span><span><span><span><strong>Final Submission Guidelines</strong>:</span></span></span></span></h4>\n\n<ul>\n\t<li>Access to your live Heroku instance for verification</li>\n\t<li><span><span><span><span>Upload a detailed Deployment Guide with configuration details, instructions to run and verification insturctions. Make sure to capture any deployment requirements and Heroku scheduling part clearly.</span></span></span></span></li>\n\t<li><span><span><span><span>Upload all your source code as a zip file</span></span></span></span></li>\n</ul>\n</div>\n</div>\n</div>\n",
+  "forumId": 31024,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=31024",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 28,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-12-23T17:53:00.000Z",
+      "actualStartTime": "2015-12-23T17:53:00.000Z",
+      "scheduledEndTime": "2015-12-28T17:54:00.000Z",
+      "actualendTime": "2015-12-28T17:54:00.000Z",
+      "_id": "58123d0e6fc1ab2d92718b6f"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-12-23T17:59:00.000Z",
+      "actualStartTime": "2015-12-23T17:59:00.000Z",
+      "scheduledEndTime": "2015-12-28T17:54:00.000Z",
+      "actualendTime": "2015-12-28T17:54:00.000Z",
+      "_id": "58123d0e6fc1ab2d92718b6e"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-12-28T17:54:00.000Z",
+      "actualStartTime": "2015-12-28T17:54:00.000Z",
+      "scheduledEndTime": "2015-12-30T17:55:00.000Z",
+      "actualendTime": "2015-12-30T17:55:00.000Z",
+      "_id": "58123d0e6fc1ab2d92718b6d"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-12-30T17:55:00.000Z",
+      "actualStartTime": "2015-12-30T17:55:00.000Z",
+      "scheduledEndTime": "2015-12-31T17:56:00.000Z",
+      "actualendTime": "2015-12-31T17:56:00.000Z",
+      "_id": "58123d0e6fc1ab2d92718b6c"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-12-31T17:56:00.000Z",
+      "actualStartTime": "2015-12-31T17:56:00.000Z",
+      "scheduledEndTime": "2016-01-01T05:54:00.000Z",
+      "actualendTime": "2016-01-01T05:54:00.000Z",
+      "_id": "58123d0e6fc1ab2d92718b6b"
+    }
+  ],
+  "platforms": [
+    "Heroku",
+    "iOS"
+  ],
+  "postingDate": "2015-12-23T17:53:00.000Z",
+  "prize": [
+    600,
+    300
+  ],
+  "projectId": 9223,
+  "registrants": [
+    {
+      "handle": "peakpado",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-23T18:08:00.000Z",
+      "submissionDate": "2015-12-26T22:54:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b6a"
+    },
+    {
+      "handle": "hash3r",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-23T18:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b69"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-23T19:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b68"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-23T19:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b67"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-23T19:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b66"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-23T20:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b65"
+    },
+    {
+      "handle": "jzh08",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-23T23:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b64"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-24T00:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b63"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-24T00:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b62"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-24T04:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b61"
+    },
+    {
+      "handle": "Amith",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-24T05:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b60"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-24T08:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b5f"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-24T11:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b5e"
+    },
+    {
+      "handle": "nodesabd",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-24T12:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b5d"
+    },
+    {
+      "handle": "Leewings",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-26T13:08:00.000Z",
+      "submissionDate": "2015-12-27T15:57:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b5c"
+    },
+    {
+      "handle": "e06widu",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-24T14:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b5b"
+    },
+    {
+      "handle": "ringram",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-24T20:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b5a"
+    },
+    {
+      "handle": "vimrc",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-24T23:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b59"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-25T22:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b58"
+    },
+    {
+      "handle": "ChenXiaoTemp",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-26T04:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b57"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-26T06:53:00.000Z",
+      "submissionDate": "2015-12-28T09:11:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b56"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-26T07:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b55"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-26T15:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b54"
+    },
+    {
+      "handle": "diogenesjcs",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-26T16:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b53"
+    },
+    {
+      "handle": "okuni",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-27T04:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b52"
+    },
+    {
+      "handle": "r.nivedha1",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-27T13:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b51"
+    },
+    {
+      "handle": "Parikh",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-28T09:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b50"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-28T10:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d0e6fc1ab2d92718b4f"
+    }
+  ],
+  "registrationEndDate": "2015-12-28T17:54:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-12-28T17:54:00.000Z",
+  "submissions": [
+    {
+      "handle": "peakpado",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 95,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-12-26T22:54:00.000Z",
+      "_id": "58123d0e6fc1ab2d92718b72"
+    },
+    {
+      "handle": "lanchongyizu",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 83.75,
+      "finalScore": 86.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-12-28T09:11:00.000Z",
+      "_id": "58123d0e6fc1ab2d92718b71"
+    },
+    {
+      "handle": "Leewings",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 78.75,
+      "finalScore": 78.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-12-27T15:57:00.000Z",
+      "_id": "58123d0e6fc1ab2d92718b70"
+    }
+  ],
+  "technology": [
+    "Node.js"
+  ]
+}

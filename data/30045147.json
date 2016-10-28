@@ -1,0 +1,246 @@
+{
+  "_id": 30045147,
+  "_isComplete": true,
+  "__v": 136,
+  "_lastUpdate": "2016-10-28T08:53:24.782Z",
+  "appealsEndDate": "2014-08-27T14:26:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "CrowdReason - Engrafa Service Enhancements - Code",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Cancelled - Zero Submissions",
+  "detailedRequirements": "<p dir=\"ltr\">Welcome to the<strong> <a href=\"http://crowdreason.com/\">CrowdReason</a>&nbsp;- Engrafa Service Enhancements</strong> Challenge. &nbsp;This challenge is part of the <strong>CrowdReason Engrafa</strong> project.</p>\n\n<h2 dir=\"ltr\">Overview</h2>\n\n<p dir=\"ltr\">The Engrafa Service helps clients extract highly confident, structured data from PDF documents. Instead of using OCR, the service crowdsources the data extraction. &nbsp;The Engrafa Service acts as a Workflow Manager to automate the process of sending PDFs through segmented jobs and aggregating the results into a complete data set.</p>\n\n<p dir=\"ltr\">Presently, the service monitors an online cloud storage for new documents to process. &nbsp;Then each document goes through a series of worker tasks to determine or verify details about the document. &nbsp;The Engrafa Service accumulates each response and by the end of the workflow, key data has been extrapolated from the PDF.</p>\n\n<p dir=\"ltr\">For this challenge, we have a list of improvements for the existing service. &nbsp;We&rsquo;re looking to you to help update our solution to fit our new workflow, and to improve the functionality of the service.</p>\n\n<h2 dir=\"ltr\">Detailed Requirements</h2>\n\n<h3 dir=\"ltr\">Configuration File (insert.js)</h3>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Update the service to support entry conditions at the task level (currently, this is only supported at the group level).</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Update the configuration to support a streamlined workflow file for complex dependencies. &nbsp;Current implementation requires multiple groups per phase to support complex entry conditions (see current <strong>insert.js</strong>). &nbsp;We would like to have one group per phase instead (see <strong>target-insert-expert.js</strong>&nbsp;for example).</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Update the service to support multiple workflow configurations.</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Currently, we run insert.js to add the configuration to the database for the service. &nbsp;If we want to change this configuration, it&rsquo;s recommended to drop the database so that you can insert a new configuration.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">We&rsquo;d like to support multiple configurations. &nbsp;For example, I run insert.js now and start running the service. &nbsp;A few documents get started in the workflow. Then I want to make a change to the workflow configuration. &nbsp;I update the config and want any new docs to follow the new workflow; previous documents already in progress should continue to use the original workflow.</p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Add support to specify &ldquo;input&rdquo; fields at the task level. &nbsp;These will be field names collected from previous tasks. &nbsp;Currently we send <em>ALL</em> evaluationContext properties, and this is overkill.</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">E.g. &ldquo;input&rdquo; : [&ldquo;validstate&rdquo;, &ldquo;state&rdquo;, &ldquo;collectorname&rdquo;] or something similar.</p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Add support to transform output at task level.</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Example use case is we might collect a field &ldquo;pobox&rdquo; as a number (e.g. { &ldquo;pobox&rdquo;: 514 }). &nbsp;Instead of a number output field, we might want to transform this to a separate new field, appended to some default text, e.g. &ldquo;address1&rdquo;: &ldquo;PO Box 514&rdquo;.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Add some way to be able to specify output transformation, e.g. pobox -&gt; address1 as &ldquo;PO Box &ldquo; + pobox.value.</p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Allow Taxonomy properties to be used in entry conditions for the workflow configuration (both at task level and group level), in addition to current support for previously gathered document data. &nbsp;This would be used for the Extraction task group. &nbsp;For example: taxonomy.hasaccountnumber == &ldquo;No&rdquo; and taxonomy.paymentschedule = &ldquo;one&rdquo;</p>\n\t</li>\n</ol>\n\n<h3 dir=\"ltr\">Output File</h3>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Update output.xml to include which job a value came from (e.g. &lt;field name=&rdquo;state&rdquo; value=&rdquo;WA&rdquo; jobname=&rdquo;CLASSIFICATION_STATE_BASIC&rdquo;/&gt;)</p>\n\t</li>\n</ol>\n\n<h3 dir=\"ltr\">Bug Fixes</h3>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">A valid refresh token is not always retrieved. Our access tokens expire after an hour for our online cloud storage. &nbsp;Upon starting the EngrafaServiceApp, the service successfully gets an updated refresh_token. &nbsp;However, if the service runs for hours, it sometimes doesn&rsquo;t get a new refresh_token and fails to post items back to the online storage. &nbsp;We get the error &ldquo;Invalid access token&rdquo; but no attempt is made to refresh the token.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Remove files from &ldquo;public&rdquo; folder after moved to the &ldquo;output&rdquo; folder.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Update log management so we&rsquo;re not building one long log file. &nbsp;Also make sure exceptions are included (some exceptions appear to only be thrown to the console and not the logs).</p>\n\t</li>\n</ol>\n\n<h2 dir=\"ltr\">Technology Overview</h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Node.js</p>\n\t</li>\n\t<li dir=\"ltr\">MongoDB</li>\n</ul>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30045147",
+  "finalSubmissionGuidelines": "<h2 dir=\"ltr\">Submission Deliverables</h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong>Source Code </strong>- Zip of source files.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong>Documentation</strong> - Provide documentation of setup (install/config) and steps for using the app.</p>\n\t</li>\n</ul>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong>Video</strong> - Video demonstrating setup of app (install + config), demo of app functionality, and overview of code.</p>\n\t</li>\n</ul>\n",
+  "forumId": 24963,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=24963",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 17,
+  "numberOfSubmissions": 0,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-19T02:25:00.000Z",
+      "actualStartTime": "2014-08-19T02:25:00.000Z",
+      "scheduledEndTime": "2014-08-24T02:25:00.000Z",
+      "actualendTime": "2014-08-24T02:25:00.000Z",
+      "_id": "581312046f0ff48440134b24"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-19T02:31:00.000Z",
+      "actualStartTime": "2014-08-19T02:31:00.000Z",
+      "scheduledEndTime": "2014-08-24T02:26:00.000Z",
+      "actualendTime": "2014-08-24T02:26:00.000Z",
+      "_id": "581312046f0ff48440134b23"
+    },
+    {
+      "type": "Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-08-24T02:26:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-08-26T02:26:00.000Z",
+      "actualendTime": null,
+      "_id": "581312046f0ff48440134b22"
+    },
+    {
+      "type": "Appeals",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-08-26T02:26:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-08-27T02:26:00.000Z",
+      "actualendTime": null,
+      "_id": "581312046f0ff48440134b21"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-08-27T02:26:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-08-27T14:26:00.000Z",
+      "actualendTime": null,
+      "_id": "581312046f0ff48440134b20"
+    }
+  ],
+  "platforms": [
+    "NodeJS"
+  ],
+  "postingDate": "2014-08-19T02:25:00.000Z",
+  "prize": [
+    1200,
+    700
+  ],
+  "projectId": 7719,
+  "registrants": [
+    {
+      "handle": "peakpado",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-19T02:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312046f0ff48440134b1f"
+    },
+    {
+      "handle": "moulyg",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-19T02:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312046f0ff48440134b1e"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-19T02:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312046f0ff48440134b1d"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-19T04:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312046f0ff48440134b1c"
+    },
+    {
+      "handle": "NoRKin",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-19T04:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312046f0ff48440134b1b"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-19T05:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312046f0ff48440134b1a"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-19T07:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312046f0ff48440134b19"
+    },
+    {
+      "handle": "dianluxiaozi",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-19T07:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312046f0ff48440134b18"
+    },
+    {
+      "handle": "firemanphil",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-19T09:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312046f0ff48440134b17"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-19T10:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312046f0ff48440134b16"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-19T11:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312046f0ff48440134b15"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-19T12:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312046f0ff48440134b14"
+    },
+    {
+      "handle": "sanathe06",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-19T18:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312046f0ff48440134b13"
+    },
+    {
+      "handle": "iCare",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-19T19:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312046f0ff48440134b12"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-21T18:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312046f0ff48440134b11"
+    },
+    {
+      "handle": "md.irfanm",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-22T18:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312046f0ff48440134b10"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-23T02:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312046f0ff48440134b0f"
+    }
+  ],
+  "registrationEndDate": "2014-08-24T02:25:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": null,
+  "screeningScorecardId": null,
+  "submissionEndDate": "2014-08-24T02:26:00.000Z",
+  "submissions": [],
+  "technology": [
+    "MongoDB",
+    "Node.js"
+  ]
+}

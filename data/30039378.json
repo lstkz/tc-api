@@ -1,0 +1,338 @@
+{
+  "_id": 30039378,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:46:35.029Z",
+  "appealsEndDate": "2014-02-09T13:20:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Module Assembly - TopCoder NodeJS Client Challenge Costs API",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Project Overview</span></span></span></span></span></span></h2>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">TopCoder and the TopCoder community have worked hard to get the platform to its currently level of maturity, but we&#39;re far from done. It&#39;s time to take the platform to the next level. TopCoder is going to start taking some steps to open up the platform API to the outside and community developers so they could incorporate it in their websites, applications or build their own applications (web, mobile or desktop).</span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">The ultimate goal is to open up and build an &quot;API&quot; that is targeting all different type of audiences - Software and Studio Competitors, SRM/MM competitors, Copilots, Admins and TopCoder partners - each audience will have different interests and usages of the API, so it will be a huge project and we need to make sure that we are in the right direction from the beginning.</span></p>\n\n<h2 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Competition Task Overview</span></span></span></span></span></span></h2>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\"><span style=\"font-size: 12px;\"><img align=\"absmiddle\" alt=\"\" border=\"0\" height=\"16\" src=\"http://apps.topcoder.com/wiki/images/icons/emoticons/warning.gif\" width=\"16\" /></span><strong>The updated code must still deploy and work on heroku - any submission which can&#39;t be deployed on heroku successfully will be failed in screening phase - primary reviewer must check this.</strong></span></span></span></span></span></span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">The implementation will base on the node.js version of TC platform API -&nbsp;<span class=\"nobr\"><a href=\"https://github.com/cloudspokes/tc-api\" rel=\"nofollow\">https://github.com/cloudspokes/tc-api</a>.</span>&nbsp;<strong>Please follow the existing actionhero pattern for your development.</strong></span></span></span></span></span></p>\n\n<p style=\"font-size: 13px;\"><span style=\"font-size:22px;\"><span style=\"color:#FF0000;\"><b>THIS IS 72HOURS CONTEST</b></span></span></p>\n\n<p style=\"font-size: 13px;\">You should implement the Client Challenge Costs API and provide mocha tests in this contest.</p>\n\n<h3 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Client Challenge Costs API</span></span></span></span></span></span></h3>\n\n<p style=\"font-size: 13px;\">This API is going to retrieve the Client Challenge Costs History by the given date and/or client Id.</p>\n\n<p style=\"font-size: 13px;\">It needs to pass at least one parameter (client id or start date + end date)</p>\n\n<p style=\"font-size: 13px;\">The parameters are given in the API Spec page.</p>\n\n<p style=\"font-size: 13px;\">This API should only allow &quot;TC Staff&quot; access it, you can get the authencated user role from authentication middleware.</p>\n\n<p style=\"font-size: 13px;\">Here is the query:</p>\n\n<pre style=\"color: rgb(153, 0, 0); line-height: 16.799999237060547px;\">\nSELECT\n      c.client_id AS customer_id,\n      c.client_name AS customer_name,\n      p.project_id AS direct_project_id,\n      d.name AS project_name,\n      p.project_category_name AS challenge_type,\n      p.component_name AS challenge_name,\n      p.posting_date  AS posting_date,\n      p.complete_date AS completion_date,\n      nvl(p.fulfillment, 0)*100 AS challenge_fulfillment,\n      nvl(p.contest_prizes_total, 0) AS challenge_member_cost,\n      nvl(p.admin_fee, 0) AS challenge_fee,\n      nvl(p.contest_prizes_total, 0) + nvl(p.admin_fee, 0) AS challenge_total_cost,\n      ROUND (nvl(p.duration, 0)/(60*24), 2)  AS challenge_duration,\n      p.status_desc AS challenge_status\nFROM tcs_dw:project p\nINNER JOIN tcs_dw:client_project_dim c ON p.client_project_id = c.client_project_id\nINNER JOIN tcs_dw:direct_project_dim d ON p.tc_direct_project_id = d.direct_project_id\nWHERE p.complete_date <font color=\"navy\"><b>is</b></font> <font color=\"navy\"><b>not</b></font> <font color=\"navy\"><b>null</b></font> AND p.posting_date <font color=\"navy\"><b>is</b></font> <font color=\"navy\"><b>not</b></font> <font color=\"navy\"><b>null</b></font>\nAND <font color=\"navy\"><b>Date</b></font>(p.complete_date) BETWEEN TO_DATE(<font color=\"navy\">&#39;@sdt@&#39;</font>, <font color=\"navy\">&#39;%Y-%m-%d&#39;</font>) AND TO_DATE(<font color=\"navy\">&#39;@edt@&#39;</font>, <font color=\"navy\">&#39;%Y-%m-%d&#39;</font>)\n&nbsp;\nAND   c.client_id = DECODE(@clientid@, 0, c.client_id, @clientid@)\nAND p.status_id <font color=\"navy\"><b>in</b></font> (4, 5, 6, 7, 8, 11)\nAND p.project_category_id <font color=\"navy\"><b>not</b></font> <font color=\"navy\"><b>in</b></font> (29)</pre>\n\n<h3><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\"><strong>Standarize Query Naming Convension</strong></span></span></span></span></h3>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">we like to use the underscore approach in all SQL queries under the queries directory, please follow same approach.</span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\"><strong>Notes, for the JSON data returned, we will use camelCase approach.</strong></span></span></span></span></p>\n\n<h3 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Testing</span></span></span></span></span></span></h3>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"font-size: 12px;\">The API Framework supports tests.&nbsp;</span>Use&nbsp;<a href=\"https://github.com/visionmedia/supertest\">supertest</a>&nbsp;with&nbsp;<a href=\"http://visionmedia.github.io/mocha/\">mocha</a>. Don&#39;t install mocha globally.</span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">you must use mocha BDD style (which is the default), within that, you can optionally use chai.</span></span></span></span></span></span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><strong style=\"padding: 0px; margin: 0px; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; line-height: 18px;\">Note: Tests must&nbsp;follow this standard -&nbsp;</strong><span class=\"css-truncate css-truncate-target\"><a class=\"js-directory-link\" href=\"https://github.com/cloudspokes/tc-api/blob/master/docs/Tests%20Creation%20Guide.docx\" id=\"a27028a2293e67cad481e88fad7bc18e-d4ffffe0ae5799ce363e89b27a50d54393e80be0\" title=\"Tests Creation Guide.docx\">Tests Creation Guide.docx</a></span></span></span></span></span></p>\n\n<h3 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Code Format</span></span></span></span></span></span></h3>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">All code must pass&nbsp;<a href=\"http://www.jslint.com/\">jslint</a>. You may use &quot;nomen: true&quot;.</span></p>\n\n<h3 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Winner Only</span></span></span></span></span></span></h3>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Winner will create pull request against the main github repo in final fix phase and help merge with master.&nbsp;<span style=\"color: rgb(255, 0, 0);\">The changed files should be unix style, you can use dos2unix command to convert it before commiting.</span></span></span></span></span></span></p>\n\n<h3 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Reviewer Responsiblities</span></span></span></span></span></span></h3>\n\n<p style=\"font-size: 13px; margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Reviewers need to write/update Supertest tests for the these APIs.</span></p>\n\n<p style=\"font-size: 13px; margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">There are three roles:</span></p>\n\n<ul style=\"font-size: 13px;\">\n\t<li style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Accuracy - Tests the implementation on the accuracy of the results when using the component.</span></li>\n\t<li style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Failure - Tests the implementation&#39;s ability to handle bad data and incorrect usage.</span></li>\n\t<li style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Security - Tests the oauth, sql inject and other security related requirements.</span></li>\n</ul>\n\n<p style=\"font-size: 13px; margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Reviewer could send preferred role by Contact Manager&nbsp;after system selected the reviwer.</span></p>\n\n<p style=\"font-size: 13px; margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Copilot will assign the role to reviewers if reviewer didn&#39;t send the preferred role information.</span></p>\n\n<p style=\"font-size: 13px; margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Reviewer must create pull request from GitHub for the tests.</span></p>\n\n<h3 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Virutal Machines (VMs)</span></span></span></span></span></span></h3>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">VM specific information is found here:&nbsp;<span class=\"nobr\"><a href=\"http://www.topcoder.com/wiki/display/docs/VM+Image+2.5\" rel=\"nofollow\">http://www.topcoder.com/wiki/display/docs/VM+Image+2.5</a></span></span></span></span></span></span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Upon registration as a submitter or reviewer you will need to request a VM based on the TopCoder systems image. The VM will be active through aggregation review, after which it will be terminated except for the winner&#39;s and the reviewers&#39;. To request your image, please post in contest forum.</span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Before requesting your VM, you need to ensure that you have an SSH key created and in your member profile. Instructions to do so are here:&nbsp;<span class=\"nobr\"><a href=\"http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key\" rel=\"nofollow\">http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key</a></span>, and instructions to connect afterwards are here:&nbsp;<span class=\"nobr\"><a href=\"http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key\" rel=\"nofollow\">http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key</a></span>.</span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Please realize that VMs are currently issued manually. We make every attempt to issue the VM as soon as it is requested, however, there may be delays of up to 12 hours depending on time of day when you request. We encourage everyone to request a VM as soon as possible to minimize any such delays.</span></p>\n\n<h2 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Technology Overview</span></span></span></span></span></span></h2>\n\n<ul style=\"font-size: 13px; font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">\n\t<li><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">JavaScript</span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"nobr\"><a href=\"http://nodejs.org/\" rel=\"nofollow\">Node.js 0.10.x</a></span></span></span></span></span></span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><a href=\"https://github.com/evantahler/actionHero\">actionhero.js framework</a></span></span></span></span></span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><a href=\"https://github.com/visionmedia/supertest\">supertest</a></span></span></span></span></span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><a href=\"http://visionmedia.github.io/mocha/\">mocha</a></span></span></span></span></span></li>\n</ul>\n\n<h2 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Documentation Provided</span></span></span></span></span></span></h2>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Please check the deployment guide in codebase for reference.</span></p>\n",
+  "digitalRunPoints": 270,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30039378",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2014-02-10T11:02:00.000Z",
+  "finalSubmissionGuidelines": "<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><strong><span style=\"color: rgb(255, 0, 0);\">Submission Deliverables</span></strong></span></span></span></span></span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span style=\"font-size: 12px;\">A complete list of deliverables can be viewed in the TopCoder Assembly competition Tutorial at:&nbsp;</span><a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a></span></span></span></span></span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span style=\"font-size: 12px;\">Below is an overview of the deliverables:</span></span></span></span></span></span></p>\n\n<ul style=\"font-size: 13px;\">\n\t<li><span class=\"small_info_spec\" id=\"rswGuidelines\">Source Code.</span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswGuidelines\">Deployment guide to configure and verify the application.</span></li>\n</ul>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><strong><span style=\"color: rgb(255, 0, 0);\">Final Submission</span></strong></span></span></span></span></span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span style=\"font-size: 12px;\">For each member, the final submission should be uploaded to the Online Review Tool.</span></span></span></span></span></span></p>\n",
+  "forumId": 21194,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=21194",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 17,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-01-29T03:21:00.000Z",
+      "actualStartTime": "2014-01-29T03:21:00.000Z",
+      "scheduledEndTime": "2014-01-29T03:22:00.000Z",
+      "actualendTime": "2014-01-29T03:22:00.000Z",
+      "_id": "58123d7b0659262e95dff995"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-01-29T03:22:00.000Z",
+      "actualStartTime": "2014-01-29T03:22:00.000Z",
+      "scheduledEndTime": "2014-01-29T06:52:00.000Z",
+      "actualendTime": "2014-01-29T06:52:00.000Z",
+      "_id": "58123d7b0659262e95dff994"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-01-29T06:52:00.000Z",
+      "actualStartTime": "2014-01-29T06:52:00.000Z",
+      "scheduledEndTime": "2014-01-31T06:52:00.000Z",
+      "actualendTime": "2014-01-31T06:52:00.000Z",
+      "_id": "58123d7b0659262e95dff993"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-01-29T06:57:00.000Z",
+      "actualStartTime": "2014-01-29T06:57:00.000Z",
+      "scheduledEndTime": "2014-02-01T06:57:00.000Z",
+      "actualendTime": "2014-02-01T06:57:00.000Z",
+      "_id": "58123d7b0659262e95dff992"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-02-01T06:57:00.000Z",
+      "actualStartTime": "2014-02-01T06:57:00.000Z",
+      "scheduledEndTime": "2014-02-06T09:12:00.000Z",
+      "actualendTime": "2014-02-06T09:12:00.000Z",
+      "_id": "58123d7b0659262e95dff991"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-02-06T09:12:00.000Z",
+      "actualStartTime": "2014-02-06T09:12:00.000Z",
+      "scheduledEndTime": "2014-02-08T08:48:00.000Z",
+      "actualendTime": "2014-02-08T08:48:00.000Z",
+      "_id": "58123d7b0659262e95dff990"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-02-08T08:48:00.000Z",
+      "actualStartTime": "2014-02-08T08:48:00.000Z",
+      "scheduledEndTime": "2014-02-09T08:48:00.000Z",
+      "actualendTime": "2014-02-09T08:48:00.000Z",
+      "_id": "58123d7b0659262e95dff98f"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-02-09T08:48:00.000Z",
+      "actualStartTime": "2014-02-09T08:48:00.000Z",
+      "scheduledEndTime": "2014-02-09T13:20:00.000Z",
+      "actualendTime": "2014-02-09T13:20:00.000Z",
+      "_id": "58123d7b0659262e95dff98e"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-02-09T13:20:00.000Z",
+      "actualStartTime": "2014-02-09T13:20:00.000Z",
+      "scheduledEndTime": "2014-02-09T15:16:00.000Z",
+      "actualendTime": "2014-02-09T15:16:00.000Z",
+      "_id": "58123d7b0659262e95dff98d"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-02-09T15:16:00.000Z",
+      "actualStartTime": "2014-02-09T15:16:00.000Z",
+      "scheduledEndTime": "2014-02-10T11:02:00.000Z",
+      "actualendTime": "2014-02-10T11:02:00.000Z",
+      "_id": "58123d7b0659262e95dff98c"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-02-10T11:02:00.000Z",
+      "actualStartTime": "2014-02-10T11:02:00.000Z",
+      "scheduledEndTime": "2014-02-10T13:14:00.000Z",
+      "actualendTime": "2014-02-10T13:14:00.000Z",
+      "_id": "58123d7b0659262e95dff98b"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-02-10T13:14:00.000Z",
+      "actualStartTime": "2014-02-10T13:14:00.000Z",
+      "scheduledEndTime": "2014-02-15T13:14:00.000Z",
+      "actualendTime": "2014-02-15T13:14:00.000Z",
+      "_id": "58123d7b0659262e95dff98a"
+    }
+  ],
+  "platforms": [
+    "NodeJS"
+  ],
+  "postingDate": "2014-01-29T06:52:00.000Z",
+  "prize": [
+    600,
+    300
+  ],
+  "projectId": 6757,
+  "registrants": [
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-29T07:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d7b0659262e95dff989"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "0%",
+      "registrationDate": "2014-01-29T07:31:00.000Z",
+      "submissionDate": null,
+      "rating": "997",
+      "colorStyle": "color: #00A900",
+      "_id": "58123d7b0659262e95dff988"
+    },
+    {
+      "handle": "Ghost_141",
+      "reliability": "60%",
+      "registrationDate": "2014-01-29T08:04:00.000Z",
+      "submissionDate": "2014-01-31T17:34:00.000Z",
+      "rating": "1222",
+      "colorStyle": "color: #6666FF",
+      "_id": "58123d7b0659262e95dff987"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-29T08:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d7b0659262e95dff986"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "6%",
+      "registrationDate": "2014-01-29T10:03:00.000Z",
+      "submissionDate": null,
+      "rating": "715",
+      "colorStyle": "color: #999999",
+      "_id": "58123d7b0659262e95dff985"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-29T10:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d7b0659262e95dff984"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "100%",
+      "registrationDate": "2014-01-29T11:07:00.000Z",
+      "submissionDate": "2014-01-29T20:30:00.000Z",
+      "rating": "2214",
+      "colorStyle": "color: #EE0000",
+      "_id": "58123d7b0659262e95dff983"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-29T16:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d7b0659262e95dff982"
+    },
+    {
+      "handle": "1101",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-29T16:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d7b0659262e95dff981"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2014-01-29T17:19:00.000Z",
+      "submissionDate": null,
+      "rating": "961",
+      "colorStyle": "color: #00A900",
+      "_id": "58123d7b0659262e95dff980"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "0%",
+      "registrationDate": "2014-01-30T06:14:00.000Z",
+      "submissionDate": null,
+      "rating": "785",
+      "colorStyle": "color: #999999",
+      "_id": "58123d7b0659262e95dff97f"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2014-01-29T19:52:00.000Z",
+      "submissionDate": null,
+      "rating": "1515",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58123d7b0659262e95dff97e"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "13%",
+      "registrationDate": "2014-01-29T23:51:00.000Z",
+      "submissionDate": null,
+      "rating": "1532",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58123d7b0659262e95dff97d"
+    },
+    {
+      "handle": "raj88iitr",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-30T04:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d7b0659262e95dff97c"
+    },
+    {
+      "handle": "saarixx",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-30T08:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d7b0659262e95dff97b"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-30T16:47:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58123d7b0659262e95dff97a"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2014-01-30T18:40:00.000Z",
+      "submissionDate": null,
+      "rating": "1051",
+      "colorStyle": "color: #00A900",
+      "_id": "58123d7b0659262e95dff979"
+    }
+  ],
+  "registrationEndDate": "2014-01-31T06:52:00.000Z",
+  "reliabilityBonus": 120,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-02-01T06:57:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 97.58,
+      "finalScore": 98.15,
+      "points": 189,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-01-29T20:30:00.000Z",
+      "_id": "58123d7b0659262e95dff997"
+    },
+    {
+      "handle": "Ghost_141",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 87.89,
+      "finalScore": 87.89,
+      "points": 81,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-01-31T17:34:00.000Z",
+      "_id": "58123d7b0659262e95dff996"
+    }
+  ],
+  "technology": [
+    "Node.js"
+  ]
+}

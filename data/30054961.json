@@ -1,0 +1,478 @@
+{
+  "_id": 30054961,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:50:59.890Z",
+  "appealsEndDate": "2016-08-17T12:21:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "TCO16 Bonus - Hercules PMS System - Mock hotel management subscription service",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "A new project for Hercules is an integration into a Property Management System (PMS). &nbsp;The end product will be a bridge between events raised by the PMS and internal calls to the Hercules services through the VPIL layer we are building in the Node Base Libraries. &nbsp;The PMS server will raise events and our bridge will handle those events by making a series of calls into the VPIL (and other) Base Library services. &nbsp;This challenge will build a mock PMS server we can use for testing.<br />\n<br />\n<strong>Mock</strong><br />\n<br />\nWe do not currently have a PMS system available for testing, but there are plenty of SOAP WSDLs and documents describing the PMS system in detail and how it will work. &nbsp;This challenge will build out a mock for specific calls:<br />\n<br />\n<strong>Link</strong><br />\n<br />\nHave a look at the documentation here: <a href=\"http://���http://www.htng.org/page/SpecsbyProductType\">&nbsp;���http://www.htng.org/page/SpecsbyProductType</a>. &nbsp;This covers the main developer documentation for the system, but it&#39;s way more than what we need for the mock.<br />\n<br />\nFor the mock, we are concerned with:<br />\n<br />\n* Event notification<br />\n* Guest &amp; Room Status Messaging<br />\n<br />\n<strong>Server layout</strong><br />\n<br />\nIt is expected that your solution will require two Heroku instances - one for the <em>subscription service</em> and one for the <em>subscriber</em>. &nbsp;Each app will have SOAP web services they expose as well as basic UIs so we can review the interactions between the services.<br />\n<br />\nThe interactions should follow this flow, allowing us to validate the results during review:<br />\n<br />\nThe user / reviewer should be able to load up the registration page for the subscriber app, enter URL details for the subscription service app, hit &quot;Subscribe&quot; and see that a subscription message is sent to the subscription service app. &nbsp;<br />\n<br />\nNext, the reviewer should be able to load up the subscription service app and see that a new subscriber has been added.<br />\n<br />\nThen, the reviewer should be able to send check in, check out, and move messages from the subscription service app and then switch to the subscriber app to see the messages processed.<br />\n<br />\n<strong>Subscription Service app</strong><br />\n<br />\nThere will be two pieces to the mock that we need. &nbsp;These will be separately deployable services and sites that will work together through the specified interfaces below. The first piece is the subscription flow for events, detailed in the documentation here:<br />\n<br />\n<a href=\"https://htng.site-ym.com/resource/collection/843C598F-F4A4-44F1-A4DC-57507A795B30/HTNG_Event_Notification_v3.0_2015A_Technical_Specification.pdf\">https://htng.site-ym.com/resource/collection/843C598F-F4A4-44F1-A4DC-57507A795B30/HTNG_Event_Notification_v3.0_2015A_Technical_Specification.pdf</a><br />\n<br />\n<em>Subscription service:</em><br />\n<br />\nWe need a service that mocks and exposes the web services for:<br />\n<br />\n* Get available subscriptions<br />\n* Subscribe<br />\n* Get subscription status<br />\n<br />\nThe service should be mocked based on the common bindings WSDL in the package here:<br />\n<br />\n<a href=\"https://htng.site-ym.com/resource/collection/37207339-2EEA-4DFD-89AA-F04D8F864CB0/HTNG_2011B_GRSM_v2.0_Tech_Spec_FINAL.zip\">https://htng.site-ym.com/resource/collection/37207339-2EEA-4DFD-89AA-F04D8F864CB0/HTNG_2011B_GRSM_v2.0_Tech_Spec_FINAL.zip���</a><br />\n<br />\n<em>Subscription site:</em><br />\n<br />\nOnce we have the service implemented, we can build a very basic UI over the top of it to send mock messages to the subscribers. &nbsp;We also want to view the subscriber&#39;s details and remove them for testing.<br />\n<br />\nThe subscription service will mock sending these messages to the registered subscribers:<br />\n<br />\n* Check in (HTNG_HotelCheckInNotifRQ)<br />\n* Check out (HTNG_HotelCheckOutNotifRQ)<br />\n* Guest move room (HTNG_HotelRoomMoveNotifRQ)<br />\n<br />\n<br />\n<strong>Mock subscriber</strong><br />\n<br />\nOnce the subscription service is implemented, we can build a mock subscriber app that will respond to the events raised by the subscription service. &nbsp;For this challenge, we can build a basic web app that just consumes the messages and displays them in the UI. &nbsp;Requiring a UI refresh is fine to see the new messages sent.<br />\n<br />\nThe mock subscriber should be able to parse out the 3 messages above (HTNG_HotelCheckInNotifRQ, HTNG_HotelCheckOutNotifRQ, and HTNG_HotelRoomMoveNotifRQ), and it should respond with the corresponding response (HTNG_HotelCheckInNotifRS, HTNG_HotelCheckOutNotifRS, and HTNG_HotelRoomMoveNotifRS).<br />\n<br />\nEach message received will just be displayed in a page, allowing us to see the messages sent and received.<br />\n<br />\n<em>Registration page:</em><br />\n<br />\nThe mock subscriber should have a page that allows a user to subscribe the page to the subscription service. &nbsp;The page should include a text box for the URL to the subscription service and a button that says &quot;Subscribe&quot; that will send the necessary subscription message for the events.<br />\n<br />\n<br />\n<strong>Node / Heroku</strong><br />\n<br />\nFor this challenge, we are targeting the latest version of Node and Heroku for deployment. &nbsp;For storing the messages, you can use Redis or MongoDB - either is fine.<br />\n<br />\nPlease make sure to provide a way to clear out the messages in the subscriber for easy testing.<br />\n&nbsp;",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30054961",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "Please see above",
+  "forumId": 33773,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33773",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 41,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-09T13:00:00.000Z",
+      "actualStartTime": "2016-08-09T13:00:00.000Z",
+      "scheduledEndTime": "2016-08-15T13:00:00.000Z",
+      "actualendTime": "2016-08-15T13:00:00.000Z",
+      "_id": "58123e83e0be5f30ae563768"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-09T13:05:00.000Z",
+      "actualStartTime": "2016-08-09T13:05:00.000Z",
+      "scheduledEndTime": "2016-08-15T13:00:00.000Z",
+      "actualendTime": "2016-08-15T13:00:00.000Z",
+      "_id": "58123e83e0be5f30ae563767"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-15T13:00:00.000Z",
+      "actualStartTime": "2016-08-15T13:00:00.000Z",
+      "scheduledEndTime": "2016-08-17T12:12:00.000Z",
+      "actualendTime": "2016-08-17T12:12:00.000Z",
+      "_id": "58123e83e0be5f30ae563766"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-17T12:12:00.000Z",
+      "actualStartTime": "2016-08-17T12:12:00.000Z",
+      "scheduledEndTime": "2016-08-17T12:20:00.000Z",
+      "actualendTime": "2016-08-17T12:20:00.000Z",
+      "_id": "58123e83e0be5f30ae563765"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-17T12:20:00.000Z",
+      "actualStartTime": "2016-08-17T12:20:00.000Z",
+      "scheduledEndTime": "2016-08-17T12:21:00.000Z",
+      "actualendTime": "2016-08-17T12:21:00.000Z",
+      "_id": "58123e83e0be5f30ae563764"
+    }
+  ],
+  "platforms": [
+    "Heroku"
+  ],
+  "postingDate": "2016-08-09T13:00:00.000Z",
+  "prize": [
+    1000,
+    500
+  ],
+  "projectId": 9620,
+  "registrants": [
+    {
+      "handle": "Jarnanchen",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-09T13:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563763"
+    },
+    {
+      "handle": "birdofpreyru",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-09T14:07:00.000Z",
+      "submissionDate": "2016-08-14T13:11:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563762"
+    },
+    {
+      "handle": "Kuhan",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-09T14:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563761"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-09T14:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563760"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-09T14:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56375f"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-09T15:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56375e"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-09T15:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56375d"
+    },
+    {
+      "handle": "gvir",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-09T15:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56375c"
+    },
+    {
+      "handle": "twds",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-09T16:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56375b"
+    },
+    {
+      "handle": "Amith",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-09T16:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56375a"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-09T16:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563759"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-09T23:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563758"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-10T03:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563757"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-10T04:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563756"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-10T05:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563755"
+    },
+    {
+      "handle": "gondzo",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-10T07:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563754"
+    },
+    {
+      "handle": "sribharathi1427",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-10T07:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563753"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-10T08:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563752"
+    },
+    {
+      "handle": "amanforindia",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-10T12:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563751"
+    },
+    {
+      "handle": "Tungie",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-10T13:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563750"
+    },
+    {
+      "handle": "jorje.b",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-10T13:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56374f"
+    },
+    {
+      "handle": "feistar",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-10T15:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56374e"
+    },
+    {
+      "handle": "chtbharti",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-10T18:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56374d"
+    },
+    {
+      "handle": "guwenqing",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-10T19:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56374c"
+    },
+    {
+      "handle": "spanhawk",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-10T19:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56374b"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-10T21:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56374a"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-11T07:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563749"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-11T14:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563748"
+    },
+    {
+      "handle": "cmckni3",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-11T21:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563747"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-12T07:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563746"
+    },
+    {
+      "handle": "yihanzhao",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-12T10:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563745"
+    },
+    {
+      "handle": "fish00",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-13T02:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563744"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-14T05:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563743"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-14T05:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563742"
+    },
+    {
+      "handle": "tippingcoder",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-14T11:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563741"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-14T16:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae563740"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-14T16:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56373f"
+    },
+    {
+      "handle": "mayank1892",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-14T17:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56373e"
+    },
+    {
+      "handle": "JMoore623",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-14T21:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56373d"
+    },
+    {
+      "handle": "itsuncheng",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-15T02:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56373c"
+    },
+    {
+      "handle": "xiufei",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-15T08:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae56373b"
+    }
+  ],
+  "registrationEndDate": "2016-08-15T13:00:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-08-15T13:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "birdofpreyru",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 81.88,
+      "finalScore": 81.88,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-08-14T13:11:00.000Z",
+      "_id": "58123e83e0be5f30ae563769"
+    }
+  ],
+  "technology": [
+    "Node.js"
+  ]
+}

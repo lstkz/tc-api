@@ -1,0 +1,993 @@
+{
+  "_id": 30051535,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:51:10.663Z",
+  "appealsEndDate": "2015-10-14T17:33:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Master Data Management - Error Identification and Analysis",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><strong>Background</strong></span></span></p>\n\n<p><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><span style=\"background-color:transparent\">A few weeks ago, we ran a marathon match on</span></span><span style=\"background-color:transparent; color:rgb(0, 0, 0)\"> </span><a href=\"http://community.topcoder.com/longcontest/?module=ViewProblemStatement&amp;rd=16529&amp;pm=13949\" style=\"line-height: 1.6; text-decoration: none;\"><span style=\"color:#0000FF\"><u>master data management</u></span></a><span style=\"background-color:transparent; color:rgb(0, 0, 0)\"> </span><span style=\"color:#000000\"><span style=\"background-color:transparent\">aimed at predicting which pairs of records contained a duplicate (&ldquo;Marathon Match&rdquo;).</span></span></span></span></p>\n\n<p><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">The Marathon Match was successful, and we obtained 5 winning solutions (&ldquo;Winning Algorithms&rdquo;). The system test score and rank of the Winning Algorithms appears below.</span></span></span></span></p>\n\n<table border=\"0\" cellpadding=\"5\" cellspacing=\"0\" style=\"line-height:20.8px; width:500px\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td><strong>Rank</strong></td>\n\t\t\t<td><strong>Contestant</strong></td>\n\t\t\t<td><strong>System Test Score</strong></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">1</span></span></span></td>\n\t\t\t<td><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">Psyho</span></span></span></td>\n\t\t\t<td><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">558,958.03</span></span></span></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">2</span></span></span></td>\n\t\t\t<td><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">nofto</span></span></span></td>\n\t\t\t<td><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">534,448.61</span></span></span></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">3</span></span></span></td>\n\t\t\t<td><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">wleite</span></span></span></td>\n\t\t\t<td><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">534,270.41</span></span></span></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">4</span></span></span></td>\n\t\t\t<td><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">nhzp339</span></span></span></td>\n\t\t\t<td><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">520,368.74</span></span></span></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">5</span></span></span></td>\n\t\t\t<td><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">CatalinT</span></span></span></td>\n\t\t\t<td><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">482,995.36</span></span></span></td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p>&nbsp;</p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">The Winning Algorithms all used random forests or variants thereof to predict which pairs of records contained a duplicate, and, in general, follow the steps described below:</span></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">1. Parse the data set containing potential pairs of duplicate records.&nbsp;</span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">2. Identify pairs of candidate duplicate records</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">3. Create features for a predictive model</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">4. Predict the probability that each pair of candidate records contains a duplicate</span></span></span></p>\n\n<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Steps 2 and 3 are likely to contain the most important ways in which the Winning Algorithms differ meaningfully.</span></span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>Marathon Match Data Description and Duplicate Record Creation</strong></span></span></span></p>\n\n<p><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">The original data set, which is free of duplicates (&quot;Original Data Set&quot;), is in csv format (see </span></span></span></span><span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">&ldquo;testing_orig.csv/training_orig.csv&rdquo;)&nbsp;</span><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">and contains the following useful columns with self explanatory names. Look at the NPPESproc-v7.py script to see exactly how these are used in the original generator.</span></span></span></span></p>\n\n<div dir=\"ltr\" style=\"margin-left:0pt;\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">Entity Type Code<br />\nNPI<br />\nProvider Organization Name (Legal Business Name)<br />\nProvider Other Organization Name<br />\nProvider Name Prefix Text<br />\nProvider First Name<br />\nProvider Middle Name<br />\nProvider Last Name (Legal Name)<br />\nProvider Name Suffix Text<br />\nProvider Credential Text<br />\nProvider Other Name Prefix Text<br />\nProvider Other First Name<br />\nProvider Other Middle Name<br />\nProvider Other Last Name<br />\nProvider Other Name Suffix Text<br />\nProvider Other Credential Text<br />\nProvider First Line Business Mailing Address<br />\nProvider Second Line Business Mailing Address<br />\nProvider Business Mailing Address City Name<br />\nProvider Business Mailing Address State Name<br />\nProvider Business Mailing Address Postal Code<br />\nProvider Business Mailing Address Country Code (If outside U.S.)<br />\nProvider First Line Business Practice Location Address<br />\nProvider Second Line Business Practice Location Address<br />\nProvider Business Practice Location Address City Name<br />\nProvider Business Practice Location Address State Name<br />\nProvider Business Practice Location Address Postal Code<br />\nProvider Business Practice Location Address Country Code (If outside U.S.)<br />\nHealthcare Provider Taxonomy Code_[1-15]</span></span></span></div>\n\n<div dir=\"ltr\" style=\"margin-left:0pt;\">&nbsp;</div>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">To create the data set for the Marathon Match (&ldquo;Contest Data Set&rdquo;), we started with the Original Dataset, duplicated a subset of records, and changed the field values of one of the members of the pair of duplicate records.</span></span></span></span></p>\n\n<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">The Contest Data Set is in csv format with the following columns:</span></span></span></span></p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">ID (Integer) - Index from 0 to n-1</span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Name (String) - Provider name</span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Address (String) - Provider address</span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Taxonomies (String) - Comma separated list of healthcare taxonomies</span></span></span></span></p>\n\t</li>\n</ol>\n\n<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Nb. Multiple provider taxonomies may be given for a single provider.</span></span></span></span></p>\n\n<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Ground truth for the training set is provided in a .csv file as a list of duplicate pairs. Each row corresponds to the two comma separated id numbers being a duplicate pair.</span></span></span></span></p>\n\n<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>Types of Errors</strong></span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">We have identified 4 different changes that could be made to any single 1 of the Name, Address, and Taxonomies fields in the Contest Data Set.</span></span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Deletion = abc -&gt; ac</span></span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Addition = abc -&gt; aabc</span></span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Transposition = abc -&gt; bac</span></span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Case Change = A -&gt; a or a -&gt; A</span></span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Note that substitution = abc -&gt; adc = Deletion (abc -&gt; ac) + Addition (ac -&gt; adc).</span></span></span></span></p>\n\n<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">There may be more changes that could be introduced into a single field of the Contest Data Set. Furthermore, changes involving multiple fields are possible.</span></span></span></span></p>\n\n<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Define the set of possible changes to create a Contest Data Set as &ldquo;Types of Errors&rdquo;</span></span></span></span></p>\n\n<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>Objectives</strong></span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">- Identify as many Types of Errors as possible that could appear in the Contest Data Set.</span></span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">- Write code that creates a new Contest Data Set containing the Types of Errors of your choosing (&ldquo;Revised Contest Data Set&rdquo;).</span></span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">- Change the ranks of the Winning Algorithms as much as possible when they are run against your Revised Contest Data Set.</span></span></span></span></p>\n\n<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>Contest Materials</strong></span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\">The data and code from the Marathon Match can be found here: </span>&nbsp;<u><a href=\"https://drive.google.com/file/d/0ByjxTGykXQjAUWNWLXFaNmVGRWs/view?usp=sharing\" target=\"_blank\"><span style=\"color:#0000FF\">https://drive.google.com/file/d/0ByjxTGykXQjAUWNWLXFaNmVGRWs/view?usp=sharing</span></a></u></span></span></p>\n\n<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">To complete these objectives, please use the following from the previous contest:</span></span></span></span></p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><a href=\"http://community.topcoder.com/longcontest/?module=ViewProblemStatement&amp;rd=16529&amp;pm=13949\" style=\"text-decoration:none;\"><span style=\"color:#0000FF\"><u>Contest statement</u></span></a></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Original Data Set</span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Description of the Types of Errors in the Contest Data Set</span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Python code used to create the Contest Data Set and ground truth</span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Contest Data Set</span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Contest ground truth</span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Winning Algorithm</span></span></span></span></p>\n\t&nbsp;a.&nbsp;<span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Code</span></span></span></span><br />\n\t&nbsp;b.&nbsp;<span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Saved model</span></span></span></span><br />\n\t&nbsp;c. <span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Report</span></span></span></span></li>\n</ol>\n\n<p><span style=\"color:#000000\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><strong>Suggested Approach</strong></span></span></span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">We suggest you proceed as follows.</span></p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Review the Original Data Set.</span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Read the Description of the Types of Errors in the Contest Data Set.</span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Brainstorm all the possible Types of Errors that could appear your Revised Contest Data Set.</span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Write code to create:</span></span></span></span></p>\n\ta.&nbsp;<span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Your Revised Contest Data Set, containing duplicate records with the Types of Errors of your choosing; and</span></span></span></span><br />\n\tb. <span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">The ground truth for your Revised Contest Data Set.</span></span></span></span><br />\n\t&nbsp;</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">On your machine, run the Winning Algorithms against your Revised Contest Data Set and the corresponding ground truth.</span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Score the Winning Algorithms with the </span><u>Brier Score</u><span style=\"background-color:transparent\"> in the contest statement, </span><u>not the Score</u><span style=\"background-color:transparent\">.</span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Note the change in the ranks of the Winning Algorithms.</span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Alter your Revised Contest Data Set and the corresponding ground truth to change the ranks of the Winning Algorithms as much as possible.</span></span></span></span></p>\n\t</li>\n</ol>\n\n<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Please let us know if you have trouble running the Winning Algorithms on your machine.</span></span></span></span></p>\n\n<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>Scoring</strong></span></span></span></p>\n\n<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Being an ideation contest, the scoring of submissions will be subjective based on client review. &nbsp;The the criteria for evaluating the submissions are:</span></span></span></span></p>\n\n<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">- The number of unique Types of Errors they contain; and</span></span></span></span></p>\n\n<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">-&nbsp;</span></span></span></span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">The degree to which they alter the ranking of the Winning Algorithms when the same are run against the Revised Contest Data Set and the corresponding ground truth.</span></p>\n\n<p><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">Please feel free to ask more specific questions in the forum, and if appropriate, we will answer them.</span></span></span></span></p>\n\n<p><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>Report</strong></span></span></span></p>\n\n<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">Your report must be at least 2 pages long, contain the Approach information described below:</span></span></span></p>\n\n<p><u><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>Approach Used</strong></span></span></span></u></p>\n\n<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">Please describe your approach so that we know what you did even before seeing the code to create your Revised Contest Data Set and the corresponding ground truth. This section must contain at least the following:</span></span></span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">- Descriptions and examples of the Types of Errors you introduced in your Revised Contest Data Set</span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">- Statistics describing your Revised Contest Data Set</span></span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">Total records</span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">Total total duplicate records (i.e., the total number of 1s in the ground truth)</span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">Frequency of each Type of Errors among the total duplicate records</span></span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">- Justification for Types of Errors used and the frequencies with which they occur</span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">- References to specific lines of your code that introduce each Type of Error</span></span></span></p>\n\t</li>\n</ul>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\" style=\"text-align:justify\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">- Potential improvements to your approach</span></span></span></p>\n\t</li>\n</ul>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30051535",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">In order to be considered for a prize, you must submit the following before the end of the contest: </span></span></span></p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">A single csv file containing a Revised Contest Data Set (defined below).</span></span></span></p>\n\t</li>\n</ol>\n\n<ol start=\"2\">\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">All code used to create your Revised Contest Data set. Please submit everything in 1 file (or tar or zip archive). &nbsp;We will pay winning contestants a $100 bonus if they submit a Docker file.</span></span></span></p>\n\t</li>\n</ol>\n\n<ol start=\"3\">\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">A complete report at least 2 pages long outlining how you created your Revised Contest Data Set and the Types of Errors (defined below) it contains. The required content appears in the &ldquo;Report&rdquo; section below.</span></span></span></p>\n\t</li>\n</ol>\n",
+  "forumId": 30661,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=30661",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 88,
+  "numberOfSubmissions": 9,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-09-25T22:01:00.000Z",
+      "actualStartTime": "2015-09-25T22:01:00.000Z",
+      "scheduledEndTime": "2015-10-05T17:02:00.000Z",
+      "actualendTime": "2015-10-05T17:02:00.000Z",
+      "_id": "58123e8ee0be5f30ae5649ce"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-09-25T22:06:00.000Z",
+      "actualStartTime": "2015-09-25T22:06:00.000Z",
+      "scheduledEndTime": "2015-10-05T17:02:00.000Z",
+      "actualendTime": "2015-10-05T17:02:00.000Z",
+      "_id": "58123e8ee0be5f30ae5649cd"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-05T17:02:00.000Z",
+      "actualStartTime": "2015-10-05T17:02:00.000Z",
+      "scheduledEndTime": "2015-10-14T16:31:00.000Z",
+      "actualendTime": "2015-10-14T16:31:00.000Z",
+      "_id": "58123e8ee0be5f30ae5649cc"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-14T16:31:00.000Z",
+      "actualStartTime": "2015-10-14T16:31:00.000Z",
+      "scheduledEndTime": "2015-10-14T17:31:00.000Z",
+      "actualendTime": "2015-10-14T17:31:00.000Z",
+      "_id": "58123e8ee0be5f30ae5649cb"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-14T17:31:00.000Z",
+      "actualStartTime": "2015-10-14T17:31:00.000Z",
+      "scheduledEndTime": "2015-10-14T17:33:00.000Z",
+      "actualendTime": "2015-10-14T17:33:00.000Z",
+      "_id": "58123e8ee0be5f30ae5649ca"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-09-25T22:01:00.000Z",
+  "prize": [
+    5000,
+    2500,
+    1250,
+    750,
+    500
+  ],
+  "projectId": 9168,
+  "registrants": [
+    {
+      "handle": "Ksys",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T06:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649c9"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-25T22:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649c8"
+    },
+    {
+      "handle": "arjun_singh",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T15:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649c7"
+    },
+    {
+      "handle": "andvp",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T01:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649c6"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T01:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649c5"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T01:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649c4"
+    },
+    {
+      "handle": "LOY",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T02:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649c3"
+    },
+    {
+      "handle": "hanghang",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T03:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649c2"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T03:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649c1"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T03:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649c0"
+    },
+    {
+      "handle": "ChenXiaoTemp",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T03:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649bf"
+    },
+    {
+      "handle": "daga_sumit",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T04:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649be"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T05:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649bd"
+    },
+    {
+      "handle": "ketzjs09",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T06:58:00.000Z",
+      "submissionDate": "2015-10-05T16:47:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649bc"
+    },
+    {
+      "handle": "Vovka",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T07:20:00.000Z",
+      "submissionDate": "2015-10-05T16:34:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649bb"
+    },
+    {
+      "handle": "Anela.Moagi",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T08:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649ba"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T08:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649b9"
+    },
+    {
+      "handle": "asd52403",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T08:27:00.000Z",
+      "submissionDate": "2015-10-05T08:10:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649b8"
+    },
+    {
+      "handle": "zsudraco",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T09:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649b7"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T10:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649b6"
+    },
+    {
+      "handle": "ranitdas",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T10:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649b5"
+    },
+    {
+      "handle": "patka",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T11:55:00.000Z",
+      "submissionDate": "2015-10-05T16:59:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649b4"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T12:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649b3"
+    },
+    {
+      "handle": "googlesmkm",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T13:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649b2"
+    },
+    {
+      "handle": "kubapb",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T14:18:00.000Z",
+      "submissionDate": "2015-10-05T16:24:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649b1"
+    },
+    {
+      "handle": "cunhavictor",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T14:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649b0"
+    },
+    {
+      "handle": "mosaixel",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-28T07:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649af"
+    },
+    {
+      "handle": "twds",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T15:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649ae"
+    },
+    {
+      "handle": "martimus",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T16:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649ad"
+    },
+    {
+      "handle": "MKuk",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-26T21:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649ac"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-27T01:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649ab"
+    },
+    {
+      "handle": "deas",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-27T04:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649aa"
+    },
+    {
+      "handle": "anshumanrai",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-27T11:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649a9"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-27T14:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649a8"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-27T15:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649a7"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-27T22:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649a6"
+    },
+    {
+      "handle": "elielzamora",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-28T02:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649a5"
+    },
+    {
+      "handle": "gthedreamer",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-28T05:40:00.000Z",
+      "submissionDate": "2015-10-04T12:46:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649a4"
+    },
+    {
+      "handle": "ttuygun",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-28T04:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649a3"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-28T05:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649a2"
+    },
+    {
+      "handle": "tripathiab13",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-28T07:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649a1"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-28T08:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae5649a0"
+    },
+    {
+      "handle": "defaultMaster",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-28T13:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae56499f"
+    },
+    {
+      "handle": "klo86min",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-28T12:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae56499e"
+    },
+    {
+      "handle": "TopCoderGuy",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-28T12:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae56499d"
+    },
+    {
+      "handle": "linzili",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-28T15:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae56499c"
+    },
+    {
+      "handle": "jeffknupp",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-28T18:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae56499b"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-28T14:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae56499a"
+    },
+    {
+      "handle": "son4moon",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-28T14:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564999"
+    },
+    {
+      "handle": "superManfirst",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-28T15:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564998"
+    },
+    {
+      "handle": "tsrinivas",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-28T15:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564997"
+    },
+    {
+      "handle": "xanx",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-28T16:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564996"
+    },
+    {
+      "handle": "eggnome0411",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-28T16:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564995"
+    },
+    {
+      "handle": "Psyho",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-28T16:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564994"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-29T00:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564993"
+    },
+    {
+      "handle": "winterflame",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-29T07:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564992"
+    },
+    {
+      "handle": "Rkk3",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-29T04:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564991"
+    },
+    {
+      "handle": "moshu",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-29T08:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564990"
+    },
+    {
+      "handle": "thothling",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-29T17:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae56498f"
+    },
+    {
+      "handle": "chuxy111",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-29T22:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae56498e"
+    },
+    {
+      "handle": "RaulEnriqueSil",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-30T00:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae56498d"
+    },
+    {
+      "handle": "mike.chow",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-30T03:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae56498c"
+    },
+    {
+      "handle": "Dithyrambe",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-30T13:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae56498b"
+    },
+    {
+      "handle": "Vinayaka.Raj",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-30T11:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae56498a"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-30T12:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564989"
+    },
+    {
+      "handle": "lbotsch",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-30T17:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564988"
+    },
+    {
+      "handle": "sribharathi1427",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-30T18:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564987"
+    },
+    {
+      "handle": "fireant",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-30T20:42:00.000Z",
+      "submissionDate": "2015-10-05T10:31:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564986"
+    },
+    {
+      "handle": "jlevin",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-30T21:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564985"
+    },
+    {
+      "handle": "Norichu",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-01T04:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564984"
+    },
+    {
+      "handle": "hk_apm789",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-01T05:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564983"
+    },
+    {
+      "handle": "tongkunvwang",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-01T07:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564982"
+    },
+    {
+      "handle": "yash372",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-01T07:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564981"
+    },
+    {
+      "handle": "larzk47",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-01T18:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564980"
+    },
+    {
+      "handle": "afabijan",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-01T18:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae56497f"
+    },
+    {
+      "handle": "devasthali",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-01T20:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae56497e"
+    },
+    {
+      "handle": "troglotit",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-01T21:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae56497d"
+    },
+    {
+      "handle": "skovorodkin",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-01T23:15:00.000Z",
+      "submissionDate": "2015-10-04T22:22:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae56497c"
+    },
+    {
+      "handle": "MdOmar",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-02T09:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae56497b"
+    },
+    {
+      "handle": "vish2487",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-02T10:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae56497a"
+    },
+    {
+      "handle": "shmuel.naaman",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-03T07:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564979"
+    },
+    {
+      "handle": "iSpartan",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-04T02:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564978"
+    },
+    {
+      "handle": "lthai",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-04T05:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564977"
+    },
+    {
+      "handle": "amolholani",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-04T16:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564976"
+    },
+    {
+      "handle": "Acyn",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-05T06:59:00.000Z",
+      "submissionDate": "2015-10-05T16:58:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564975"
+    },
+    {
+      "handle": "all_random",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-05T08:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564974"
+    },
+    {
+      "handle": "dhanmani100",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-05T08:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564973"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-05T12:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8ee0be5f30ae564972"
+    }
+  ],
+  "registrationEndDate": "2015-10-05T17:02:00.000Z",
+  "reviewScorecardId": 30001881,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-10-05T17:02:00.000Z",
+  "submissions": [
+    {
+      "handle": "Vovka",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-10-05T16:34:00.000Z",
+      "_id": "58123e8ee0be5f30ae5649d7"
+    },
+    {
+      "handle": "fireant",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 90,
+      "finalScore": 90,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-10-05T10:31:00.000Z",
+      "_id": "58123e8ee0be5f30ae5649d6"
+    },
+    {
+      "handle": "asd52403",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 80,
+      "finalScore": 80,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-10-05T08:10:00.000Z",
+      "_id": "58123e8ee0be5f30ae5649d5"
+    },
+    {
+      "handle": "kubapb",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 70,
+      "finalScore": 70,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-10-05T16:24:00.000Z",
+      "_id": "58123e8ee0be5f30ae5649d4"
+    },
+    {
+      "handle": "patka",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 60,
+      "finalScore": 60,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-10-05T16:59:00.000Z",
+      "_id": "58123e8ee0be5f30ae5649d3"
+    },
+    {
+      "handle": "gthedreamer",
+      "placement": 6,
+      "screeningScore": null,
+      "initialScore": 50,
+      "finalScore": 50,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-10-04T12:46:00.000Z",
+      "_id": "58123e8ee0be5f30ae5649d2"
+    },
+    {
+      "handle": "skovorodkin",
+      "placement": 7,
+      "screeningScore": null,
+      "initialScore": 50,
+      "finalScore": 50,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-10-04T22:22:00.000Z",
+      "_id": "58123e8ee0be5f30ae5649d1"
+    },
+    {
+      "handle": "ketzjs09",
+      "placement": 8,
+      "screeningScore": null,
+      "initialScore": 50,
+      "finalScore": 50,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-10-05T16:47:00.000Z",
+      "_id": "58123e8ee0be5f30ae5649d0"
+    },
+    {
+      "handle": "Acyn",
+      "placement": 9,
+      "screeningScore": null,
+      "initialScore": 50,
+      "finalScore": 50,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-10-05T16:58:00.000Z",
+      "_id": "58123e8ee0be5f30ae5649cf"
+    }
+  ],
+  "technology": [
+    "Data Science",
+    "Python"
+  ]
+}

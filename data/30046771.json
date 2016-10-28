@@ -1,0 +1,292 @@
+{
+  "_id": 30046771,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:48:10.631Z",
+  "appealsEndDate": "2014-11-04T17:07:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Release Assembly - CSFV Social Network Login Autoconnect",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2 dir=\"ltr\">Project Overview</h2>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:12px\">This project, the CSFV Community Gaming website project will provide the web site infrastructure and integration of the games. This will be a web site that is available on the Internet, and also delivered in a form where the server and the games can be installed and used behind a firewall.</span></p>\n\n<h2 dir=\"ltr\">Challenge Overview</h2>\n\n<p dir=\"ltr\">The current flow when login or register via social networks that it validates the profile identifier exists in DB and associated with existing CSFV user, if not, then it takes user to registration flow. This is causing a confusing user experience.</p>\n\n<p dir=\"ltr\">We are fixing this flow in this challenge for facebook and google login/register as these are the only social networks we are currently using that return email of the user from it&#39;s social network. Twitter does not provide the user email.</p>\n\n<h2 dir=\"ltr\">Challenge Requirements</h2>\n\n<p dir=\"ltr\">You will address the following in this challenge :</p>\n\n<ul dir=\"ltr\">\n\t<li>The logic to connect social network account with existing CSFV user exists under csfv_socialnetwork_module#SocialNetworkConnection.js controller\n\t<ul>\n\t\t<li><a href=\"https://github.com/topcoderinc/csfv_socialnetwork_module/blob/master/controllers/SocialNetworkConnection.js#L220-L289\">Logic to connect Facebook account with existing csfv user.</a></li>\n\t\t<li><a href=\"https://github.com/topcoderinc/csfv_socialnetwork_module/blob/master/controllers/SocialNetworkConnection.js#L309-L347\">Logic to connect Google account with existing csfv user.</a> It is also used by twitter.</li>\n\t\t<li>both of the above logic should be moved to <span><a class=\"js-directory-link\" href=\"https://github.com/topcoderinc/csfv_socialnetwork_module/blob/master/controllers/ControllerHelper.js\" id=\"d47e0079e66d70cbbb9b2a968082d7a3-8a1f8d71c2afe004631854d2c844eaa27ba47453\" title=\"ControllerHelper.js\">ControllerHelper.js</a></span> to be used by Login.js and Registration.js controller</li>\n\t</ul>\n\t</li>\n\t<li>Update csfv_frontend_module#Login.js controller and csfv_socialnetwork_module#Registration.js as follow :&nbsp;\n\t<ul>\n\t\t<li>If the code to check social network account existence does not return a connection then</li>\n\t\t<li>Check if social network account profile has email set</li>\n\t\t<li>If email set then check if there is a CSFV user associated with that email using <a href=\"https://github.com/topcoderinc/csfv_core_module/blob/master/services/UserService/User.js#L233\">getByEmail</a> method</li>\n\t\t<li>If user returned then delegate to the connect functions (the one moved to helper as outlined in the point above), to connect the social network account with the CSFV user.</li>\n\t\t<li>Auto login user after successful connection and redirect user to the proper page.</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\">Testing and Test Scenarios</h3>\n\n<ul dir=\"ltr\">\n\t<li>You need to update provided test scenario to cover the new flow</li>\n\t<li><span style=\"font-size:12px\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">For registration test scenarios not affected by this update, you need to check them against your submission before submitting to make sure you have not broken any functionality.</span></span></li>\n</ul>\n\n<h2 dir=\"ltr\">Source Code</h2>\n\n<p dir=\"ltr\"><span style=\"font-size:12px\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">Source code exists in private github repo</span><a href=\"https://github.com/topcoderinc/\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\"> </span><u>https://github.com/topcoderinc/</u></a></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:12px\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">If you get 404 then you need permission to access it. Request it in challenge forums, copilot will add you to the repository and you should receive email about you being added to github. Post your *github* account name when requesting access.</span></span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-size:12px\"><a href=\"https://github.com/topcoderinc/csfv_frontend_module\" style=\"text-decoration:none;\"><u>csfv_frontend_module</u></a></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-size:12px\"><a href=\"https://github.com/topcoderinc/csfv_frontend_module\" style=\"text-decoration:none;\"><u><span style=\"font-size:12px\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">csfv_socialnetwork_module</span></span></u></a></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-size:12px\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">csfv_core_module</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-size:12px\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">Other CSFV dependencies are listed in package.json of csfv_frontend_module, you can also search the topcoderinc repository to search for them.</span></span></p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Deploying the apps</h2>\n\n<p dir=\"ltr\"><span style=\"font-size:12px\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">Post in challenge forums if you have any issue during deploying the apps.</span></span></p>\n",
+  "digitalRunPoints": 270,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30046771",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2014-11-05T14:42:00.000Z",
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<h2><span><strong><span style=\"color:#FF0000\"><span>Submission Deliverables</span></span></strong></span></h2>\n\n<p><span><span style=\"font-size:12px\">Below is an overview of the deliverables:</span></span></p>\n\n<ul>\n\t<li><span><span style=\"font-size:12px\">Patch file of changes.</span></span></li>\n\t<li><span style=\"font-size:12px\">Deployment document with verification screens for reviewers.</span></li>\n\t<li><span style=\"font-size:12px\">Updated csfv_test_data_generator module if needed.</span></li>\n</ul>\n\n<h2><span><span style=\"color:#FF0000\"><strong>Final Submission</strong></span></span></h2>\n\n<p><span><span style=\"font-size:12px\">For each member, the final submission should be uploaded to the Online Review Tool.</span></span></p>\n</div>\n",
+  "forumId": 26324,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=26324",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 13,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-27T13:17:00.000Z",
+      "actualStartTime": "2014-10-27T13:17:00.000Z",
+      "scheduledEndTime": "2014-10-27T13:18:00.000Z",
+      "actualendTime": "2014-10-27T13:18:00.000Z",
+      "_id": "58123dda0659262e95e004f1"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-27T13:18:00.000Z",
+      "actualStartTime": "2014-10-27T13:18:00.000Z",
+      "scheduledEndTime": "2014-10-27T14:33:00.000Z",
+      "actualendTime": "2014-10-27T14:33:00.000Z",
+      "_id": "58123dda0659262e95e004f0"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-27T14:33:00.000Z",
+      "actualStartTime": "2014-10-27T14:33:00.000Z",
+      "scheduledEndTime": "2014-10-29T14:34:00.000Z",
+      "actualendTime": "2014-10-29T14:34:00.000Z",
+      "_id": "58123dda0659262e95e004ef"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-27T14:38:00.000Z",
+      "actualStartTime": "2014-10-27T14:38:00.000Z",
+      "scheduledEndTime": "2014-11-01T14:32:00.000Z",
+      "actualendTime": "2014-11-01T14:32:00.000Z",
+      "_id": "58123dda0659262e95e004ee"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-01T14:32:00.000Z",
+      "actualStartTime": "2014-11-01T14:32:00.000Z",
+      "scheduledEndTime": "2014-11-02T02:19:00.000Z",
+      "actualendTime": "2014-11-02T02:19:00.000Z",
+      "_id": "58123dda0659262e95e004ed"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-02T02:19:00.000Z",
+      "actualStartTime": "2014-11-02T02:19:00.000Z",
+      "scheduledEndTime": "2014-11-04T01:08:00.000Z",
+      "actualendTime": "2014-11-04T01:08:00.000Z",
+      "_id": "58123dda0659262e95e004ec"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-04T01:08:00.000Z",
+      "actualStartTime": "2014-11-04T01:08:00.000Z",
+      "scheduledEndTime": "2014-11-04T08:48:00.000Z",
+      "actualendTime": "2014-11-04T08:48:00.000Z",
+      "_id": "58123dda0659262e95e004eb"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-04T08:48:00.000Z",
+      "actualStartTime": "2014-11-04T08:48:00.000Z",
+      "scheduledEndTime": "2014-11-04T17:07:00.000Z",
+      "actualendTime": "2014-11-04T17:07:00.000Z",
+      "_id": "58123dda0659262e95e004ea"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-04T17:07:00.000Z",
+      "actualStartTime": "2014-11-04T17:07:00.000Z",
+      "scheduledEndTime": "2014-11-05T01:14:00.000Z",
+      "actualendTime": "2014-11-05T01:14:00.000Z",
+      "_id": "58123dda0659262e95e004e9"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-05T01:14:00.000Z",
+      "actualStartTime": "2014-11-05T01:14:00.000Z",
+      "scheduledEndTime": "2014-11-05T14:42:00.000Z",
+      "actualendTime": "2014-11-05T14:42:00.000Z",
+      "_id": "58123dda0659262e95e004e8"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-05T14:42:00.000Z",
+      "actualStartTime": "2014-11-05T14:42:00.000Z",
+      "scheduledEndTime": "2014-11-05T15:23:00.000Z",
+      "actualendTime": "2014-11-05T15:23:00.000Z",
+      "_id": "58123dda0659262e95e004e7"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-05T15:23:00.000Z",
+      "actualStartTime": "2014-11-05T15:23:00.000Z",
+      "scheduledEndTime": "2014-11-10T15:23:00.000Z",
+      "actualendTime": "2014-11-10T15:23:00.000Z",
+      "_id": "58123dda0659262e95e004e6"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2014-10-27T14:33:00.000Z",
+  "prize": [
+    600,
+    300
+  ],
+  "projectId": 5104,
+  "registrants": [
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-27T15:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004e5"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "0%",
+      "registrationDate": "2014-10-27T15:20:00.000Z",
+      "submissionDate": null,
+      "rating": "1447",
+      "colorStyle": "color: #6666FF",
+      "_id": "58123dda0659262e95e004e4"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "100%",
+      "registrationDate": "2014-10-27T15:21:00.000Z",
+      "submissionDate": "2014-10-29T17:03:00.000Z",
+      "rating": "2252",
+      "colorStyle": "color: #EE0000",
+      "_id": "58123dda0659262e95e004e3"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-27T15:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004e2"
+    },
+    {
+      "handle": "rakeshk_87",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-27T17:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004e1"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-27T20:16:00.000Z",
+      "submissionDate": null,
+      "rating": "717",
+      "colorStyle": "color: #999999",
+      "_id": "58123dda0659262e95e004e0"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-27T22:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004df"
+    },
+    {
+      "handle": "LieutenantRoger",
+      "reliability": "20%",
+      "registrationDate": "2014-10-28T05:23:00.000Z",
+      "submissionDate": null,
+      "rating": "1067",
+      "colorStyle": "color: #00A900",
+      "_id": "58123dda0659262e95e004de"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-10-29T07:37:00.000Z",
+      "submissionDate": null,
+      "rating": "1031",
+      "colorStyle": "color: #00A900",
+      "_id": "58123dda0659262e95e004dd"
+    },
+    {
+      "handle": "spanhawk",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-29T09:54:00.000Z",
+      "submissionDate": null,
+      "rating": "689",
+      "colorStyle": "color: #999999",
+      "_id": "58123dda0659262e95e004dc"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-10-29T11:59:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58123dda0659262e95e004db"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-29T13:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004da"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2014-10-29T13:37:00.000Z",
+      "submissionDate": null,
+      "rating": "400",
+      "colorStyle": "color: #999999",
+      "_id": "58123dda0659262e95e004d9"
+    }
+  ],
+  "registrationEndDate": "2014-10-29T14:34:00.000Z",
+  "reliabilityBonus": 120,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-11-01T14:32:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 98.11,
+      "finalScore": 99.39,
+      "points": 270,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-10-29T17:03:00.000Z",
+      "_id": "58123dda0659262e95e004f2"
+    }
+  ],
+  "technology": [
+    "MongoDB",
+    "Node.js"
+  ]
+}

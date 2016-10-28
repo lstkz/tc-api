@@ -1,0 +1,468 @@
+{
+  "_id": 30049724,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:50:43.234Z",
+  "appealsEndDate": "2015-04-22T10:00:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Project Mom and Pop - AWS Infrastructure assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h1><a name=\"_Toc456598593\">1.&nbsp;&nbsp;&nbsp; Project Overview</a></h1>\n\n<h2>1.1&nbsp;&nbsp;&nbsp; System Description</h2>\n\n<p>The client for this project has decided to build a platform that will support the sale, exchange, and redemption of gift cards between businesses and individuals.&nbsp; The goal of this platform is to help small businesses expand, using both web and mobile layouts, by giving them a simple way to raise capital and acquire new customers using gift cards.</p>\n\n<p>The client needs to create a high quality platform that is easy-to-use even for business owners that don&rsquo;t have a lot of technical expertise.&nbsp; Many business owners are not technologically sophisticated, so creating a platform that is simple to understand and navigate is also a top priority.</p>\n\n<p>The main function of the platform will be to allow business to post virtual gift cards for sale on the platform.&nbsp; Individual users will be able to browse and buy these gift cards, as well as resell or trade gift cards they own.&nbsp; Using the mobile layout, users will be able to redeem their gift cards at the business, and the business will be able to process gift card redemption at their point of sale.</p>\n\n<p><span style=\"color:rgb(102, 102, 102); font-family:lucida grande,helvetica,arial,sans-serif; font-size:12px\">This assembly is responsible for setting up the AWS infrastructure.</span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:12px\">Since this assembly is a bit unusual - it doesn&#39;t require to develop and assembly software, but build an infrastructure - <u>it won&#39;t affect your reliability and rating.</u></span></p>\n\n<h2>1.2&nbsp;&nbsp;&nbsp; Competition Task Overview</h2>\n\n<p>A complete list of deliverables can be found in the TopCoder Assembly competition Tutorial at:</p>\n\n<p><a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a></p>\n\n<p><strong>Please find attached the detailed Deployment Guide in the attached codebase.&nbsp;</strong></p>\n\n<p><em>Note: System architecture is also attached for reference.</em></p>\n\n<div style=\"padding: 5px 10px; margin: 0px; color: rgb(102, 102, 102); font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif; line-height: 18.9090900421143px; font-size: 12.7272720336914px; border: 1px solid rgb(204, 204, 204); background: rgb(238, 238, 238);\"><span style=\"color:rgb(255, 0, 0)\"><span class=\"marker\"><strong>Time constraint</strong></span></span></div>\n\n<div style=\"padding: 5px 10px; margin: 0px; color: rgb(102, 102, 102); font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif; line-height: 18.9090900421143px; font-size: 12.7272720336914px; border: 1px solid rgb(204, 204, 204); background: rgb(238, 238, 238);\"><span style=\"color:rgb(255, 0, 0)\"><span class=\"marker\">This project has tight time line so</span></span></div>\n\n<div style=\"padding: 5px 10px; margin: 0px; color: rgb(102, 102, 102); font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif; line-height: 18.9090900421143px; font-size: 12.7272720336914px; border: 1px solid rgb(204, 204, 204); background: rgb(238, 238, 238);\"><span style=\"color:rgb(255, 0, 0)\"><span class=\"marker\">1) the review phase is only 24 hours</span></span></div>\n\n<div style=\"padding: 5px 10px; margin: 0px; color: rgb(102, 102, 102); font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif; line-height: 18.9090900421143px; font-size: 12.7272720336914px; border: 1px solid rgb(204, 204, 204); background: rgb(238, 238, 238);\"><span style=\"color:rgb(255, 0, 0)\"><span class=\"marker\">2) we would like to avoid any timeline extension, please ask questions early</span></span></div>\n\n<p>&nbsp;</p>\n\n<h3>1.2.1&nbsp;&nbsp;&nbsp; Scope</h3>\n\n<p>This assembly is responsible for the following parts.</p>\n\n<p><span>1. <strong>Setup application server</strong> (node.js+express) including Wordpress and SMTP</span></p>\n\n<p>2. <strong>Setup database server</strong></p>\n\n<p>Ensure app server can access the DB and configuration at the app server is relevantly updated.</p>\n\n<p>3. <strong>Continuous integration setup</strong></p>\n\n<p><span>The provided codebase must be deployed as a proof-of-concept.&nbsp;</span>Once the AWS servers are up and the codebase is initially deployed, the developer/admin must be able to deploy the updates easily doing the following:</p>\n\n<p>1) &nbsp;&nbsp;&nbsp;push code update into the github repository in the cloud.</p>\n\n<p>2) &nbsp;&nbsp;&nbsp;click a button (or run a command) in the admin console (e.g. Jenkins) and the update deployed on both application and database servers. Configuration must be updated automatically (DB IP address or whatever relevant)</p>\n\n<p>Jenkins &ndash; the CI server &ndash; will be deployed at the CI server instance and accessed via web browser.</p>\n\n<p>The workflow must be the following: developers pushes his code from his/her desktop to github, then push github update to the app server</p>\n\n<p>S3 must be used as a file storage (incl).</p>\n\n<p><strong>4. &nbsp;Backup and restore</strong></p>\n\n<p>The following features are desired:</p>\n\n<p>1)<span> &nbsp;&nbsp;&nbsp;</span>auto backup of the code every time deployment is performed;</p>\n\n<p>2)<span> &nbsp;&nbsp;&nbsp;</span>database backup on schedule (e.g. weekly)</p>\n\n<p>3)<span> &nbsp;&nbsp;&nbsp;</span>opportunity to restore the previous version of the database with a button click</p>\n\n<p>4)<span> &nbsp;&nbsp;&nbsp;</span>opportunity to roll the codebase back with a button click</p>\n\n<p>5)<span> &nbsp;&nbsp;&nbsp;</span>e-mail notification when either codebase or database backup has been launched but failed</p>\n\n<p>6)<span> &nbsp;&nbsp;&nbsp;</span>notifications persons list must be editable on the web. User must be able to add/delete the e-mail (and names/roles against it).</p>\n\n<p>&nbsp;</p>\n\n<p><strong>5. &nbsp;Performance monitoring and notifications</strong></p>\n\n<p>In case of the services failure the notifications will be sent. Admin user must be able to set up the notification persons list.</p>\n\n<p>Each service must be polled every 5 minutes.</p>\n\n<p>The cases when notifications are sent is the following (to be continued):</p>\n\n<p>-<span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>any server error at the database or application server (HTTP 50x response);</p>\n\n<p>-<span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>deployment failure</p>\n\n<p>-<span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>backup failure</p>\n\n<p>-<span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>lack of memory</p>\n\n<p>-<span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>lack of storage</p>\n\n<p>-<span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>CPU overload (not enough computational capacity to respond all requests)</p>\n\n<p><span>Successful events and errors must be logged.</span></p>\n\n<p>Once down the servers must be able to automatically restart.</p>\n\n<p>&nbsp;</p>\n\n<p><strong>8. &nbsp;&nbsp;Physical Deployment</strong></p>\n\n<p>&middot;<span> &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span>The application will achieve a 99.5% uptime</p>\n\n<p>&middot;<span> &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span>The application will have 24x7 availability</p>\n\n<p>&middot;<span> &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span>The new system needs be scalable, meaning that as the volume of users and orders grow the system can scale (by adding additional app servers, web services, database, etc) to make the application run correctly.</p>\n\n<p>&middot;<span> &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span>All pages in the application should be loaded in 2 seconds or less after the initial hit.</p>\n\n<p><strong>Software:</strong></p>\n\n<p><span>&middot;</span><span> &nbsp;&nbsp;&nbsp;&nbsp;<a href=\"http://nodejs.org/\"><span>&nbsp;</span>&nbsp;<span>Node.js 0.10.34</span></a></span></p>\n\n<p><span>&middot;</span><span> &nbsp;&nbsp;&nbsp;&nbsp;<a href=\"https://nodebb.org/\"><span>&nbsp;</span>&nbsp;<span>Wordpress 4.1</span></a></span></p>\n\n<p><strong>Database:</strong></p>\n\n<p>&middot;<span> &nbsp;&nbsp;&nbsp;&nbsp;<a href=\"http://www.mongodb.org/\">&nbsp;<span>&nbsp;</span><span>MongoDB 2.6</span></a></span><span>&nbsp;or later</span></p>\n\n<p><strong>Application Server:</strong></p>\n\n<p><span>&middot;</span><span> &nbsp;&nbsp;&nbsp;&nbsp;<a href=\"http://httpd.apache.org/\"><span>&nbsp;</span>&nbsp;<span>Apache HTTP Server 2.4.10</span></a></span><span>&nbsp;or later</span></p>\n\n<p><strong>Operation System</strong></p>\n\n<p>&middot;<span> &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span>Linux</p>\n\n<p>&nbsp;</p>\n\n<p><strong>12.<span> &nbsp;</span>Initial actions to set up infrastructure</strong></p>\n\n<p>Members are welcome with own suggestions/editions to this list.</p>\n\n<p>A)<span> &nbsp;&nbsp;</span>Backup, CI and monitoring server (Auxiliary server for short)</p>\n\n<p>1)<span> &nbsp;&nbsp;&nbsp;</span>set up the host</p>\n\n<p>2)<span> &nbsp;&nbsp;&nbsp;</span>set up monitoring service, documenting performance metrics</p>\n\n<p>3)<span> &nbsp;&nbsp;&nbsp;</span>set up &nbsp;CI service</p>\n\n<p>4)<span> &nbsp;&nbsp;&nbsp;</span>configure and test CI service</p>\n\n<p>5)<span> &nbsp;&nbsp;&nbsp;</span>documenting the host and its services</p>\n\n<p>&nbsp;</p>\n\n<p>B)<span> &nbsp;&nbsp;&nbsp;</span>Database server</p>\n\n<p>6)<span> &nbsp;&nbsp;&nbsp;</span>set up the host</p>\n\n<p>7)<span> &nbsp;&nbsp;&nbsp;</span>set up monitoring agent, documenting performance metrics</p>\n\n<p>8)<span> &nbsp;&nbsp;&nbsp;</span>set up MongoDB and and deploying the database dump</p>\n\n<p>9)<span> &nbsp;&nbsp;&nbsp;</span>set up backup script and backup rotation; documenting the back-up and restore procedures</p>\n\n<p>10)<span> </span>documenting the host and its services</p>\n\n<p>&nbsp;</p>\n\n<p>C)<span> &nbsp;&nbsp;&nbsp;</span>Application server</p>\n\n<p>11)<span> </span>set up the host</p>\n\n<p>12)<span> </span>set up monitoring agent, documenting performance metrics</p>\n\n<p>13)<span> </span>setting up environment at the application server (including installation and configuration of node.js and dependencies)</p>\n\n<p>14)<span> </span>setting up a web server (Apache) at the application server (3 web hosts - app, CI, and monitoring)</p>\n\n<p>15)<span> </span>documenting the host and its services</p>\n\n<p>&nbsp;</p>\n\n<p>The infrastructure must be scalable which means that in future there must be on obstacles to setting up a cluster of app or DB servers. For this purpose load balancer setup is required.</p>\n",
+  "digitalRunPoints": 360,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30049724",
+  "finalFixEndDate": "2015-04-29T04:38:00.000Z",
+  "finalSubmissionGuidelines": "<p>- Documentation of steps done to perform the task.&nbsp;<span>Clear and detailed verification steps for all required features must be described.</span></p>\n\n<p>- Working app at AWS</p>\n\n<p>- Working mechanism of backup/restore and continuous integration</p>\n\n<p>The winner will be responsible for copying all the assets to the client&#39;s environment.</p>\n\n<p>&nbsp;</p>\n\n<p>It is supposed that you will use 3 t2.micro instances (app, DB and CI) within 10 days and thus will fit into 750 hours/months of the AWS free tier.</p>\n",
+  "forumId": 28946,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=28946",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 26,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-13T17:05:00.000Z",
+      "actualStartTime": "2015-04-13T17:05:00.000Z",
+      "scheduledEndTime": "2015-04-13T17:07:00.000Z",
+      "actualendTime": "2015-04-13T17:07:00.000Z",
+      "_id": "58123e73e0be5f30ae562e38"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-13T17:08:00.000Z",
+      "actualStartTime": "2015-04-13T17:08:00.000Z",
+      "scheduledEndTime": "2015-04-13T18:26:00.000Z",
+      "actualendTime": "2015-04-13T18:26:00.000Z",
+      "_id": "58123e73e0be5f30ae562e37"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-13T18:31:00.000Z",
+      "actualStartTime": "2015-04-13T18:31:00.000Z",
+      "scheduledEndTime": "2015-04-17T18:31:00.000Z",
+      "actualendTime": "2015-04-17T18:31:00.000Z",
+      "_id": "58123e73e0be5f30ae562e36"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-13T18:36:00.000Z",
+      "actualStartTime": "2015-04-13T18:36:00.000Z",
+      "scheduledEndTime": "2015-04-19T17:35:00.000Z",
+      "actualendTime": "2015-04-19T17:35:00.000Z",
+      "_id": "58123e73e0be5f30ae562e35"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-19T17:35:00.000Z",
+      "actualStartTime": "2015-04-19T17:35:00.000Z",
+      "scheduledEndTime": "2015-04-20T06:06:00.000Z",
+      "actualendTime": "2015-04-20T06:06:00.000Z",
+      "_id": "58123e73e0be5f30ae562e34"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-20T06:06:00.000Z",
+      "actualStartTime": "2015-04-20T06:06:00.000Z",
+      "scheduledEndTime": "2015-04-21T04:10:00.000Z",
+      "actualendTime": "2015-04-21T04:10:00.000Z",
+      "_id": "58123e73e0be5f30ae562e33"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-21T04:10:00.000Z",
+      "actualStartTime": "2015-04-21T04:10:00.000Z",
+      "scheduledEndTime": "2015-04-22T04:12:00.000Z",
+      "actualendTime": "2015-04-22T04:12:00.000Z",
+      "_id": "58123e73e0be5f30ae562e32"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-22T04:12:00.000Z",
+      "actualStartTime": "2015-04-22T04:12:00.000Z",
+      "scheduledEndTime": "2015-04-22T10:00:00.000Z",
+      "actualendTime": "2015-04-22T10:00:00.000Z",
+      "_id": "58123e73e0be5f30ae562e31"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-22T10:00:00.000Z",
+      "actualStartTime": "2015-04-22T10:00:00.000Z",
+      "scheduledEndTime": "2015-04-22T10:05:00.000Z",
+      "actualendTime": "2015-04-22T10:05:00.000Z",
+      "_id": "58123e73e0be5f30ae562e30"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-22T10:06:00.000Z",
+      "actualStartTime": "2015-04-22T10:06:00.000Z",
+      "scheduledEndTime": "2015-04-24T07:25:00.000Z",
+      "actualendTime": "2015-04-24T07:25:00.000Z",
+      "_id": "58123e73e0be5f30ae562e2f"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-24T07:25:00.000Z",
+      "actualStartTime": "2015-04-24T07:25:00.000Z",
+      "scheduledEndTime": "2015-04-24T19:03:00.000Z",
+      "actualendTime": "2015-04-24T19:03:00.000Z",
+      "_id": "58123e73e0be5f30ae562e2e"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-27T15:34:00.000Z",
+      "actualStartTime": "2015-04-27T15:34:00.000Z",
+      "scheduledEndTime": "2015-04-28T05:48:00.000Z",
+      "actualendTime": "2015-04-28T05:48:00.000Z",
+      "_id": "58123e73e0be5f30ae562e2d"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-24T19:03:00.000Z",
+      "actualStartTime": "2015-04-24T19:03:00.000Z",
+      "scheduledEndTime": "2015-04-25T17:10:00.000Z",
+      "actualendTime": "2015-04-25T17:10:00.000Z",
+      "_id": "58123e73e0be5f30ae562e2c"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-25T17:10:00.000Z",
+      "actualStartTime": "2015-04-25T17:10:00.000Z",
+      "scheduledEndTime": "2015-04-26T10:20:00.000Z",
+      "actualendTime": "2015-04-26T10:20:00.000Z",
+      "_id": "58123e73e0be5f30ae562e2b"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-26T10:20:00.000Z",
+      "actualStartTime": "2015-04-26T10:20:00.000Z",
+      "scheduledEndTime": "2015-04-27T08:51:00.000Z",
+      "actualendTime": "2015-04-27T08:51:00.000Z",
+      "_id": "58123e73e0be5f30ae562e2a"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-27T08:51:00.000Z",
+      "actualStartTime": "2015-04-27T08:51:00.000Z",
+      "scheduledEndTime": "2015-04-27T15:34:00.000Z",
+      "actualendTime": "2015-04-27T15:34:00.000Z",
+      "_id": "58123e73e0be5f30ae562e29"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-28T05:50:00.000Z",
+      "actualStartTime": "2015-04-28T05:50:00.000Z",
+      "scheduledEndTime": "2015-04-29T04:38:00.000Z",
+      "actualendTime": "2015-04-29T04:38:00.000Z",
+      "_id": "58123e73e0be5f30ae562e28"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-29T04:38:00.000Z",
+      "actualStartTime": "2015-04-29T04:38:00.000Z",
+      "scheduledEndTime": "2015-04-29T06:54:00.000Z",
+      "actualendTime": "2015-04-29T06:54:00.000Z",
+      "_id": "58123e73e0be5f30ae562e27"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-29T06:57:00.000Z",
+      "actualStartTime": "2015-04-29T06:57:00.000Z",
+      "scheduledEndTime": "2015-05-04T06:58:00.000Z",
+      "actualendTime": "2015-05-04T06:58:00.000Z",
+      "_id": "58123e73e0be5f30ae562e26"
+    }
+  ],
+  "platforms": [
+    "AWS"
+  ],
+  "postingDate": "2015-04-13T18:31:00.000Z",
+  "prize": [
+    800,
+    400
+  ],
+  "projectId": 8087,
+  "registrants": [
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-13T18:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e73e0be5f30ae562e25"
+    },
+    {
+      "handle": "superastrom",
+      "reliability": "0%",
+      "registrationDate": "2015-04-13T18:54:00.000Z",
+      "submissionDate": null,
+      "rating": "468",
+      "colorStyle": "color: #999999",
+      "_id": "58123e73e0be5f30ae562e24"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2015-04-13T20:02:00.000Z",
+      "submissionDate": null,
+      "rating": "571",
+      "colorStyle": "color: #999999",
+      "_id": "58123e73e0be5f30ae562e23"
+    },
+    {
+      "handle": "duxiaoyang",
+      "reliability": "40%",
+      "registrationDate": "2015-04-13T20:14:00.000Z",
+      "submissionDate": null,
+      "rating": "1296",
+      "colorStyle": "color: #6666FF",
+      "_id": "58123e73e0be5f30ae562e22"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "6%",
+      "registrationDate": "2015-04-14T05:08:00.000Z",
+      "submissionDate": null,
+      "rating": "957",
+      "colorStyle": "color: #00A900",
+      "_id": "58123e73e0be5f30ae562e21"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-14T05:13:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58123e73e0be5f30ae562e20"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-14T09:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e73e0be5f30ae562e1f"
+    },
+    {
+      "handle": "amanforindia",
+      "reliability": "6%",
+      "registrationDate": "2015-04-14T09:12:00.000Z",
+      "submissionDate": null,
+      "rating": "630",
+      "colorStyle": "color: #999999",
+      "_id": "58123e73e0be5f30ae562e1e"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-14T12:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e73e0be5f30ae562e1d"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-14T12:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e73e0be5f30ae562e1c"
+    },
+    {
+      "handle": "kcchiu",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-14T12:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e73e0be5f30ae562e1b"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-14T12:42:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58123e73e0be5f30ae562e1a"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-14T13:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e73e0be5f30ae562e19"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-14T14:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e73e0be5f30ae562e18"
+    },
+    {
+      "handle": "iCare",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-14T18:15:00.000Z",
+      "submissionDate": null,
+      "rating": "568",
+      "colorStyle": "color: #999999",
+      "_id": "58123e73e0be5f30ae562e17"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-15T06:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e73e0be5f30ae562e16"
+    },
+    {
+      "handle": "michael_tang",
+      "reliability": "0%",
+      "registrationDate": "2015-04-15T03:59:00.000Z",
+      "submissionDate": null,
+      "rating": "497",
+      "colorStyle": "color: #999999",
+      "_id": "58123e73e0be5f30ae562e15"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "20%",
+      "registrationDate": "2015-04-15T09:54:00.000Z",
+      "submissionDate": null,
+      "rating": "1208",
+      "colorStyle": "color: #6666FF",
+      "_id": "58123e73e0be5f30ae562e14"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "25%",
+      "registrationDate": "2015-04-15T11:18:00.000Z",
+      "submissionDate": null,
+      "rating": "992",
+      "colorStyle": "color: #00A900",
+      "_id": "58123e73e0be5f30ae562e13"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2015-04-15T18:34:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58123e73e0be5f30ae562e12"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-16T00:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e73e0be5f30ae562e11"
+    },
+    {
+      "handle": "flytoj2ee",
+      "reliability": "100%",
+      "registrationDate": "2015-04-16T11:35:00.000Z",
+      "submissionDate": "2015-04-19T15:24:00.000Z",
+      "rating": "1521",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58123e73e0be5f30ae562e10"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "86%",
+      "registrationDate": "2015-04-16T16:38:00.000Z",
+      "submissionDate": null,
+      "rating": "1835",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58123e73e0be5f30ae562e0f"
+    },
+    {
+      "handle": "BeBetter",
+      "reliability": "0%",
+      "registrationDate": "2015-04-17T00:45:00.000Z",
+      "submissionDate": null,
+      "rating": "1893",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58123e73e0be5f30ae562e0e"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-17T17:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e73e0be5f30ae562e0d"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2015-04-17T18:13:00.000Z",
+      "submissionDate": null,
+      "rating": "265",
+      "colorStyle": "color: #999999",
+      "_id": "58123e73e0be5f30ae562e0c"
+    }
+  ],
+  "registrationEndDate": "2015-04-17T18:31:00.000Z",
+  "reliabilityBonus": 160,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-04-19T17:35:00.000Z",
+  "submissions": [
+    {
+      "handle": "flytoj2ee",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 95.68,
+      "finalScore": 95.68,
+      "points": 360,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-04-19T15:24:00.000Z",
+      "_id": "58123e73e0be5f30ae562e39"
+    }
+  ],
+  "technology": [
+    "Angular.js",
+    "MongoDB",
+    "Node.js"
+  ]
+}

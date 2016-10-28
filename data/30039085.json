@@ -1,0 +1,226 @@
+{
+  "_id": 30039085,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:46:23.682Z",
+  "appealsEndDate": "2014-01-23T16:57:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Brivo Labs - OAuth Server Provider",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2>Project Overview</h2>\n\n<p><a href=\"http://www.brivolabs.com/sam-api/\">BrivoLabs</a> has a beta version of a node.js/coffeescript application that is called Social Access Management (SAM) API. It uses postgres database, runs on heroku, consists of both a web and a worker process, and uses a redis-based message queue to communicate between them.</p>\n\n<p>The next step of building the API is exposing it to developers, in order to achieve that we need to manage developers access to the API. The first step is to build OAuth 2.0 Sever provider with basic API management functionality, in the future we will integrate with <a href=\"http://www.mashery.com/\">Mashery API Management</a> to issue developer keys.</p>\n\n<p>The goal of this contest is to implement Coffeescript OAuth 2.0 server provider that uses 3rd party identity providers to authenticate users.</p>\n\n<h2>Task Requirements</h2>\n\n<h3><span style=\"color:#0000FF;\">OAuth Server Module</span></h3>\n\n<p>The OAuth Server should run as standalone application and will be used as a <a href=\"http://passportjs.org/\">Passport</a> starategy for authorizing api calls in SAM API.</p>\n\n<h3><span style=\"color:#0000FF;\">Workflow</span></h3>\n\n<p>General Workflow Overview :</p>\n\n<ul>\n\t<li>When request comes, the application will route the request to the corresponding controller functions according to the routing definition.</li>\n\t<li>Controller functions handle the request, and delegate the model manipulation logic (like CRUD) using ORM module.</li>\n\t<li>The ORM module will communicate to the database to perform the tasks.</li>\n\t<li>Return the response to the caller</li>\n</ul>\n\n<p>Specific notes about the workflow :</p>\n\n<ul>\n\t<li>The server should use</li>\n\t<li>Identity Provider is handled by 3rd Party Providers, in this version a <em>Login</em> controller is requied to support authentication with Google, and Salesforce.com. <em>Passport</em> and concrete strategy modules should be used for working with those external providers. For Salesforce.com SessionID authentication, <em>nforce</em> module or any salesforce.com authentication module can be used to verify user is logged in.</li>\n\t<li>OAuth2 Server controller is needed to implement the core OAuth2 server using <a href=\"http://passportjs.org/guide/oauth2-api/\"><em>oauth2orize</em></a> module (This module is recommended by Passport, you can use any other module that implement the requirements), the controller should define and use proper Models for accessing OAuth2 authorization codes, access tokens and clients information persisted in DB.</li>\n\t<li>DomainID must be passed when exchanging/validating user Access Token. Please refer to existing Salesforce.com authorization logic in SAM API (salesforce-controller) for more information how domainID is used during authorizing the user.</li>\n\t<li>Move OAuth token from SAM API model (DomainAccount) to a new entity model defined as part of this OAuth Server Module. We also need models for OAuth 2.0 Client, and OAuth 2.0 Grant access codes.</li>\n</ul>\n\n<h3><span style=\"color:#0000FF;\">Authorization Grants</span></h3>\n\n<p>The OAuth 2.0 server should address the below Authorization Grants :</p>\n\n<ul>\n\t<li>Authorization Code\n\t<ul>\n\t\t<li>SAM API should use Salesforce.com and Google+ as Identity Provider. We don&#39;t have registration logic, the OAuth flow should create new user if the user does not exist in the system.</li>\n\t\t<li>Use cases for this grant type :\n\t\t<ul>\n\t\t\t<li>Web application<br />\n\t\t\tConsider a web application (&quot;app&quot;) that stores and graphs events associated with a &quot;beacon&quot; device in a building.&nbsp; A user grants access to this app to poll SAM nightly.&nbsp; During initial setup, the user is asked to authenticate to SAM to grant OAuth access.&nbsp; The app provides two options: &quot;sign in with google&quot; or &quot;sign in with salesforce&quot;.&nbsp; The user chooses google, and is presented with a google login screen.&nbsp; They enter their correct credentials, and are then asked to grant &quot;basic&quot; access to SAM so that SAM can validate their google identity.&nbsp; Now the user is authenticated to SAM, and she is then asked to grant access to SAM to our app.&nbsp; This latter access will have some scope that allows querying event data.&nbsp; SAM now issues access and refresh tokens to our app, and the app can now submit requests to SAM on the user&#39;s behalf.</li>\n\t\t\t<li>Mobile application<br />\n\t\t\tConsider a mobile app (&quot;app&quot;) that allows users to open their office&#39;s parking garage.&nbsp; When the application first starts, it asks the user to authenticate to SAM using either google or salesforce.&nbsp; The user chooses salesforce, and is presented with a salesforce login screen.&nbsp; They enter their correct credentials, and are then asked to grant &quot;basic&quot; access to SAM so that SAM can validate their salesforce identity.&nbsp; Now the user is authenticated to SAM, and she is then asked to grant access to SAM to this mobile app.&nbsp; This latter access will have some scope that allows creation of events.&nbsp; SAM now issues an access token to our app, and the app can now submit requests to SAM.</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li>Extended Credentials Grant\n\t<ul>\n\t\t<li>We are not sure if the use case we have here fall exactly under this grant type, we need your thoughts about the best approach to address it, here is the use case :\n\t\t<ul>\n\t\t\t<li>Brivo Labs has a salesforce applications, these apps make direct calls to Salesforce.com API so the user of the apps will need to login to salesforce.com.</li>\n\t\t\t<li>After successful login to these apps, the apps obtain session ID and can execute calls to Salesforce.com API.</li>\n\t\t\t<li>We want to use <a href=\"http://www.salesforce.com/us/developer/docs/api_rest/Content/quickstart_oauth.htm\">Session ID Authorization</a> in order to give these apps access to SAM API without asking users to grant them permission to do that, click <a href=\"http://www.salesforce.com/us/developer/docs/api_rest/Content/intro_curl.htm\">here for a cURL example</a>, the OAuth server should use the session ID to authenticate user, if user is valid then OAuth sends back a valid access token.</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Please note the authorization via Session ID already exist in SAM API (refer to salesforce controller), you will need to move that code from there to OAuth server.</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3><span style=\"color:#0000FF;\">General Notes</span></h3>\n\n<ul>\n\t<li>OAuth 2.0 Client Controller is required to be implemented with all CRUD operations to manage Client application&#39;s API keys.</li>\n\t<li>The architecture should be flexible to allow adding more identity providers in future.</li>\n\t<li>The authorization UI pages should be simple page with no design/look-and-feel.</li>\n\t<li>Basic documentation of the code is required.</li>\n\t<li>Configuration structure should follow SAM API application.</li>\n\t<li>Validation must be implemented in all operations.</li>\n\t<li>Consist/Unified error handling should be implemented.</li>\n\t<li>Naming of all files should use camelCase naming convention.</li>\n\t<li>This module should update SAM API so that it will always verify if the API requests from Clients are properly authorized by end user. Passport and concrete strategy modules are used for working with OAuth2 authentication.</li>\n\t<li>Update Postman with the new OAuth 2.0 api calls.</li>\n\t<li>Cleanup SAM API by removing the existing Authorization flow that will be replaced by this OAuth server.</li>\n\t<li>Please use same node.js modules dependencies used by SAM API as much as possible. i.e. same ORM module to interact with DB.</li>\n\t<li>The OAuth server application should still run within the same attached SAM application but with different end point, and it should run on Heruko.</li>\n</ul>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30039085",
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<p><span class=\"small_info_spec\" id=\"rswGuidelines\">The readme file includes most necessary information. &nbsp;You may download the attached zip file, or request access to the&nbsp;github repository&nbsp;if you do not already have it. &nbsp;Your submission should include the updated code, preferably with git commits (either locally in a zip file, or via github pull request). &nbsp;</span></p>\n</div>\n",
+  "forumId": 20990,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=20990",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 15,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-01-17T20:00:00.000Z",
+      "actualStartTime": "2014-01-17T20:00:00.000Z",
+      "scheduledEndTime": "2014-01-19T20:00:00.000Z",
+      "actualendTime": "2014-01-19T20:00:00.000Z",
+      "_id": "58123d6f0659262e95dff90c"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-01-17T20:05:00.000Z",
+      "actualStartTime": "2014-01-17T20:05:00.000Z",
+      "scheduledEndTime": "2014-01-21T20:05:00.000Z",
+      "actualendTime": "2014-01-21T20:05:00.000Z",
+      "_id": "58123d6f0659262e95dff90b"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-01-21T20:05:00.000Z",
+      "actualStartTime": "2014-01-21T20:05:00.000Z",
+      "scheduledEndTime": "2014-01-23T16:57:00.000Z",
+      "actualendTime": "2014-01-23T16:57:00.000Z",
+      "_id": "58123d6f0659262e95dff90a"
+    }
+  ],
+  "platforms": [
+    "Salesforce.com",
+    "NodeJS",
+    "Brivo Labs"
+  ],
+  "postingDate": "2014-01-17T20:00:00.000Z",
+  "prize": [
+    800,
+    500
+  ],
+  "projectId": 7163,
+  "registrants": [
+    {
+      "handle": "gfhuertac",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-17T21:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d6f0659262e95dff909"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-17T23:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d6f0659262e95dff908"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-18T03:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d6f0659262e95dff907"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-18T05:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d6f0659262e95dff906"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-18T10:17:00.000Z",
+      "submissionDate": "2014-01-20T15:47:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d6f0659262e95dff905"
+    },
+    {
+      "handle": "raj88iitr",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-18T11:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d6f0659262e95dff904"
+    },
+    {
+      "handle": "esteer",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-19T12:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d6f0659262e95dff903"
+    },
+    {
+      "handle": "hello-c",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-18T04:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d6f0659262e95dff902"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-18T11:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d6f0659262e95dff901"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-18T14:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d6f0659262e95dff900"
+    },
+    {
+      "handle": "notpad",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-19T00:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d6f0659262e95dff8ff"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-19T03:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d6f0659262e95dff8fe"
+    },
+    {
+      "handle": "iCare",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-19T08:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d6f0659262e95dff8fd"
+    },
+    {
+      "handle": "selvaa89",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-19T13:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d6f0659262e95dff8fc"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-19T15:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d6f0659262e95dff8fb"
+    }
+  ],
+  "registrationEndDate": "2014-01-19T20:00:00.000Z",
+  "reviewScorecardId": 30001552,
+  "reviewType": null,
+  "screeningScorecardId": null,
+  "submissionEndDate": "2014-01-21T20:05:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 84.17,
+      "finalScore": 84.17,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-01-20T15:47:00.000Z",
+      "_id": "58123d6f0659262e95dff90d"
+    }
+  ],
+  "technology": [
+    "CoffeeScript",
+    "Node.js",
+    "PostgreSQL",
+    "Salesforce"
+  ]
+}

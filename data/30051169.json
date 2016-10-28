@@ -1,0 +1,346 @@
+{
+  "_id": 30051169,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:51:09.489Z",
+  "appealsEndDate": "2015-10-27T15:30:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "IBM - SiBM Watson Pattern Explorer User Interface",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h1><a name=\"_Toc10301853\"></a><a name=\"_Toc456598592\">Watson Pattern Explorer User Interface</a> Contest Specification</h1>\n\n<h1><a name=\"_Toc456598593\">1.&nbsp;&nbsp;&nbsp;&nbsp; Project Overview</a></h1>\n\n<h2>1.1&nbsp;&nbsp;&nbsp;&nbsp; System Description</h2>\n\n<p style=\"margin-left:.5in\">The goal is to produce a proof of concept pattern explorer application using Node RED technology. The application should take in data from the Watson Engagement Advisor Instance, run it through a series of processing steps and provide access to the processed data.</p>\n\n<h2>1.2&nbsp;&nbsp;&nbsp;&nbsp; Competition Task Overview</h2>\n\n<p>In this contest we will build an end user application to enable configuring flows, managing user credentials and accessing the processing results. The application will be built using nodejs/express stack.</p>\n\n<p>The application should support the following:</p>\n\n<ul>\n\t<li>User credentials configuration</li>\n\t<li>Configuration of the available nodeRED flows</li>\n\t<li>Adding a new job</li>\n\t<li>Monitoring job status</li>\n\t<li>Displaying job history</li>\n\t<li>Access to the job results</li>\n</ul>\n\n<h3>1.2.1 Credentials configuration</h3>\n\n<p>This is where the user can define credentials that will be reused in multiple flows. Implement add/remove/update credential pages. Each credential should be a username/password combination with ID and credentials title.</p>\n\n<p>Credential: {</p>\n\n<p>&nbsp; &nbsp; ID:int,</p>\n\n<p>&nbsp; &nbsp; Name:string,</p>\n\n<p>&nbsp; &nbsp; Username:string,</p>\n\n<p>&nbsp; &nbsp; Password: string</p>\n\n<p>}</p>\n\n<h3>1.2.2 &nbsp; &nbsp; Configuring nodeRED flows</h3>\n\n<p>This is where the user can define node RED flows that can be used to process the jobs. User should be able to Add/Remove/Update a nodeRED flow. Each flow will have a name, configuration, trigger path, list of input parameters and a list of output results.&nbsp;</p>\n\n<p>JobConfig:{<br />\n&nbsp;&nbsp; &nbsp;name:string,</p>\n\n<p>&nbsp; &nbsp; configuration:string,</p>\n\n<p><span>&nbsp; &nbsp; triggerPath:string,</span></p>\n\n<p>&nbsp;&nbsp; &nbsp;inputParams:[<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;{<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;name<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;type:number|string|file|credential<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;}<br />\n&nbsp;&nbsp; &nbsp;],<br />\n&nbsp;&nbsp; &nbsp;results:[<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;{<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;name:string<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;type:json|csv|text<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;}<br />\n&nbsp;&nbsp; &nbsp;]</p>\n\n<p>}</p>\n\n<p>If the input parameter type is credential, name should be chosen from the available credentials (created in 1.2.1)</p>\n\n<h3>1.2.2&nbsp;&nbsp;&nbsp;&nbsp; Adding a new job</h3>\n\n<p>User will first choose a job type (one of the added flows in 1.2.2), then enter the input parameters for the job.</p>\n\n<p>Form with the input parameters is generated on the fly. Show a textbox for number/string parameters and file selector for file parameter types. Credential parameters should not be shown here, as they will be populated from the configured ones.</p>\n\n<p>On submitting the form, new job will be created in the database and the data will be sent to the nodeRED http endpoint to trigger the processing flow. Triggering the flow is out of scope here, just define and call a triggerFlow method and pass the job parameters to it.</p>\n\n<p>For now, we can use the following database schema for persisting user jobs</p>\n\n<p>Job:{</p>\n\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ID:string,</p>\n\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; userID:int,</p>\n\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name:string,</p>\n\n<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; jobConfigID:string,</p>\n\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; inputParams:[</p>\n\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>\n\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name</p>\n\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; value</p>\n\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>\n\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ],</p>\n\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; results:[</p>\n\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>\n\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name</p>\n\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; value</p>\n\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; timestamp</p>\n\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>\n\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ],</p>\n\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; status:string</p>\n\n<p>}</p>\n\n<h3>1.2.3&nbsp;&nbsp;&nbsp;&nbsp; Monitoring job status</h3>\n\n<p>User can start multiple processing jobs, and each of them can be in different stages. The processing flow will update the job status in the database, so the UI should reflect the status changes. For now, implement just the simple polling for job status changes and add a refresh status button.</p>\n\n<h3>1.2.4&nbsp;&nbsp;&nbsp;&nbsp; Displaying job history</h3>\n\n<p>Display a simple list of all submitted jobs. For each job display the input parameters, processing status and a link to the output data if the job is completed.</p>\n\n<h3>1.2.5&nbsp;&nbsp;&nbsp;&nbsp; Access to the job result</h3>\n\n<p>The job result will be available in the database after the processing is completed. The result will be available in json, csv or text format. Show a page with job details (inputs) and processing results.</p>\n\n<h3>&nbsp;</h3>\n\n<p>All of the above actions should operate on a user basis. For now, add users table (ID, username, password). Job history should include jobs by the current user only.&nbsp;</p>\n\n<h2>1.3&nbsp;&nbsp;&nbsp;&nbsp; Persistence</h2>\n\n<p>Use cloudant database instance to persist all the data. To connect to the cloudant instance use one of the supported nodejs libraries <a href=\"https://docs.cloudant.com/libraries.html#node.js\">https://docs.cloudant.com/libraries.html#node.js</a> &nbsp;</p>\n\n<p>&nbsp;</p>\n\n<h2>1.4&nbsp;&nbsp;&nbsp;&nbsp; User interface</h2>\n\n<p>There is no UI prototype yet, so use a simple one column layout with a menu (configuration, new job, job history).</p>\n\n<h2><a name=\"_Toc10301854\"></a><a name=\"_Toc10301867\">1.5&nbsp;&nbsp;&nbsp;&nbsp; Verification</a></h2>\n\n<p>&nbsp;</p>\n\n<p>All pages can be verified manually.</p>\n\n<h2>1.6&nbsp;&nbsp;&nbsp;&nbsp; Technology overview</h2>\n\n<ul>\n\t<li><a name=\"_Toc264791785\"></a><a name=\"_Toc253168776\"></a><a name=\"_Toc247023653\">Nodejs </a><a href=\"https://nodejs.org/\">https://nodejs.org</a></li>\n\t<li>Node RED <a href=\"http://nodered.org/\">http://nodered.org</a></li>\n\t<li>Cloudant <a href=\"https://cloudant.com/\">https://cloudant.com</a></li>\n\t<li>cf-cloudant <a href=\"http://flows.nodered.org/node/node-red-node-cf-cloudant\">http://flows.nodered.org/node/node-red-node-cf-cloudant</a></li>\n</ul>\n\n<h2>&nbsp;</h2>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30051169",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<p>Submit a zip file with all the deliverables.</p>\n",
+  "forumId": 30296,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=30296",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 25,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-19T13:00:00.000Z",
+      "actualStartTime": "2015-10-19T13:00:00.000Z",
+      "scheduledEndTime": "2015-10-24T13:00:00.000Z",
+      "actualendTime": "2015-10-24T13:00:00.000Z",
+      "_id": "58123e8de0be5f30ae56479d"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-19T13:06:00.000Z",
+      "actualStartTime": "2015-10-19T13:06:00.000Z",
+      "scheduledEndTime": "2015-10-24T13:00:00.000Z",
+      "actualendTime": "2015-10-24T13:00:00.000Z",
+      "_id": "58123e8de0be5f30ae56479c"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-24T13:01:00.000Z",
+      "actualStartTime": "2015-10-24T13:01:00.000Z",
+      "scheduledEndTime": "2015-10-26T13:30:00.000Z",
+      "actualendTime": "2015-10-26T13:30:00.000Z",
+      "_id": "58123e8de0be5f30ae56479b"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-26T13:30:00.000Z",
+      "actualStartTime": "2015-10-26T13:30:00.000Z",
+      "scheduledEndTime": "2015-10-27T13:30:00.000Z",
+      "actualendTime": "2015-10-27T13:30:00.000Z",
+      "_id": "58123e8de0be5f30ae56479a"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-27T13:30:00.000Z",
+      "actualStartTime": "2015-10-27T13:30:00.000Z",
+      "scheduledEndTime": "2015-10-27T15:30:00.000Z",
+      "actualendTime": "2015-10-27T15:30:00.000Z",
+      "_id": "58123e8de0be5f30ae564799"
+    }
+  ],
+  "platforms": [
+    "NodeJS",
+    "IBM Bluemix"
+  ],
+  "postingDate": "2015-10-19T13:00:00.000Z",
+  "prize": [
+    1500,
+    750
+  ],
+  "projectId": 9068,
+  "registrants": [
+    {
+      "handle": "Sky_",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-19T13:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae564798"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-19T13:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae564797"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-19T14:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae564796"
+    },
+    {
+      "handle": "son4moon",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-19T14:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae564795"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-19T16:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae564794"
+    },
+    {
+      "handle": "code56Life",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-19T16:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae564793"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-19T16:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae564792"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-19T17:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae564791"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-19T20:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae564790"
+    },
+    {
+      "handle": "Luckyodell",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-19T20:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae56478f"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-19T22:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae56478e"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-20T00:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae56478d"
+    },
+    {
+      "handle": "chandan047",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-20T06:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae56478c"
+    },
+    {
+      "handle": "zsudraco",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-20T08:31:00.000Z",
+      "submissionDate": "2015-10-23T18:39:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae56478b"
+    },
+    {
+      "handle": "spanhawk",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-20T14:12:00.000Z",
+      "submissionDate": "2015-10-24T13:00:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae56478a"
+    },
+    {
+      "handle": "charlie09",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-20T16:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae564789"
+    },
+    {
+      "handle": "jaindsonvs",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-20T16:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae564788"
+    },
+    {
+      "handle": "diogenesjcs",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-21T00:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae564787"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-21T04:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae564786"
+    },
+    {
+      "handle": "abeysinghe92",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-21T07:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae564785"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-21T09:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae564784"
+    },
+    {
+      "handle": "Amith",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-22T03:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae564783"
+    },
+    {
+      "handle": "bcds",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-22T15:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae564782"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-22T15:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae564781"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-23T10:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e8de0be5f30ae564780"
+    }
+  ],
+  "registrationEndDate": "2015-10-24T13:00:00.000Z",
+  "reviewScorecardId": 30001884,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-10-24T13:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "spanhawk",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 81.42,
+      "finalScore": 88.42,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-10-24T13:00:00.000Z",
+      "_id": "58123e8de0be5f30ae56479f"
+    },
+    {
+      "handle": "zsudraco",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 74.94,
+      "finalScore": 84.38,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-10-23T18:39:00.000Z",
+      "_id": "58123e8de0be5f30ae56479e"
+    }
+  ],
+  "technology": [
+    "Node.js"
+  ]
+}

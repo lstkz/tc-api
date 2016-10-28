@@ -1,0 +1,451 @@
+{
+  "_id": 30050098,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:50:42.339Z",
+  "appealsEndDate": "2015-05-20T07:08:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "MTurk Web Dashboard and API Update 3",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h1 dir=\"ltr\">Project Overview</h1>\n\n<p dir=\"ltr\">Our client want to use Amazon mturk to invite game players to play set of games. Each Human Intelligence Task (HIT) will be for completing a &quot;task&quot; (analogous to a subset of levels in the game versions) in exchange for payment.</p>\n\n<p dir=\"ltr\">In this challenge we are making several changes and update to the mturk web dashboard, and mturk api to support notifying users about HITs status, listing workers, and enable features to block/unblock/notify/grant-bonus to these workers.</p>\n\n<h1 dir=\"ltr\">Challenge Requirements</h1>\n\n<p dir=\"ltr\">You will address the following in this challenge :</p>\n\n<h3 dir=\"ltr\">Real Time Notifications</h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">We need to enable notification for any HIT to be created.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">You will refer to <a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_NotificationReceptorAPIArticle.html\">this page</a> for more information about how to enable notification for HITs</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Use Amazon SQS as notification destination for every HIT.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Create a cron job to keep pulling messages from SQS</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">We need to have a notification collection to store pulled notifications, so we create a notification record for every new message, the message should be associated with Task id in the record.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Notify - via email and real time - both the global user, and admin users of the domain associated with the HIT.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Add notification icon at header that updates in real time to bring user attention to new notifications.</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">It should be an icon, it can be gray when no notification exists, and can be red if notifications exist.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">when user click on the notification it will take user to a page that list all notifications.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\">List workers page</h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Add new menu item at header &ldquo;Workers&rdquo; to access the page</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">This page will list all workers who submitted for any HIT.</p>\n\t</li>\n</ul>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Workers will be listed from any domain, any user from any domain can view the list of workers.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The table should have three buttons &nbsp;: Notify, Block, Unblock</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">These buttons should be top of the table</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">User can select one or more worker from table and use these buttons to process the action.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">When clicking any button a popup should be displayed with &ldquo;text area&rdquo; field to provide message to be sent to workers.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">We will use <a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_NotifyWorkersOperation.html\">this API</a> to notify worker.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Use <a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_BlockWorkerOperation.html\">this API</a> to block a worker.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Use <a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_UnblockWorkerOperation.html\">this API</a> to unblock worker.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The table should have following columns :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Worker name</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">No API for this so you need to use<a href=\"http://crowdresearch.org/blog/?p=5177\"> this solution as workaround</a></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Worker ID</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Earnings</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Total of earnings the worker made from hits.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Submit to domains</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">This field will display comma separated names of the domains the worker submitted to it.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Qualifications (assigned to the worker)</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Comma separated qualifications assigned to worker.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">You will implement this by iterating through the qualification types we have in DB, and retrieve workers who has that qualification via <a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_GetQualificationsForQualificationTypeOperation.html\">this API</a>.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Status (Active/Blocked)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">HITs</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">comma separated HITs IDs</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Table should have filtering using the displayed columns, sorting, and pagination.</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Filtering is important feature, specifically to get workers per HIT or per domain.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Only admin or global admin can block/unblock/notify workers. User role can only view the workers.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The above information might take too long to be processed for every request, so you need to :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">create a DB table that store these information.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">add &ldquo;Refresh List&rdquo; button in the page (available only to global admin users) that run in the backend to iterate through HITs, get workers, filter them and get needed information in the page and store them in the DB, then refresh the page with latest data from table.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\">Assignment details</h3>\n\n<p dir=\"ltr\">You need to make the following changes to the assignment details page :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">When approve or rejecting an assignment, keep the user in the same page</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Display domain name in the page.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Display buttons :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">&ldquo;Pay Bonus&rdquo;</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_GrantBonusOperation.html\">Use GrantBonus API </a></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">When viewing the assignment, if there is a bonus granted already, you need to display the information in the page. Use <a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_GetBonusPaymentsOperation.html\">this API</a> to address this.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">&ldquo;Email Worker&rdquo;</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">We will use <a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_NotifyWorkersOperation.html\">this API</a> to notify worker.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">&ldquo;Block&rdquo; or &ldquo;Unblock&rdquo; depends on worker status</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Use <a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_BlockWorkerOperation.html\">this API</a> to block a worker.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Use <a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_UnblockWorkerOperation.html\">this API</a> to unblock worker.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The buttons above will trigger a popup when clicking on them with needed information.</p>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<h3 dir=\"ltr\">Tasks Listing page</h3>\n\n<p dir=\"ltr\">You need to make the following changes to the page :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Update Tasks table to use domain name in the pick list instead of domain IDs.</p>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<h3 dir=\"ltr\">OAuth Server</h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Update the server to skip the authorization flow if user already authorized the application.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">We have fixed the issue recently for CSFV OAuth Server, you can refer to <a href=\"https://github.com/topcoderinc/csfv_oauth2_server_module/commit/5c2bce5cd417e5411ab3195752bf0dc4fcdf157f\">this commit</a> to duplicate the fix.</p>\n\t</li>\n</ul>\n\n<h1 dir=\"ltr\">Code Organization</h1>\n\n<p>&nbsp;</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">All logic will be updated and placed in csfv_mturk_api_module</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">All frontend changes will be placed in csfv_mturk_dashbaord module</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The code changes in backend should keep each API path/endpoint a self contained api with specific functionality.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Use helpers for common functionality that will be used by different areas in the code.</p>\n\t</li>\n</ul>\n\n<h1 dir=\"ltr\">Testing</h1>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">You will use mturk sandbox for testing.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">You can view created hit by navigation to worker sandbox search for the title of the hit.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">You will need to accept it and manually navigate to the website to simulate the player flow.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Make sure you can complete the outlined flow above as described. Reviewers are expected to do the same.</p>\n\t</li>\n</ul>\n\n<h1 dir=\"ltr\">Github Repo</h1>\n\n<p dir=\"ltr\">API exists in private repositories, request access in challenge forums if you don&#39;t have it already.</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><a href=\"https://github.com/topcoderinc/csfv_mturk_api\">https://github.com/topcoderinc/csfv_mturk_api</a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><a href=\"https://github.com/topcoderinc/csfv_mturk_dashboard\">https://github.com/topcoderinc/csfv_mturk_dashboard</a></p>\n\t</li>\n</ul>\n\n<h1 dir=\"ltr\">References</h1>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/Welcome.html\">Mturk Amazon API Documentation</a></p>\n\t</li>\n</ul>\n",
+  "digitalRunPoints": 630,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30050098",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2015-05-21T10:33:00.000Z",
+  "finalSubmissionGuidelines": "<h1 dir=\"ltr\">Submission Deliverables</h1>\n\n<p dir=\"ltr\">Below is an overview of the deliverables:</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Git patch of the changes of each repository.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Text file with notes to reviewer.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Update README.md in the API and admin web dashboard git folders, this file should also be part of the patch file.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">You don&#39;t need to submit a word document for deployment guide. But you need to submit a very detailed document for all possible scenarios of the new feature, and how to test it.</p>\n\t</li>\n</ul>\n\n<h1 dir=\"ltr\">Final Submission</h1>\n\n<p dir=\"ltr\">For each member, the final submission should be uploaded via the challenge detail page on&nbsp;<a href=\"http://www.topcoder.com/\">topcoder.com</a>.</p>\n",
+  "forumId": 29332,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=29332",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 29,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-11T17:22:00.000Z",
+      "actualStartTime": "2015-05-11T17:22:00.000Z",
+      "scheduledEndTime": "2015-05-11T17:24:00.000Z",
+      "actualendTime": "2015-05-11T17:24:00.000Z",
+      "_id": "58123e72e0be5f30ae562c7a"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-11T17:24:00.000Z",
+      "actualStartTime": "2015-05-11T17:24:00.000Z",
+      "scheduledEndTime": "2015-05-11T17:52:00.000Z",
+      "actualendTime": "2015-05-11T17:52:00.000Z",
+      "_id": "58123e72e0be5f30ae562c79"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-11T17:52:00.000Z",
+      "actualStartTime": "2015-05-11T17:52:00.000Z",
+      "scheduledEndTime": "2015-05-13T17:54:00.000Z",
+      "actualendTime": "2015-05-13T17:54:00.000Z",
+      "_id": "58123e72e0be5f30ae562c78"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-11T17:58:00.000Z",
+      "actualStartTime": "2015-05-11T17:58:00.000Z",
+      "scheduledEndTime": "2015-05-16T12:59:00.000Z",
+      "actualendTime": "2015-05-16T12:59:00.000Z",
+      "_id": "58123e72e0be5f30ae562c77"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-16T12:59:00.000Z",
+      "actualStartTime": "2015-05-16T12:59:00.000Z",
+      "scheduledEndTime": "2015-05-16T21:39:00.000Z",
+      "actualendTime": "2015-05-16T21:39:00.000Z",
+      "_id": "58123e72e0be5f30ae562c76"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-16T21:39:00.000Z",
+      "actualStartTime": "2015-05-16T21:39:00.000Z",
+      "scheduledEndTime": "2015-05-18T21:07:00.000Z",
+      "actualendTime": "2015-05-18T21:07:00.000Z",
+      "_id": "58123e72e0be5f30ae562c75"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-18T21:08:00.000Z",
+      "actualStartTime": "2015-05-18T21:08:00.000Z",
+      "scheduledEndTime": "2015-05-19T21:09:00.000Z",
+      "actualendTime": "2015-05-19T21:09:00.000Z",
+      "_id": "58123e72e0be5f30ae562c74"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-19T21:09:00.000Z",
+      "actualStartTime": "2015-05-19T21:09:00.000Z",
+      "scheduledEndTime": "2015-05-20T07:08:00.000Z",
+      "actualendTime": "2015-05-20T07:08:00.000Z",
+      "_id": "58123e72e0be5f30ae562c73"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-20T07:08:00.000Z",
+      "actualStartTime": "2015-05-20T07:08:00.000Z",
+      "scheduledEndTime": "2015-05-20T07:58:00.000Z",
+      "actualendTime": "2015-05-20T07:58:00.000Z",
+      "_id": "58123e72e0be5f30ae562c72"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-20T07:58:00.000Z",
+      "actualStartTime": "2015-05-20T07:58:00.000Z",
+      "scheduledEndTime": "2015-05-21T10:33:00.000Z",
+      "actualendTime": "2015-05-21T10:33:00.000Z",
+      "_id": "58123e72e0be5f30ae562c71"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-21T10:33:00.000Z",
+      "actualStartTime": "2015-05-21T10:33:00.000Z",
+      "scheduledEndTime": "2015-05-22T01:18:00.000Z",
+      "actualendTime": "2015-05-22T01:18:00.000Z",
+      "_id": "58123e72e0be5f30ae562c70"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-22T01:18:00.000Z",
+      "actualStartTime": "2015-05-22T01:18:00.000Z",
+      "scheduledEndTime": "2015-05-27T01:20:00.000Z",
+      "actualendTime": "2015-05-27T01:20:00.000Z",
+      "_id": "58123e72e0be5f30ae562c6f"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-05-11T17:52:00.000Z",
+  "prize": [
+    1400,
+    700
+  ],
+  "projectId": 8764,
+  "registrants": [
+    {
+      "handle": "Sky_",
+      "reliability": "93%",
+      "registrationDate": "2015-05-11T17:55:00.000Z",
+      "submissionDate": "2015-05-15T17:01:00.000Z",
+      "rating": "2029",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58123e72e0be5f30ae562c6e"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-11T18:27:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58123e72e0be5f30ae562c6d"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-11T18:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562c6c"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "6%",
+      "registrationDate": "2015-05-11T18:56:00.000Z",
+      "submissionDate": null,
+      "rating": "963",
+      "colorStyle": "color: #00A900",
+      "_id": "58123e72e0be5f30ae562c6b"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-11T20:11:00.000Z",
+      "submissionDate": null,
+      "rating": "717",
+      "colorStyle": "color: #999999",
+      "_id": "58123e72e0be5f30ae562c6a"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-11T20:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562c69"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-11T22:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562c68"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2015-05-11T23:22:00.000Z",
+      "submissionDate": null,
+      "rating": "1053",
+      "colorStyle": "color: #00A900",
+      "_id": "58123e72e0be5f30ae562c67"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-12T07:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562c66"
+    },
+    {
+      "handle": "serfire",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-12T00:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562c65"
+    },
+    {
+      "handle": "ifox",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-12T02:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562c64"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2015-05-12T02:23:00.000Z",
+      "submissionDate": null,
+      "rating": "1104",
+      "colorStyle": "color: #00A900",
+      "_id": "58123e72e0be5f30ae562c63"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-12T02:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562c62"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "20%",
+      "registrationDate": "2015-05-12T03:15:00.000Z",
+      "submissionDate": null,
+      "rating": "734",
+      "colorStyle": "color: #999999",
+      "_id": "58123e72e0be5f30ae562c61"
+    },
+    {
+      "handle": "kcchiu",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-12T03:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562c60"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-12T05:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562c5f"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "6%",
+      "registrationDate": "2015-05-12T05:28:00.000Z",
+      "submissionDate": null,
+      "rating": "975",
+      "colorStyle": "color: #00A900",
+      "_id": "58123e72e0be5f30ae562c5e"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-12T05:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562c5d"
+    },
+    {
+      "handle": "ananthhh",
+      "reliability": "93%",
+      "registrationDate": "2015-05-12T05:46:00.000Z",
+      "submissionDate": "2015-05-16T12:22:00.000Z",
+      "rating": "1055",
+      "colorStyle": "color: #00A900",
+      "_id": "58123e72e0be5f30ae562c5c"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2015-05-12T06:20:00.000Z",
+      "submissionDate": null,
+      "rating": "1387",
+      "colorStyle": "color: #6666FF",
+      "_id": "58123e72e0be5f30ae562c5b"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-12T07:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562c5a"
+    },
+    {
+      "handle": "rajeshk87",
+      "reliability": "0%",
+      "registrationDate": "2015-05-12T10:36:00.000Z",
+      "submissionDate": null,
+      "rating": "860",
+      "colorStyle": "color: #999999",
+      "_id": "58123e72e0be5f30ae562c59"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-12T11:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562c58"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2015-05-12T18:27:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58123e72e0be5f30ae562c57"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2015-05-12T23:21:00.000Z",
+      "submissionDate": null,
+      "rating": "571",
+      "colorStyle": "color: #999999",
+      "_id": "58123e72e0be5f30ae562c56"
+    },
+    {
+      "handle": "ilovecode",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-13T04:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562c55"
+    },
+    {
+      "handle": "michael_tang",
+      "reliability": "0%",
+      "registrationDate": "2015-05-13T07:20:00.000Z",
+      "submissionDate": null,
+      "rating": "497",
+      "colorStyle": "color: #999999",
+      "_id": "58123e72e0be5f30ae562c54"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-13T14:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562c53"
+    },
+    {
+      "handle": "tosha5252",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-13T15:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e72e0be5f30ae562c52"
+    }
+  ],
+  "registrationEndDate": "2015-05-13T17:54:00.000Z",
+  "reliabilityBonus": 280,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-05-16T12:59:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 97.82,
+      "finalScore": 98.18,
+      "points": 441,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-05-15T17:01:00.000Z",
+      "_id": "58123e72e0be5f30ae562c7c"
+    },
+    {
+      "handle": "ananthhh",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 88.42,
+      "finalScore": 94.49,
+      "points": 189,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-05-16T12:22:00.000Z",
+      "_id": "58123e72e0be5f30ae562c7b"
+    }
+  ],
+  "technology": [
+    "Angular.js",
+    "CSS",
+    "Express",
+    "HTML",
+    "Node.js",
+    "PostgreSQL"
+  ]
+}

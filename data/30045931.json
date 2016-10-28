@@ -1,0 +1,280 @@
+{
+  "_id": 30045931,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:48:10.583Z",
+  "appealsEndDate": "2014-09-26T16:49:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "CrowdReason  - Engrafa Service - Add Statistic Properties",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2014-10-19T23:02:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -63830769,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\">Welcome to the <strong><a href=\"http://crowdreason.com/\">CrowdReason</a> Engrafa Service - Add Statistics Properties</strong>&nbsp;Challenge. &nbsp;This challenge is part of the <strong>CrowdReason Engrafa</strong> project.</p>\n\n<h2 dir=\"ltr\">Overview</h2>\n\n<p dir=\"ltr\">The Engrafa Service helps clients extract highly confident, structured data from documents. Instead of using OCR, the service uses crowdsourcing to extract document content and metadata. &nbsp;The Engrafa Service acts as a Workflow Manager to automate the process of sending documents through segmented jobs and then aggregating the results into a complete data set.</p>\n\n<p dir=\"ltr\">Presently, the service monitors an online cloud storage for new documents to process. &nbsp;Then each document goes through a series of tasks to determine or verify details about the document. &nbsp;The Engrafa Service accumulates each response and by the end of the workflow, key data has been extrapolated from the document.</p>\n\n<p dir=\"ltr\"><strong>For This Challenge</strong><br />\nFor this challenge, we are looking to add <strong>time&nbsp;</strong>and&nbsp;<strong>cost</strong>&nbsp;statistics to&nbsp;the service to help with future reporting as well as service logic.</p>\n\n<h2 dir=\"ltr\">Detailed Requirements</h2>\n\n<p dir=\"ltr\">These should be new fields/properties for the WorkUnit and also be available for entryConditions.</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Add start and end times to tasks and work units.</p>\n\n\t<ol>\n\t\t<li>\n\t\t<p dir=\"ltr\">The start time of a work unit shall occur when the service pulls a new file to be processed, around WorkUnit.create().</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">The end time of a work unit shall occur when the service saves the work unit output, i.e. uploads the results.</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">The start time of a task is when we create a unit for our external crowdsourcing platform.</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">The end time of a task is when we query for the result of the external unit, and isDone == true</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">(<a href=\"http://apps.topcoder.com/forums/?module=Thread&amp;threadID=831946&amp;start=0&amp;mc=3#1926748\">See Forums</a> for more specifics around start and end events.)</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">Intended use cases:</p>\n\n\t\t<ol>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\">Need to be able to report on time picked up from input folder, dropped off in output folder, and time difference (total processing time). &nbsp;E.g. startTime, endTime, endTime - startTime (or maybe include shorthand processingTime)</p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\">Need to be able to look at how long a work unit has been active in case it needs to be escalated. &nbsp;e.g. new Date().getTime() - startTime (or maybe include shorthand processingTime).</p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\">Need to be able to see how long each task is taking for each work unit. E.g. we export DB results to find out CLASSIFICATION_STATE_BASIC takes on average 500000 seconds.</p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\">Need to be able to report on trending averages of time it takes to work documents. &nbsp;E.g. we export DB results and see that from Sep 1 - Sep 30, work units took on average 48 hours to complete, but from Oct 1 - Oct 31, they&#39;re averaging 23 hours.</p>\n\t\t\t</li>\n\t\t</ol>\n\t\t</li>\n\t\t<li>\n\t\t<p>We will use these properties to define entry conditions based on time, e.g.</p>\n\n\t\t<p>&quot;entryCondition&quot; : &quot;processTime &gt; 3000&quot;,<br />\n\t\t&quot;entryCondition&quot; : &quot;(new Date().getTime() - startTime) &gt; 3000&quot;</p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Capture costs per task and work unit.</p>\n\n\t<ol>\n\t\t<li>\n\t\t<p dir=\"ltr\">Each job in the external platform has a Payment-per-Task (payments_cents), and Units per Task (units_per_assignment). &nbsp;So each external Unit cost = payments_cents / units_per_assignment. &nbsp;Our service&#39;s work units consist of the results of multiple external units. &nbsp;So total cost for our task =<br />\n\t\t<br />\n\t\t<strong>cost = unit.judgementCount * job.payments_cents / job.units_per_assignment</strong></p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">Work Unit cost would be the aggregation of all completed child Tasks.</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">Intended use cases:</p>\n\n\t\t<ol>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"line-height:1.6\">Need to capture the cost of each task/job. &nbsp;E.g. we export DB results and see that the CLASSIFICATION_STATE_BASIC job on average costs $10 per document, but that EXTRACTION_STATE_BASIC only costs $2 per document.</span></p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"line-height:1.6\">Need to capture the total cost of work unit. E.g. we export DB results and compare the total cost for File A vs. File B.</span></p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"line-height:1.6\">Need to be able to report the cost of a particular document type. E.g. we export DB results and compare the average costs for Tax Bills vs the average costs for Assessments. &nbsp;We can also extrapolate from the data that this month&#39;s costs are down compared to last month&#39;s costs.</span></p>\n\t\t\t</li>\n\t\t</ol>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Add file name to work unit collection. &nbsp;Need to be able to tie results back to original document (current url refers to public link, which gets deleted when moved to output folder).</p>\n\n\t<ol>\n\t\t<li>\n\t\t<p dir=\"ltr\">E.g. I upload a file named &quot;lolcats-71-4.png&quot; and it gets a unique/random name of &quot;lolcats-71-4_9454632241278886&quot;. &nbsp;When a document finishes, I want to be able to see the randomized file name in the DB for my WorkUnit, so that I can tie it with the output.</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">Nice-to-have would be to also update the URL to point to the output file when it gets moved from public to output folders.</p>\n\t\t</li>\n\t</ol>\n\t</li>\n</ol>\n\n<h2 dir=\"ltr\">Getting Started</h2>\n\n<p dir=\"ltr\">See accompanying source code and Deployment Guides in the forums to help get started.</p>\n\n<h2 dir=\"ltr\">Technology Overview</h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">MongoDB</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">AngularJS</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Node.js</p>\n\t</li>\n</ul>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30045931",
+  "finalSubmissionGuidelines": "<h2 dir=\"ltr\">Submission Deliverables</h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong>Source Code</strong> - Zip of source files.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong>Documentation</strong> - Provide documentation of setup (install/config) and steps for using the app. &nbsp;Update DeploymentGuide as necessary.</p>\n\t</li>\n</ul>\n",
+  "forumId": 25629,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=25629",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 17,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2014-09-19T23:02:00.000Z",
+      "actualStartTime": "2014-09-19T23:02:00.000Z",
+      "scheduledEndTime": "2014-10-19T23:02:00.000Z",
+      "actualendTime": null,
+      "_id": "58123dda0659262e95e004d5"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-25T13:20:00.000Z",
+      "actualStartTime": "2014-09-25T13:20:00.000Z",
+      "scheduledEndTime": "2014-09-25T21:31:00.000Z",
+      "actualendTime": "2014-09-25T21:31:00.000Z",
+      "_id": "58123dda0659262e95e004d4"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2014-09-19T23:07:00.000Z",
+      "actualStartTime": "2014-09-19T23:07:00.000Z",
+      "scheduledEndTime": "2014-10-19T23:07:00.000Z",
+      "actualendTime": null,
+      "_id": "58123dda0659262e95e004d3"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-25T21:32:00.000Z",
+      "actualStartTime": "2014-09-25T21:32:00.000Z",
+      "scheduledEndTime": "2014-09-25T23:43:00.000Z",
+      "actualendTime": "2014-09-25T23:43:00.000Z",
+      "_id": "58123dda0659262e95e004d2"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-26T12:18:00.000Z",
+      "actualStartTime": "2014-09-26T12:18:00.000Z",
+      "scheduledEndTime": "2014-09-26T16:49:00.000Z",
+      "actualendTime": "2014-09-26T16:49:00.000Z",
+      "_id": "58123dda0659262e95e004d1"
+    }
+  ],
+  "platforms": [
+    "NodeJS"
+  ],
+  "postingDate": "2014-09-19T23:02:00.000Z",
+  "prize": [
+    300
+  ],
+  "projectId": 7719,
+  "registrants": [
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-20T03:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004d0"
+    },
+    {
+      "handle": "savon_cn",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-20T03:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004cf"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-20T05:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004ce"
+    },
+    {
+      "handle": "smart_raghavan",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-20T06:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004cd"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-20T08:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004cc"
+    },
+    {
+      "handle": "HShi",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-20T09:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004cb"
+    },
+    {
+      "handle": "SPChoria",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-20T11:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004ca"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-21T05:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004c9"
+    },
+    {
+      "handle": "okuni",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-21T10:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004c8"
+    },
+    {
+      "handle": "mln",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-22T17:49:00.000Z",
+      "submissionDate": "2014-09-26T12:17:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004c7"
+    },
+    {
+      "handle": "pbd",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-22T20:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004c6"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-23T01:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004c5"
+    },
+    {
+      "handle": "gvir",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-23T04:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004c4"
+    },
+    {
+      "handle": "Yizzer",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-24T01:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004c3"
+    },
+    {
+      "handle": "lqgo",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-24T06:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004c2"
+    },
+    {
+      "handle": "callmekatootie",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-24T08:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004c1"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-24T09:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123dda0659262e95e004c0"
+    }
+  ],
+  "registrationEndDate": "2014-10-19T23:02:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2014-10-19T23:07:00.000Z",
+  "submissions": [
+    {
+      "handle": "mln",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-09-25T13:23:00.000Z",
+      "_id": "58123dda0659262e95e004d8"
+    },
+    {
+      "handle": "mln",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-09-25T14:12:00.000Z",
+      "_id": "58123dda0659262e95e004d7"
+    },
+    {
+      "handle": "mln",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-09-26T12:17:00.000Z",
+      "_id": "58123dda0659262e95e004d6"
+    }
+  ],
+  "technology": [
+    "Angular.js",
+    "MongoDB",
+    "Node.js"
+  ]
+}

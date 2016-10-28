@@ -1,0 +1,199 @@
+{
+  "_id": 30039383,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:46:35.237Z",
+  "appealsEndDate": "2014-02-06T19:16:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "CSFV MailChimp Integeration",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span style=\"color:#FF0000;\">We have updated requirements in this </span><a href=\"http://apps.topcoder.com/forums/?module=Thread&amp;threadID=810030&amp;start=0&amp;mc=1#1839575\"><span style=\"color:#FF0000;\">thread post</span></a><span style=\"color:#FF0000;\">. Please make sure to read it carefully.</span></h2>\n\n<h2>Project Overview</h2>\n\n<p>This project, the CSFV Community Gaming website project will provide the web site infrastructure and integration of the games (called <a href=\"http://www.verigames.com\">http://www.verigames.com</a>). This will be a web site that is available on the Internet, and also will be delivered in a form where the server and the games can be installed and used behind a firewall.</p>\n\n<p>We are planning to send newsletters campaign monthly, we are going to use <a href=\"http://mailchimp.com/\">MailChimp </a>for that purpose, and this challenge is to implement the outlined requirements for integration with MailChimp.</p>\n\n<h2>Challenge Requirements</h2>\n\n<ul>\n\t<li>Create a cron job that run periodically to syncing MailChimp compaign subscribers list with current CSFV backend :\n\t<ul>\n\t\t<li>Cron job should be added to csfv_cms_module</li>\n\t\t<li>Add new item under &quot;Others&quot; tab in csfv_cms_module, call it &quot;MailChimp Management&quot; link, clicking on this link it opens up a page that contains single button &quot;Sync Subscribers&quot;, this button force running the sync between MailChimp and CSFV backend.</li>\n\t\t<li>Use <a href=\"http://apidocs.mailchimp.com/api/2.0\">MailChimp api version 2.0</a> to implement the requirement, it&#39;s up to you to use any open source node module available or build a custom node.js class for this.</li>\n\t\t<li>Syncing involves the following steps :\n\t\t<ul>\n\t\t\t<li>Retrieve all subscribers of the configured list (it is preferred that the list ID is dyanamically configured in csfv_cms_module as a cms post with metadata)</li>\n\t\t\t<li>From the retrieved subscribers list from configured list, if any subscriber&#39;s status is soft unsubscribe and that subscriber&#39;s email exist in verigames DB then do hard unsubscribe from MailChimp and set &quot;NEWSLETTER&quot; flag to false.</li>\n\t\t\t<li>Retrieve current CSFV users who have NEWSLETTER notification flag enabled, filter the list to remove already subscribed users from the retrieved list (first step above)</li>\n\t\t\t<li>Send new batch of subscribers retrieved in the first step of this flow.</li>\n\t\t\t<li>You need to take into account that there will be some cases where the configured list is empty (has no subscribers).</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li>Add a checkbox to the registration form of csfv_frontend_module to asking whether or not users want to opt-in/out of receving verigames emails newsletters. This will update user preferences in backend to disable this email notificaiton. The text can be &quot;I want to receive verigames.com newsletter&quot;.</li>\n\t<li>There are two ways for a user to unsubscribe from the newsletter (both are done in csfv_frontend_module):\n\t<ul>\n\t\t<li>From user private profile &gt; Email Notifications &gt; Disable &quot;NEWSLETTER&quot; option.</li>\n\t\t<li>When receiving the newsletter email, there will be a link that redirects the user the website to unsubscribe the user (http://www.verigames.com/newsletter/unsubscribe)</li>\n\t\t<li>If user used any of these methods to unsubscribe, MailChimp API unsubscribe method must be called to remove that subscriber (it should be hard delete set delete flag when executing the api), and if the email belongs to existing verigames user then the &quot;NEWSLETTER&quot; email notification flag should be disabled in database.</li>\n\t</ul>\n\t</li>\n\t<li>There are two ways for user to subscribe to the newsletter :\n\t<ul>\n\t\t<li>From user private profile&nbsp; &gt; email Notifications &gt; Enable &quot;NEWSLETTER&quot; option.</li>\n\t\t<li>Newsletter form (this is new requirement in this challenge).</li>\n\t\t<li>If user used any of these methods to subscribe, MailChimp API subscribe method must be called to add that subscriber. If the email belongs to existing verigames user then the &quot;NEWSLETTER&quot; email notification flag should be enabled in database.</li>\n\t</ul>\n\t</li>\n\t<li>We want to leverage the <a href=\"http://apidocs.mailchimp.com/webhooks/\">webhooks</a> in MailChimp whenever a user unsubscribed or an address was cleaned :\n\t<ul>\n\t\t<li>Add new api method to csfv_frontend_module to handle the web hook, in both cases, if user exists in CSFV, then his/her &quot;NEWSLETTER&quot; email notification preference must be disabled.</li>\n\t</ul>\n\t</li>\n\t<li>Configuration/Logging/Error handling must be used properly in all the new code or updated code in this challenge.</li>\n\t<li>Subscribe form :\n\t<ul>\n\t\t<li>UI Prototype provided in challenge forum</li>\n\t\t<li>Implement it for all the 6 websites (the main site exist in csfv_frontend_module, and minisites exist in csfv_minisite_frontend_module under branches minisite1, minisite2, minisite3, minisite4, and minisite5)</li>\n\t\t<li>Implement new controller in backend to handle subscriptions call. The controller will be placed in csfv_frontend_module</li>\n\t\t<li>When user click subscribe a call to the controller a new page should open in new window to execute the request and on successful subscriptions, it should show a message similar to registration successful message page (&quot;You have succssffully subscribed to Verigames newsletter!&quot;).</li>\n\t</ul>\n\t</li>\n\t<li>In case the &quot;NEWSLETTER&quot; DataNotification entry does not exist in DataNotification collection in db then use the following to insert it :<br />\n\t<em>{ &quot;eventName&quot; : &quot;Newsletter&quot;, &quot;notificationDataType&quot; : &quot;NEWSLETTER&quot;, &quot;emailFormat&quot; : &quot;HTML&quot;, &quot;deleted&quot; : false, &quot;sendNotification&quot; : true }</em></li>\n</ul>\n\n<h2>Github Repository</h2>\n\n<p>We have the source code in private gihub repository http://www.github.com/topcoderinc if you don&#39;t have access please post in challenge forum to request access.</p>\n\n<p>csfv_cms_module : http://github.com/topcoderinc/csfv_cms_module</p>\n\n<p>csfv_frontend_module : http://github.com/topcoderinc/csfv_frontend_module</p>\n\n<p>csfv_minisite_frontend_module : http://github.com/topcoderinc/csfv_minisite_frontend_module</p>\n\n<p>Follow readme file in each repoistory to deploy the requirements above.</p>\n\n<h2>Documents Provided</h2>\n\n<p>Attached subscribe form ui prototype in challenge forums.</p>\n\n<h2>Support</h2>\n\n<p>Standard 30 days.</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30039383",
+  "finalSubmissionGuidelines": "<h2><span style=\"color:#FF0000;\">We have updated requirements in this </span><a href=\"http://apps.topcoder.com/forums/?module=Thread&amp;threadID=810030&amp;start=0&amp;mc=1#1839575\"><span style=\"color:#FF0000;\">thread post</span></a><span style=\"color:#FF0000;\">. Please make sure to read it carefully.</span></h2>\n\n<h2>Submission Deliverables</h2>\n\n<ul>\n\t<li>New/Changed files of each module.</li>\n\t<li>Updated readme for each module.</li>\n</ul>\n\n<h2>Final Submission</h2>\n\n<p>For each member, the final submission should be uploaded to the Online Review Tool.</p>\n",
+  "forumId": 21196,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=21196",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 12,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-02-02T13:24:00.000Z",
+      "actualStartTime": "2014-02-02T13:24:00.000Z",
+      "scheduledEndTime": "2014-02-04T13:24:00.000Z",
+      "actualendTime": "2014-02-04T13:24:00.000Z",
+      "_id": "58123d7b0659262e95dffa0e"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-02-02T13:29:00.000Z",
+      "actualStartTime": "2014-02-02T13:29:00.000Z",
+      "scheduledEndTime": "2014-02-05T13:29:00.000Z",
+      "actualendTime": "2014-02-05T13:29:00.000Z",
+      "_id": "58123d7b0659262e95dffa0d"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-02-05T13:29:00.000Z",
+      "actualStartTime": "2014-02-05T13:29:00.000Z",
+      "scheduledEndTime": "2014-02-06T19:16:00.000Z",
+      "actualendTime": "2014-02-06T19:16:00.000Z",
+      "_id": "58123d7b0659262e95dffa0c"
+    }
+  ],
+  "platforms": [
+    "NodeJS",
+    "HTML"
+  ],
+  "postingDate": "2014-02-02T13:24:00.000Z",
+  "prize": [
+    800,
+    400
+  ],
+  "projectId": 5104,
+  "registrants": [
+    {
+      "handle": "Sky_",
+      "reliability": "n/a",
+      "registrationDate": "2014-02-02T15:10:00.000Z",
+      "submissionDate": "2014-02-03T19:01:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d7b0659262e95dffa0b"
+    },
+    {
+      "handle": "lovefreya",
+      "reliability": "n/a",
+      "registrationDate": "2014-02-02T14:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d7b0659262e95dffa0a"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2014-02-02T15:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d7b0659262e95dffa09"
+    },
+    {
+      "handle": "sri02",
+      "reliability": "n/a",
+      "registrationDate": "2014-02-02T17:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d7b0659262e95dffa08"
+    },
+    {
+      "handle": "esteer",
+      "reliability": "n/a",
+      "registrationDate": "2014-02-02T18:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d7b0659262e95dffa07"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "n/a",
+      "registrationDate": "2014-02-02T20:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d7b0659262e95dffa06"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-02-02T20:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d7b0659262e95dffa05"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-02-03T00:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d7b0659262e95dffa04"
+    },
+    {
+      "handle": "Ritesh999",
+      "reliability": "n/a",
+      "registrationDate": "2014-02-03T01:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d7b0659262e95dffa03"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-02-03T08:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d7b0659262e95dffa02"
+    },
+    {
+      "handle": "googlesmkm",
+      "reliability": "n/a",
+      "registrationDate": "2014-02-03T13:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d7b0659262e95dffa01"
+    },
+    {
+      "handle": "raj88iitr",
+      "reliability": "n/a",
+      "registrationDate": "2014-02-04T07:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123d7b0659262e95dffa00"
+    }
+  ],
+  "registrationEndDate": "2014-02-04T13:24:00.000Z",
+  "reviewScorecardId": 30001552,
+  "reviewType": null,
+  "screeningScorecardId": null,
+  "submissionEndDate": "2014-02-05T13:29:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 95,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-02-03T19:01:00.000Z",
+      "_id": "58123d7b0659262e95dffa0f"
+    }
+  ],
+  "technology": [
+    "CSS",
+    "HTML",
+    "JavaScript",
+    "MongoDB",
+    "Node.js"
+  ]
+}

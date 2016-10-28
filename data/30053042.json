@@ -1,0 +1,412 @@
+{
+  "_id": 30053042,
+  "_isComplete": true,
+  "__v": 132,
+  "_lastUpdate": "2016-10-28T08:53:25.008Z",
+  "appealsEndDate": "2016-03-03T13:31:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "[!!Bonus!!] Lets App iOS-AWS Architecture Challenge",
+  "challengeType": "Architecture",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2016-02-28T13:31:00.000Z",
+  "currentPhaseName": "Submission",
+  "currentPhaseRemainingTime": -20982143,
+  "currentStatus": "Cancelled - Requirements Infeasible",
+  "detailedRequirements": "<div style=\"background:#eee;border:1px solid #ccc;padding:5px 10px;\">\n<h3 dir=\"ltr\">Milestone Phase!</h3>\n\n<h3 dir=\"ltr\">We set a milestone phase to check early submissions, any submission on Friday between 12:00AM and 12:00PM EST will be valid for milestone review and bonus if passed the review.</h3>\n</div>\n\n<p dir=\"ltr\">Let&#39;s App is a mobile social network app to help users connect with friends and plan on site activities.</p>\n\n<h2 dir=\"ltr\">Challenge Overview</h2>\n\n<p dir=\"ltr\">The purpose of this challenge is provide a complete architecture for the app and make sure it covers all requirements.</p>\n\n<h3 dir=\"ltr\"><u>App Screens and Flow</u></h3>\n\n<p dir=\"ltr\">At this point we have the design screens of the app and a high level overview process/flow diagrams that you will use to understand the app and build the architecture.</p>\n\n<p dir=\"ltr\">The app screens, and flow/navigation is demonstrated in this invisionapp &nbsp;(provided in challenge forums)</p>\n\n<p dir=\"ltr\">We also have a document that show the process/flow in the app &nbsp;(provided in challenge forums)</p>\n\n<p dir=\"ltr\">If you are confused about any flow please ask in forums and we will clarify it.</p>\n\n<h3 dir=\"ltr\"><u>AWS Mobile Hub</u></h3>\n\n<p dir=\"ltr\">We will use Amazon Mobile Hub as a serverless solution, it is a console that simplifies the usage of multiple AWS services by mobile apps.</p>\n\n<p dir=\"ltr\">We expect you to provide a detailed architecture with implementation notes of all the code that needed to support the app features.</p>\n\n<p dir=\"ltr\">The architecture should include everything needed in the AWS side in addition to sequence diagrams for the integration between the iOS app/web views and AWS .</p>\n\n<p dir=\"ltr\">Here is a high level breakdown of the amazon web service we think we need to use (we are open to your suggestions) :</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- <strong>AWS Lambda</strong> : Host all the nodejs code, it exposed via mobile hub SDK for the mobile app and &nbsp;API Gateway for the web views, it communicates with DynamoDB, S3, Twilio.com, SES, and SNS .. etc.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- <strong>AWS API Gateway</strong> : Expose the Lambda functions to be used by web views.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- <strong>AWS SES</strong> : Used to send emails for signup verification or invites.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- <strong>Twilio.com</strong> : Used to send SMS for signup verification or for invites for US numbers.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- <strong>Sinch.com</strong> : Used for send SMS for signup verification or for invites for India numbers.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- <strong>AWS DynamoDB</strong> : This is the NoSQL data database.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- <strong>AWS SNS</strong> : This is used by the mobile hub for push notifications and also we can use it for real time comments.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- <strong>AWS S3</strong> : Hosting photos, images, Webview html page. Also used to host any static user data.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- <strong>AWS Mobile Analytics</strong> : Tracking app events</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- <strong>AWS Cognito</strong> : For User identity management, and used to sync data between user devices.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- <strong>AWS Farm Device</strong> : Used to perform Fuzz testing.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- <strong>AWS Mobile Hub</strong> : This will wrap the amazon services and expose it as SDK to the ios app.</p>\n\t</li>\n</ol>\n\n<p dir=\"ltr\">Note the following :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Suggest a solution to perform deploying (i.e. gulp), and testing the code locally and on AWS. We understand that aws mobile hub provide SDK but we need suggestion for how to verify the implementation during the coding challenge before we start integrating with the iOS app.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Please document the manual setup required for AWS (required if it is complicated process).</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><s>- We want an aws configuration to disable/enable sending SMS invites to india numbers. There are few restrictions on sending SMS for india so for now we want to ability to control when enable/disable this feature, so the expected behavior here that app users will not be able to select SMS as option to send invites for india phones when the configuration is set to disable.</s></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- We will need AWS configuration to enable SMS invitations by country. Users registered with US numbers can send SMS invites to US numbers for now. For users who register with other country phone numbers SMS invites are completely disabled but can be enabled at a later date. Ex: If SMS invitations are enabled at a later date for users with Indian numbers, then users registered with an Indian number will be able to send SMS invites to Indian numbers.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>App Features</u></h3>\n\n<p dir=\"ltr\">In addition to provided documents here is a list of the app features, we hope it helps you to understand all the features needed, ask in forums if you see contradicts between what is listed here and the app screen :</p>\n\n<p dir=\"ltr\"><strong>Login</strong></p>\n\n<ul>\n\t<li>\n\t<p dir=\"ltr\">- Supports login via email, username and phone number.</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><strong>Signup</strong></p>\n\n<ul>\n\t<li>\n\t<p dir=\"ltr\">- Supports custom signup, facebook signup, and google signup.</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- We use social networks accounts to pull basic info, friends/contacts and to connect calendars (in case of google calendar).</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- Reconcile new invites with the new user - using phone, email or fb.</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><strong>Reset Password</strong></p>\n\n<ul>\n\t<li>\n\t<p dir=\"ltr\">- User should be able to reset password via email or SMS code.</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><strong>SMS + Verification</strong></p>\n\n<ul>\n\t<li>\n\t<p dir=\"ltr\">- Used to send signup verification code.</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- Used to send activity invites to friends.</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- Used to reset password.</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- We support US and India phone number only.</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><strong>Contacts</strong></p>\n\n<ul>\n\t<li>\n\t<p dir=\"ltr\">- App can pull phone contacts</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- App can pull facebook friends who are an app users.</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- App can pull google contacts.</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- These contacts to be used to suggest friends in the app to follow.</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- App will allow sending activity invites to non app contacts via SMS/Email/FB Messenger.</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><strong>Calendars</strong></p>\n\n<ul>\n\t<li>\n\t<p dir=\"ltr\">- App will allow connecting with apple calendar and google calendar</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- App will add/remove created activities in user calendars.</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><strong>User Pic</strong></p>\n\n<ul>\n\t<li>\n\t<p dir=\"ltr\">- App will allow uploading user photos from FB or device/camera.</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><strong>Activities</strong></p>\n\n<ul>\n\t<li>\n\t<p dir=\"ltr\">- Users can manage activities and invite users to it.</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- Activities can be Re-shared.</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- Activities can be private(invitees only), shared(followers only) or public.</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- Refer to &ldquo;Let&#39;s Processes&rdquo; diagram for more information about the Activity Sharing.</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- Users can comment/like on activities.</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- User can post pictures to activities and share these pictures on their feeds.</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- User can view people who RSVPed but not people who are invited. Only activity creator/owner can view invitees.</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><strong>RSVP</strong></p>\n\n<ul>\n\t<li>\n\t<p dir=\"ltr\">- App users will get push notifications for invites and can view them in their feed.</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">-Non app users can receive invites via SMS/Email/FB Messenger. They can reply to invite via a web view page.</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><strong>Push Notifications</strong> - All push notifications will increment unread messages badge on App icon. The following push notifications need to be implemented.</p>\n\n<ul>\n\t<li>\n\t<p dir=\"ltr\">- Push notifications outlined in notification preferences/settings screen. Only the following two kinds of notifications will be accompanied by a sound</p>\n\n\t<ol>\n\t\t<li>\n\t\t<p dir=\"ltr\">&ldquo;When a comment is posted to my activity&rdquo;</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">&ldquo;When a picture is posted to my activity&rdquo;</p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- Additional mandatory push notification with sound: When someone invites user to join an activity on Let&rsquo;s</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- &ldquo;my activity&rdquo; refers to</p>\n\n\t<ol>\n\t\t<li>\n\t\t<p dir=\"ltr\">any activity to which the user has been invited explicitly</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">any activity the user has created</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">any activity to which the user has RSVPed</p>\n\t\t</li>\n\t</ol>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><strong>Feeds</strong> - There are three feeds</p>\n\n<ul>\n\t<li>\n\t<p dir=\"ltr\">- Public Feed - show public activities from all app users.</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- User Feed - show activities created by the user or the users I am following. Also the feed will show pictures posted under activities to which you have RSVPed.</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- Upcoming Activities Feed - show all upcoming user&rsquo;s activities grouped by date.</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><strong>Mobile Analytics</strong></p>\n\n<ul>\n\t<li>\n\t<p dir=\"ltr\">- We will use AWS mobile analytics to track app usage.</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><strong>Web Views</strong> - we will have two web pages that can be hosted in S3</p>\n\n<ul>\n\t<li>\n\t<p dir=\"ltr\">- Page for RSVP</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- Page for resetting password</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><strong>Realtime comments/activity</strong></p>\n\n<ul>\n\t<li>\n\t<p dir=\"ltr\">- Comment updates in activity/pic details page should be real-time</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- Activity creation and invitations should be real-time. Meaning when push notification is received the iOS app should pull information and add it to feed and notifications screen.</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><strong>Friends/Followings/Followers</strong></p>\n\n<ul>\n\t<li>\n\t<p dir=\"ltr\">- User can be (un)followed or (un)follow other app users.</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- App provides option to review and approve followers.</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- Users can be blocked from seeing your activity on Let&rsquo;s.</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- User can view all followers/followings and non-app friends in Contacts screen.</p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\">- Contacts can be grouped into a group. We will have one group level only.</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><strong>User Profile</strong> - the screen has the following options :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Display basic user info.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Access to update settings.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Activities feed of the activities/pic posted/shared by the user.</p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Documents</h2>\n\n<p dir=\"ltr\">The invisionapp link and processes document will be provided in challenge forums.</p>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30053042",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalFixEndDate": "2016-03-05T01:31:00.000Z",
+  "finalSubmissionGuidelines": "<h2 dir=\"ltr\">SUBMISSION DELIVERABLES</h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Application Design Specification</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Entity Relationship Diagram</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Sequence Diagrams</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Interface Diagrams</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Challenge specification</p>\n\t</li>\n</ul>\n",
+  "forumId": 31991,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=31991",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 26,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-23T13:30:00.000Z",
+      "actualStartTime": "2016-02-23T13:30:00.000Z",
+      "scheduledEndTime": "2016-02-23T13:31:00.000Z",
+      "actualendTime": "2016-02-23T13:31:00.000Z",
+      "_id": "581312056f0ff48440134b58"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-23T13:31:00.000Z",
+      "actualStartTime": "2016-02-23T13:31:00.000Z",
+      "scheduledEndTime": "2016-02-23T13:34:00.000Z",
+      "actualendTime": "2016-02-23T13:34:00.000Z",
+      "_id": "581312056f0ff48440134b57"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-23T13:34:00.000Z",
+      "actualStartTime": "2016-02-23T13:34:00.000Z",
+      "scheduledEndTime": "2016-02-26T13:34:00.000Z",
+      "actualendTime": "2016-02-26T13:34:00.000Z",
+      "_id": "581312056f0ff48440134b56"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2016-02-23T13:39:00.000Z",
+      "actualStartTime": "2016-02-23T13:39:00.000Z",
+      "scheduledEndTime": "2016-02-28T13:31:00.000Z",
+      "actualendTime": null,
+      "_id": "581312056f0ff48440134b55"
+    },
+    {
+      "type": "Screening",
+      "status": "Scheduled",
+      "scheduledStartTime": "2016-02-28T13:31:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2016-02-29T01:31:00.000Z",
+      "actualendTime": null,
+      "_id": "581312056f0ff48440134b54"
+    },
+    {
+      "type": "Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2016-02-29T01:31:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2016-03-02T01:31:00.000Z",
+      "actualendTime": null,
+      "_id": "581312056f0ff48440134b53"
+    },
+    {
+      "type": "Appeals",
+      "status": "Scheduled",
+      "scheduledStartTime": "2016-03-02T01:31:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2016-03-03T01:31:00.000Z",
+      "actualendTime": null,
+      "_id": "581312056f0ff48440134b52"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2016-03-03T01:31:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2016-03-03T13:31:00.000Z",
+      "actualendTime": null,
+      "_id": "581312056f0ff48440134b51"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Scheduled",
+      "scheduledStartTime": "2016-03-03T13:31:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2016-03-04T01:31:00.000Z",
+      "actualendTime": null,
+      "_id": "581312056f0ff48440134b50"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Scheduled",
+      "scheduledStartTime": "2016-03-04T01:31:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2016-03-05T01:31:00.000Z",
+      "actualendTime": null,
+      "_id": "581312056f0ff48440134b4f"
+    },
+    {
+      "type": "Final Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2016-03-05T01:31:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2016-03-05T13:31:00.000Z",
+      "actualendTime": null,
+      "_id": "581312056f0ff48440134b4e"
+    },
+    {
+      "type": "Approval",
+      "status": "Scheduled",
+      "scheduledStartTime": "2016-03-05T13:31:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2016-03-10T13:31:00.000Z",
+      "actualendTime": null,
+      "_id": "581312056f0ff48440134b4d"
+    }
+  ],
+  "platforms": [
+    "AWS",
+    "iOS"
+  ],
+  "postingDate": "2016-02-23T13:34:00.000Z",
+  "prize": [
+    1700,
+    850
+  ],
+  "projectId": 9372,
+  "registrants": [
+    {
+      "handle": "Sky_",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-23T13:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b4c"
+    },
+    {
+      "handle": "Cagi",
+      "reliability": "0%",
+      "registrationDate": "2016-02-23T14:02:00.000Z",
+      "submissionDate": null,
+      "rating": "967",
+      "colorStyle": "color: #00A900",
+      "_id": "581312056f0ff48440134b4b"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "6%",
+      "registrationDate": "2016-02-23T14:17:00.000Z",
+      "submissionDate": null,
+      "rating": "691",
+      "colorStyle": "color: #999999",
+      "_id": "581312056f0ff48440134b4a"
+    },
+    {
+      "handle": "kiril.kartunov",
+      "reliability": "100%",
+      "registrationDate": "2016-02-23T14:36:00.000Z",
+      "submissionDate": "2016-02-26T14:22:00.000Z",
+      "rating": "1293",
+      "colorStyle": "color: #6666FF",
+      "_id": "581312056f0ff48440134b49"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-23T14:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b48"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-23T15:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b47"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-23T15:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b46"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-23T15:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b45"
+    },
+    {
+      "handle": "Urmass",
+      "reliability": "46%",
+      "registrationDate": "2016-02-23T15:59:00.000Z",
+      "submissionDate": null,
+      "rating": "1189",
+      "colorStyle": "color: #00A900",
+      "_id": "581312056f0ff48440134b44"
+    },
+    {
+      "handle": "veshu",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-23T18:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b43"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-23T19:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b42"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-24T01:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b41"
+    },
+    {
+      "handle": "mess",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-24T02:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b40"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-24T05:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b3f"
+    },
+    {
+      "handle": "jackchongs",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-24T05:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b3e"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-24T06:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b3d"
+    },
+    {
+      "handle": "pirosl_tc",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-24T09:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b3c"
+    },
+    {
+      "handle": "Aysun",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-24T12:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b3b"
+    },
+    {
+      "handle": "albetjanuar",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-25T01:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b3a"
+    },
+    {
+      "handle": "indiancomet",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-25T06:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b39"
+    },
+    {
+      "handle": "sandyr39",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-25T10:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b38"
+    },
+    {
+      "handle": "seriyvolk83",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-25T12:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b37"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-25T14:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b36"
+    },
+    {
+      "handle": "AnushaAmith",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-25T20:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b35"
+    },
+    {
+      "handle": "medophin",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-26T08:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b34"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-26T12:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581312056f0ff48440134b33"
+    }
+  ],
+  "registrationEndDate": "2016-02-26T13:34:00.000Z",
+  "reliabilityBonus": 340,
+  "reviewScorecardId": 30001463,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30001330,
+  "submissionEndDate": "2016-02-28T13:31:00.000Z",
+  "submissions": [
+    {
+      "handle": "kiril.kartunov",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-02-26T14:22:00.000Z",
+      "_id": "581312056f0ff48440134b59"
+    }
+  ],
+  "technology": [
+    "API",
+    "MongoDB",
+    "Node.js",
+    "iOS"
+  ]
+}

@@ -1,0 +1,676 @@
+{
+  "_id": 30055036,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-27T17:50:59.321Z",
+  "appealsEndDate": "2016-08-25T04:23:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "TCO - Status Report Generation - D3js Contest",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p>Welcome to the Status Report Generation - D3js Contest. As part of this contest, you will generate a report for our client that details their payments using the <a href=\"https://d3js.org/\">d3js library</a>.</p>\n&nbsp;\n\n<p><strong>Contest Details</strong></p>\n\n<p>This challenge is to dynamically generate a report to be sent to customers explaining their payment stream. Historically this has been done using text but we think a graph could make everything easier to understand for our client&rsquo;s customers. Developers are to use the supplied XML or JSON files (slight preference to JSON) to create Explanation of Benefits (EOBs) using the Data Driven Document (D3) JavaScript library.</p>\n&nbsp;\n\n<p><span style=\"color:#FF0000\">Create a simple web page that allows the user to upload a JSON or XML file and generates a report in another web page that our client will then print out using the browser&rsquo;s print feature.</span></p>\n&nbsp;\n\n<p>There are multiple aspects or sections in this report. You don&rsquo;t have to title each section in the document. These have been categorized only to make the understanding easier for you, the participant.</p>\n&nbsp;<br />\nFor each of the following sections, we will using the terms in the <em>20160519Payment.json</em> file that will be shared in the contest forum. Please use that as reference.<br />\n&nbsp;\n<p><u>Section 1: The chart</u></p>\n\n<p>This is the important part of the report. Refer to the <em>ExplanationOfBenefits.Lines.Line</em> array in the JSON file. To present this information intuitively, the client wishes to display the payment information in the form of a chart. Some examples of the types of chart:</p>\n\n<p style=\"margin-left:40px\">-&nbsp;<a href=\"http://bl.ocks.org/dk8996/5449641\">Gantt Chart</a></p>\n\n<p style=\"margin-left:40px\">-&nbsp;<a href=\"https://github.com/flrs/visavail\">Time Data Availability Chart</a></p>\n\n<ul>\n</ul>\n\n<p>You are free to use other types of charts too. The expectation is that each block in the chart will be an element in the <em>ExplanationOfBenefits.Lines.Line</em> array. Each block should convey the following information:</p>\n\n<p style=\"margin-left:40px\">- LineType</p>\n\n<p style=\"margin-left:40px\">- Description</p>\n\n<p style=\"margin-left:40px\">- DateRange.Start and DateRange.End</p>\n\n<p style=\"margin-left:40px\">- MonthlyRate</p>\n\n<ol>\n</ol>\n\n<p>You can take a look at the mockup that our client created on how this information is represented in the chart. You are free to come up with your own representation though.</p>\n&nbsp;\n\n<p>Guidelines for this section are:</p>\n\n<p style=\"margin-left:40px\">- You need to show all line array elements in the chart.</p>\n\n<p style=\"margin-left:40px\">- The current period is present under <em>ExplanationOfBenefits.Payment.DateRange</em>. All line elements that are within this date range need to be highlighted. The simplest way that you can highlight them is to have two vertical lines in the chart - one line for the <em>Payment.DateRange.Start</em> and one for the <em>Payment.DateRange.End</em>. Thus, all blocks in the chart that are within the two vertical lines are considered &ldquo;highlighted&rdquo;. You are free to represent this differently too as long as it is clear which is the current period and which lines fall under it.</p>\n\n<p style=\"margin-left:40px\">- The LineTypes aren&rsquo;t restricted to the ones in the JSON file. There could be other line types too. It should be easy for our client to pass the different values and without any code modification, for these values to still show up in the chart. That is, you should not hard-code any value, your chart code should be generic and should only concern itself with displaying the lines in the chart. The customer mentions that they will have a maximum of 25 lines in a JSON file with maximum of 8 overlapping a single payment period.</p>\n\n<p style=\"margin-left:40px\">- This will always be the first section in the report.</p>\n\n<ul>\n</ul>\n&nbsp;\n\n<p><u>Section 2: Misc Information</u></p>\n\n<p>Simple section. You need to show the <em>ExplanationOfBenefits.Customer information</em> here. Additionally, you also need to show the <em>ExplanationOfBenefits.RequiredText</em> here. When displaying the customer information, you need to show all attributes in the <em>ExplanationOfBenefits.Customer</em> object namely:</p>\n\n<p style=\"margin-left:40px\">- CustomerNumber</p>\n\n<p style=\"margin-left:40px\">- Name</p>\n\n<p style=\"margin-left:40px\">- BirthDate</p>\n\n<p style=\"margin-left:40px\">- Address</p>\n\n<p style=\"margin-left:40px\">- BankAccount</p>\n\n<ul>\n</ul>\n&nbsp;\n\n<p>The Guidelines for this section are:</p>\n\n<p style=\"margin-left:40px\">- BankAccount may or may not exist. If it does exist, then it implies that the payment was direct deposited. If BankAccount does NOT exist, then Section 4 is shown. Else instead of Section 4, simply show a text &ldquo;Net Amount was transferred to your back account <em>Customer.BankAccount.AccountNumber</em> on <em>Payment.CheckDate</em> (Current Date if CheckDate does not exist).</p>\n\n<p style=\"margin-left:40px\">- The RequiredText field can be lengthy. Thus, make sure that you do assign plenty of space to display the text (fluid content and not fixed, that is the height of the content should not be fixed and should increase / decrease based on the content)</p>\n\n<ul>\n</ul>\n&nbsp;\n\n<p><u>Section 3 - Payment</u></p>\n\n<p>This section describes to our client&rsquo;s customers how the payments have been calculated.</p>\n&nbsp;\n\n<p>Refer to the attached excel file. You need to display the calculations exactly as seen in the excel file. Each row in the excel file uses the <em>ExplanationOfBenefits.Lines.Line</em> elements and the <em>ExplanationOfBenefits.Payment</em> elements.</p>\n\n<p>Notice how lines with id 7, 8 and 10 are not in the excel because their dates are outside the current period (<em>ExplanationOfBenefits.Payment.DateRange</em>)</p>\n&nbsp;\n\n<p><u>Section 4 - Check</u></p>\n\n<p>This section is shown only if there is no BankAccount attribute under the Customer Object. You can use this check as <a href=\"https://www.dreamstime.com/royalty-free-stock-photo-large-bank-check-false-numbers-image13235505\">reference</a>. You need to fill up the following fields:</p>\n\n<p style=\"margin-left:40px\">- Date (Current Date)</p>\n\n<p style=\"margin-left:40px\">- Payee (In JSON file, this will be the <em>Customer.Name</em> field)</p>\n\n<p style=\"margin-left:40px\">- Amount and Amount in words (In JSON file, this will be the NetAmount in the Payments object).</p>\n\n<ul>\n</ul>\n&nbsp;\n\n<p>You need to ensure that on printing the page, the check will always exist together - that is, the check does not split into multiple pages and is always shown completely. It can be shown in a different page if the area in the previous page is not sufficient but the check should not split where one part of the check is on one page and the remaining part on the second page. This should not happen.</p>\n\n<p><span style=\"color:#FF0000\">If the document can be printed in grayscale and the customers will still understand it, then it will be considered under section 1.1.7 of the scorecard.</span></p>\n\n<div><br />\n<strong>Points to Note</strong></div>\n\n<div style=\"margin-left:40px\">- Apart from the D3js library, you are allowed to use jQuery too. Use of any other libraries should first be clarified in the contest forums.<br />\n- Make sure that the performance of the web page is good. The browser should not hang when loading the data<br />\n- There is no backend for the app. It should be possible for us to use any static HTTP web server to use your app.</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30055036",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<p>Upload your submission as a .zip file. Provide a non-public video of how your submission works.</p>\n\n<div>&nbsp;</div>\n",
+  "forumId": 33835,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33835",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 58,
+  "numberOfSubmissions": 5,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-18T07:00:00.000Z",
+      "actualStartTime": "2016-08-18T07:00:00.000Z",
+      "scheduledEndTime": "2016-08-22T07:00:00.000Z",
+      "actualendTime": "2016-08-22T07:00:00.000Z",
+      "_id": "58123e83e0be5f30ae5635e7"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-18T07:05:00.000Z",
+      "actualStartTime": "2016-08-18T07:05:00.000Z",
+      "scheduledEndTime": "2016-08-22T07:00:00.000Z",
+      "actualendTime": "2016-08-22T07:00:00.000Z",
+      "_id": "58123e83e0be5f30ae5635e6"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-22T07:00:00.000Z",
+      "actualStartTime": "2016-08-22T07:00:00.000Z",
+      "scheduledEndTime": "2016-08-23T20:08:00.000Z",
+      "actualendTime": "2016-08-23T20:08:00.000Z",
+      "_id": "58123e83e0be5f30ae5635e5"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-23T20:08:00.000Z",
+      "actualStartTime": "2016-08-23T20:08:00.000Z",
+      "scheduledEndTime": "2016-08-24T20:08:00.000Z",
+      "actualendTime": "2016-08-24T20:08:00.000Z",
+      "_id": "58123e83e0be5f30ae5635e4"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-24T20:08:00.000Z",
+      "actualStartTime": "2016-08-24T20:08:00.000Z",
+      "scheduledEndTime": "2016-08-25T04:23:00.000Z",
+      "actualendTime": "2016-08-25T04:23:00.000Z",
+      "_id": "58123e83e0be5f30ae5635e3"
+    }
+  ],
+  "platforms": [
+    "HTML"
+  ],
+  "postingDate": "2016-08-18T07:00:00.000Z",
+  "prize": [
+    900,
+    450
+  ],
+  "projectId": 10381,
+  "registrants": [
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T07:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635e2"
+    },
+    {
+      "handle": "ShindouHikaru",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T07:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635e1"
+    },
+    {
+      "handle": "utkarshkukreti",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T07:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635e0"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T07:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635df"
+    },
+    {
+      "handle": "kiril.kartunov",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T07:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635de"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T07:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635dd"
+    },
+    {
+      "handle": "gets0ul",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T07:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635dc"
+    },
+    {
+      "handle": "phaniram",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T07:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635db"
+    },
+    {
+      "handle": "GeetaMamuni",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T08:00:00.000Z",
+      "submissionDate": "2016-08-22T06:51:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635da"
+    },
+    {
+      "handle": "mayank1892",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T08:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635d9"
+    },
+    {
+      "handle": "jackyzhangjb",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T08:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635d8"
+    },
+    {
+      "handle": "thomaskranitsas",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T08:18:00.000Z",
+      "submissionDate": "2016-08-20T19:32:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635d7"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T08:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635d6"
+    },
+    {
+      "handle": "Khadoos",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T08:27:00.000Z",
+      "submissionDate": "2016-08-21T18:41:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635d5"
+    },
+    {
+      "handle": "xiufei",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T08:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635d4"
+    },
+    {
+      "handle": "Jarnanchen",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T08:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635d3"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T08:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635d2"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T08:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635d1"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T09:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635d0"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T09:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635cf"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T10:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635ce"
+    },
+    {
+      "handle": "Arif.Nyet",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T12:16:00.000Z",
+      "submissionDate": "2016-08-21T21:49:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635cd"
+    },
+    {
+      "handle": "Ohanzee",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T12:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635cc"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T12:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635cb"
+    },
+    {
+      "handle": "siddnitr1",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T13:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635ca"
+    },
+    {
+      "handle": "jorje.b",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T13:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635c9"
+    },
+    {
+      "handle": "daga_sumit",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T13:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635c8"
+    },
+    {
+      "handle": "Bende",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T13:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635c7"
+    },
+    {
+      "handle": "TopG",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T14:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635c6"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T14:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635c5"
+    },
+    {
+      "handle": "HulkRambo",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T16:51:00.000Z",
+      "submissionDate": "2016-08-22T04:35:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635c4"
+    },
+    {
+      "handle": "isv",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T16:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635c3"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T17:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635c2"
+    },
+    {
+      "handle": "tosha5252",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T17:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635c1"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T19:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635c0"
+    },
+    {
+      "handle": "Fanazhe",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T20:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635bf"
+    },
+    {
+      "handle": "M.X",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T21:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635be"
+    },
+    {
+      "handle": "Colinh84",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T22:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635bd"
+    },
+    {
+      "handle": "dranbirsid",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T22:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635bc"
+    },
+    {
+      "handle": "mbis",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T13:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635bb"
+    },
+    {
+      "handle": "ouyangki",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-18T23:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635ba"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T00:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635b9"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T02:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635b8"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T02:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635b7"
+    },
+    {
+      "handle": "KudaChinyemba",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T06:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635b6"
+    },
+    {
+      "handle": "alcanta",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T07:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635b5"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T10:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635b4"
+    },
+    {
+      "handle": "Devilsxangel",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T11:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635b3"
+    },
+    {
+      "handle": "PinaGamer",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T11:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635b2"
+    },
+    {
+      "handle": "moagi.anela",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T12:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635b1"
+    },
+    {
+      "handle": "amanonymous",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-19T17:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635b0"
+    },
+    {
+      "handle": "AkshatGandhi",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T14:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635af"
+    },
+    {
+      "handle": "avbngera",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-20T07:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635ae"
+    },
+    {
+      "handle": "cairi",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-21T07:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635ad"
+    },
+    {
+      "handle": "siyaddigital",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-21T09:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635ac"
+    },
+    {
+      "handle": "AtomskiMrav",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-21T11:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635ab"
+    },
+    {
+      "handle": "MonicaMuranyi",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-21T12:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635aa"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-21T13:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58123e83e0be5f30ae5635a9"
+    }
+  ],
+  "registrationEndDate": "2016-08-22T07:00:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-08-22T07:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "GeetaMamuni",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 90.63,
+      "finalScore": 93.13,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-08-22T06:51:00.000Z",
+      "_id": "58123e83e0be5f30ae5635ec"
+    },
+    {
+      "handle": "Khadoos",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 81.25,
+      "finalScore": 83.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-08-21T18:41:00.000Z",
+      "_id": "58123e83e0be5f30ae5635eb"
+    },
+    {
+      "handle": "thomaskranitsas",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 75,
+      "finalScore": 80,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-08-20T19:32:00.000Z",
+      "_id": "58123e83e0be5f30ae5635ea"
+    },
+    {
+      "handle": "Arif.Nyet",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 73.75,
+      "finalScore": 76.25,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-08-21T21:49:00.000Z",
+      "_id": "58123e83e0be5f30ae5635e9"
+    },
+    {
+      "handle": "HulkRambo",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 64.38,
+      "finalScore": 65.63,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-08-22T04:35:00.000Z",
+      "_id": "58123e83e0be5f30ae5635e8"
+    }
+  ],
+  "technology": [
+    "HTML5",
+    "JavaScript"
+  ]
+}
