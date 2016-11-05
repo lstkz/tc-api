@@ -1,0 +1,432 @@
+{
+  "_id": 30038691,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:15:29.973Z",
+  "appealsEndDate": "2013-12-24T07:06:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Healthcare Fraud Prevention System Integration Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><span style=\"font-family:arial,helvetica,sans-serif;\">The Healthcare Fraud Prevention Partnership (HFPP) is a coalition of healthcare insurers who aim to share data in search of suspicious claims. A claim is a demand for reimbursement under an insurance plan. Insurers are happy to pay legitimate claims but do not want to cover&nbsp;fraudulent or wasteful reimbursement, which ultimately results in higher costs for all consumers. To assist in the identification of suspicious&nbsp;claims, partners intend to make their own database of claims available for studies to be conducted by a trusted third party.</span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif;\"><span style=\"line-height: 1.6em;\">TopCoder has developed all the modules of this system. In this contest, we are going to integrate all the modules and verify the system works as expected. Also we need to fix some issues that have been discovered in previous contests. Please read on for the details of the requirements.</span></span></p>\n\n<p><span style=\"color:#FF0000;\"><strong>Please note this is a 96 hour contest. We have raised the prize to $2500 to make up for the urgency!</strong></span></p>\n\n<h2>System Integration</h2>\n\n<p>We have the following modules developed for this system:</p>\n\n<h3><strong>Frontend</strong>:</h3>\n\n<p>SVN: <a href=\"https://coder.topcoder.com/tcs/clients/cms2/applications/hfpp/integrate/study/hfppnetwork/\">https://coder.topcoder.com/tcs/clients/cms2/applications/hfpp/integrate/study/hfppnetwork/</a></p>\n\n<p>Demo : We have a demonstration site set up at <a href=\"http://ec2-184-72-145-164.compute-1.amazonaws.com:8070\">http://ec2-184-72-145-164.compute-1.amazonaws.com:8070</a>. Please login as admin/admin, or user/user to get familiar with the functionalities for admin and regular users.</p>\n\n<p>The frontend was developed in python with django. It provides the management of studies, partners, partner tags and user profiles. Currently most of the frontend features have been integrated. What is left is that we need to integrate with the backend about the studies and fix some issues. Specifically:</p>\n\n<ul>\n\t<li>The users should be able to initiate the studies from frontend. The study request should be sent to the hub after &#39;Create and Execute&#39; or &#39;Execute&#39; or &#39;Execute Transactions&#39;. Currently this is not done. After the study is executed, it should be listed in the &#39;IN PROGRESS&#39; tab. The execution progress should be supported.</li>\n\t<li>The rule editor should support all five kinds of claims.</li>\n\t<li>The rule editor should treat date as string. The format is MM/dd/yyyy. It should be single quoted.</li>\n</ul>\n\n<h3><strong>Hub:</strong></h3>\n\n<p>SVN: <a href=\"https://coder.topcoder.com/tcs/clients/cms2/applications/hfpp/integrate/hub/\">https://coder.topcoder.com/tcs/clients/cms2/applications/hfpp/integrate/hub/</a></p>\n\n<p>The hub acts as a centralized coordinator of all the partners and their requests. It accepts the studies from the study management frontend and distributes them to partners. The hub has been implemented in Java. In this contest, we are going to improve the global caching. Now the cache key is the request json, which does not make much sense as parameters can be in different orders yet represents the same query. We are going to change the cache key generation policy by sorting the query parameters first.</p>\n\n<h3><strong>Node:</strong></h3>\n\n<p>SVN: <a href=\"https://coder.topcoder.com/tcs/clients/cms2/applications/hfpp/integrate/node/\">https://coder.topcoder.com/tcs/clients/cms2/applications/hfpp/integrate/node/</a></p>\n\n<p>The node acts as a communication layer between client and hub. It accepts requests from the hub, parses them and send it to the client. We do not have much to do with this module in this contest. It has been implemented in Java.</p>\n\n<h3><strong>Partner Client:</strong></h3>\n\n<p>SVN: <a href=\"https://coder.topcoder.com/tcs/clients/cms2/applications/hfpp/integrate/partnerclient/\">https://coder.topcoder.com/tcs/clients/cms2/applications/hfpp/integrate/partnerclient/</a></p>\n\n<p>The partner client is the core of the query execution. It receives queries from hub (through node), parses the query string into an AST tree and converts it to either SQL or non-SQL backend&nbsp; queries. Then the queries are sent to its database appliance module for execution. After execution, the data should be posted back to the hub and hub will redirect it to the study server then we can read the report in study management (e.g., http://ec2-184-72-145-164.compute-1.amazonaws.com:8070/studies?csrfmiddlewaretoken=Qsit7zH7EJ0cmwNsUMMVEyyYH3FmGGZP&amp;status=2&amp;id=&amp;description=&amp;created_on_from=&amp;created_on_to=&amp;last_modified_on_from=&amp;last_modified_on_to=&amp;executed_on_from=&amp;executed_on_to=&amp;completed_on_from=&amp;completed_on_to=). <strong><span style=\"color:#FF0000;\">The last step has not been implemented, in this contest, we need to complete it.</span></strong></p>\n\n<p>There are several modules that we want to integrate:</p>\n\n<p><strong>Desicison Module : </strong>The partner client supports both automatic or manual approval of the query execution. This is done by the decision module. When client receives a query, it will be sent to decision module to see whether manual approval is required. If it is, the query will be stored in client db (via database applicance module) and waits for approval by a specialist. Otherwise, the query is sent to database appliance module directly for execution. Or, when manual approval is required, after it is approved, it is sent to the data appliance module for execution.</p>\n\n<p><strong>Data Appliance Module:</strong> The data appliance module is a middleware between the general client software and the partner&#39;s backend persistence. It is designed to support all kinds of storage engines, including SQL/NoSQL ones. We have implemented the supports for two backends : <a href=\"https://coder.topcoder.com/tcs/clients/cms2/applications/hfpp/integrate/partnerclient/hfppnetwork/partner/appliance/\">MySQL and Redis</a>. In this contest, the competitors are expected to create two partner client instances with MySQL and Redis to verify that all five claim types are supported. We also require the competitors to demonstrate kinds of queries including but not limited to AND/OR/NOT combinations. Reviewers are expected to provide thorough sets of testing queries to verify. Note, we need to use the real data provided at <a href=\"http://www.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/SynPUFs/DESample13.html\">http://www.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/SynPUFs/DESample13.html</a> (U.S. only, please find a VPN or proxy to download).</p>\n\n<p><strong>Caching : </strong>As indicated in the hub module, we need to support global caching. Caching workflow is described below:</p>\n\n<ul>\n\t<li>Study management frontend sends the query to hub.</li>\n\t<li>Hub generates the key from the query and check its cache to see whether it is already in. If it is not, the request will be sent to client for execution. Otherwise:</li>\n\t<li>Hub retrieves the cache_timestamp of the cached data and send the query together with the cache_timestamp to the client.</li>\n\t<li>Client receives the query and it checks the cache_timstamp to see if there have been data changes for this query since cache_timestamp. If there is, it retrieves the data from backend. Otherwise:</li>\n\t<li>Client responds to hub indicating that there is no change since cache_timestamp.</li>\n\t<li>Hub receives the response and decides to use the cached data.</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p>We have also some other fixes that we need to integrate:</p>\n\n<ul>\n\t<li>Support for prescription claim type. This has been implemented, but we need it integrated in converter/database appliance.</li>\n\t<li>Support for dates in string type. Please refer to the frontend module. We are going to use string to represent dates.</li>\n</ul>\n\n<h3><strong>Deployment:</strong></h3>\n\n<p>The competitors are expected to provide easy-to-use deployment scripts to deploy each modules : study server, study management web interface, hub, node, partner client.</p>\n\n<p>Also, we need to change all use of SQLite to MySQL.</p>\n\n<h3><strong>Verification:</strong></h3>\n\n<p>We need to verify the system integration by using a distributed network with at least four virtual nodes, namely Study Server, Hub, Client Node A and Client Node B. Client Node A will have MySQL as backend and Client Node B will have Redis as backend.</p>\n",
+  "digitalRunPoints": 1125,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30038691",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2013-12-28T01:35:00.000Z",
+  "finalSubmissionGuidelines": "<p><span style=\"font-size:14px;\"><strong>Software environment</strong></span></p>\n\n<ul style=\"list-style-type:square;\">\n\t<li>all integration code to be written in&nbsp;Python 3.3</li>\n\t<li>operating system: fresh&nbsp;install of Ubuntu 12.04&nbsp;with all current updates</li>\n</ul>\n\n<p><span style=\"font-size:14px;\"><strong>Deliverables</strong></span></p>\n\n<ul style=\"list-style-type:square;\">\n\t<li>all&nbsp;source code and configuration files required to build the assembly.</li>\n\t<li>a detailed deployment and configuration guide.</li>\n\t<li>unit tests are not required, but the deployment guide must demonstrate the required feature front to end for all kinds of claims.</li>\n</ul>\n",
+  "forumId": 20758,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=20758",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 21,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-17T05:06:00.000Z",
+      "actualStartTime": "2013-12-17T05:06:00.000Z",
+      "scheduledEndTime": "2013-12-17T05:06:00.000Z",
+      "actualendTime": "2013-12-17T05:06:00.000Z",
+      "_id": "58134f71550dfb3b52c30a52"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-17T05:06:00.000Z",
+      "actualStartTime": "2013-12-17T05:06:00.000Z",
+      "scheduledEndTime": "2013-12-17T07:47:00.000Z",
+      "actualendTime": "2013-12-17T07:47:00.000Z",
+      "_id": "58134f71550dfb3b52c30a51"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-17T07:47:00.000Z",
+      "actualStartTime": "2013-12-17T07:47:00.000Z",
+      "scheduledEndTime": "2013-12-19T07:47:00.000Z",
+      "actualendTime": "2013-12-19T07:47:00.000Z",
+      "_id": "58134f71550dfb3b52c30a50"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-17T07:52:00.000Z",
+      "actualStartTime": "2013-12-17T07:52:00.000Z",
+      "scheduledEndTime": "2013-12-22T07:52:00.000Z",
+      "actualendTime": "2013-12-22T07:52:00.000Z",
+      "_id": "58134f71550dfb3b52c30a4f"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-22T07:52:00.000Z",
+      "actualStartTime": "2013-12-22T07:52:00.000Z",
+      "scheduledEndTime": "2013-12-23T10:17:00.000Z",
+      "actualendTime": "2013-12-23T10:17:00.000Z",
+      "_id": "58134f71550dfb3b52c30a4e"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-23T10:17:00.000Z",
+      "actualStartTime": "2013-12-23T10:17:00.000Z",
+      "scheduledEndTime": "2013-12-23T12:58:00.000Z",
+      "actualendTime": "2013-12-23T12:58:00.000Z",
+      "_id": "58134f71550dfb3b52c30a4d"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-23T12:58:00.000Z",
+      "actualStartTime": "2013-12-23T12:58:00.000Z",
+      "scheduledEndTime": "2013-12-24T04:57:00.000Z",
+      "actualendTime": "2013-12-24T04:57:00.000Z",
+      "_id": "58134f71550dfb3b52c30a4c"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-24T04:57:00.000Z",
+      "actualStartTime": "2013-12-24T04:57:00.000Z",
+      "scheduledEndTime": "2013-12-24T07:06:00.000Z",
+      "actualendTime": "2013-12-24T07:06:00.000Z",
+      "_id": "58134f71550dfb3b52c30a4b"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-24T07:06:00.000Z",
+      "actualStartTime": "2013-12-24T07:06:00.000Z",
+      "scheduledEndTime": "2013-12-24T08:38:00.000Z",
+      "actualendTime": "2013-12-24T08:38:00.000Z",
+      "_id": "58134f71550dfb3b52c30a4a"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-24T08:38:00.000Z",
+      "actualStartTime": "2013-12-24T08:38:00.000Z",
+      "scheduledEndTime": "2013-12-25T07:25:00.000Z",
+      "actualendTime": "2013-12-25T07:25:00.000Z",
+      "_id": "58134f71550dfb3b52c30a49"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-25T07:25:00.000Z",
+      "actualStartTime": "2013-12-25T07:25:00.000Z",
+      "scheduledEndTime": "2013-12-25T12:37:00.000Z",
+      "actualendTime": "2013-12-25T12:37:00.000Z",
+      "_id": "58134f71550dfb3b52c30a48"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-28T02:18:00.000Z",
+      "actualStartTime": "2013-12-28T02:18:00.000Z",
+      "scheduledEndTime": "2013-12-31T17:31:00.000Z",
+      "actualendTime": "2013-12-31T17:31:00.000Z",
+      "_id": "58134f71550dfb3b52c30a47"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-25T12:37:00.000Z",
+      "actualStartTime": "2013-12-25T12:37:00.000Z",
+      "scheduledEndTime": "2013-12-26T10:22:00.000Z",
+      "actualendTime": "2013-12-26T10:22:00.000Z",
+      "_id": "58134f71550dfb3b52c30a46"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-26T10:22:00.000Z",
+      "actualStartTime": "2013-12-26T10:22:00.000Z",
+      "scheduledEndTime": "2013-12-26T12:28:00.000Z",
+      "actualendTime": "2013-12-26T12:28:00.000Z",
+      "_id": "58134f71550dfb3b52c30a45"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-26T12:28:00.000Z",
+      "actualStartTime": "2013-12-26T12:28:00.000Z",
+      "scheduledEndTime": "2013-12-26T14:06:00.000Z",
+      "actualendTime": "2013-12-26T14:06:00.000Z",
+      "_id": "58134f71550dfb3b52c30a44"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-26T14:06:00.000Z",
+      "actualStartTime": "2013-12-26T14:06:00.000Z",
+      "scheduledEndTime": "2013-12-27T02:38:00.000Z",
+      "actualendTime": "2013-12-27T02:38:00.000Z",
+      "_id": "58134f71550dfb3b52c30a43"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-27T02:38:00.000Z",
+      "actualStartTime": "2013-12-27T02:38:00.000Z",
+      "scheduledEndTime": "2013-12-28T01:35:00.000Z",
+      "actualendTime": "2013-12-28T01:35:00.000Z",
+      "_id": "58134f71550dfb3b52c30a42"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-28T01:35:00.000Z",
+      "actualStartTime": "2013-12-28T01:35:00.000Z",
+      "scheduledEndTime": "2013-12-28T02:18:00.000Z",
+      "actualendTime": "2013-12-28T02:18:00.000Z",
+      "_id": "58134f71550dfb3b52c30a41"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2013-12-17T07:47:00.000Z",
+  "prize": [
+    2500,
+    1250
+  ],
+  "projectId": 6277,
+  "registrants": [
+    {
+      "handle": "deedee",
+      "reliability": "6%",
+      "registrationDate": "2013-12-17T07:57:00.000Z",
+      "submissionDate": null,
+      "rating": "786",
+      "colorStyle": "color: #999999",
+      "_id": "58134f71550dfb3b52c30a40"
+    },
+    {
+      "handle": "agus.mw",
+      "reliability": "13%",
+      "registrationDate": "2013-12-17T08:43:00.000Z",
+      "submissionDate": null,
+      "rating": "984",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f71550dfb3b52c30a3f"
+    },
+    {
+      "handle": "patka",
+      "reliability": "0%",
+      "registrationDate": "2013-12-17T08:57:00.000Z",
+      "submissionDate": null,
+      "rating": "566",
+      "colorStyle": "color: #999999",
+      "_id": "58134f71550dfb3b52c30a3e"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-17T09:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f71550dfb3b52c30a3d"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "13%",
+      "registrationDate": "2013-12-17T09:22:00.000Z",
+      "submissionDate": null,
+      "rating": "1677",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58134f71550dfb3b52c30a3c"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "20%",
+      "registrationDate": "2013-12-17T10:01:00.000Z",
+      "submissionDate": null,
+      "rating": "1686",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58134f71550dfb3b52c30a3b"
+    },
+    {
+      "handle": "sweetu",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-17T11:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f71550dfb3b52c30a3a"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "20%",
+      "registrationDate": "2013-12-17T11:22:00.000Z",
+      "submissionDate": "2013-12-22T07:40:00.000Z",
+      "rating": "1041",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f71550dfb3b52c30a39"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "20%",
+      "registrationDate": "2013-12-17T11:48:00.000Z",
+      "submissionDate": null,
+      "rating": "829",
+      "colorStyle": "color: #999999",
+      "_id": "58134f71550dfb3b52c30a38"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "0%",
+      "registrationDate": "2013-12-17T12:31:00.000Z",
+      "submissionDate": null,
+      "rating": "579",
+      "colorStyle": "color: #999999",
+      "_id": "58134f71550dfb3b52c30a37"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "6%",
+      "registrationDate": "2013-12-17T15:06:00.000Z",
+      "submissionDate": null,
+      "rating": "631",
+      "colorStyle": "color: #999999",
+      "_id": "58134f71550dfb3b52c30a36"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-17T15:14:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58134f71550dfb3b52c30a35"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-17T15:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f71550dfb3b52c30a34"
+    },
+    {
+      "handle": "saarixx",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-17T15:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f71550dfb3b52c30a33"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "13%",
+      "registrationDate": "2013-12-18T01:37:00.000Z",
+      "submissionDate": null,
+      "rating": "693",
+      "colorStyle": "color: #999999",
+      "_id": "58134f71550dfb3b52c30a32"
+    },
+    {
+      "handle": "brain_cn",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-18T02:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f71550dfb3b52c30a31"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-18T07:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f71550dfb3b52c30a30"
+    },
+    {
+      "handle": "caoweiquan322",
+      "reliability": "91%",
+      "registrationDate": "2013-12-18T07:42:00.000Z",
+      "submissionDate": "2013-12-22T04:29:00.000Z",
+      "rating": "1310",
+      "colorStyle": "color: #6666FF",
+      "_id": "58134f71550dfb3b52c30a2f"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-18T11:12:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58134f71550dfb3b52c30a2e"
+    },
+    {
+      "handle": "seeef",
+      "reliability": "53%",
+      "registrationDate": "2013-12-19T04:18:00.000Z",
+      "submissionDate": null,
+      "rating": "918",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f71550dfb3b52c30a2d"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2013-12-19T06:29:00.000Z",
+      "submissionDate": null,
+      "rating": "1027",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f71550dfb3b52c30a2c"
+    }
+  ],
+  "registrationEndDate": "2013-12-19T07:47:00.000Z",
+  "reliabilityBonus": 500,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2013-12-22T07:52:00.000Z",
+  "submissions": [
+    {
+      "handle": "caoweiquan322",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 88.21,
+      "finalScore": 88.21,
+      "points": 787.5,
+      "submissionStatus": "Active",
+      "submissionDate": "2013-12-22T04:29:00.000Z",
+      "_id": "58134f71550dfb3b52c30a54"
+    },
+    {
+      "handle": "yedtoss",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 88.1,
+      "finalScore": 88.1,
+      "points": 337.5,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2013-12-22T07:40:00.000Z",
+      "_id": "58134f71550dfb3b52c30a53"
+    }
+  ],
+  "technology": [
+    "Java",
+    "MySQL",
+    "NoSQL",
+    "Python",
+    "Redis"
+  ]
+}

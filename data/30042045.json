@@ -1,0 +1,349 @@
+{
+  "_id": 30042045,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:07:36.123Z",
+  "appealsEndDate": "2014-04-26T12:48:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Hercules Personal Content DVR iOS Photos and Settings Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2 style=\"font-size: 18px; line-height: normal; font-weight: bold; background-color: rgb(240, 240, 240); border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(136, 136, 136); padding: 0px; margin: 3px 0px 0px; font-family: Arial, Helvetica, Verdana, sans-serif;\">Overview</h2>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">The Hercules Personal Content DVR application is a stand-alone iOS app, allowing users to upload their own video content they recorded on their phone or tablet camera into their DVR for playback on their TV and syncing with other devices.</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">This assembly will add new photos functionality to the application</p>\n\n<h2 style=\"font-size: 18px; line-height: normal; font-weight: bold; background-color: rgb(240, 240, 240); border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(136, 136, 136); padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><a name=\"HerculesPersonalContentDVRStandaloneAndroidReleaseAssembly-Projectsetup\"></a>Project setup</h2>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">The current codebase has multiple targets for Fog, University, and &quot;PCDVR&quot;. &nbsp;This assembly will update the code in the DVR folder for the app, used by the &quot;PCDVR Development&quot; and &quot;PCDVR Prod&quot; targets. &nbsp;Don&#39;t make any code changes outside the DVR folder in the codebase without forum approval as it could have unintended consequences for other apps.</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">This app will run in the simulator. &nbsp;Look in the configuration.plist to configure the authGuid for the account used and the test username and password for login. &nbsp;You should be able to do all necessary development in the simulator, although testing on a device is required for reviewers.</p>\n\n<h2 style=\"font-size: 18px; line-height: normal; font-weight: bold; background-color: rgb(240, 240, 240); border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(136, 136, 136); padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><a name=\"HerculesPersonalContentDVRStandaloneAndroidReleaseAssembly-Standalonebuild\"></a>Platforms</h2>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">The code changes for the requirements must be tested and work on all devices (iPhones, iPods, iPads), with both retina and non-retina displays and in both orientations. &nbsp;iOS 6.1+ is required.</p>\n\n<h2 style=\"font-size: 18px; line-height: normal; font-weight: bold; background-color: rgb(240, 240, 240); border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(136, 136, 136); padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><a name=\"HerculesPersonalContentDVRStandaloneAndroidReleaseAssembly-Login\"></a>Requirements</h2>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">Currently, the application supports video only. &nbsp;Videos can be uploaded, edited, moved, and displayed in the app. &nbsp;This assembly will add:</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">* Photo support</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">* Photo editing</p>\n\n<h2 style=\"font-size: 18px; line-height: normal; font-weight: bold; background-color: rgb(240, 240, 240); border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(136, 136, 136); padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><a name=\"HerculesPersonalContentDVRStandaloneAndroidReleaseAssembly-Modifyingthumbnailafterupload\"></a>Photo support</h2>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">The API for the uploading, moving, editing, and downloading of photos should be the same for photos as it is for videos. &nbsp;The only difference will be in the MIME types reported by the clients backend API.</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">In the UI, we won&#39;t have &quot;Take to go&quot; buttons for photos, although we will support them being downloaded and sent to the camera roll. &nbsp;To test this, select a photo on an album view, and then pick the &quot;Send to camera roll&quot; option from the share menu.</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">Photos can be:</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">* Uploaded to albums (new or existing)</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">* Displayed in an album, next to videos.</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">* Edited (name and other options detailed below)</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">* Moved between albums (new or existing)</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">* Deleted</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">* Exported to the camera roll</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">* Viewed full screen. &nbsp;Replace the &quot;Play&quot; text with &quot;View&quot;. &nbsp;When viewed full screen, just show a simple &quot;Done&quot; button in the upper left of the header to go back.</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">You will need to also modify the current video selector for uploading. &nbsp;Right now it only shows videos, but we&#39;ll need to update it to show photos as well. &nbsp;The display for photos in the selector should eliminate the time overlay. &nbsp;Only photos should have the overlay.</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\"><strong>NOTE:&nbsp;</strong>For the repost, a sample app with a lot of this functionality will be provided. &nbsp;You are responsible for&nbsp;<strong>ALL</strong> fixes and proper testing of this code, which was done quickly, but it should give you a head start on implementing the requirements listed here.</p>\n\n<h2 style=\"font-weight: bold; line-height: normal; font-size: 18px; background-color: rgb(240, 240, 240); border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(136, 136, 136); padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><a name=\"HerculesPersonalContentDVRStandaloneAndroidReleaseAssembly-Milestone\"></a>Photo display</h2>\n\n<p>Photos are displayed in the app with the camera icon. &nbsp;This should be carried through throughout the app. &nbsp;Note that the album display has to be updated as well to match the screenshot provided in the forum. &nbsp;Only the footer details need to updated - we&#39;re basically just replacing text with the icons.</p>\n\n<h2 style=\"font-size: 18px; line-height: normal; font-weight: bold; background-color: rgb(240, 240, 240); border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(136, 136, 136); padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><a name=\"HerculesPersonalContentDVRStandaloneAndroidReleaseAssembly-Functionality\"></a>Editing</h2>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">We will support Aviary (http://www.aviary.com/) for editing photos. &nbsp;This should be supported in the upload selector, and when a single photo is selected in the album view.</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">We will show the edit panel we use now for the videos. &nbsp;It will allow for the same name editing, but in place of the cover image selector we for videos, for photos we&#39;ll show a &quot;Launch Photo Editor&quot; button that will open the Aviary edit panel. &nbsp;The user will be able to manipulate the photo through Aviary in the app.</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">*NOTE*: The edit panel for videos shouldn&#39;t be changed. &nbsp;We want to ensure the cover editor still works as expected.</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">Here&#39;s how editing should work:</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\"><strong>On the file upload selector:</strong></p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">1) In the file upload selector, the user should be able to press and hold on a photo. &nbsp;Instead of the cover selector for videos, we&#39;ll have an &quot;Edit Photo&quot; button that will launch the Aviary screen.</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">2) When the user has confirmed an update to the file, the edited version will be saved locally to the app, in the documents folder. &nbsp;It will show as a separate file in the file upload selector. &nbsp;It will&nbsp;<strong>not</strong> show in the user&#39;s camera roll, and it will&nbsp;<strong>not&nbsp;</strong>replace the original - the user will see the original&nbsp;<strong>and</strong> the edited photo.</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\"><strong>In the album view:</strong></p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">The user will see 3 buttons when they select a photo - View, Edit, and Delete. &nbsp;In the PoC, the edit button is shown when viewing the image. &nbsp;We are moving this to replace the &quot;Take To Go&quot; button that is shown when the user has a video selected.</p>\n\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 16px 0px; padding: 0px;\">When the user confirms the update to the photo after using Aviary, we will reupload the file to the same GUID in the API. &nbsp;This will replace the file on the server with the updated version.</p>\n\n<h2 style=\"font-weight: bold; line-height: normal; font-size: 18px; background-color: rgb(240, 240, 240); border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(136, 136, 136); padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><a name=\"HerculesPersonalContentDVRStandaloneAndroidReleaseAssembly-Milestone\"></a>File selector</h2>\n\n<p>The file selector has been updated in the PoC to show photos and videos and differentiate them with the icon on the cell. &nbsp;The file selector is taking too long to load now and scrolling can cause problems. &nbsp;Users have 10&#39;s-100&#39;s of videos, but thousands of photos, and the selector isn&#39;t scaling properly. &nbsp;We need to implement a better scrolling mechanism here, so instead of processing *all* files when the selector loads, we will only process and display the files to fill the initial selector view and when the user scrolls, we will asynchronously process and display the thumbnails.</p>\n\n<h2 style=\"font-weight: bold; line-height: normal; font-size: 18px; background-color: rgb(240, 240, 240); border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(136, 136, 136); padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><a name=\"HerculesPersonalContentDVRStandaloneAndroidReleaseAssembly-Functionality\"></a>Settings</h2>\n\n<p>A new UI for the settings screen has been provided. &nbsp;The text in the upper left currently says &quot;Log Out&quot;. &nbsp;We are going to replace that with a &quot;Settings&quot; button. &nbsp;When the user presses this button, the Settings screen will display as shown in the UI. &nbsp;The user can press the Log Out button on the Settings popup to log out as it is implemented now. &nbsp;The user can enable photo functionality by putting in the passcode (described below), and they can set the auto-upload and 3G upload switches, which should be saved in the app and the settings retrieved through an API.</p>\n\n<h2 style=\"font-weight: bold; line-height: normal; font-size: 18px; background-color: rgb(240, 240, 240); border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(136, 136, 136); padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><a name=\"HerculesPersonalContentDVRStandaloneAndroidReleaseAssembly-Functionality\"></a>Configurable photos</h2>\n\n<p>The photos functionality must be configurable. &nbsp;The user will put in a passcode in the settings screen to enable this functionality. &nbsp;It will be disabled by default.</p>\n\n<h2 style=\"font-weight: bold; line-height: normal; font-size: 18px; background-color: rgb(240, 240, 240); border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(136, 136, 136); padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><a name=\"HerculesPersonalContentDVRStandaloneAndroidReleaseAssembly-Functionality\"></a>Milestone</h2>\n\n<p><span style=\"color: rgb(0, 0, 0); font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px;\">For the milestone, please show photo uploading working. &nbsp;We should be able to:</span></p>\n\n<ul>\n\t<li><span style=\"color: rgb(0, 0, 0); font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px;\">Edit a photo before uploading</span></li>\n\t<li><span style=\"color: rgb(0, 0, 0); font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px;\">Quickly scroll through the file selector&nbsp;</span></li>\n</ul>\n",
+  "digitalRunPoints": 1080,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30042045",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2014-05-05T10:49:00.000Z",
+  "finalSubmissionGuidelines": "<div class=\"wiki-content\">\n<h2 style=\"font-size: 18px; line-height: normal; font-weight: bold; background-color: rgb(240, 240, 240); border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(136, 136, 136); padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif;\">Technology overview</h2>\n\n<ul style=\"margin: 2px 0px 2px 10px; padding-right: 3em; padding-left: 10px;\">\n\t<li style=\"padding-top: 2px; padding-bottom: 2px;\">XCode 5.1</li>\n\t<li style=\"padding-top: 2px; padding-bottom: 2px;\">iOS 6.1+</li>\n\t<li style=\"padding-top: 2px; padding-bottom: 2px;\">iPhones and iPads</li>\n\t<li style=\"padding-top: 2px; padding-bottom: 2px;\">Objective-C</li>\n</ul>\n\n<h2 style=\"font-size: 18px; line-height: normal; font-weight: bold; background-color: rgb(240, 240, 240); border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(136, 136, 136); padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><a name=\"HerculesPersonalContentDVRStandaloneAndroidReleaseAssembly-ExistingDocuments\"></a><a name=\"HerculesPersonalContentDVRStandaloneAndroidReleaseAssembly-Toc273395376\"></a>Existing Documents</h2>\n\n<ul style=\"margin: 2px 0px 2px 10px; padding-right: 3em; padding-left: 10px;\">\n\t<li style=\"padding-top: 2px; padding-bottom: 2px;\">PCDVR codebase</li>\n\t<li>ARS (without photo requirements)</li>\n</ul>\n</div>\n\n<div class=\"wiki-content\" style=\"margin-right: 10px;\">\n<p style=\"font-family: Verdana, arial, sans-serif; font-size: 11px; line-height: 16px; color: rgb(0, 0, 0); margin: 3px 0px 16px; padding: 0px; clear: both;\">&nbsp;</p>\n</div>\n",
+  "forumId": 22201,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=22201",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 18,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-04-17T19:00:00.000Z",
+      "actualStartTime": "2014-04-17T19:00:00.000Z",
+      "scheduledEndTime": "2014-04-17T19:01:00.000Z",
+      "actualendTime": "2014-04-17T19:01:00.000Z",
+      "_id": "58133f88550dfb3b52bde964"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-04-17T19:01:00.000Z",
+      "actualStartTime": "2014-04-17T19:01:00.000Z",
+      "scheduledEndTime": "2014-04-18T04:09:00.000Z",
+      "actualendTime": "2014-04-18T04:09:00.000Z",
+      "_id": "58133f88550dfb3b52bde963"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-04-18T04:09:00.000Z",
+      "actualStartTime": "2014-04-18T04:09:00.000Z",
+      "scheduledEndTime": "2014-04-20T04:09:00.000Z",
+      "actualendTime": "2014-04-20T04:09:00.000Z",
+      "_id": "58133f88550dfb3b52bde962"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-04-18T04:14:00.000Z",
+      "actualStartTime": "2014-04-18T04:14:00.000Z",
+      "scheduledEndTime": "2014-04-23T04:14:00.000Z",
+      "actualendTime": "2014-04-23T04:14:00.000Z",
+      "_id": "58133f88550dfb3b52bde961"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-04-23T04:14:00.000Z",
+      "actualStartTime": "2014-04-23T04:14:00.000Z",
+      "scheduledEndTime": "2014-04-23T12:51:00.000Z",
+      "actualendTime": "2014-04-23T12:51:00.000Z",
+      "_id": "58133f88550dfb3b52bde960"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-04-23T12:51:00.000Z",
+      "actualStartTime": "2014-04-23T12:51:00.000Z",
+      "scheduledEndTime": "2014-04-25T12:47:00.000Z",
+      "actualendTime": "2014-04-25T12:47:00.000Z",
+      "_id": "58133f88550dfb3b52bde95f"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-04-25T12:47:00.000Z",
+      "actualStartTime": "2014-04-25T12:47:00.000Z",
+      "scheduledEndTime": "2014-04-26T12:47:00.000Z",
+      "actualendTime": "2014-04-26T12:47:00.000Z",
+      "_id": "58133f88550dfb3b52bde95e"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-04-26T12:47:00.000Z",
+      "actualStartTime": "2014-04-26T12:47:00.000Z",
+      "scheduledEndTime": "2014-04-26T12:48:00.000Z",
+      "actualendTime": "2014-04-26T12:48:00.000Z",
+      "_id": "58133f88550dfb3b52bde95d"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-04-26T12:48:00.000Z",
+      "actualStartTime": "2014-04-26T12:48:00.000Z",
+      "scheduledEndTime": "2014-04-26T14:33:00.000Z",
+      "actualendTime": "2014-04-26T14:33:00.000Z",
+      "_id": "58133f88550dfb3b52bde95c"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-04-26T14:33:00.000Z",
+      "actualStartTime": "2014-04-26T14:33:00.000Z",
+      "scheduledEndTime": "2014-05-05T10:49:00.000Z",
+      "actualendTime": "2014-05-05T10:49:00.000Z",
+      "_id": "58133f88550dfb3b52bde95b"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-05T10:49:00.000Z",
+      "actualStartTime": "2014-05-05T10:49:00.000Z",
+      "scheduledEndTime": "2014-05-05T13:34:00.000Z",
+      "actualendTime": "2014-05-05T13:34:00.000Z",
+      "_id": "58133f88550dfb3b52bde95a"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-05T13:34:00.000Z",
+      "actualStartTime": "2014-05-05T13:34:00.000Z",
+      "scheduledEndTime": "2014-05-10T13:34:00.000Z",
+      "actualendTime": "2014-05-10T13:34:00.000Z",
+      "_id": "58133f88550dfb3b52bde959"
+    }
+  ],
+  "platforms": [
+    "iOS"
+  ],
+  "postingDate": "2014-04-18T04:09:00.000Z",
+  "prize": [
+    2400,
+    1200
+  ],
+  "projectId": 6680,
+  "registrants": [
+    {
+      "handle": "Zulander",
+      "reliability": "86%",
+      "registrationDate": "2014-04-18T13:59:00.000Z",
+      "submissionDate": "2014-04-23T03:51:00.000Z",
+      "rating": "1635",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58133f88550dfb3b52bde958"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-04-18T04:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f88550dfb3b52bde957"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-04-18T04:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f88550dfb3b52bde956"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-04-18T05:54:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58133f88550dfb3b52bde955"
+    },
+    {
+      "handle": "gondzo",
+      "reliability": "53%",
+      "registrationDate": "2014-04-18T09:10:00.000Z",
+      "submissionDate": null,
+      "rating": "725",
+      "colorStyle": "color: #999999",
+      "_id": "58133f88550dfb3b52bde954"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-04-18T11:57:00.000Z",
+      "submissionDate": null,
+      "rating": "810",
+      "colorStyle": "color: #999999",
+      "_id": "58133f88550dfb3b52bde953"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2014-04-18T12:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f88550dfb3b52bde952"
+    },
+    {
+      "handle": "LieutenantRoger",
+      "reliability": "0%",
+      "registrationDate": "2014-04-18T12:53:00.000Z",
+      "submissionDate": "2014-04-23T02:17:00.000Z",
+      "rating": "957",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f88550dfb3b52bde951"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "13%",
+      "registrationDate": "2014-04-18T13:18:00.000Z",
+      "submissionDate": null,
+      "rating": "1325",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133f88550dfb3b52bde950"
+    },
+    {
+      "handle": "glin0728",
+      "reliability": "0%",
+      "registrationDate": "2014-04-18T13:25:00.000Z",
+      "submissionDate": null,
+      "rating": "644",
+      "colorStyle": "color: #999999",
+      "_id": "58133f88550dfb3b52bde94f"
+    },
+    {
+      "handle": "winterflame",
+      "reliability": "0%",
+      "registrationDate": "2014-04-18T14:55:00.000Z",
+      "submissionDate": null,
+      "rating": "978",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f88550dfb3b52bde94e"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-04-18T16:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f88550dfb3b52bde94d"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2014-04-18T18:42:00.000Z",
+      "submissionDate": null,
+      "rating": "1373",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133f88550dfb3b52bde94c"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "6%",
+      "registrationDate": "2014-04-19T02:21:00.000Z",
+      "submissionDate": null,
+      "rating": "1460",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133f88550dfb3b52bde94b"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-04-19T06:45:00.000Z",
+      "submissionDate": null,
+      "rating": "1135",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f88550dfb3b52bde94a"
+    },
+    {
+      "handle": "BeBetter",
+      "reliability": "0%",
+      "registrationDate": "2014-04-19T22:53:00.000Z",
+      "submissionDate": null,
+      "rating": "1893",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58133f88550dfb3b52bde949"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2014-04-20T02:42:00.000Z",
+      "submissionDate": null,
+      "rating": "883",
+      "colorStyle": "color: #999999",
+      "_id": "58133f88550dfb3b52bde948"
+    },
+    {
+      "handle": "michael_tang",
+      "reliability": "0%",
+      "registrationDate": "2014-04-20T04:03:00.000Z",
+      "submissionDate": null,
+      "rating": "497",
+      "colorStyle": "color: #999999",
+      "_id": "58133f88550dfb3b52bde947"
+    }
+  ],
+  "registrationEndDate": "2014-04-20T04:09:00.000Z",
+  "reliabilityBonus": 480,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-04-23T04:14:00.000Z",
+  "submissions": [
+    {
+      "handle": "Zulander",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 91.22,
+      "finalScore": 91.22,
+      "points": 1080,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-04-23T03:51:00.000Z",
+      "_id": "58133f88550dfb3b52bde966"
+    },
+    {
+      "handle": "LieutenantRoger",
+      "placement": null,
+      "screeningScore": 50,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Failed Screening",
+      "submissionDate": "2014-04-23T02:17:00.000Z",
+      "_id": "58133f88550dfb3b52bde965"
+    }
+  ],
+  "technology": [
+    "HTTP",
+    "Objective C",
+    "iOS"
+  ]
+}

@@ -1,0 +1,500 @@
+{
+  "_id": 30052789,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:06:04.264Z",
+  "appealsEndDate": "2016-02-23T22:44:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "CredentialME - Pearson Acclaim F2F",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2016-02-24T16:12:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -21322364,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><span style=\"color:#FF0000\"><strong>Challenge Overview</strong></span></p>\n\n<p>An Open Badge is a digital representation of a skill or achievement. Each badge awarded to an earner comprises a digital image file and some metadata. The metadata describes what the badge represents, the identity of the earner and the issuing organization.<br />\nThe CredentialME App will allow you to earn, manage, share, build and consume digital badges and credentials for skills and achievements. &nbsp;In other words, CredentialME is a badge wallet, where you can see and manage your badges. &nbsp;For this first release, we will accept badges from Mozilla and Pearson.</p>\n\n<p>We have implemented the backend and <a href=\"https://credly.com/\">Credly</a> API access, in this challenge we will merge the Credly code(check challenge spec <a href=\"http://www.topcoder.com/challenge-details/30052465/?type=develop&amp;noncache=true\">here</a>) and explore the <a href=\"http://https://www.youracclaim.com/docs\">Acclaim API</a> to sign in, query badges and synchronize to our database(Cloudant).</p>\n\n<p><span style=\"color:#FF0000\"><strong>Task Overview</strong></span></p>\n\n<p><strong>First, Merge Code of Credly to backend</strong></p>\n\n<p><strong>Second, Acclaim</strong></p>\n\n<p>for Acclaim, &quot;badge template&quot;(or badge class) is a badge prototype(similar as &quot;Badge&quot; in our db), while &quot;badge&quot; is the one when the badge template is issued to some user(similar as &quot;BadgeAssertion&quot; in out db))</p>\n\n<p>We will use two kinds of API: OAuth API and Issuer API (they have different authorization)<br />\nto access OAuth API, you have to access API of host https://www.youracclaim.com ,setting value of &quot;Authorization&quot; header to be &quot;Basic {access_token}&quot; (described in following sections)<br />\nto access Issuer API, you have to access API of host https://sandbox.youracclaim.com, setting value of &quot;Authorization&quot; header to be &quot;Basic em4wSWc3dTZiYS10NG1Gb0RjbTU=&quot;<br />\norganization_id is 7f2a0a74-64fa-4138-b12b-06f986fd6b30</p>\n\n<p>1. OAuth signIn<br />\n1) signIn(we have wrap the OAuth in a stub service located at credential-me.mybluemix.net)<br />\nPOST /api/v1/acclaim/signIn<br />\nTODO<br />\nredirect to https://www.youracclaim.com/oauth/authorize?client_id=5961d3559c30aa68407ee6c2e713e0bd63f01944ed4d84dad9f930dbbce7e703&amp;redirect_uri=https://credential-me.mybluemix.net/acclaim/oauthcallback&amp;response_type=code&amp;state=<br />\nyou have to set the value of &quot;state&quot; with your own callback URL ({host}/api/v1/acclaim/signInCallback)</p>\n\n<p>2)<br />\nGET /api/v1/acclaim/signInCallback<br />\nparams: access_token, expires_in, created_at<br />\nTODO<br />\nsave &quot;access_token&quot; to User.acclaim.accessToken<br />\n(&quot;expires_in&quot; + &quot;created_at&quot;) to User.acclaim.tokenExpiresAt</p>\n\n<p>2. sync organization&#39;s badges<br />\nTODO<br />\nPOST /api/v1/acclaim/sync/org/badges<br />\nuse the Issuer API `GET /organizations/&lt;organization_id&gt;/badge_templates` (https://www.youracclaim.com/docs/badge_templates) to query all the badge templates,<br />\nsave or update to Badge records in our database(additional field: please store the &quot;recommendations&quot; too)<br />\nnotice: please wrapper the server method properly, we may call from scheduled job later</p>\n\n<p>3. sync user&#39;s badges.<br />\nPOST /api/v1/acclaim/sync/user/badges<br />\nTODO<br />\nfor BadgeAssertion, we need additional fields:<br />\n&nbsp;&nbsp; &quot;uid&quot; : number, Unique Identifier for the badge assertion. This is expected to be locally unique on a per-origin basis, not globally unique.<br />\n&nbsp;&nbsp; &quot;pending&quot;: bool, whether it is pending<br />\nuse the OAuth API GET `/oauth/v1/users/self/badges` (https://www.youracclaim.com/docs/oauth) to query the user&#39;s public badges<br />\nthen use the Issuer API GEt `GET /organizations/&lt;organization_id&gt;/badges` (https://www.youracclaim.com/docs/issued_badges) to query the user&#39;s pending badges with filter<br />\ninsert or update BadgeAssertion records in our database.<br />\ninsert or update Badge records in our database.</p>\n\n<p>4. accept or reject user&#39;s pending badges<br />\nPOST /api/v1/badge/:id/accept<br />\nPOST /api/v1/badge/:id/reject<br />\nTODO<br />\n:id is the ObjectId of BadgeAssertion<br />\nquery BadgeAssertion and Badge, if the badge assertion is pending and the origin is from Acclaim, then use the OAuth API PUT `/oauth/v1//users/self/badges/&lt;badge_id&gt;/accept` and PUT `/oauth/v1/users/self/badges/&lt;badge_id&gt;/reject` to accept or reject pending badge<br />\n&lt;badge_id&gt; is stored as the &quot;uid&quot; of BadgeAssertion</p>\n\n<p><span style=\"color:#FF0000\"><strong>Technical Stack</strong></span></p>\n\n<p>-Nodejs<br />\n-IBM Bluemix</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30052789",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<ul>\n\t<li><span>Updated backend(Nodejs app code) that could be deployed to Bluemix.</span></li>\n\t<li><span>Updated REST API doc(merge updated API in Credly too).</span></li>\n\t<li><span>A complete and detailed deployment documented explaining how to deploy and verify the app including configuration information. </span><span style=\"color:#FF0000\">Please provide step by step verification steps, simple text ReadMe is not acceptable.</span></li>\n</ul>\n",
+  "forumId": 31261,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=31261",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 44,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2016-01-25T16:12:00.000Z",
+      "actualStartTime": "2016-01-25T16:12:00.000Z",
+      "scheduledEndTime": "2016-02-24T16:12:00.000Z",
+      "actualendTime": null,
+      "_id": "5813230c550dfb3b52b3c37a"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-01T00:28:00.000Z",
+      "actualStartTime": "2016-02-01T00:28:00.000Z",
+      "scheduledEndTime": "2016-02-23T22:44:00.000Z",
+      "actualendTime": "2016-02-23T22:44:00.000Z",
+      "_id": "5813230c550dfb3b52b3c379"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2016-01-25T16:17:00.000Z",
+      "actualStartTime": "2016-01-25T16:17:00.000Z",
+      "scheduledEndTime": "2016-02-24T16:17:00.000Z",
+      "actualendTime": null,
+      "_id": "5813230c550dfb3b52b3c378"
+    }
+  ],
+  "platforms": [
+    "NodeJS",
+    "Other",
+    "IBM Bluemix"
+  ],
+  "postingDate": "2016-01-25T16:12:00.000Z",
+  "prize": [
+    500
+  ],
+  "projectId": 9237,
+  "registrants": [
+    {
+      "handle": "tazzledazzle",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-11T14:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c377"
+    },
+    {
+      "handle": "yagna247",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T14:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c376"
+    },
+    {
+      "handle": "p.poojashri",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-15T12:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c375"
+    },
+    {
+      "handle": "mohhasbias",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-16T02:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c374"
+    },
+    {
+      "handle": "mrxy56",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-25T16:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c373"
+    },
+    {
+      "handle": "thientri",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-25T18:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c372"
+    },
+    {
+      "handle": "susiak",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-25T18:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c371"
+    },
+    {
+      "handle": "Shadrach",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-25T20:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c370"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-25T21:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c36f"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-25T22:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c36e"
+    },
+    {
+      "handle": "toode",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-25T23:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c36d"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-26T01:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c36c"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-26T01:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c36b"
+    },
+    {
+      "handle": "diogenesjcs",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-26T04:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c36a"
+    },
+    {
+      "handle": "swktopcoder1",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-26T06:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c369"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-26T07:45:00.000Z",
+      "submissionDate": "2016-02-04T05:02:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c368"
+    },
+    {
+      "handle": "gets0ul",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-26T08:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c367"
+    },
+    {
+      "handle": "Ninja91",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-26T09:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c366"
+    },
+    {
+      "handle": "Rushikesh.Deshp",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-26T10:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c365"
+    },
+    {
+      "handle": "MCastillo",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-26T10:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c364"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-26T23:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c363"
+    },
+    {
+      "handle": "ecavalier313",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-27T08:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c362"
+    },
+    {
+      "handle": "solokop",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-27T08:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c361"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-27T18:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c360"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-27T20:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c35f"
+    },
+    {
+      "handle": "m4risU",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-27T23:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c35e"
+    },
+    {
+      "handle": "ananthhh",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-28T03:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c35d"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-28T20:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c35c"
+    },
+    {
+      "handle": "superastrom",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-29T00:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c35b"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-29T06:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c35a"
+    },
+    {
+      "handle": "playgameTL",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-29T10:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c359"
+    },
+    {
+      "handle": "abcivashritt",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-30T20:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c358"
+    },
+    {
+      "handle": "bgshih",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-01T14:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c357"
+    },
+    {
+      "handle": "cjalmeida",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-02T19:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c356"
+    },
+    {
+      "handle": "CrazyCoderLZB",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-03T05:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c355"
+    },
+    {
+      "handle": "kpraveenkumar10",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-03T09:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c354"
+    },
+    {
+      "handle": "chok68",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-04T08:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c353"
+    },
+    {
+      "handle": "absharma21jan",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-04T11:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c352"
+    },
+    {
+      "handle": "Chamae",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-06T23:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c351"
+    },
+    {
+      "handle": "DimaKorn",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-08T15:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c350"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-19T02:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c34f"
+    },
+    {
+      "handle": "DHEERAJSONI",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-19T19:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c34e"
+    },
+    {
+      "handle": "cerebromusic",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-21T19:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c34d"
+    },
+    {
+      "handle": "crazygo",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-23T16:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230c550dfb3b52b3c34c"
+    }
+  ],
+  "registrationEndDate": "2016-02-24T16:12:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-02-24T16:17:00.000Z",
+  "submissions": [
+    {
+      "handle": "peakpado",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-02-01T00:28:00.000Z",
+      "_id": "5813230c550dfb3b52b3c37c"
+    },
+    {
+      "handle": "peakpado",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-02-04T05:02:00.000Z",
+      "_id": "5813230c550dfb3b52b3c37b"
+    }
+  ],
+  "technology": [
+    "Node.js",
+    "Other"
+  ]
+}

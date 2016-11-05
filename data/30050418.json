@@ -1,0 +1,601 @@
+{
+  "_id": 30050418,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T09:54:15.273Z",
+  "appealsEndDate": "2015-06-24T15:46:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Omega Microservices / API Challenge - Endpoints",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\">Welcome to the Omega Microservices / API challenge. This challenge is the fifth in a series of challenges where will build an application for a world leading retail hardware and software solution manufacturer.</p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\">Project Overview</p>\n\n<p dir=\"ltr\">The goal of this application is to allow retail store operators to manage and provision security for their fleet of hardware and POS software. In this series we will be building our application APIs. This will be a series of microservices built in Golang connecting to a <a href=\"http://cassandra.apache.org/\">Cassandra</a> database. We will be creating 13 <a href=\"http://martinfowler.com/articles/microservices.html\">microservices</a> in total and have already completed six of them so you will have some good examples.</p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\">Challenge Details</p>\n\n<p dir=\"ltr\">We have the following resources that will be built out as microservices:</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Customers (microservice already exists)</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Enterprise Groups (microservice already exists)</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Location (microservice already exists)</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Endpoint Services (microservice already exists)</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Terminals (microservice already exists)</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">Peripherals</p>\n\n\t\t\t\t\t<ul>\n\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t<p dir=\"ltr\">Endpoints</p>\n\n\t\t\t\t\t\t<ul>\n\t\t\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t\t\t<p dir=\"ltr\">Manifests</p>\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t</ul>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Statistics</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Users / Groups / Roles</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Coming soon</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Events</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Alerts</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Manifest Templates</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\">For this challenge, you will create a microservice for the &ldquo;Endpoints&rdquo; Resource. Details about this can be found in the Dataguard_Endpoints.yaml file - this has been provided in the challenge forum and is visible only after registration.</p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\">As part of this challenge, you also need to provide the following:</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">A CQL file and a CSV file containing 100 records which will be used with our existing &ldquo;dgestool&rdquo; utility to import the schema and load the data.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Update the &ldquo;dgestool&rdquo; utility to support detection, mapping and import of the new service&rsquo;s sample data CSV.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Unit tests that exercise your solution. Use the Go test framework for all unit tests and provide coverage report.</p>\n\t</li>\n</ol>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\">Following are points that you need to take care of:</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Note the hierarchy and dependency in the resource. Since you are building the &ldquo;Endpoints&rdquo; resource, make sure that you have checks for referential integrity.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Domain data isolation: each microservice &ldquo;owns&rdquo; its respective Cassandra keyspace, if another microservice wants to access data that is not its own, it must do so through the foreign microservice&rsquo;s API and not attempt to access the Cassandra keyspace directly. &nbsp;A good example of this can be found in the locations service where the service verifies the existence of the parent enterprisegroup by creating a web service client and querying enterprisegroups microservice for the enterprisegroup in question.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Sanitize the input data and ensure that the microservice that you build is not prone to SQL-injection type of attacks: use parameters for querying which will also allow special characters from being interpreted as part of the CQL script. &nbsp;&nbsp;</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">For all purposes, we strongly suggest that you follow the design and architecture of the &ldquo;Locations&rdquo; microservice.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">You are developing microservices. As such, we expect that your submission for the Endpoints microservice should be independent of the other existing microservices. Under no circumstances should any of the microservice be dependent on the other. Do not create any common code outside of the microservice that you are working on. This may result in redundant code that is present across all the microservices and we are fine with that.</p>\n\t</li>\n</ol>\n\n<p dir=\"ltr\"><strong><span style=\"color:rgb(255, 0, 0)\"><span style=\"font-family:arial,sans-serif; font-size:12.8000001907349px\">Keep in mind that microservices architecture dictates that each service should be able to run completely independently of any other service. Based on this, you will want to ensure that any common tools used in multiple services appear redundantly in each microservice.&nbsp;</span></span></strong><strong><span style=\"color:rgb(255, 0, 0)\"><span style=\"font-family:arial,sans-serif; font-size:12.8000001907349px\">We cannot stress this enough.</span></span></strong></p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30050418",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalSubmissionGuidelines": "<p>Submit your source code in zip file to TopCoder Online Review. Your submission must include the following:</p>\n\n<ul>\n\t<li>Detailed setup instructions</li>\n\t<li>Documentation of unit tests</li>\n\t<li>Unit test coverage report</li>\n</ul>\n",
+  "forumId": 29605,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=29605",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 46,
+  "numberOfSubmissions": 8,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-06-09T15:41:00.000Z",
+      "actualStartTime": "2015-06-09T15:41:00.000Z",
+      "scheduledEndTime": "2015-06-16T18:41:00.000Z",
+      "actualendTime": "2015-06-16T18:41:00.000Z",
+      "_id": "58132047550dfb3b52b2ac1a"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-06-09T15:46:00.000Z",
+      "actualStartTime": "2015-06-09T15:46:00.000Z",
+      "scheduledEndTime": "2015-06-16T18:41:00.000Z",
+      "actualendTime": "2015-06-16T18:41:00.000Z",
+      "_id": "58132047550dfb3b52b2ac19"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-06-16T18:42:00.000Z",
+      "actualStartTime": "2015-06-16T18:42:00.000Z",
+      "scheduledEndTime": "2015-06-23T00:06:00.000Z",
+      "actualendTime": "2015-06-23T00:06:00.000Z",
+      "_id": "58132047550dfb3b52b2ac18"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-06-23T00:06:00.000Z",
+      "actualStartTime": "2015-06-23T00:06:00.000Z",
+      "scheduledEndTime": "2015-06-24T00:06:00.000Z",
+      "actualendTime": "2015-06-24T00:06:00.000Z",
+      "_id": "58132047550dfb3b52b2ac17"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-06-24T00:06:00.000Z",
+      "actualStartTime": "2015-06-24T00:06:00.000Z",
+      "scheduledEndTime": "2015-06-24T15:46:00.000Z",
+      "actualendTime": "2015-06-24T15:46:00.000Z",
+      "_id": "58132047550dfb3b52b2ac16"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-06-09T15:41:00.000Z",
+  "prize": [
+    1000,
+    500
+  ],
+  "projectId": 8463,
+  "registrants": [
+    {
+      "handle": "chicapi",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-09T15:52:00.000Z",
+      "submissionDate": "2015-06-13T16:36:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac15"
+    },
+    {
+      "handle": "anhtuannd",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-09T15:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac14"
+    },
+    {
+      "handle": "aarifjindani",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-09T16:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac13"
+    },
+    {
+      "handle": "maniek",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-09T16:11:00.000Z",
+      "submissionDate": "2015-06-16T15:46:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac12"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-09T16:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac11"
+    },
+    {
+      "handle": "srikkbhat",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-09T16:34:00.000Z",
+      "submissionDate": "2015-06-16T18:02:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac10"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-09T16:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac0f"
+    },
+    {
+      "handle": "lbotsch",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-09T17:32:00.000Z",
+      "submissionDate": "2015-06-16T07:40:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac0e"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-09T16:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac0d"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-09T17:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac0c"
+    },
+    {
+      "handle": "Ksys",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-09T17:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac0b"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-09T17:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac0a"
+    },
+    {
+      "handle": "vasumaniram",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-09T18:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac09"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-09T18:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac08"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-09T18:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac07"
+    },
+    {
+      "handle": "hash3r",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-09T19:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac06"
+    },
+    {
+      "handle": "ncsibra",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-09T20:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac05"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-09T20:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac04"
+    },
+    {
+      "handle": "norcimo5",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-09T21:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac03"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-09T23:23:00.000Z",
+      "submissionDate": "2015-06-16T11:00:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac02"
+    },
+    {
+      "handle": "m8",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-09T23:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac01"
+    },
+    {
+      "handle": "precker.unix",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-10T00:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2ac00"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-10T02:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abff"
+    },
+    {
+      "handle": "deas",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-10T03:23:00.000Z",
+      "submissionDate": "2015-06-16T16:24:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abfe"
+    },
+    {
+      "handle": "profficv",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-10T03:23:00.000Z",
+      "submissionDate": "2015-06-13T12:55:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abfd"
+    },
+    {
+      "handle": "sabbirhs",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-10T03:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abfc"
+    },
+    {
+      "handle": "Euniceadu",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-10T06:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abfb"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-10T08:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abfa"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-10T08:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abf9"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-10T10:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abf8"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-10T11:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abf7"
+    },
+    {
+      "handle": "stupidmxx",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-10T13:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abf6"
+    },
+    {
+      "handle": "kily",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-10T15:32:00.000Z",
+      "submissionDate": "2015-06-16T08:45:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abf5"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-10T15:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abf4"
+    },
+    {
+      "handle": "goyal.arpit.91",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-10T17:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abf3"
+    },
+    {
+      "handle": "_akash",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-11T03:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abf2"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-11T04:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abf1"
+    },
+    {
+      "handle": "michael_tang",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-11T10:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abf0"
+    },
+    {
+      "handle": "dianluxiaozi",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-12T03:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abef"
+    },
+    {
+      "handle": "Reaper2255",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-12T04:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abee"
+    },
+    {
+      "handle": "piotrrojek",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-12T16:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abed"
+    },
+    {
+      "handle": "jwlhc172",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-12T19:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abec"
+    },
+    {
+      "handle": "xl456123",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-13T13:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abeb"
+    },
+    {
+      "handle": "jithin005",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-13T17:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abea"
+    },
+    {
+      "handle": "jarontang",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-14T11:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abe9"
+    },
+    {
+      "handle": "Kaushik_TC",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-15T05:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132047550dfb3b52b2abe8"
+    }
+  ],
+  "registrationEndDate": "2015-06-16T18:41:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-06-16T18:41:00.000Z",
+  "submissions": [
+    {
+      "handle": "chicapi",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 95.63,
+      "finalScore": 95.63,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-06-13T16:36:00.000Z",
+      "_id": "58132047550dfb3b52b2ac22"
+    },
+    {
+      "handle": "maniek",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 95.63,
+      "finalScore": 95.63,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-06-16T15:46:00.000Z",
+      "_id": "58132047550dfb3b52b2ac21"
+    },
+    {
+      "handle": "deas",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 95.63,
+      "finalScore": 95.63,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-06-16T16:24:00.000Z",
+      "_id": "58132047550dfb3b52b2ac20"
+    },
+    {
+      "handle": "pfilippi",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 91.88,
+      "finalScore": 91.88,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-06-16T11:00:00.000Z",
+      "_id": "58132047550dfb3b52b2ac1f"
+    },
+    {
+      "handle": "kily",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 87.5,
+      "finalScore": 90,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-06-16T08:45:00.000Z",
+      "_id": "58132047550dfb3b52b2ac1e"
+    },
+    {
+      "handle": "srikkbhat",
+      "placement": 6,
+      "screeningScore": null,
+      "initialScore": 87.5,
+      "finalScore": 88.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-06-16T18:02:00.000Z",
+      "_id": "58132047550dfb3b52b2ac1d"
+    },
+    {
+      "handle": "lbotsch",
+      "placement": 7,
+      "screeningScore": null,
+      "initialScore": 85.63,
+      "finalScore": 85.63,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-06-16T07:40:00.000Z",
+      "_id": "58132047550dfb3b52b2ac1c"
+    },
+    {
+      "handle": "profficv",
+      "placement": 8,
+      "screeningScore": null,
+      "initialScore": 75,
+      "finalScore": 75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-06-13T12:55:00.000Z",
+      "_id": "58132047550dfb3b52b2ac1b"
+    }
+  ],
+  "technology": [
+    "API",
+    "Go"
+  ]
+}

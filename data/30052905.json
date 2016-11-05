@@ -1,7 +1,7 @@
 {
   "_id": 30052905,
   "_isComplete": true,
-  "__v": 1,
+  "__v": 0,
   "_lastUpdate": "2016-10-27T17:51:28.259Z",
   "appealsEndDate": "2016-02-19T14:27:00.000Z",
   "challengeCommunity": "develop",
@@ -15,11 +15,6 @@
   "detailedRequirements": "<h2>Trixel Challenge series</h2>\n\n<p>The Trixel challenge series will be a multi-part series of challenges that will eventually produce an application for tracking a users internet usage across a set of sites where trixel components exist. There are several different pieces of this application that will be developed in parallel then combined in future challenges.</p>\n\n<h2>Overview:</h2>\n\n<p>In this challenge we want to build two scripts. One (trixel.js) that will be loaded in several webpages for tracking a user&#39;s history when visiting those pages. trixel.js will interact with a sister script in an iframe on the current page. The iframe script (trixel-iframe.js) will listen for calls from trixels.js and update a cookie with page view information as well as processing the data and reporting it on when a user is identified. The purpose being to track the users usage pattern and save it in a cookie for the iframe domain. This data will be reported to a logging API when we have an event that identifies the user.</p>\n\n<h3>Scope:</h3>\n\n<ul>\n\t<li>You should write a javascript file to be embedded in webpages. The name of this file should be trixel.js. The functions of trixel.js are described in the requirements.</li>\n\t<li>You should write a javascript file to be embedded in an iframe. The name of this file should be trixel-iframe.js. The functions of trixel-iframe.js are described in the requirements.</li>\n\t<li>You should include a build script for minifying trixel.js and trixel-iframe.js.</li>\n\t<li>Document all of you code. Ensure that whatever minification tool you use removes all comments and uglifies the code.</li>\n</ul>\n\n<h3>Requirements trixel.js:</h3>\n\n<ul>\n\t<li>The script should include:\n\t<ul style=\"margin-left:18px !important; margin-right:0px !important\">\n\t\t<li>onload event handler that will do the following:</li>\n\t\t<li>Get the current url</li>\n\t\t<li>Fire a postMessage event to a iframe element with the id &#39;trixel-iframe&#39;. The message should be a json object with the following structure:</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h6>Current Page message</h6>\n\n<pre>\n<code><span>{</span>\n<span style=\"color:rgb(187, 187, 187)\">  </span><span style=\"color:navy\">&quot;URL&quot;</span><span>:</span><span style=\"color:rgb(187, 187, 187)\"> </span><span style=\"color:rgb(221, 17, 68)\">&quot;https://thesite.url&quot;</span>\n<span>}</span></code></pre>\n\n<h3>Requirements trixel-iframe.js:</h3>\n\n<ul>\n\t<li>The iframe script should include:\n\t<ul style=\"margin-left:18px !important; margin-right:0px !important\">\n\t\t<li>A postMessage handler that will accept posted message and save the data about the current site, and information about the current user to a cookie called trixel. The information about the current visit should have the following structure:</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h6>Visits object</h6>\n\n<pre>\n<code><span>{</span>\n\n<span style=\"color:rgb(187, 187, 187)\">  </span><span style=\"color:navy\">&quot;userId&quot;</span><span>:</span><span style=\"color:rgb(187, 187, 187)\"> </span><span style=\"color:rgb(221, 17, 68)\">&quot;IfAUserIdIsKnownItGoesHere&quot;</span><span>,</span>\n<span style=\"color:rgb(187, 187, 187)\">  </span><span style=\"color:navy\">&quot;cookieId&quot;</span><span>:</span><span style=\"color:rgb(187, 187, 187)\"> </span><span style=\"color:rgb(221, 17, 68)\">&quot;uniqueCookieId&quot;</span><span>,</span>\n<span style=\"color:rgb(187, 187, 187)\">  </span><span style=\"background-color:rgb(227, 210, 210); color:rgb(166, 23, 23)\">&ldquo;url&rdquo;</span><span>:</span><span style=\"color:rgb(187, 187, 187)\"> </span><span style=\"background-color:rgb(227, 210, 210); color:rgb(166, 23, 23)\">&ldquo;http://whatdomain.com&rdquo;</span><span>,</span>\n<span style=\"color:rgb(187, 187, 187)\">  </span><span style=\"color:navy\">&quot;viewed_at&quot;</span><span>:</span><span style=\"color:rgb(187, 187, 187)\"> </span><span style=\"color:rgb(221, 17, 68)\">&quot;DateSiteWasVisited&quot;</span><span style=\"color:rgb(187, 187, 187)\"> </span>\n<span>}</span></code></pre>\n\n<ul>\n\t<li>An event handler for when the current user has authenticated. The handler message will include the user id for the current user. This handler will take that user id and update the trixel cookie to indicate that the user has been identified. The cookie should be a stringified json object the has two fields:</li>\n</ul>\n\n<h6>Trixel Cookie Structure</h6>\n\n<pre>\n<code><span>{</span>\n<span style=\"color:rgb(187, 187, 187)\">  </span><span style=\"color:navy\">&quot;user&quot;</span><span>:</span><span style=\"color:rgb(187, 187, 187)\"> </span><span style=\"color:rgb(221, 17, 68)\">&quot;userIdIfItHasBeenDetected&quot;</span><span>,</span>\n<span style=\"color:rgb(187, 187, 187)\">  </span><span style=\"color:navy\">&quot;visits&quot;</span><span>:</span><span style=\"color:rgb(187, 187, 187)\"> </span><span>[</span><span style=\"color:rgb(187, 187, 187)\"> </span><span style=\"background-color:rgb(227, 210, 210); color:rgb(166, 23, 23)\">Object</span><span>,</span><span style=\"color:rgb(187, 187, 187)\"> </span><span style=\"background-color:rgb(227, 210, 210); color:rgb(166, 23, 23)\">Object</span><span>,</span><span style=\"color:rgb(187, 187, 187)\"> </span><span style=\"background-color:rgb(227, 210, 210); color:rgb(166, 23, 23)\">Object</span><span style=\"color:rgb(187, 187, 187)\"> </span><span>]</span>\n<span>}</span></code></pre>\n\n<p>Where the Objects in the visits array are objects that were saved when the browser visited sites with the trixel scripts embedded. For this challenge the handler only needs to console.log the cookie value. The actual call to the log api service will be added in a later challenge.</p>\n\n<h3>SETUP &amp; REFERENCE:</h3>\n\n<ul>\n\t<li>Request access to the&nbsp;<a href=\"https://gitlab.com/Hercules-Trixel\" style=\"box-sizing: border-box; color: rgb(48, 132, 187); text-decoration: none; margin-top: 0px; background-color: transparent;\">Gitlab group</a>&nbsp;by posting on the forums or email&nbsp;<a href=\"mailto:%20gordonk66@gmail.com\" style=\"box-sizing: border-box; color: rgb(48, 132, 187); text-decoration: none; background-color: transparent;\">gbockus</a>.</li>\n\t<li>Once added to the team, fork the repository and work off&nbsp;<a href=\"https://gitlab.com/Hercules-Trixel/trixel-script/commits/30052905-challenge01\" style=\"box-sizing: border-box; color: rgb(48, 132, 187); text-decoration: none; margin-top: 0px; background-color: transparent;\">this branch</a>.</li>\n\t<li>The uncompressed trixel.js and trixel-iframe.js scripts go in the src directory.</li>\n\t<li>The minified versions go in the dist directory.</li>\n\t<li>An example of the scripts interacting should be created and put in the example directory.</li>\n\t<li>postMessage reference:&nbsp;<a href=\"https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage\" rel=\"nofollow\" style=\"box-sizing: border-box; color: rgb(48, 132, 187); text-decoration: none; margin-top: 0px; background-color: transparent;\">https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage</a></li>\n</ul>\n\n<h3>Questions</h3>\n\n<ul>\n\t<li>Please post any questions or concerns you have to the forum. They will be addressed in a timely manner.</li>\n</ul>\n\n<h3>&nbsp;</h3>\n",
   "digitalRunPoints": null,
   "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30052905",
-  "event": {
-    "id": 3446,
-    "description": "2016 TopCoder(R) Open",
-    "shortDescription": "tco16"
-  },
   "finalSubmissionGuidelines": "<h3>SUBMISSION:</h3>\n\n<ul>\n\t<li>Upload documentation for how to run your submission</li>\n\t<li>Upload all your source code as a zip</li>\n\t<li>Add lazybaer and gbockus as members of your forked repository</li>\n\t<li>Provide a video overview of your submission. Please describe what you did in the video.</li>\n\t<li>Winner will be required to submit a merge request on gitlab against the branch specified!</li>\n</ul>\n",
   "forumId": 31906,
   "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=31906",
@@ -27,6 +22,59 @@
   "numberOfCheckpointsPrizes": 0,
   "numberOfRegistrants": 25,
   "numberOfSubmissions": 4,
+  "postingDate": "2016-02-08T23:11:00.000Z",
+  "projectId": 9440,
+  "registrationEndDate": "2016-02-13T08:11:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-02-13T08:11:00.000Z",
+  "submissions": [
+    {
+      "handle": "zsudraco",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 98.75,
+      "finalScore": 98.75,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-02-10T18:10:00.000Z",
+      "_id": "58123ea0e0be5f30ae5653cf"
+    },
+    {
+      "handle": "thomaskranitsas",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 95,
+      "finalScore": 96.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-02-12T13:24:00.000Z",
+      "_id": "58123ea0e0be5f30ae5653ce"
+    },
+    {
+      "handle": "gla5001",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 95,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-02-10T04:37:00.000Z",
+      "_id": "58123ea0e0be5f30ae5653cd"
+    },
+    {
+      "handle": "kiril.kartunov",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 90,
+      "finalScore": 92.5,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-02-12T15:35:00.000Z",
+      "_id": "58123ea0e0be5f30ae5653cc"
+    }
+  ],
   "phases": [
     {
       "type": "Registration",
@@ -74,15 +122,6 @@
       "_id": "58123ea0e0be5f30ae5653c7"
     }
   ],
-  "platforms": [
-    "Other"
-  ],
-  "postingDate": "2016-02-08T23:11:00.000Z",
-  "prize": [
-    1000,
-    500
-  ],
-  "projectId": 9440,
   "registrants": [
     {
       "handle": "MauroBonucci",
@@ -310,58 +349,19 @@
       "_id": "58123ea0e0be5f30ae5653ae"
     }
   ],
-  "registrationEndDate": "2016-02-13T08:11:00.000Z",
-  "reviewScorecardId": 30001610,
-  "reviewType": "COMMUNITY",
-  "screeningScorecardId": null,
-  "submissionEndDate": "2016-02-13T08:11:00.000Z",
-  "submissions": [
-    {
-      "handle": "zsudraco",
-      "placement": 1,
-      "screeningScore": null,
-      "initialScore": 98.75,
-      "finalScore": 98.75,
-      "points": 0,
-      "submissionStatus": "Active",
-      "submissionDate": "2016-02-10T18:10:00.000Z",
-      "_id": "58123ea0e0be5f30ae5653cf"
-    },
-    {
-      "handle": "thomaskranitsas",
-      "placement": 2,
-      "screeningScore": null,
-      "initialScore": 95,
-      "finalScore": 96.25,
-      "points": 0,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2016-02-12T13:24:00.000Z",
-      "_id": "58123ea0e0be5f30ae5653ce"
-    },
-    {
-      "handle": "gla5001",
-      "placement": 3,
-      "screeningScore": null,
-      "initialScore": 95,
-      "finalScore": 95,
-      "points": 0,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2016-02-10T04:37:00.000Z",
-      "_id": "58123ea0e0be5f30ae5653cd"
-    },
-    {
-      "handle": "kiril.kartunov",
-      "placement": 4,
-      "screeningScore": null,
-      "initialScore": 90,
-      "finalScore": 92.5,
-      "points": 0,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2016-02-12T15:35:00.000Z",
-      "_id": "58123ea0e0be5f30ae5653cc"
-    }
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "prize": [
+    1000,
+    500
   ],
   "technology": [
     "JavaScript"
+  ],
+  "platforms": [
+    "Other"
   ]
 }

@@ -1,0 +1,936 @@
+{
+  "_id": 30054510,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:07:41.615Z",
+  "appealsEndDate": "2016-06-27T04:32:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Living Progress - CrowdAnalytics - Python Classification Challenge",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<div>\n<h2><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></h2>\n\n<p>Governments across the world are increasingly applying open government practices such as crowdsourcing to develop stronger policies and to engage citizens, providing access to civic influencing beyond election cycle. When hundreds of ideas from citizens flow in, the crowdsourcers are facing a problem: Lack of efficient analysis and synthesis tools. &nbsp;<br />\n<br />\nCivic CrowdAnalytics, a group at Stanford University, is developing solutions to address this problem, and is taking steps towards more participatory, inclusive and transparent democratic societies, making sure that all citizens have an equal opportunity to get their voices heard.<br />\n<br />\nThis challenge is part of the&nbsp;<a href=\"http://blitz.topcoder.com/hpe-lpc_design/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">HPE Living Progress Challenge Blitz Program</a>&nbsp;(Secure top placements in the leaderboard to grab additional cash prizes).</p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Competition Task Overview</span></h2>\n\n<p>In this challenge, you will analyzing and categorizing two data sets of crowd-sourced ideas for civic improvements. &nbsp;One of the data sets is related to transportation issues in Palo Alto, CA.<br />\n<br />\nThe training data set (317 examples) can be found here:<br />\n<a href=\"https://docs.google.com/spreadsheets/d/1tyZu4gNumrQT0xWg0iytf6CIPBw48LbdpwwrxuVUh48/edit?usp=sharing\">https://docs.google.com/spreadsheets/d/1tyZu4gNumrQT0xWg0iytf6CIPBw48LbdpwwrxuVUh48/edit?usp=sharing</a><br />\n<br />\nAll the complete category hierarchy can be found in this separate document here:<br />\n<a href=\"https://docs.google.com/spreadsheets/d/1BNXL38LxjRH5QEzQUhS58kl9fDTWUPdeWQ4ncerPnpw/edit?usp=sharing\">https://docs.google.com/spreadsheets/d/1BNXL38LxjRH5QEzQUhS58kl9fDTWUPdeWQ4ncerPnpw/edit?usp=sharing</a><br />\n<br />\nThe second data set is from Chile and it is in Spanish. &nbsp;However, the inputs and categories are clearly defined. &nbsp;The &quot;Cuerpo&quot; column in the input text to be categorized and the &quot;Etiquetas ciudadanas&quot; column contains the category tags.<br />\n<a href=\"https://drive.google.com/open?id=0ByjxTGykXQjATTNTYWFDeUFvRG8\">https://drive.google.com/open?id=0ByjxTGykXQjATTNTYWFDeUFvRG8</a><br />\n<br />\nIn a <a href=\"https://www.topcoder.com/challenge-details/30054392/?type=develop&amp;noncache=true\">previous challenge</a>, we asked the Topcoder Community to use <a href=\"https://www.havenondemand.com/\">Haven OnDemand</a> as our classification technology. &nbsp;Haven OnDemand has a free developer tier and you can sign up for a developer account <a href=\"https://www.havenondemand.com/signup.html\">here</a>. &nbsp; For this challenge, however, you may any Python machine learning API&rsquo;s or libraries provided licensing allows for commercial use.<br />\n<br />\nFifty percent of the scoring for your submission with be based upon the effectiveness of your classification responses. &nbsp;We&rsquo;re going to compare the accuracy of the submissions against each other.&nbsp;<br />\n<br />\nThe scoring function will work as follows for the Palo Alto data:<br />\n<br />\n1 point will be given for each correct main category and subcategory 1 associations<br />\n.5 points will be given for each correct subcategory 2 association<br />\n.25 points will be given for each correct subcategory 3 or 4 association<br />\n<br />\nWe&rsquo;re also going to allow you to make a second guess for each category tag. &nbsp;The second guess will be ignored if the first guess is correct. &nbsp;The scoring for the second guesses will be as follows:<br />\n.5 points will be given for each correct secondary main category and subcategory 1 associations<br />\n.25 points will be given for each correct secondary subcategory 2 association<br />\n.125 points will be given for each correct secondary subcategory 3 or 4 association<br />\n<br />\nFor the Chile data set the scoring will work as follows:<br />\n1 point will be given for each correct primary main category<br />\n.5 points will be given for each secondary main category response.<br />\n<br />\nWe&rsquo;ll average the scores together between the two data sets for each submission to determine the winner. &nbsp; After we determine your score, based on your responses. &nbsp;We&rsquo;ll create a decile range based on this set of values from all the competitors. &nbsp;Submissions that have the highest scores in the range will receive a &ldquo;10&rdquo; for this performance metric and those that are the least accurate will receive a &ldquo;1&rdquo;. &nbsp;You will be provided with a training dataset of 317 records for the Palo Alto dataset training and 1045 records from the Chile Data to test and validate your solution. &nbsp;We&rsquo;ll validate your solution and generate scores with data that we don&rsquo;t provide in advance.<br />\n<br />\nIn order to facilitate the testing of your solution, we&rsquo;re going to ask you to set up a simple Python web service and publish this on the web so it is available to our test harness. Your service, in turn, will need to provide categorization responses based on our input. &nbsp;You will still need to submit your code to Topcoder through the normal submission process but we&rsquo;ll be doing the initial categorization validation online. Platforms like <a href=\"https://www.heroku.com/\">Heroku</a> allow you to host your REST service for free.<br />\n<br />\nYour API should have the following endpoints:&nbsp;<br />\n<a href=\"http://your.ip.address/api/v1/categorize/paloalto\">http://your.ip.address/api/v1/categorize/paloalto</a><br />\n<a href=\"http://your.ip.address/api/v1/categorize/chile\">http://your.ip.address/api/v1/categorize/chile</a><br />\n<br />\nYour service should accept the following JSON in a post request:<br />\n{<br />\n&nbsp;&nbsp; &nbsp;&quot;document&quot; :<br />\n&nbsp;&nbsp; &nbsp;[<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;{<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;id&quot; : &quot;1&quot;,<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;content&quot; : &quot;A large block of text, which you should categorize.&quot;<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;}, {<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;id&quot; : &quot;2&quot;,<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;content&quot; : &quot;A large block of text, which you should also categorize.<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;}<br />\n&nbsp;&nbsp; &nbsp;]<br />\n}<br />\nYour response should contain a JSON response in the following format:<br />\n<br />\n{<br />\n&nbsp;&nbsp; &nbsp;&quot;document&quot; :<br />\n&nbsp;&nbsp; &nbsp;[<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;{<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;id&quot; : &quot;1&quot;,<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;content&quot; : &quot;A large block of text, which you should categorize.&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;primary_main_category&quot; : &quot;Big picture infrastructure&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;primary_subcategory1&quot; : &quot;other subcategory&rdquo;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;primary_subcategory2&quot; : &quot;other subcategory&rdquo;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;primary_subcategory3&quot; : &quot;other subcategory&rdquo;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;primary_subcategory4&quot; : &quot;other subcategory&rdquo;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;secondary_main_category&quot; : &quot;Public &quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;secondary_subcategory1&quot; : &quot;other subcategory&rdquo;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;secondary_subcategory2&quot; : &quot;other subcategory&rdquo;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;secondary_subcategory3&quot; : &quot;other subcategory&rdquo;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;secondary_subcategory4&quot; : &quot;other subcategory&rdquo;&nbsp;<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;}, {<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;id&quot; : &quot;2&quot;,<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;content&quot; : &quot;A large block of text, which you should also categorize.&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;primary_main_category&quot; : &quot;Private Transit&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;primary_subcategory1&quot; : &quot;other subcategory&rdquo;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;primary_subcategory2&quot; : &quot;other subcategory&rdquo;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;primary_subcategory3&quot; : &quot;other subcategory&rdquo;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;primary_subcategory4&quot; : &quot;other subcategory&rdquo;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;secondary_main_category&quot; : &quot;Non-motor powered transit &quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;secondary_subcategory1&quot; : &quot;other subcategory&rdquo;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;secondary_subcategory2&quot; : &quot;other subcategory&rdquo;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;secondary_subcategory3&quot; : &quot;other subcategory&rdquo;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;secondary_subcategory4&quot; : &quot;other subcategory&rdquo;&nbsp;<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;}<br />\n&nbsp;&nbsp; &nbsp;]<br />\n}<br />\n<br />\nYour code should support at least 10 document records at a time and return a response within 1 minute. &nbsp;For the Chile endpoint, the requests will be the same, but the responses should look like the following:<br />\n{<br />\n&nbsp;&nbsp; &nbsp;&quot;document&quot; :<br />\n&nbsp;&nbsp; &nbsp;[<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;{<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;id&quot; : &quot;1&quot;,<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;content&quot; : &quot;A large block of text, which you should categorize.&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;primary_main_category&quot; : &quot;Big picture infrastructure&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;secondary_main_category&quot; : &quot;Public &quot;<br />\n&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;}, {<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;id&quot; : &quot;2&quot;,<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;content&quot; : &quot;A large block of text, which you should also categorize.&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;primary_main_category&quot; : &quot;Private Transit&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;secondary_main_category&quot; : &quot;Non-motor powered transit &quot;<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;}<br />\n&nbsp;&nbsp; &nbsp;]<br />\n}<br />\n<br />\nWe have developed a Test Harness in Python that you can use to test the services you create. &nbsp;It works well and has been updated for both endpoints. &nbsp;You can download from the following Drive folder:<br />\nhttps://drive.google.com/file/d/0ByjxTGykXQjAcjhFRnVfenNqYkE/view?usp=sharing</p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Technology Overview</span></h2>\n\n<p>Linux<br />\nData Science<br />\nPython 2.7<br />\nREST<br />\nJSON</p>\n</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30054510",
+  "finalSubmissionGuidelines": "<div>\n<h2><strong><span style=\"color:rgb(255, 0, 0)\">Submission Deliverables</span></strong></h2>\n\n<p>1. Please submit all code required by the application in your submission.zip<br />\n2. Document the build process for your code including all dependencies (pip installs etc..)<br />\n3. We will be reviewing code and building the winning submissions locally to verify that they perform as they do on your web service.<br />\n4. You may use any Python Open Source libraries or technologies provided they are available for commercial use.&nbsp;<br />\n5. If you use some other API or platform please document all steps required to replicate your results. &nbsp;(e.g. with Haven OnDemand, this typically means creating text indices and loading training data to this external platform).&nbsp;</p>\n\n<p>&nbsp;</p>\n</div>\n",
+  "forumId": 33342,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33342",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 81,
+  "numberOfSubmissions": 10,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-11T23:00:00.000Z",
+      "actualStartTime": "2016-06-11T23:00:00.000Z",
+      "scheduledEndTime": "2016-06-19T12:58:00.000Z",
+      "actualendTime": "2016-06-19T12:58:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf1f7"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-11T23:05:00.000Z",
+      "actualStartTime": "2016-06-11T23:05:00.000Z",
+      "scheduledEndTime": "2016-06-19T12:58:00.000Z",
+      "actualendTime": "2016-06-19T12:58:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf1f6"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-19T12:59:00.000Z",
+      "actualStartTime": "2016-06-19T12:59:00.000Z",
+      "scheduledEndTime": "2016-06-26T02:23:00.000Z",
+      "actualendTime": "2016-06-26T02:23:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf1f5"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-26T02:23:00.000Z",
+      "actualStartTime": "2016-06-26T02:23:00.000Z",
+      "scheduledEndTime": "2016-06-27T02:23:00.000Z",
+      "actualendTime": "2016-06-27T02:23:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf1f4"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-27T02:23:00.000Z",
+      "actualStartTime": "2016-06-27T02:23:00.000Z",
+      "scheduledEndTime": "2016-06-27T04:32:00.000Z",
+      "actualendTime": "2016-06-27T04:32:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf1f3"
+    }
+  ],
+  "platforms": [
+    "Other",
+    "Linux"
+  ],
+  "postingDate": "2016-06-11T23:00:00.000Z",
+  "prize": [
+    1500,
+    750
+  ],
+  "projectId": 9584,
+  "registrants": [
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-11T23:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1f2"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T00:03:00.000Z",
+      "submissionDate": "2016-06-18T04:10:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1f1"
+    },
+    {
+      "handle": "deas",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T01:01:00.000Z",
+      "submissionDate": "2016-06-18T15:59:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1f0"
+    },
+    {
+      "handle": "gondzo",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T01:15:00.000Z",
+      "submissionDate": "2016-06-18T21:28:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1ef"
+    },
+    {
+      "handle": "kinfkong",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T02:04:00.000Z",
+      "submissionDate": "2016-06-18T13:04:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1ee"
+    },
+    {
+      "handle": "bannie2492",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T02:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1ed"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T04:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1ec"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T06:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1eb"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T06:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1ea"
+    },
+    {
+      "handle": "poletaev",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T07:44:00.000Z",
+      "submissionDate": "2016-06-19T12:54:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1e9"
+    },
+    {
+      "handle": "btgd88",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T08:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1e8"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T09:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1e7"
+    },
+    {
+      "handle": "utkarshkukreti",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T10:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1e6"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T10:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1e5"
+    },
+    {
+      "handle": "dushcoder",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T12:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1e4"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T12:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1e3"
+    },
+    {
+      "handle": "demo.b",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T12:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1e2"
+    },
+    {
+      "handle": "freegod",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T14:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1e1"
+    },
+    {
+      "handle": "asteroidiv",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T15:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1e0"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T16:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1df"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T16:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1de"
+    },
+    {
+      "handle": "AadityaDev",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T20:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1dd"
+    },
+    {
+      "handle": "siddnitr1",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-12T21:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1dc"
+    },
+    {
+      "handle": "twds",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-13T03:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1db"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-13T04:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1da"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-13T06:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1d9"
+    },
+    {
+      "handle": "SAbdulRahuman",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-13T14:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1d8"
+    },
+    {
+      "handle": "Ksys",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-13T11:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1d7"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-13T12:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1d6"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-13T12:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1d5"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-13T13:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1d4"
+    },
+    {
+      "handle": "grey220022",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-14T13:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1d3"
+    },
+    {
+      "handle": "dualfitting",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-13T15:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1d2"
+    },
+    {
+      "handle": "hc668",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-13T15:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1d1"
+    },
+    {
+      "handle": "marshallmutiso",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-13T16:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1d0"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-13T16:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1cf"
+    },
+    {
+      "handle": "mosaixel",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-13T20:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1ce"
+    },
+    {
+      "handle": "chaos_theory",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-13T20:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1cd"
+    },
+    {
+      "handle": "hp87",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-13T22:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1cc"
+    },
+    {
+      "handle": "thkang91",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-13T22:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1cb"
+    },
+    {
+      "handle": "and1can",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-13T22:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1ca"
+    },
+    {
+      "handle": "chiwakii",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-14T01:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1c9"
+    },
+    {
+      "handle": "code_now",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-14T01:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1c8"
+    },
+    {
+      "handle": "miuc",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-14T01:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1c7"
+    },
+    {
+      "handle": "Indemar",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-14T06:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1c6"
+    },
+    {
+      "handle": "stfods",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-14T14:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1c5"
+    },
+    {
+      "handle": "kubapb",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-14T15:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1c4"
+    },
+    {
+      "handle": "faisalbasha1982",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-14T17:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1c3"
+    },
+    {
+      "handle": "freezer05",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-14T21:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1c2"
+    },
+    {
+      "handle": "megaterik",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-14T18:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1c1"
+    },
+    {
+      "handle": "ode2k",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-14T21:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1c0"
+    },
+    {
+      "handle": "bluetiger12",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-15T01:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1bf"
+    },
+    {
+      "handle": "subsunacop2011",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-15T02:37:00.000Z",
+      "submissionDate": "2016-06-19T11:56:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1be"
+    },
+    {
+      "handle": "net_buster",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-15T04:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1bd"
+    },
+    {
+      "handle": "vibz96",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-15T06:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1bc"
+    },
+    {
+      "handle": "tongkunvwang",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-15T09:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1bb"
+    },
+    {
+      "handle": "moshu",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-15T10:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1ba"
+    },
+    {
+      "handle": "auxilia7",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-15T13:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1b9"
+    },
+    {
+      "handle": "allenjuly7",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-15T15:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1b8"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-15T16:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1b7"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-15T17:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1b6"
+    },
+    {
+      "handle": "ganeshramc",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-15T18:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1b5"
+    },
+    {
+      "handle": "aliasmrchips",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-15T20:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1b4"
+    },
+    {
+      "handle": "shangjingbo",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-15T21:41:00.000Z",
+      "submissionDate": "2016-06-19T06:24:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1b3"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-15T23:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1b2"
+    },
+    {
+      "handle": "greedycat",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-16T03:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1b1"
+    },
+    {
+      "handle": "sumit.nalawade",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-16T07:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1b0"
+    },
+    {
+      "handle": "faisal1911",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-16T08:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1af"
+    },
+    {
+      "handle": "dejucoder",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-16T09:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1ae"
+    },
+    {
+      "handle": "ztimpy",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-16T20:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1ad"
+    },
+    {
+      "handle": "jeongyoonlee",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-17T07:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1ac"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-17T07:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1ab"
+    },
+    {
+      "handle": "ankurv857",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-17T13:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1aa"
+    },
+    {
+      "handle": "chinnapong",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-17T19:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1a9"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-17T21:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1a8"
+    },
+    {
+      "handle": "Aciel",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-17T21:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1a7"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-18T16:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1a6"
+    },
+    {
+      "handle": "TheKingOfWrong",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-18T17:32:00.000Z",
+      "submissionDate": "2016-06-19T10:41:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1a5"
+    },
+    {
+      "handle": "greyzor",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-18T19:22:00.000Z",
+      "submissionDate": "2016-06-18T22:40:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1a4"
+    },
+    {
+      "handle": "dimitz",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-19T05:59:00.000Z",
+      "submissionDate": "2016-06-19T08:00:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1a3"
+    },
+    {
+      "handle": "DHKIM",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-19T08:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf1a2"
+    }
+  ],
+  "registrationEndDate": "2016-06-19T12:58:00.000Z",
+  "reviewScorecardId": 30001963,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-06-19T12:58:00.000Z",
+  "submissions": [
+    {
+      "handle": "Standlove",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 97.5,
+      "finalScore": 97.5,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-06-18T04:10:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf201"
+    },
+    {
+      "handle": "kinfkong",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 90,
+      "finalScore": 90,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-06-18T13:04:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf200"
+    },
+    {
+      "handle": "dimitz",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 90,
+      "finalScore": 90,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-06-19T08:00:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf1ff"
+    },
+    {
+      "handle": "TheKingOfWrong",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 80,
+      "finalScore": 80,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-06-19T10:41:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf1fe"
+    },
+    {
+      "handle": "shangjingbo",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 70,
+      "finalScore": 70,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-06-19T06:24:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf1fd"
+    },
+    {
+      "handle": "deas",
+      "placement": 6,
+      "screeningScore": null,
+      "initialScore": 62.5,
+      "finalScore": 62.5,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-06-18T15:59:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf1fc"
+    },
+    {
+      "handle": "gondzo",
+      "placement": 7,
+      "screeningScore": null,
+      "initialScore": 56.25,
+      "finalScore": 56.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-06-18T21:28:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf1fb"
+    },
+    {
+      "handle": "greyzor",
+      "placement": 8,
+      "screeningScore": null,
+      "initialScore": 48.75,
+      "finalScore": 48.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-06-18T22:40:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf1fa"
+    },
+    {
+      "handle": "poletaev",
+      "placement": 9,
+      "screeningScore": null,
+      "initialScore": 37.5,
+      "finalScore": 37.5,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-06-19T12:54:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf1f9"
+    },
+    {
+      "handle": "subsunacop2011",
+      "placement": 10,
+      "screeningScore": null,
+      "initialScore": 17.5,
+      "finalScore": 17.5,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-06-19T11:56:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf1f8"
+    }
+  ],
+  "technology": [
+    "Data Science",
+    "JSON",
+    "Python",
+    "REST"
+  ]
+}

@@ -1,0 +1,607 @@
+{
+  "_id": 30046225,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T09:54:42.061Z",
+  "appealsEndDate": "2014-10-24T15:47:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Go Learning Challenge - Simple Cache Server",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p>Welcome the Simple Cache Server challenge !&nbsp;<br />\nThis is the second challenge of our second stage &lsquo;Develop Backend Services with Golang&rsquo;.</p>\n\n<p>The Goal of this challenge is to develop a simple in-memory KVS like Memcached with Golang.</p>\n\n<p>We will evaluate your submission based on the <a href=\"https://software.topcoder.com/review/actions/ViewScorecard?scid=30001722\" target=\"_blank\">scorecard.</a> We recommend you to check &lsquo;Final Submission Guidelines&rsquo; section before you start coding. The person who gets the highest score wins. In case of a tie, the person to submit earlier wins.&nbsp;</p>\n\n<p>If you have any questions, ask and get clarification in the forum.</p>\n\n<p>If you would like to join as a reviewer, please <a href=\"https://software.topcoder.com/review/actions/ContactManager?pid=30046225\" target=\"_blank\">contact us</a> !</p>\n\n<h1>Spec</h1>\n\n<ul>\n\t<li>The cache server communicates with clients via TCP</li>\n\t<li>The cache server provides five commands set, get, delete, stats and quit</li>\n\t<li>The cache server handles multiple connections</li>\n\t<li>The cache server stores data on memory and does not persist it</li>\n</ul>\n\n<p>See &ldquo;Examples&rdquo; section to know how the commands work. Please note that the cache server should maintain the connection until &lsquo;quit&rsquo; command is sent.</p>\n\n<h2>Commands</h2>\n\n<p><strong><u><em>set command</em></u></strong><br />\nStore data. Overwrite data if the data exists.</p>\n\n<p><u>client request</u><br />\n<span style=\"font-size:13px\">set &lt;key&gt;\\r\\n</span><br />\n<span style=\"font-size:13px\">&lt;data&gt;\\r\\n</span></p>\n\n<p>- &lt;key&gt; is the key to store the data. The size must be less than 250 characters.<br />\n- &lt;data&gt; is data to store. The size must be less than 8KB.</p>\n\n<p>The&nbsp;character range of key and data is the following&nbsp;ASCII characters.</p>\n\n<ul>\n\t<li>a-z</li>\n\t<li>A-Z</li>\n\t<li>0-9</li>\n\t<li>! # $ % &amp; &#39; &quot; * + - / = ? ^ _ ` { | } ~</li>\n\t<li>( ) &lt; &gt; [ ] : ; @ , .</li>\n\t<li>space (just for data)</li>\n</ul>\n\n<p><u>server response</u></p>\n\n<p><span style=\"font-size:13px\">The server sends the string &quot;STORED\\r\\n&quot; to indicate success.</span></p>\n\n<p><u><strong><em>get command</em></strong></u><br />\n<span style=\"font-size:13px\">Retrieve data. Take one or more keys and returns all found items.</span></p>\n\n<p><u>client request</u><br />\n<span style=\"font-size:13px\">get &lt;key&gt;*\\r\\n</span></p>\n\n<p><span style=\"font-size:13px\">- &lt;key&gt;* means one or more key strings separated by whitespace.</span></p>\n\n<p><u>server response</u><br />\n<span style=\"font-size:13px\">VALUE &lt;key&gt;\\r\\n</span><br />\n<span style=\"font-size:13px\">&lt;data&gt;\\r\\n</span></p>\n\n<p>- &lt;key&gt; is the key for the item being sent.<br />\n- &lt;data&gt; is the data for this item.</p>\n\n<p>After the server sends all the items, the server sends the string &quot;END\\r\\n&quot;</p>\n\n<p><strong><u><em>delete command</em></u></strong><br />\n<span style=\"font-size:13px\">Remove an item from the cache, if it exists.</span></p>\n\n<p><u>client request</u><br />\n<span style=\"font-size:13px\">delete &lt;key&gt;\\r\\n</span></p>\n\n<p>- &lt;key&gt; is the key of the item the client would like the server to delete</p>\n\n<p><u>server response</u><br />\n- &quot;DELETED\\r\\n&quot; to indicate success.<br />\n- &quot;NOT_FOUND\\r\\n&quot; to indicate that the item was not found.</p>\n\n<p><em><u><strong>stats command</strong></u></em><br />\nOutput statistics and settings below.</p>\n\n<ul>\n\t<li>cmd_get\n\t<ul>\n\t\t<li>Cumulative number of get</li>\n\t\t<li>&ldquo;get&rdquo; command with multiple keys is counted by number of keys</li>\n\t\t<li>e.g.\n\t\t<ul>\n\t\t\t<li>&ldquo;get appirio topcoder&rdquo; command is counted as 2 get commands.</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li>cmd_set\n\t<ul>\n\t\t<li>Cumulative number of set</li>\n\t</ul>\n\t</li>\n\t<li>get_hits\n\t<ul>\n\t\t<li>Number of get command for items stored</li>\n\t</ul>\n\t</li>\n\t<li>get_misses\n\t<ul>\n\t\t<li>Number of get command for items not stored</li>\n\t</ul>\n\t</li>\n\t<li>delete_hits\n\t<ul>\n\t\t<li>Number of delete command for items stored</li>\n\t</ul>\n\t</li>\n\t<li>delete_misses\n\t<ul>\n\t\t<li>Number of delete command for items not stored</li>\n\t</ul>\n\t</li>\n\t<li>curr_items\n\t<ul>\n\t\t<li>Current number of items stored</li>\n\t</ul>\n\t</li>\n\t<li>limit_items\n\t<ul>\n\t\t<li>Number of items this server is allowed to store.</li>\n\t\t<li>This number does not change while the server process is running.</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p><u>client request</u><br />\nstats\\r\\n</p>\n\n<p><u>server response</u><br />\n&lt;stat&gt; &lt;number&gt;\\r\\n<br />\n&lt;stat&gt; &lt;number&gt;\\r\\n<br />\n...<br />\n(See Examples section)</p>\n\n<p>The server terminates this list with the line<br />\n&ldquo;END\\r\\n&rdquo;</p>\n\n<p><em><u><strong>quit command</strong></u></em><br />\nTerminate connection to the server</p>\n\n<p><u>client request</u><br />\nquit\\r\\n</p>\n\n<p><u>server response</u><br />\nNo response. The connection is just closed.</p>\n\n<h2>Errors</h2>\n\n<p>In case of errors, the server sends an error string.</p>\n\n<p>- &quot;ERROR &lt;error&gt;\\r\\n&quot;</p>\n\n<p>&lt;error&gt; should be a human-readable and easy to detect the reason.</p>\n\n<p>Please note that the server just ignores an empty line that has only &quot;\\r\\n&quot;.</p>\n\n<h2>Extensibility</h2>\n\n<p>We would like to support new commands with less effort in the future, so extensibility to add new commands is important.</p>\n\n<h2>Examples</h2>\n\n<p>Blue characters are responses from the server.</p>\n\n<hr />\n<p>telnet localhost 11212<br />\nTrying 127.0.0.1...<br />\nConnected to localhost.<br />\nEscape character is &#39;^]&#39;.</p>\n\n<p>set sushi<br />\ndelicious<br />\n<span style=\"color:#0000FF\">STORED</span></p>\n\n<p><span style=\"font-size:13px\">set topcoder</span><br />\n<span style=\"font-size:13px\">fun</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">STORED</span></p>\n\n<p><span style=\"font-size:13px\">get sushi topcoder</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">VALUE sushi</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">delicious</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">VALUE topcoder</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">fun</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">END</span></p>\n\n<p><span style=\"font-size:13px\">get sushi</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">VALUE sushi</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">delicious</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">END</span></p>\n\n<p><span style=\"font-size:13px\">delete sushi</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">DELETED</span></p>\n\n<p><span style=\"font-size:13px\">get sushi</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">END</span></p>\n\n<p><span style=\"font-size:13px\">get topcoder</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">VALUE topcoder</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">fun</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">END</span></p>\n\n<p><span style=\"font-size:13px\">get topcoder sushi</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">VALUE topcoder</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">fun</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">END</span></p>\n\n<p><span style=\"font-size:13px\">delete sushi</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">NOT_FOUND</span></p>\n\n<p><span style=\"font-size:13px\">stats</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">cmd_get 7</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">cmd_set 2</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">get_hits 5</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">get_misses 2</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">delete_hits 1</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">delete_misses 1</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">curr_items 1</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">limit_items 65535</span><br />\n<span style=\"color:rgb(0, 0, 255); font-size:13px\">END</span></p>\n\n<p><span style=\"font-size:13px\">quit</span><br />\n<span style=\"font-size:13px\">Connection closed by foreign host.</span></p>\n\n<hr />\n<h2>Command-line options</h2>\n\n<p>The server provides the following command-line options</p>\n\n<p><u>Port&nbsp;</u></p>\n\n<ul>\n\t<li>The port the server listens on</li>\n\t<li>&ldquo;-port&rdquo; option</li>\n\t<li>The default is 11212</li>\n</ul>\n\n<p><u>Items</u></p>\n\n<ul>\n\t<li>Total number of items the server can store</li>\n\t<li>&ldquo;-items&rdquo; option</li>\n\t<li>The default is 65535</li>\n</ul>\n\n<p><u>Example</u></p>\n\n<ul>\n\t<li>go run &lt;your cache server&gt;.go -port 11213 -items 1024</li>\n</ul>\n\n<h2>Signal Handling</h2>\n\n<p>Please handle the following signal and terminate the server after all commands being requested are processed.</p>\n\n<ul>\n\t<li>os.Interrupt (syscall.SIGINT)</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30046225",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalSubmissionGuidelines": "<h2>Code Guidelines</h2>\n\n<p>Follow practices mentioned in the articles below</p>\n\n<ul>\n\t<li>http://golang.org/doc/effective_go.html</li>\n\t<li>https://code.google.com/p/go-wiki/wiki/CodeReviewComments#Go_Code_Review_Comments</li>\n</ul>\n\n<p>We have one note specific to this challenge.</p>\n\n<ul>\n\t<li>Use &nbsp;&lsquo;lower_case_with_underscore&rsquo; name for package, file or directory. However, try to avoid underscores and prefer short names</li>\n</ul>\n\n<h2>Submission Deliverables</h2>\n\n<ul>\n\t<li>Source code\n\t<ul>\n\t\t<li>Format your code with &lsquo;gofmt&rsquo; command</li>\n\t</ul>\n\t</li>\n\t<li>Package path\n\t<ul>\n\t\t<li>Put your code under &lsquo;topcoder.com/&lt;your handle&gt;/scs&rsquo; directory</li>\n\t\t<li>e.g.\n\t\t<ul>\n\t\t\t<li>topcoder.com/TakumiYambe/scs/server.go</li>\n\t\t\t<li>topcoder.com/TakumiYambe/scs/parser/parser.go</li>\n\t\t\t<li>(Please note that the file names are just examples !)</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li>Test script that we could confirm all your commands work properly\n\t<ul>\n\t\t<li>Cover the cases listed on &lsquo;Examples&rsquo; section&nbsp;</li>\n\t\t<li>It depends on your design but you may add some cases to confirm that your server could handle exceptional cases appropriately</li>\n\t</ul>\n\t</li>\n\t<li>Simple README to explain your deliverables</li>\n</ul>\n\n<h2>External Libraries</h2>\n\n<p><span style=\"font-size:13px\">If you would like to use external libraries please follow the guidelines below.</span></p>\n\n<ul>\n\t<li><span style=\"font-size:13px\">Do not use libraries developed with languages other than Golang</span></li>\n\t<li><span style=\"font-size:13px\">Do not use GPL libraries and LGPL libraries</span></li>\n\t<li><span style=\"font-size:13px\">MIT, Apache and BSD libraries are available</span></li>\n\t<li><span style=\"font-size:13px\">Please mention about external libraries you used in your README</span></li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n",
+  "forumId": 25933,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=25933",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 37,
+  "numberOfSubmissions": 16,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-15T01:00:00.000Z",
+      "actualStartTime": "2014-10-15T01:00:00.000Z",
+      "scheduledEndTime": "2014-10-20T00:48:00.000Z",
+      "actualendTime": "2014-10-20T00:48:00.000Z",
+      "_id": "58132062550dfb3b52b2bdbe"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-15T01:06:00.000Z",
+      "actualStartTime": "2014-10-15T01:06:00.000Z",
+      "scheduledEndTime": "2014-10-20T00:48:00.000Z",
+      "actualendTime": "2014-10-20T00:48:00.000Z",
+      "_id": "58132062550dfb3b52b2bdbd"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-20T00:48:00.000Z",
+      "actualStartTime": "2014-10-20T00:48:00.000Z",
+      "scheduledEndTime": "2014-10-21T15:14:00.000Z",
+      "actualendTime": "2014-10-21T15:14:00.000Z",
+      "_id": "58132062550dfb3b52b2bdbc"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-21T15:14:00.000Z",
+      "actualStartTime": "2014-10-21T15:14:00.000Z",
+      "scheduledEndTime": "2014-10-22T15:14:00.000Z",
+      "actualendTime": "2014-10-22T15:14:00.000Z",
+      "_id": "58132062550dfb3b52b2bdbb"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-22T15:14:00.000Z",
+      "actualStartTime": "2014-10-22T15:14:00.000Z",
+      "scheduledEndTime": "2014-10-24T15:47:00.000Z",
+      "actualendTime": "2014-10-24T15:47:00.000Z",
+      "_id": "58132062550dfb3b52b2bdba"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2014-10-15T01:00:00.000Z",
+  "prize": [
+    500,
+    250
+  ],
+  "projectId": 8065,
+  "registrants": [
+    {
+      "handle": "chris75898",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T01:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bdb9"
+    },
+    {
+      "handle": "fox000002",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T01:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bdb8"
+    },
+    {
+      "handle": "kyrra",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T01:24:00.000Z",
+      "submissionDate": "2014-10-19T23:01:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bdb7"
+    },
+    {
+      "handle": "vectorijk",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T02:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bdb6"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T03:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bdb5"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T04:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bdb4"
+    },
+    {
+      "handle": "abelli",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T04:42:00.000Z",
+      "submissionDate": "2014-10-20T00:39:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bdb3"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T08:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bdb2"
+    },
+    {
+      "handle": "planetkeeper",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T09:14:00.000Z",
+      "submissionDate": "2014-10-18T21:58:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bdb1"
+    },
+    {
+      "handle": "chicapi",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T10:05:00.000Z",
+      "submissionDate": "2014-10-20T00:46:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bdb0"
+    },
+    {
+      "handle": "wsuncle",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T13:37:00.000Z",
+      "submissionDate": "2014-10-15T13:38:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bdaf"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T14:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bdae"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T15:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bdad"
+    },
+    {
+      "handle": "vlad_D",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T15:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bdac"
+    },
+    {
+      "handle": "mayank8888",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T15:39:00.000Z",
+      "submissionDate": "2014-10-15T22:46:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bdab"
+    },
+    {
+      "handle": "5ud0",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T18:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bdaa"
+    },
+    {
+      "handle": "domel911",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T20:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bda9"
+    },
+    {
+      "handle": "harisamin",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-16T00:29:00.000Z",
+      "submissionDate": "2014-10-18T10:26:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bda8"
+    },
+    {
+      "handle": "jorje.b",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-16T02:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bda7"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-16T05:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bda6"
+    },
+    {
+      "handle": "joe.yia",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-16T07:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bda5"
+    },
+    {
+      "handle": "ycqiaowork",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-16T07:46:00.000Z",
+      "submissionDate": "2014-10-17T02:21:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bda4"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-16T09:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bda3"
+    },
+    {
+      "handle": "pirosl_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-16T09:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bda2"
+    },
+    {
+      "handle": "ozanyildiz",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-16T11:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bda1"
+    },
+    {
+      "handle": "callmekatootie",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-16T14:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bda0"
+    },
+    {
+      "handle": "bolts",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-16T20:15:00.000Z",
+      "submissionDate": "2014-10-17T03:47:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bd9f"
+    },
+    {
+      "handle": "SPChoria",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-16T21:28:00.000Z",
+      "submissionDate": "2014-10-18T23:30:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bd9e"
+    },
+    {
+      "handle": "pbruna",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-17T10:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bd9d"
+    },
+    {
+      "handle": "partychen",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-18T05:43:00.000Z",
+      "submissionDate": "2014-10-19T02:57:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bd9c"
+    },
+    {
+      "handle": "natebrennand",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-18T04:24:00.000Z",
+      "submissionDate": "2014-10-18T04:27:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bd9b"
+    },
+    {
+      "handle": "hmmdar",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-18T04:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bd9a"
+    },
+    {
+      "handle": "sunny_fable",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-18T06:53:00.000Z",
+      "submissionDate": "2014-10-19T11:48:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bd99"
+    },
+    {
+      "handle": "alecn2002",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-18T12:03:00.000Z",
+      "submissionDate": "2014-10-19T14:23:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bd98"
+    },
+    {
+      "handle": "michaeljkw",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-18T09:09:00.000Z",
+      "submissionDate": "2014-10-19T16:30:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bd97"
+    },
+    {
+      "handle": "mouchtaris",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-18T11:19:00.000Z",
+      "submissionDate": "2014-10-19T23:54:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bd96"
+    },
+    {
+      "handle": "satefan",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-19T01:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2bd95"
+    }
+  ],
+  "registrationEndDate": "2014-10-20T00:48:00.000Z",
+  "reviewScorecardId": 30001722,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2014-10-20T00:48:00.000Z",
+  "submissions": [
+    {
+      "handle": "bolts",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 96.25,
+      "finalScore": 96.25,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-10-17T03:47:00.000Z",
+      "_id": "58132062550dfb3b52b2bdce"
+    },
+    {
+      "handle": "kyrra",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 94.58,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-19T23:01:00.000Z",
+      "_id": "58132062550dfb3b52b2bdcd"
+    },
+    {
+      "handle": "chicapi",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 93.75,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-20T00:46:00.000Z",
+      "_id": "58132062550dfb3b52b2bdcc"
+    },
+    {
+      "handle": "partychen",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 79.58,
+      "finalScore": 94.38,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-19T02:57:00.000Z",
+      "_id": "58132062550dfb3b52b2bdcb"
+    },
+    {
+      "handle": "sunny_fable",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 78.75,
+      "finalScore": 94.38,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-19T11:48:00.000Z",
+      "_id": "58132062550dfb3b52b2bdca"
+    },
+    {
+      "handle": "abelli",
+      "placement": 6,
+      "screeningScore": null,
+      "initialScore": 93.33,
+      "finalScore": 94.38,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-20T00:39:00.000Z",
+      "_id": "58132062550dfb3b52b2bdc9"
+    },
+    {
+      "handle": "michaeljkw",
+      "placement": 7,
+      "screeningScore": null,
+      "initialScore": 94.58,
+      "finalScore": 93.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-19T16:30:00.000Z",
+      "_id": "58132062550dfb3b52b2bdc8"
+    },
+    {
+      "handle": "mouchtaris",
+      "placement": 8,
+      "screeningScore": null,
+      "initialScore": 76.25,
+      "finalScore": 93.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-19T23:54:00.000Z",
+      "_id": "58132062550dfb3b52b2bdc7"
+    },
+    {
+      "handle": "natebrennand",
+      "placement": 9,
+      "screeningScore": null,
+      "initialScore": 78.75,
+      "finalScore": 91.88,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-18T04:27:00.000Z",
+      "_id": "58132062550dfb3b52b2bdc6"
+    },
+    {
+      "handle": "alecn2002",
+      "placement": 10,
+      "screeningScore": null,
+      "initialScore": 75.83,
+      "finalScore": 89.38,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-19T14:23:00.000Z",
+      "_id": "58132062550dfb3b52b2bdc5"
+    },
+    {
+      "handle": "ycqiaowork",
+      "placement": 11,
+      "screeningScore": null,
+      "initialScore": 72.08,
+      "finalScore": 81.88,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-17T02:21:00.000Z",
+      "_id": "58132062550dfb3b52b2bdc4"
+    },
+    {
+      "handle": "SPChoria",
+      "placement": 12,
+      "screeningScore": null,
+      "initialScore": 72.08,
+      "finalScore": 81.88,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-18T23:30:00.000Z",
+      "_id": "58132062550dfb3b52b2bdc3"
+    },
+    {
+      "handle": "harisamin",
+      "placement": 13,
+      "screeningScore": null,
+      "initialScore": 75.83,
+      "finalScore": 80,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-18T10:26:00.000Z",
+      "_id": "58132062550dfb3b52b2bdc2"
+    },
+    {
+      "handle": "mayank8888",
+      "placement": 14,
+      "screeningScore": null,
+      "initialScore": 69.58,
+      "finalScore": 79.38,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-15T22:46:00.000Z",
+      "_id": "58132062550dfb3b52b2bdc1"
+    },
+    {
+      "handle": "planetkeeper",
+      "placement": 15,
+      "screeningScore": null,
+      "initialScore": 70.42,
+      "finalScore": 79.38,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-18T21:58:00.000Z",
+      "_id": "58132062550dfb3b52b2bdc0"
+    },
+    {
+      "handle": "wsuncle",
+      "placement": 16,
+      "screeningScore": null,
+      "initialScore": 82.08,
+      "finalScore": 78.13,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-15T13:38:00.000Z",
+      "_id": "58132062550dfb3b52b2bdbf"
+    }
+  ],
+  "technology": [
+    "Go"
+  ]
+}

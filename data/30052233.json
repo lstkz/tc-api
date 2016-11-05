@@ -1,0 +1,340 @@
+{
+  "_id": 30052233,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:05:57.281Z",
+  "appealsEndDate": "2015-11-28T11:39:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "SunShot - MySunBuddy Python API-UI Integration",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\"><span style=\"line-height:1.6\">MySunBuddy is a peer-to-peer platform to facilitate the purchase and selling of solar net metering credits.</span></p>\n\n<p dir=\"ltr\">In previous challenges we built the backend code and HTML &nbsp;prototype.</p>\n\n<p dir=\"ltr\">The scope of this challenge is to hook up the provided AngularJS HTML prototype with the provided python backend code.</p>\n\n<h1 dir=\"ltr\">Challenge Requirements</h1>\n\n<h3 dir=\"ltr\"><u>Gitlab Repo</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- <a href=\"https://gitlab.com/tc-sunshot-r2/ss2-my-sun-buddy\">https://gitlab.com/tc-sunshot-r2/ss2-my-sun-buddy</a> Please check challenge forums to get access.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- REST Api application with sample demo pages that demonstrate the functionality we implemented <a href=\"https://gitlab.com/tc-sunshot-r2/ss2-my-sun-buddy/tree/master/mysunbuddy-backend-app\">https://gitlab.com/tc-sunshot-r2/ss2-my-sun-buddy/tree/master/mysunbuddy-backend-app</a></p>\n\t</li>\n</ul>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Prototype <a href=\"https://gitlab.com/tc-sunshot-r2/ss2-my-sun-buddy/tree/master/prototype\">https://gitlab.com/tc-sunshot-r2/ss2-my-sun-buddy/tree/master/prototype</a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- As part of this challenge, if there is any backend issue or bug or missing requirement, you will be required to address it.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Models Update</u></h3>\n\n<p dir=\"ltr\">There are new data to collect in the provided UI prototype that we did not currently catch in the provided backend application, you need to address this in this challenge.</p>\n\n<p dir=\"ltr\"><u>User Model</u></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Name: This store the user full name.</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><u>Mapping Model</u></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- price_per_kWh : represents a float value (i.e can be between 0.1 and 0.9)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- ghg_factor : represents the greenhouse gas impact on co2 factor used to calculate the GHG impact.</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><u>Deal Model</u></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- saving : this calculate saving in the deal.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- ghg_impact : this is the calculated GHG impact on co2</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- document_id : represents the signed docuSign id associated with the deal.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- start_date : represents the deal approval date.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- end_date : represents the deal end date.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Partners Matching Job Scheduler Update</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- match_script.py is used to match partners.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Update signup method to execute this script after each each new registration.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- When we found matching we want to assume the seller agreed on the sell, so store the status PENDINGBUYER to show the deals in buyer dashboard right away.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Also for some matchings we want to make them as completed deal. so the job will generate PENDINGBUYER deals and completed deals for the new buyer.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- You need to do the following update to this job scheduler to calculate the new Deal fields:</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- saving field :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Formula : deal#quantity * mapping#price_per_kWh * DISCOUNT</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- DISCOUNT is configurable value, use 0.15 in this challenge.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- ghg_impact field :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Formula : deal#quantity * mapping#ghg_factor</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Pages and Functionality Requirement</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Landing Page</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Page : <a href=\"https://demo.topcoder.com/studio/sunshot2-my-sun-buddy/ff2/index.html#/Landing\">#/Landing</a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- This page will contain static content and mainly used to navigate to signup and signin.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Sign In Popup</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Clicking on Sign In on header will open up the Signin popup.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Use /api/login endpoint to process login.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Signup : Seller Steps Wizard</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Page : <a href=\"https://demo.topcoder.com/studio/sunshot2-my-sun-buddy/ff2/index.html#/Sign_Up_Seller\">#/Sign_Up_Seller</a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The registration wizard will collect all information then store it in backend when clicking on &ldquo;Next&rdquo; in &ldquo;Finish&rdquo; step.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Use /api/register endpoint to register the user, refer to the backend to see what fields we are passing. Role to be passed in this flow is SELLER.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Clicking on &ldquo;Calculate solar production&rdquo; button logic :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- The three fields top of the button must be provided otherwise show error.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Call GET api/credit/calculate to calculate solar production for the seller by passing the three fields values.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- When popup opens up, the 100% will present the total calculated value return from json, display the calculated value below the range field, user can change the range, value will be updated accordingly, when user close it the &ldquo;Net Credit to Sell&rdquo; % value will be updated to match the value selected.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Signup : Buyer Steps Wizard</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Page : <a href=\"https://demo.topcoder.com/studio/sunshot2-my-sun-buddy/ff2/index.html#/Sign_Up_Buyer\">#/Sign_Up_Buyer</a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The wizard is same as Seller Steps wizard, we collect few different fields/information, it will create user in &ldquo;Finish&rdquo; tab and will use same endpoint, except we will pass different fields as shown in backend, and role = BUYER.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Buyer Dashboard</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Page : <a href=\"https://demo.topcoder.com/studio/sunshot2-my-sun-buddy/ff2/index.html#/Buyer\">#/Buyer</a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Retrieve current user information from &ldquo;GET /api/account&rdquo; endpoint response when page loads.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Usage Section</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Usage : Use Dummy Data, assume it is 2.5KW.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Initial State : Use Dummy Data, assume it is 10KW<br />\n\t\t\t<img src=\"https://lh3.googleusercontent.com/eLyk6iblTDT_3rOsxlB22vU8HJ0pSv4HH05eOIU028VqQJ8uTHF8A-qqUamD4xatcwkYxhSnHVYjoNFUxSdB2lc8gKwJTMAfHfKDTETewYfbf_O1DQHJV43q09BQR-Hj0vvS07Gm\" /></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Summary Tab</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Summary section :<br />\n\t\t\t<img src=\"https://lh5.googleusercontent.com/dSHFtgYN403lZ_O3nLC_5QvhNiZfmqfNpDwPv8KWx5mqYkPRoM0V2BlbwUojF340tavuUJ9lgr8doSVQQb4pXGBEim757_x3UWgFxnsm5PyKAKbaAOJscaxNf4kjdbKZ510clpXI\" style=\"height:103px; width:600px\" /></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- We need to update the GET /api/account to include these three values in response.</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- Savings : should be aggregated deal#saving field from all completed deals of current logged in user.</p>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- GHG impact : should be aggregated deal#ghg_impact field from all completed deals of current user</p>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- Purchased : should be aggregated deal#quantity from all completed deals of current user.</p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- &ldquo;We found X matches in your area&rdquo; section and table</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Endpoint to use will be /api/deals?&amp;pending=1</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Use &ldquo;count&rdquo; field from response to render &ldquo;X&rdquo; in &ldquo;We found X matches in your area&rdquo;.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- The table will render the deals returned</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- Buy button : this one will call /api/deals/{id}/approve endpoint where id is the deal &ldquo;id&rdquo; json attribute. On successful approve ajax call display a popup saying &ldquo;Match complete!&rdquo;</p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- &ldquo; Google Map&rdquo;</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Display sellers addresses will be retrieved from endpoint GET /api/deals/sellers</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Display buyer house address.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- &ldquo;Current Percentage of your bill to buy.&rdquo; section :</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- The large circle chart is set using &ldquo;credit_to_buy_percent&rdquo; json field from &nbsp;GET /api/account endpoint</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- kWh : Represents the monthly usage (dummy) * credit_to_buy_percent value.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Price : Represents kWh * the mapping#price_per_kWh of user load-zone/zipcode area.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- GHG Impact : Represents the kWh* mapping#ghg_factor of user load-zone/zipcode area.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- MySunBuddy Buyer Tab</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- The table is loaded using GET /deals endpoint, it loads completed deals.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Table will render returned deals.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Seller Dashboard</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Page : <a href=\"https://demo.topcoder.com/studio/sunshot2-my-sun-buddy/ff2/index.html#/Seller\">#/Seller</a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Retrieve current user information from &ldquo;GET /api/account&rdquo; endpoint response when page loads.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Usage section :<br />\n\t\t<img src=\"https://lh5.googleusercontent.com/Ks40QGlh-Dj38aF-_fT9jRgUxk_1aikzY6QMM8tJOWKH4eECk-Cv2-PehXDZ2_Ip2DDTxA0aPI6eMREPIHW4G6K2EVROarz2cby2IlamNY05HXGi900XthkUnzJ1PvxfDWwRFtc6\" /></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- &ldquo;Left %&rdquo; = credit_to_sell_percent - sold credits of all deals current month.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- &ldquo;Contracted&rdquo; &nbsp;the sold credit this month from all deals.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Update &ldquo;GET /api/account&rdquo; endpoint to calculate the above two values and set them in response.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Summary Tab</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Earning Section<br />\n\t\t\t<img src=\"https://lh3.googleusercontent.com/wXLPNqoY3hjsyyYX8uv3c11qb6gGEXfF7GVPx5m9aoODfK_2_-dZ3nr4zg1X0H8vpe3E_6yXTb0T5FjJuJnXKDttGCLtmQfgQO-OQ6k68RWr-QW9MfNPVs8gLoMR1Mj_j7HrxeZ0\" style=\"height:118px; width:700px\" /></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">The values map as follow :</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- &ldquo;Pending value of monetary credits&rdquo; : represents the total (deal#price) active transactions of current month.</p>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- Earning to date : this should aggregate the total deal#price of completed deals.</p>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- Capacity Sold : this should aggregate total solar power &lsquo;deal#quantity&rsquo; sold in all completed deals.</p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Update &ldquo;GET /api/account&rdquo; endpoint to aggregate the above three values and set them in response.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- &ldquo;We found X matches in your area&rdquo; section and table</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Endpoint to use will be /api/deals?&amp;pending=1</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Use &ldquo;count&rdquo; field from response to render &ldquo;X&rdquo; in &ldquo;We found X matches in your area&rdquo;.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<ul>\n\t<li>\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- &ldquo; Google Map&rdquo; Section will be same as Buyer google map.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- &ldquo;Current Percentage of solar production to sell&rdquo; section :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- The large circle chart is set using &ldquo;credit_to_sell_percent&rdquo; json field from &nbsp;/api/account endpoint</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- MySunBuddy Seller Tab</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The table is loaded using deals?limit=10&amp;offset=0 endpoint, pagination should be passed, so it is progressive loading ajax.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Test Data</u></h3>\n\n<p dir=\"ltr\">Provide test data for the solution.</p>\n\n<h3 dir=\"ltr\"><u>Test Scenario 1</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Buyer register</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Buyer login</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Buyer navigate to dashboard and see list of matches</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Buyer click &ldquo;Buy&rdquo; and get &ldquo;Match Complete!&rdquo;</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Test Scenario 2</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Seller Register</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Seller login</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Seller navigate to dashboard and see list of matches</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Seller click on &ldquo;Sell&rdquo; and get &ldquo;Thanks! Notification sent to buyer!&rdquo;</p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Technology</h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Python version 3.x running on Ubuntu</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Postgres 9.4</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Django 1.8.x</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- AngularJS</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Bootstrap</p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Abstracting and Design Patterns</h2>\n\n<p dir=\"ltr\">Please make sure to create helper/interface to include the common code/functionality.</p>\n\n<p dir=\"ltr\">Also please make sure your design is flexible, use facade design pattern and adapter design pattern (and any other proper design pattern) to enable future extensibility of the solution.</p>\n\n<h2 dir=\"ltr\">Coding Standard</h2>\n\n<p dir=\"ltr\">Follow python coding best practices : <a href=\"http://www.python.org/dev/peps/pep-0008/\">PEP 8</a> for the main text, and<a href=\"http://www.python.org/dev/peps/pep-0257/\"> PEP 257</a> for docstring conventions</p>\n\n<h2 dir=\"ltr\">Documentation</h2>\n\n<p dir=\"ltr\">Your solution must be well documented.</p>\n\n<h2 dir=\"ltr\">Readme</h2>\n\n<p dir=\"ltr\">Provide a detailed readme file using Markdown language with following information :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Overview</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Setup Prerequisites</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Configurations</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Deployment</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Any details about any limitations of your solution.</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\">Please note, we&#39;re judging this competition not just on the code, but also on the quality of the documentation, and ease of use.</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30052233",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<h1 dir=\"ltr\">Deliverable</h1>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Git patch file of changes.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Deployment document with verification steps</p>\n\t</li>\n</ul>\n",
+  "forumId": 31017,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=31017",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 25,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-20T16:17:00.000Z",
+      "actualStartTime": "2015-11-20T16:17:00.000Z",
+      "scheduledEndTime": "2015-11-25T16:18:00.000Z",
+      "actualendTime": "2015-11-25T16:18:00.000Z",
+      "_id": "58132305550dfb3b52b3b441"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-20T16:22:00.000Z",
+      "actualStartTime": "2015-11-20T16:22:00.000Z",
+      "scheduledEndTime": "2015-11-25T16:18:00.000Z",
+      "actualendTime": "2015-11-25T16:18:00.000Z",
+      "_id": "58132305550dfb3b52b3b440"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-25T16:18:00.000Z",
+      "actualStartTime": "2015-11-25T16:18:00.000Z",
+      "scheduledEndTime": "2015-11-28T08:15:00.000Z",
+      "actualendTime": "2015-11-28T08:15:00.000Z",
+      "_id": "58132305550dfb3b52b3b43f"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-28T08:15:00.000Z",
+      "actualStartTime": "2015-11-28T08:15:00.000Z",
+      "scheduledEndTime": "2015-11-28T11:04:00.000Z",
+      "actualendTime": "2015-11-28T11:04:00.000Z",
+      "_id": "58132305550dfb3b52b3b43e"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-28T11:04:00.000Z",
+      "actualStartTime": "2015-11-28T11:04:00.000Z",
+      "scheduledEndTime": "2015-11-28T11:39:00.000Z",
+      "actualendTime": "2015-11-28T11:39:00.000Z",
+      "_id": "58132305550dfb3b52b3b43d"
+    }
+  ],
+  "platforms": [
+    "Heroku"
+  ],
+  "postingDate": "2015-11-20T16:17:00.000Z",
+  "prize": [
+    1800,
+    900
+  ],
+  "projectId": 9156,
+  "registrants": [
+    {
+      "handle": "son4moon",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-20T18:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b43c"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-20T18:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b43b"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T00:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b43a"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T02:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b439"
+    },
+    {
+      "handle": "alexdglover",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T03:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b438"
+    },
+    {
+      "handle": "ananthhh",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T03:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b437"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T04:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b436"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T05:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b435"
+    },
+    {
+      "handle": "rtriv",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T07:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b434"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T08:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b433"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T08:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b432"
+    },
+    {
+      "handle": "spritab",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T11:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b431"
+    },
+    {
+      "handle": "zaixiang",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T03:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b430"
+    },
+    {
+      "handle": "jorje.b",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T03:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b42f"
+    },
+    {
+      "handle": "vvvpig",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T05:30:00.000Z",
+      "submissionDate": "2015-11-25T12:16:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b42e"
+    },
+    {
+      "handle": "chtbharti",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T07:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b42d"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T11:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b42c"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T14:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b42b"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-23T06:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b42a"
+    },
+    {
+      "handle": "agus.mw",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-23T07:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b429"
+    },
+    {
+      "handle": "HomelyHyperion",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-23T10:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b428"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-23T23:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b427"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-24T08:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b426"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-24T09:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b425"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-25T13:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132305550dfb3b52b3b424"
+    }
+  ],
+  "registrationEndDate": "2015-11-25T16:18:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-11-25T16:18:00.000Z",
+  "submissions": [
+    {
+      "handle": "vvvpig",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 88.75,
+      "finalScore": 97.5,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-11-25T12:16:00.000Z",
+      "_id": "58132305550dfb3b52b3b442"
+    }
+  ],
+  "technology": [
+    "API",
+    "Angular.js",
+    "CSS",
+    "HTML",
+    "JavaScript",
+    "PostgreSQL",
+    "Python"
+  ]
+}

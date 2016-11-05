@@ -1,7 +1,7 @@
 {
   "_id": 30036155,
   "_isComplete": true,
-  "__v": 1,
+  "__v": 0,
   "_lastUpdate": "2016-10-27T17:45:22.039Z",
   "appealsEndDate": "2013-11-12T04:53:00.000Z",
   "challengeCommunity": "develop",
@@ -15,11 +15,6 @@
   "detailedRequirements": "<h2 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span style=\"color: rgb(255, 0, 0);\">Project Overview</span></h2>\n\n<p><span style=\"font-size: 12px; line-height: 19.1875px;\">In a team based development environment, developers usually don&#39;t know the status of CI build, and that may lead to piling onto red builds if developers commit &amp; dash without checking the status of CI build first. It&#39;s also hard to figure out in this case who is fixing the build and other develoeprs could blocked by red builds.</span></p>\n\n<p><span style=\"font-size: 12px; line-height: 19.1875px;\">The purpose of this project is to build an app to resolve such issues.</span></p>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Competition Task Overview</span></h2>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; font-size: 12px; line-height: 16px;\"><span style=\"font-family: sans-serif, Arial, Verdana, 'Trebuchet MS'; line-height: 1.6em;\">For this PoC, we&#39;ll focus on the following features.</span></p>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\"><span style=\"color: rgb(255, 0, 0);\"><strong>Windows Forms Application</strong></span></p>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">This will be built as a Windows Forms application, and it will minimize to system tray when launched. We don&#39;t need any separate forms but just a system tray icon.</p>\n\n<p style=\"font-size: 13px; font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\"><span style=\"color: rgb(255, 0, 0);\"><strong>Proxy Server</strong></span></p>\n\n<p style=\"font-size: 13px; font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">Our developers while at work must go through an HTTP proxy server to access the Rally website (and anything else on the internet). This tool will either need to honor the system default proxy, HTTP_PROXY &amp; HTTPS_PROXY environment variables, or allow the user to specify the proxy to use for this connection.</p>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; font-size: 12px; line-height: 16px;\"><strong style=\"color: rgb(255, 0, 0); font-size: 13px;\">Status</strong></p>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">The icon in the system tray will not be static, instead it needs to update itself based on the&nbsp;status of CI build:</p>\n\n<ul>\n\t<li style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">Green: SUCCESS</li>\n\t<li style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">Red: FAILURE</li>\n\t<li style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">Gray: if the build status is not current / connection error / inactive</li>\n</ul>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">You&#39;ll get the status through a HTTP call and the result will be in JSON, you&#39;ll need to parse the Status field in order to find out the current CI Build status.</p>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">The application needs to poll for build status every 15 minutes.</p>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">Details on how to retrieve the status will be provided in contest forum.</p>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\"><strong><span style=\"color:#FF0000;\"><span style=\"background-color:#FFFF00;\">NOTE: the call may require authorization, your code should take care of that. You can hardcode the readonly account we provided in the forum, but we also want to be able to configure that, see below.</span></span></strong></p>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\"><span style=\"color: rgb(255, 0, 0);\"><strong>Tooltip</strong></span></p>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">When mouse hovers on the status icon, we need to show a tooltip that includes<span style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">&nbsp;build ID, date,&nbsp;and link. These fields can also be parsed from the JSON result (</span><span style=\"font-family: Arial, Helvetica, Verdana, sans-serif; font-size: 13px; line-height: 16px;\">Number, CreationDate, and Uri fields in JSON</span>).</p>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">Double clicking the icon should open the link in browser if such a link is available.</p>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\"><span style=\"color: rgb(255, 0, 0);\"><strong>Context Menus</strong></span></p>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">The following context menus should be present when you right click on the system tray icon:</p>\n\n<ul>\n\t<li style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">Check for current status: this is a menu to manually check for current status</li>\n\t<li style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">Show in browser: this simply opens the current/latest Uri parsed from JSON, this menu should be disabled if no Uri has been retrieved yet</li>\n\t<li style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">Options: this will allow users to configure a different user account if they don&#39;t want to use the hardcoded one; it will also allow users to configure the proxy server.</li>\n\t<li style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">Exit: closes the widget.</li>\n</ul>\n\n<p style=\"font-size: 13px; font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\"><strong style=\"color: rgb(255, 0, 0);\">Installer</strong></p>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">If this application cant be distributed without an installer (i.e. just extract and launch) that&#39;s great, otherwise you need to provide an installer project too.</p>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Technology Overview</span></h2>\n\n<ul style=\"font-family: Arial, Helvetica, Verdana, sans-serif; font-size: 12px; line-height: 16px;\">\n\t<li>C#</li>\n\t<li>Windows Forms</li>\n\t<li>.NET Framework 3.5</li>\n\t<li>Windows 7</li>\n</ul>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Documentation Provided</span></h2>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; font-size: 12px; line-height: 16px;\">Register to see documents in contest forum.</p>\n",
   "digitalRunPoints": 450,
   "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30036155",
-  "event": {
-    "id": 3437,
-    "description": "2014 TopCoder(R) Open",
-    "shortDescription": "tco14"
-  },
   "finalFixEndDate": "2013-11-13T07:54:00.000Z",
   "finalSubmissionGuidelines": "<h2><strong><span style=\"color: rgb(255, 0, 0);\"><span style=\"line-height: 1.6em;\">Submission Deliverables</span></span></strong></h2>\n\n<h2><span style=\"font-size: 12px; line-height: 1.6em;\">A complete list of deliverables can be viewed in the TopCoder Assembly competition Tutorial at: </span><a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorial\" style=\"font-size: 12px; line-height: 1.6em;\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorial&nbsp;</a></h2>\n\n<p><span style=\"font-size: 12px; line-height: 1.6em;\">Below is an overview of the deliverables:</span></p>\n\n<ul>\n\t<li><span style=\"font-size:12px;\">An application that meets all listed requirements.</span></li>\n\t<li><span style=\"font-size:12px;\">A complete and detailed deployment documented explaining how to deploy the application including configuration information (if configuration is needed).</span></li>\n</ul>\n\n<h2><span style=\"color:#FF0000;\"><strong>Final Submission</strong></span></h2>\n\n<p><span style=\"font-size:12px;\">For each member, the final submission should be uploaded to the Online Review Tool.</span></p>\n",
   "forumId": 19398,
@@ -28,6 +23,104 @@
   "numberOfCheckpointsPrizes": 0,
   "numberOfRegistrants": 23,
   "numberOfSubmissions": 8,
+  "postingDate": "2013-11-07T14:00:00.000Z",
+  "projectId": 6829,
+  "registrationEndDate": "2013-11-09T14:00:00.000Z",
+  "reliabilityBonus": 200,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2013-11-09T14:05:00.000Z",
+  "submissions": [
+    {
+      "handle": "fatsushi",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 97.95,
+      "finalScore": 98.81,
+      "points": 252.00000000000003,
+      "submissionStatus": "Active",
+      "submissionDate": "2013-11-08T17:08:00.000Z",
+      "_id": "58123d326fc1ab2d92718f36"
+    },
+    {
+      "handle": "zaixiang",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 95.63,
+      "finalScore": 98.2,
+      "points": 90,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2013-11-09T09:58:00.000Z",
+      "_id": "58123d326fc1ab2d92718f35"
+    },
+    {
+      "handle": "dualfitting",
+      "placement": 3,
+      "screeningScore": 100,
+      "initialScore": 94.13,
+      "finalScore": 94.24,
+      "points": 45,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2013-11-09T01:54:00.000Z",
+      "_id": "58123d326fc1ab2d92718f34"
+    },
+    {
+      "handle": "milton93",
+      "placement": 4,
+      "screeningScore": 100,
+      "initialScore": 93.04,
+      "finalScore": 93.15,
+      "points": 36,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2013-11-09T13:40:00.000Z",
+      "_id": "58123d326fc1ab2d92718f33"
+    },
+    {
+      "handle": "partychen",
+      "placement": 5,
+      "screeningScore": 100,
+      "initialScore": 89.35,
+      "finalScore": 91.81,
+      "points": 27,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2013-11-09T11:10:00.000Z",
+      "_id": "58123d326fc1ab2d92718f32"
+    },
+    {
+      "handle": "r1cs1",
+      "placement": 6,
+      "screeningScore": 100,
+      "initialScore": 86.83,
+      "finalScore": 87.04,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2013-11-09T13:24:00.000Z",
+      "_id": "58123d326fc1ab2d92718f31"
+    },
+    {
+      "handle": "wsobolewski",
+      "placement": 7,
+      "screeningScore": 100,
+      "initialScore": 81.26,
+      "finalScore": 81.26,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2013-11-09T13:37:00.000Z",
+      "_id": "58123d326fc1ab2d92718f30"
+    },
+    {
+      "handle": "DerekLoveCC",
+      "placement": 8,
+      "screeningScore": 100,
+      "initialScore": 80.24,
+      "finalScore": 80.35,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2013-11-09T13:05:00.000Z",
+      "_id": "58123d326fc1ab2d92718f2f"
+    }
+  ],
   "phases": [
     {
       "type": "Specification Submission",
@@ -138,13 +231,6 @@
       "_id": "58123d326fc1ab2d92718f23"
     }
   ],
-  "platforms": [],
-  "postingDate": "2013-11-07T14:00:00.000Z",
-  "prize": [
-    1000,
-    500
-  ],
-  "projectId": 6829,
   "registrants": [
     {
       "handle": "wsobolewski",
@@ -354,103 +440,17 @@
       "_id": "58123d326fc1ab2d92718f0c"
     }
   ],
-  "registrationEndDate": "2013-11-09T14:00:00.000Z",
-  "reliabilityBonus": 200,
-  "reviewScorecardId": 30001470,
-  "reviewType": null,
-  "screeningScorecardId": 30000412,
-  "submissionEndDate": "2013-11-09T14:05:00.000Z",
-  "submissions": [
-    {
-      "handle": "fatsushi",
-      "placement": 1,
-      "screeningScore": 100,
-      "initialScore": 97.95,
-      "finalScore": 98.81,
-      "points": 252.00000000000003,
-      "submissionStatus": "Active",
-      "submissionDate": "2013-11-08T17:08:00.000Z",
-      "_id": "58123d326fc1ab2d92718f36"
-    },
-    {
-      "handle": "zaixiang",
-      "placement": 2,
-      "screeningScore": 100,
-      "initialScore": 95.63,
-      "finalScore": 98.2,
-      "points": 90,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2013-11-09T09:58:00.000Z",
-      "_id": "58123d326fc1ab2d92718f35"
-    },
-    {
-      "handle": "dualfitting",
-      "placement": 3,
-      "screeningScore": 100,
-      "initialScore": 94.13,
-      "finalScore": 94.24,
-      "points": 45,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2013-11-09T01:54:00.000Z",
-      "_id": "58123d326fc1ab2d92718f34"
-    },
-    {
-      "handle": "milton93",
-      "placement": 4,
-      "screeningScore": 100,
-      "initialScore": 93.04,
-      "finalScore": 93.15,
-      "points": 36,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2013-11-09T13:40:00.000Z",
-      "_id": "58123d326fc1ab2d92718f33"
-    },
-    {
-      "handle": "partychen",
-      "placement": 5,
-      "screeningScore": 100,
-      "initialScore": 89.35,
-      "finalScore": 91.81,
-      "points": 27,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2013-11-09T11:10:00.000Z",
-      "_id": "58123d326fc1ab2d92718f32"
-    },
-    {
-      "handle": "r1cs1",
-      "placement": 6,
-      "screeningScore": 100,
-      "initialScore": 86.83,
-      "finalScore": 87.04,
-      "points": 0,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2013-11-09T13:24:00.000Z",
-      "_id": "58123d326fc1ab2d92718f31"
-    },
-    {
-      "handle": "wsobolewski",
-      "placement": 7,
-      "screeningScore": 100,
-      "initialScore": 81.26,
-      "finalScore": 81.26,
-      "points": 0,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2013-11-09T13:37:00.000Z",
-      "_id": "58123d326fc1ab2d92718f30"
-    },
-    {
-      "handle": "DerekLoveCC",
-      "placement": 8,
-      "screeningScore": 100,
-      "initialScore": 80.24,
-      "finalScore": 80.35,
-      "points": 0,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2013-11-09T13:05:00.000Z",
-      "_id": "58123d326fc1ab2d92718f2f"
-    }
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "prize": [
+    1000,
+    500
   ],
   "technology": [
     ".NET 3.5"
-  ]
+  ],
+  "platforms": []
 }

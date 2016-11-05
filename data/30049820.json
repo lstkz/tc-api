@@ -1,0 +1,287 @@
+{
+  "_id": 30049820,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T11:00:53.116Z",
+  "appealsEndDate": "2015-05-01T05:48:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "SunShot - Gridmates Send Energy Ruby on Rails Engine",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\">Challenge Overview</p>\n\n<p dir=\"ltr\">In this challenge you are building a Rails mountable <a href=\"http://edgeguides.rubyonrails.org/engines.html\">engine</a> using the provided UI prototype and outlined requirements below.</p>\n\n<p dir=\"ltr\">Winning submissions will be used by end users to donate energy to people in energy poverty.</p>\n\n<p dir=\"ltr\">You are expected to implement the following in this challenge :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Build the Ruby on Rails engine as outlined below.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Build a Ruby on Rails demo application that demonstrate how to host the engine.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Create a detailed readme deployment document.</p>\n\t</li>\n</ul>\n\n<h1 dir=\"ltr\">Challenge Requirements</h1>\n\n<h3 dir=\"ltr\">Send Energy Now Requirement</h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">In this functionality a user can see energy production of solar energy, define a percentage of produced energy to send to people in energy poverty, see the impact of the specific amount of energy selected and click to send energy. The Send Energy button will include a URL to drive users to a Send Energy.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong>Step 1</strong><br />\n\t<span><span style=\"background-color:transparent\"><img src=\"https://lh6.googleusercontent.com/PlZfpD6k82cnxGOE2z72yhVvG1VJ7GEA85tXArp0SSTwh0CBmSNDVTWPRVIPAqtO2o_vVSKDV-boEJ_A7Q66ycBP69CE090LikuposNJkSIZSPqJsVajpGaRJN3n8bNC213kgOo\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:217px; transform:rotate(0.00rad); width:566px\" /></span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">User will provide a US zip code.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">We have following flow/logic based on user&rsquo;s answer for &ldquo;Do you have rooftop solar panels?&rdquo; :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Yes</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">This will display a form to authenticate user with <a href=\"https://developer.enphase.com/\">enphase</a>. But since enphase api requires user id (generated from an auth flow) &nbsp;you need to change the first field a button with label &ldquo;Login with EnPhase&rdquo;. The second field will display the user id on successful authentication.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Clicking on &ldquo;Login with EnPhase&rdquo; will take user to enphase auth flow.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Refer to Enphase and PVWatts Gem demo for sample of how the authorization is done.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">No</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">We will take the input value from &ldquo;Installed Capacity&rdquo; field as it is.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">If user picked &ldquo;Square feet of solar panels&rdquo; then do the following calculation to convert the value from sqrft to Kw:</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">Capacity (kW)=sqrft * 0.0106</p>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">You can <a href=\"https://www.google.jo/search?q=sq+ft+%3D+%3F+sqin&amp;oq=sq+ft+%3D+%3F+sqin&amp;aqs=chrome..69i57.4791j0j4&amp;sourceid=chrome&amp;es_sm=119&amp;ie=UTF-8\">refer to google calculator</a> for converting between sq xx units.</p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">For both Yes/No options, the collected data will be passed to backend to be processed by &ldquo;Enphase and PVWatts Gem&rdquo;, refer to &ldquo;Enphase and PVWatts Gem Gem&rdquo; section below for more information.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">The call to backend should be via AJAX, display ajax loading indicator to give user indication that is something is being calculated in the backend.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong>Step 2</strong><br />\n\t<span><span style=\"background-color:transparent\"><img src=\"https://lh4.googleusercontent.com/O7yB5m6E2WchDWWCOszMnh_6DXRdx8Gk7x5Qc1W8PYnS_MC_MH0pfl9TDlB410fHcTXmaXY7LYGUS0i5gohr7ThwbwqlvZUMumiAVlSX1ycf02vU7w3-r20Odxn9Y4qmi2nk818\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:268px; transform:rotate(0.00rad); width:624px\" /></span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">The response of &lsquo;calculate&rsquo; button will be an energy production value and cost, render these information as shown in the screenshot.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">&ldquo;Your Impact&rdquo; section will allow user to select the amount of energy to send.</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">User can set the amount to send via two input UI :</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Slider :</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">The steps should be dynamically calculated based on the amount of cost rendered above. Every step is 5$ always, so if we have $100 then we will have 20 steps .. etc.</p>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">The selected step should be updated when percentage button is changed.</p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Percentage buttons :</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">You will use same percentage as in the prototype.</p>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">The selected button should be updated when slider step is changed.</p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">The three labels : day of energy, $$ amount, and energy amount will be recalculated based on selected amount to send.</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">You can assume the response from &ldquo;calculate&rdquo; represents a 30 days of produced energy, your calculation for updating these labels will be based on this assumption.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong><span><span style=\"background-color:transparent\">Last Step : Send Energy</span></span></strong></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Clicking this button will do the following :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Persist all data and information collected from all steps in cookie/session. So next time user visit the page will get the information pre-populated from cookie.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">A backend controller method should handle the call : &nbsp;<br />\n\t\t\tprotected def callback_to_host_app(dollars_to_send, kwh_to_send, last_month_production, zipcode)<br />\n\t\t\t&nbsp;&nbsp; &nbsp;raise &quot;Please override me in the host application!&quot;<br />\n\t\t\tend</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">The demo application should show how to override this method and displaying a success popup window with the information passed to the method.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\">Enphase and PVWatts Gem</h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">You are provided with a Ruby gem built in a past challenge to handle &ldquo;calculate&rdquo; action in Send Energy flow.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The Gem is provided in challenge forums and contains a very detailed information about it&rsquo;s usage.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">If user selected Enphase then zip code and enphase user id will be passed to the Enphase get_enphase_last_month_stats function in the Gem.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">If user selected &ldquo;NO&rdquo; then we will use PVWatts to calculate an estimate of last month produced energy and cost. We will pass zip code, and capacity (in kW) to PVWatts get_pvwatts_stats function in the gem.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The provided Gem also include a demo folder gm_stats_demo that demonstrates how to authorize a user with EnPhase and how to use the Gem to get produced energy and cost for both EnPhase and PVWatts.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">All required configuration in this gem should be configured in the Rails engine.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\">Ruby on Rails Engine Requirements</h3>\n\n<p dir=\"ltr\">The following points are very important as we are integrating the output of this challenge with an existing RoR application. You can find <a href=\"http://edgeguides.rubyonrails.org/engines.html\">this link</a> very helpful to get started with Engines.</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The engine to be built should be ready made application extension, such that it can be plugged in into an existing RubyOnRails application and once handed the execution path it runs completely autonomous.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The views created in this challenge should not render any core HTML elements (html, head, body) nor provide any header/footer. The host application is responsible for them. CSS/JS assets will be loaded by the host/existing application per instructions.</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">The demo application should use the header/footer in the provided UI prototype.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Make sure the Rails engine is inheriting from host application&#39;s ApplicationController class and not the namespaced one, by removing the auto generated application_controller.rb in your engine. This way the engine is also inheriting the host application&#39;s layouts.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">In your generated views use a construct the one like below to pass your header elements to the host application layout. There is JS in the real host application to automatically pick-up a link with class .scroll-link and smooth-scroll to the element ID in data-id. You also need to demonstrate this in the demo application app.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ol>\n\n<p dir=\"ltr\">- content_for :topcoders_main_nav</p>\n\n<p dir=\"ltr\">&nbsp;&nbsp; &nbsp;li= link_to &quot;Send energy now&quot;, &#39;javascript:void(0)&#39;, class: &quot;scroll-link&quot;, data: {id: &quot;your-impact&quot;}</p>\n\n<p dir=\"ltr\">&nbsp;&nbsp; &nbsp;li= link_to &quot;How it works&quot;, &quot;javascript:void(0)&quot;, class: &quot;scroll-link&quot;, data:{id: &quot;how-it-works-for-you&quot;}</p>\n\n<ol start=\"3\">\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Provide Turbolinks compatible JS. Existing application is utilizing Turbolinks, which is de facto included in Rails 4 projects.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Provide all needed integration scripts and instructions to integrate with existing application, that include the routes, database migration, and an initializer for the engine configuration.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Provide a sample RoR application to verify the integration and mounting functionality.</p>\n\t</li>\n</ol>\n\n<h3 dir=\"ltr\">Demo RoR Application</h3>\n\n<p dir=\"ltr\">You are building a demo RoR to demonstrate the following :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Mounting the engine to existing RoR application.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Passing header/footer dynamic content to hosting RoR application.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Verify that the engine inherit the hosting view layout.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Demonstrate the &ldquo;Send Energy&rdquo; controller function override functionality.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\">Documentation</h3>\n\n<p dir=\"ltr\">Because other programmers will be working with your code, and incorporating it into their projects, all functions must be documented in detail in the code.</p>\n\n<h3 dir=\"ltr\">Coding Standard</h3>\n\n<p dir=\"ltr\">Follows coding standards listed here: <a href=\"https://github.com/copycopter/style-guide\">https://github.com/copycopter/style-guide </a></p>\n\n<h3 dir=\"ltr\">Folder Structure</h3>\n\n<p dir=\"ltr\">Please follow best practices for the folder structure as mentioned in this link <a href=\"http://edgeguides.rubyonrails.org/engines.html\">http://edgeguides.rubyonrails.org/engines.html</a></p>\n\n<h3 dir=\"ltr\">Readme</h3>\n\n<p dir=\"ltr\">Provide a detailed readme file using Markdown language with following information :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Overview</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Setup Prerequisites</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">How to install</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Usage Example</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">How to run the engine and verify results.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Any details about any limitations of your solution.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\">References</h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><a href=\"http://edgeguides.rubyonrails.org/engines.html\">http://edgeguides.rubyonrails.org/engines.html</a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><a href=\"https://developer.enphase.com/docs/\">https://developer.enphase.com/docs/</a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><a href=\"https://developer.nrel.gov/docs/solar/pvwatts-v5/\">https://developer.nrel.gov/docs/solar/pvwatts-v5/</a></p>\n\t</li>\n</ul>\n\n<h1 dir=\"ltr\">Documents</h1>\n\n<p dir=\"ltr\">The UI prototype and Gem library are provided in challenge forums.</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30049820",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalSubmissionGuidelines": "<h1 dir=\"ltr\">Deliverable</h1>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">All source code files and scripts that addresses the challenge requirement.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Detailed readme file as clarified above.</p>\n\t</li>\n</ul>\n",
+  "forumId": 29069,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=29069",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 19,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-22T20:00:00.000Z",
+      "actualStartTime": "2015-04-22T20:00:00.000Z",
+      "scheduledEndTime": "2015-04-28T20:01:00.000Z",
+      "actualendTime": "2015-04-28T20:01:00.000Z",
+      "_id": "58132fe5550dfb3b52b8ce92"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-22T20:05:00.000Z",
+      "actualStartTime": "2015-04-22T20:05:00.000Z",
+      "scheduledEndTime": "2015-04-28T20:06:00.000Z",
+      "actualendTime": "2015-04-28T20:06:00.000Z",
+      "_id": "58132fe5550dfb3b52b8ce91"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-28T20:07:00.000Z",
+      "actualStartTime": "2015-04-28T20:07:00.000Z",
+      "scheduledEndTime": "2015-04-30T17:13:00.000Z",
+      "actualendTime": "2015-04-30T17:13:00.000Z",
+      "_id": "58132fe5550dfb3b52b8ce90"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-30T17:13:00.000Z",
+      "actualStartTime": "2015-04-30T17:13:00.000Z",
+      "scheduledEndTime": "2015-04-30T18:20:00.000Z",
+      "actualendTime": "2015-04-30T18:20:00.000Z",
+      "_id": "58132fe5550dfb3b52b8ce8f"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-30T18:20:00.000Z",
+      "actualStartTime": "2015-04-30T18:20:00.000Z",
+      "scheduledEndTime": "2015-05-01T05:48:00.000Z",
+      "actualendTime": "2015-05-01T05:48:00.000Z",
+      "_id": "58132fe5550dfb3b52b8ce8e"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-04-22T20:00:00.000Z",
+  "prize": [
+    1000,
+    500,
+    250
+  ],
+  "projectId": 8522,
+  "registrants": [
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-24T09:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe5550dfb3b52b8ce8d"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-22T20:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe5550dfb3b52b8ce8c"
+    },
+    {
+      "handle": "vimrc",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-23T01:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe5550dfb3b52b8ce8b"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-23T03:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe5550dfb3b52b8ce8a"
+    },
+    {
+      "handle": "amanforindia",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-23T09:50:00.000Z",
+      "submissionDate": "2015-04-28T18:00:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe5550dfb3b52b8ce89"
+    },
+    {
+      "handle": "TAG",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-24T00:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe5550dfb3b52b8ce88"
+    },
+    {
+      "handle": "chok68",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-23T20:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe5550dfb3b52b8ce87"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-23T21:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe5550dfb3b52b8ce86"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-23T22:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe5550dfb3b52b8ce85"
+    },
+    {
+      "handle": "evilkyro1965",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-24T01:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe5550dfb3b52b8ce84"
+    },
+    {
+      "handle": "karthikbecse",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-24T04:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe5550dfb3b52b8ce83"
+    },
+    {
+      "handle": "Luckyodell",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-24T09:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe5550dfb3b52b8ce82"
+    },
+    {
+      "handle": "nagarajan87",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-24T16:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe5550dfb3b52b8ce81"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-24T21:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe5550dfb3b52b8ce80"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-25T04:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe5550dfb3b52b8ce7f"
+    },
+    {
+      "handle": "phaniram",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-25T16:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe5550dfb3b52b8ce7e"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-26T06:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe5550dfb3b52b8ce7d"
+    },
+    {
+      "handle": "mo.sehsah",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-26T10:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe5550dfb3b52b8ce7c"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-27T12:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe5550dfb3b52b8ce7b"
+    }
+  ],
+  "registrationEndDate": "2015-04-28T20:01:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-04-28T20:06:00.000Z",
+  "submissions": [
+    {
+      "handle": "amanforindia",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 88.75,
+      "finalScore": 91.88,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-04-28T18:00:00.000Z",
+      "_id": "58132fe5550dfb3b52b8ce93"
+    }
+  ],
+  "technology": [
+    "API",
+    "CSS",
+    "HTML",
+    "JavaScript",
+    "Ruby",
+    "Ruby on Rails",
+    "jQuery"
+  ]
+}

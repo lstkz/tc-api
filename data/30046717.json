@@ -1,0 +1,166 @@
+{
+  "_id": 30046717,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:13:53.891Z",
+  "appealsEndDate": "2014-11-03T12:58:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "TopCoder Direct - Add Group Permission Logic  and project full permission checking",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p>In TopCoder Direct, to determine an user&#39;s <span>project&nbsp;</span>access permission needs to check both project permission table (corporate_oltp:user_permission_grant) and user&#39;s group permission (via group authorization service). Now several places in Direct miss group permission checking, that means users with group permission ONLY are not granted correct project permission. These places shall be added with group permission checking. There are also several actions requires project FULL permission but mistake to only check project WRITE permission, these shall be fixed in this challenge too. See the requirement details below.</p>\n\n<p><strong><span style=\"font-size:14px\">Requirement Details</span></strong></p>\n\n<p><u><span style=\"font-size:14px\">project FULL permission checking</span></u></p>\n\n<ul>\n\t<li>In edit direct project page. All the actions that invole grant project permission to other users need the current user has FULL project permission.</li>\n\t<li>FULL project permission means (Please refer to AuthorizationProvider#isUserGrantedWriteAccessToProject(TCSubject tcSubject, long projectId) which checks write project permission on project)\n\t<ul>\n\t\t<li>has direct full project permission - has record in user_permission_grant with permission type (4, project_full)</li>\n\t\t<li>OR user is a client administrator for the client that the project belongs to</li>\n\t\t<li>OR user has full permission on the group which contains the project</li>\n\t</ul>\n\t</li>\n\t<li>There is an existing annotation WriteProject used to annotate the action / action methods needs project write permission. We want to do the same for full project permission checking, please add an annotation FullProject, and use it to annotate action / action methods needs project full permission. And make sure ProjectAccessInterceptor is updated to handle it.</li>\n</ul>\n\n<p><u><span style=\"font-size:14px\">Add Group Permission Checking</span></u></p>\n\n<ul>\n\t<li>Add Group Permission checking to EditCockiptProjectAction</li>\n\t<li>Add Group Permission checking to SaveCockpitProjectSettingAction, make sure to check action methods too.</li>\n\t<li>Update PermissionServiceFacadeBean#updateProjectPermissions in service component permission_service_facade to add group permission checking\n\t<ul>\n\t\t<li>Please find a way to inject the spring service&nbsp;com.topcoder.security.groups.services.AuthorizationService from the direct app&#39;s spring app context, and use this service to do group related permission checking.</li>\n\t\t<li>Please add a new method getClientByProject into service component project_service - ProjectServiceBean to get the client of a project and use this new method to get the client id of project to check the client administractor using group authorization service.</li>\n\t</ul>\n\t</li>\n\t<li>Update GamePlanServiceBean in service component game_plan_service to include the project group permission checking. Now in the game plan view (https://cockpit.cloud.topcoder.com/direct/ProjectJsGanttGamePlanView.action?formData.projectId=&lt;directProjectID&gt;), the user with group permission only cannot view the game plan content.</li>\n</ul>\n\n<p><strong><span style=\"font-size:14px\">Environments</span></strong></p>\n\n<p><u><span style=\"font-size:14px\">VM Environment</span></u></p>\n\n<p>You need a TopCoder VM to work on this challenge.</p>\n\n<p>Information about VM can be found below:</p>\n\n<p>VM specific information is found here: http://www.topcoder.com/wiki/display/docs/VM+Image+2.5. Upon registration as a submitter or reviewer you will need to request a VM based on the new TopCoder Cockpit/Direct image. To request your image, please use the forum. Before requesting your VM, you need to ensure that you have an SSH key created and in your member profile. Instructions to do so are here: http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key, and instructions to connect afterwards are here: http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key.</p>\n\n<p><span style=\"background-color:rgb(255, 255, 224)\">For the direct on VM, please do not use the /home/direct/direct as your work base. Instead you should git clone from&nbsp;https://github.com/cloudspokes/direct-app into another direct for example /home/direct/direct-app.</span></p>\n\n<ul>\n\t<li><span style=\"background-color:rgb(255, 255, 224)\">Copy&nbsp;token.properties and&nbsp;topcoder_global.properties from the /home/direct/direct to /home/direct/direct-app</span></li>\n\t<li><span style=\"background-color:rgb(255, 255, 224)\">Update&nbsp;topcoder_global.properties to point to the new location&nbsp;&nbsp;/home/direct/direct-app</span>\n\t<ul>\n\t\t<li><span style=\"background-color:rgb(255, 255, 224)\">���Add a new line&nbsp;direct_service_libdir=${libdir}/tcs/ejb</span></li>\n\t</ul>\n\t</li>\n\t<li><span style=\"background-color:rgb(255, 255, 224)\">Run the following to use JDK7 instead</span>\n\t<p><br />\n\t<span style=\"font-size:12px\"><span style=\"font-family:courier new,courier,monospace\"><span style=\"background-color:#FFFFE0\">export JAVA_HOME=/opt/jdk1.7.0_17</span></span></span></p>\n\n\t<p>&nbsp;</p>\n\t</li>\n\t<li><span style=\"background-color:rgb(255, 255, 224)\">You can run &#39;ant deploy&#39; to deploy the direct after these steps. Please note that if you update backend components, &#39;ant deploy&#39; will automatically rebuild all the backend components.</span></li>\n</ul>\n\n<p><strong><span style=\"font-size:14px\">Source code repostiroy:</span></strong></p>\n\n<p>Direct :&nbsp;https://github.com/cloudspokes/direct-app/tree/challenge-30046530</p>\n\n<p>The branch&nbsp;<em>challenge-30046530</em></p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30046717",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalSubmissionGuidelines": "<ul>\n\t<li>The updated / added files in direct-app repo or a git patch/diff contains all the changes. If submitting a patch / diff file, please make sure it can be applied successully.</li>\n\t<li>A deployment guide with detailed verification on each requirement. Please have an user setup with group permission ONLY on project to test.</li>\n</ul>\n",
+  "forumId": 26280,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=26280",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 6,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-25T13:00:00.000Z",
+      "actualStartTime": "2014-10-25T13:00:00.000Z",
+      "scheduledEndTime": "2014-10-31T13:00:00.000Z",
+      "actualendTime": "2014-10-31T13:00:00.000Z",
+      "_id": "58134101550dfb3b52be7fdc"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-25T13:06:00.000Z",
+      "actualStartTime": "2014-10-25T13:06:00.000Z",
+      "scheduledEndTime": "2014-10-31T13:07:00.000Z",
+      "actualendTime": "2014-10-31T13:07:00.000Z",
+      "_id": "58134101550dfb3b52be7fdb"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-31T13:07:00.000Z",
+      "actualStartTime": "2014-10-31T13:07:00.000Z",
+      "scheduledEndTime": "2014-11-02T12:57:00.000Z",
+      "actualendTime": "2014-11-02T12:57:00.000Z",
+      "_id": "58134101550dfb3b52be7fda"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-02T12:57:00.000Z",
+      "actualStartTime": "2014-11-02T12:57:00.000Z",
+      "scheduledEndTime": "2014-11-03T12:57:00.000Z",
+      "actualendTime": "2014-11-03T12:57:00.000Z",
+      "_id": "58134101550dfb3b52be7fd9"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-03T12:57:00.000Z",
+      "actualStartTime": "2014-11-03T12:57:00.000Z",
+      "scheduledEndTime": "2014-11-03T12:58:00.000Z",
+      "actualendTime": "2014-11-03T12:58:00.000Z",
+      "_id": "58134101550dfb3b52be7fd8"
+    }
+  ],
+  "platforms": [
+    "EC2"
+  ],
+  "postingDate": "2014-10-25T13:00:00.000Z",
+  "prize": [
+    1200
+  ],
+  "projectId": 7201,
+  "registrants": [
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-26T01:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134101550dfb3b52be7fd7"
+    },
+    {
+      "handle": "iCare",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-26T13:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134101550dfb3b52be7fd6"
+    },
+    {
+      "handle": "hajmoh",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-26T20:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134101550dfb3b52be7fd5"
+    },
+    {
+      "handle": "locke716",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-27T02:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134101550dfb3b52be7fd4"
+    },
+    {
+      "handle": "notpad",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-28T12:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134101550dfb3b52be7fd3"
+    },
+    {
+      "handle": "GreatKevin",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-30T07:47:00.000Z",
+      "submissionDate": "2014-10-31T09:45:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134101550dfb3b52be7fd2"
+    }
+  ],
+  "registrationEndDate": "2014-10-31T13:00:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2014-10-31T13:07:00.000Z",
+  "submissions": [
+    {
+      "handle": "GreatKevin",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 95,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-10-31T09:45:00.000Z",
+      "_id": "58134101550dfb3b52be7fdd"
+    }
+  ],
+  "technology": [
+    "EJB",
+    "Java",
+    "SQL",
+    "Spring",
+    "Struts"
+  ]
+}

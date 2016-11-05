@@ -1,0 +1,408 @@
+{
+  "_id": 30035819,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T23:14:05.313Z",
+  "appealsEndDate": "2013-10-25T07:51:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Release Assembly - Topcoder Search Contests API Enhancement",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2 style=\"font-weight: bold; line-height: normal; padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">Project Overview</span></h2>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 16px; font-family: Arial, Helvetica, Verdana, sans-serif;\">TopCoder and the TopCoder community have worked hard to get the platform to its currently level of maturity, but we&#39;re far from done. It&#39;s time to take the platform to the next level. TopCoder is going to start taking some steps to open up the platform API to the outside and community developers so they could incorporate it in their websites, applications or build their own applications (web, mobile or desktop).<br style=\"padding: 0px; margin: 0px;\" />\nThe ultimate goal is to open up and build an &quot;API&quot; that is targeting all different type of audiences - Software and Studio Competitors, SRM/MM competitors, Copilots, Admins and TopCoder partners - each audience will have different interests and usages of the API, so it will be a huge project and we need to make sure that we are in the right direction from the beginning.</p>\n\n<h2 style=\"font-weight: bold; line-height: normal; padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">Competition Task Overview</span></h2>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">The current implementation use hibernate to query the data from database and this contest should move the query to query tool and remove hibernate and dependency components.</p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><strong style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">Scope:&nbsp;</strong></p>\n\n<ol style=\"font-size: 13px;\">\n\t<li style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Search Contests -&nbsp;/contests</li>\n</ol>\n\n<ul style=\"font-size: 13px; margin-left: 40px;\">\n\t<li style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Remove &quot;ALL&quot; status.</li>\n</ul>\n\n<ol style=\"font-size: 13px;\">\n\t<li style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Remove&nbsp;Get all contest catalogs -&nbsp;/contestCatalogs</li>\n\t<li style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Remove&nbsp;Get contest types for a contest catalog -&nbsp;/contestCatalogs/{catalogName}/contestTypes</li>\n</ol>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">Move queries from the component to the query tool, it means stop using tc_refactoring components (drop both components tc_refactoring_stage_1_review_and_search_services and tc_refactoring_stage_1_contest_services), move validation to the rest services and queries to query tool.</span></p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">(Review Opps API will still use hibernate now&nbsp;so you can still keep the components in this contest but don&#39;t use that for the search contests API)</p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">This also means queries needs to be rewritten, because filtering, pagination will be part of query, and all of them are optional. so queries need to be rewritten to include the optional fields in WHERE clause. In current components they are appended to query only if they are present, that is cannot be done when using query tool because the query in query tool cannot be changed from code level,&nbsp;so the filter parameters used by the API should be part of the query and should have default values or excluded from query if field not passed.</span></p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"line-height: 1.5em;\">Note: the performance is very important for this contest. Please try to optimize the query.</span></p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">You can play the current API here:</p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><a href=\"https://dev.topcoder.com/docs\" style=\"color: rgb(51, 51, 51); padding: 0px; margin: 0px;\">https://dev.topcoder.com/docs</a>&nbsp;(you can find your key in &quot;My Dashboard&quot;)</p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">We find some issues in current API implementation, but make sure the rewritten queries in query tool doesn&#39;t have such issue, you should also test the API with other parameters to make sure it work as expected.</p>\n\n<ol style=\"margin: 0px; font-family: Arial, Helvetica, sans-serif; line-height: normal; padding-top: 6px !important; padding-right: 0px !important; padding-bottom: 6px !important;\">\n\t<li style=\"padding: 0px; margin: 0px;\">Sort By Prize - ASC/DESC order is wrong:&nbsp;<a href=\"https://apps.topcoder.com/bugs/browse/TCAPI-29\" style=\"padding: 0px; margin: 0px; color: rgb(51, 51, 51);\">https://apps.topcoder.com/bugs/browse/TCAPI-29</a></li>\n\t<li style=\"padding: 0px; margin: 0px;\">listType - ALL actually returns the result of &quot;Active&quot;:&nbsp;<a href=\"https://apps.topcoder.com/bugs/browse/TCAPI-30\" style=\"padding: 0px; margin: 0px; color: rgb(51, 51, 51);\">https://apps.topcoder.com/bugs/browse/TCAPI-30</a></li>\n\t<li style=\"padding: 0px; margin: 0px;\">Can&#39;t get Open contests -&nbsp;<a href=\"https://apps.topcoder.com/bugs/browse/TCAPI-34\" style=\"padding: 0px; margin: 0px; color: rgb(51, 51, 51);\">https://apps.topcoder.com/bugs/browse/TCAPI-34</a>&nbsp;Timeout or Internal Server Error</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Can&#39;t search contest by contest name -&nbsp;<a href=\"https://apps.topcoder.com/bugs/browse/TCAPI-41\" style=\"padding: 0px; margin: 0px; color: rgb(51, 51, 51);\">https://apps.topcoder.com/bugs/browse/TCAPI-41</a></li>\n\t<li style=\"padding: 0px; margin: 0px;\">Can&#39;t search contests by catalog -&nbsp;<a href=\"https://apps.topcoder.com/bugs/browse/TCAPI-43\" style=\"padding: 0px; margin: 0px; color: rgb(51, 51, 51);\">https://apps.topcoder.com/bugs/browse/TCAPI-43</a>&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-88</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Can&#39;t search upcoming algorithm /&nbsp;bug hunt / test scenarios / test suites by contest type / name -&nbsp;<a href=\"https://apps.topcoder.com/bugs/browse/TCAPI-47\" style=\"padding: 0px; margin: 0px; color: rgb(51, 51, 51);\">https://apps.topcoder.com/bugs/browse/TCAPI-47</a>&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-96</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Can&#39;t search active contests by contest type -&nbsp;<a href=\"https://apps.topcoder.com/bugs/browse/TCAPI-52\">https://apps.topcoder.com/bugs/browse/TCAPI-52</a>&nbsp;/&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-83&nbsp;</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Can&#39;t search test scenario contest:&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-91 /&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-92 /&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-93</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Can&#39;t search past contests:&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-100&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-109&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-113&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-145&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-146&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-147</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Confusing Filter:&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-150</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Search Contest Parameters:&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-160</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Registration End Date Filter:&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-161</li>\n\t<li style=\"padding: 0px; margin: 0px;\">504 Error:&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-179</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Filter Issue:&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-182&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-184&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-186</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Page Index Issue:&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-187&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-188&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-190&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-191</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Page Number: the API works when the page number is 1 but returns internal error when the page number is 2</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Reliability Bonus:&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-229</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Error Message:&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-233</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Bug Race:&nbsp;https://apps.topcoder.com/bugs/browse/TCAPI-243</li>\n</ol>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">You also need to verify this API with other parameters to make sure it work as expected.</p>\n\n<h3 style=\"line-height: 1.5em; padding: 0px; margin: 0px 0px 12px; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"color: rgb(255, 0, 0);\"><strong>Exception Handling</strong></span></h3>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">When some server error occurs, it will throw exception to end user directly.</p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">It should&nbsp;follow the error codes responses here and return json error message</p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><a href=\"https://dev.twitter.com/docs/error-codes-responses\">https://dev.twitter.com/docs/error-codes-responses</a></p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">config.apiCodes = {<br />\nOK : {name : &#39;OK&#39;, value : 200, description : &#39;Success&#39; },<br />\nnotModified : {name : &#39;Not Modified&#39;, value: 304, description : &#39;There was no new data to return.&#39; },<br />\nbadRequest : {name : &#39;Bad Request&#39;, value: 400, description : &#39;The request was invalid. An accompanying message will explain why.&#39; },<br />\nunauthorized : {name : &#39;Unauthorized&#39;, value: 401, description : &#39;Authentication credentials were missing or incorrect.&#39; },<br />\nforbidden : {name : &#39;Forbidden&#39;, value: 403, description : &#39;The request is understood, but it has been refused or access is not allowed.&#39; },<br />\nnotFound : {name : &#39;Not Found&#39;, value: 404, description : &#39;The URI requested is invalid or the requested resource does not exist.&#39; },<br />\nserverError : {name : &#39;Internal Server Error&#39;, value: 500, description : &#39;Something is broken. Please contact support.&#39; }<br />\n};<br />\nwith an optional &quot;message&quot; parameter for more details</p>\n\n<h3 style=\"font-weight: bold; line-height: normal; padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">Testing</span></h3>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"padding: 0px; margin: 0px;\">You need to provide manual steps to verify your submission.</span></p>\n\n<h2 style=\"font-weight: bold; line-height: normal; padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">Existing Code</span></h2>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">(Please send your request to subversion@topcoder.com if you don&#39;t have access)</p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">tc_refactoring_stage_1_contest_services:&nbsp;<a href=\"https://coder.topcoder.com/tcs/clients/cronos/components/tc_refactoring_stage_1_contest_services/trunk\" style=\"color: rgb(51, 51, 51); padding: 0px; margin: 0px;\">https://coder.topcoder.com/tcs/clients/cronos/components/tc_refactoring_stage_1_contest_services/trunk</a></p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">tc_refactoring_stage_1_review_and_search_services:&nbsp;<a href=\"https://coder.topcoder.com/tcs/clients/cronos/components/tc_refactoring_stage_1_review_and_search_services/trunk\">https://coder.topcoder.com/tcs/clients/cronos/components/tc_refactoring_stage_1_review_and_search_services/trunk</a></p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">web_module:&nbsp;<a href=\"https://coder.topcoder.com/internal/web_module/trunk\" style=\"color: rgb(51, 51, 51); padding: 0px; margin: 0px;\">https://coder.topcoder.com/internal/web_module/trunk</a></p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">platform api:&nbsp;<a href=\"https://coder.topcoder.com/tcs/clients/cronos/applications/tc_platform_api/trunk\" style=\"color: rgb(51, 51, 51); padding: 0px; margin: 0px;\"><span style=\"padding: 0px; margin: 0px;\">https://coder.topcoder.com/tcs/clients/cronos/applications/tc_platform_api/trunk</span></a></p>\n\n<h2 style=\"line-height: normal; padding: 0px; margin: 0px; font-family: Arial, Helvetica, sans-serif;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\"><strong style=\"padding: 0px; margin: 0px;\">Virtual Machine (VM)</strong></span></h2>\n\n<h2 style=\"line-height: normal; padding: 0px; margin: 0px; font-family: Arial, Helvetica, sans-serif;\"><span style=\"padding: 0px; margin: 0px; line-height: 1.2em; font-size: 13px;\">VM specific information is found here:&nbsp;<a href=\"http://www.topcoder.com/wiki/display/docs/VM+Image+2.5\" style=\"color: rgb(51, 51, 51); padding: 0px; margin: 0px;\">http://www.topcoder.com/wiki/display/docs/VM+Image+2.5</a></span></h2>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Upon registration as a submitter or reviewer you will need to request a VM based on the TopCoder systems image. The VM will be active through aggregation review, after which it will be terminated except for the winner&#39;s and the reviewers&#39;. To request your image, please post in contest forum.</p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Before requesting your VM, you need to ensure that you have an SSH key created and in your member profile. Instructions to do so are here: http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key, and instructions to connect afterwards are here:&nbsp;<a href=\"http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key\" style=\"color: rgb(51, 51, 51); padding: 0px; margin: 0px;\">http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key</a>.</p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Please realize that VMs are currently issued manually. We make every attempt to issue the VM as soon as it is requested, however, there may be delays of up to 12 hours depending on time of day when you request. We encourage everyone to request a VM as soon as possible to minimize any such delays.</p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">VMs will be granted only during registration phase!</p>\n\n<h2 style=\"line-height: normal; padding: 0px; margin: 0px; font-family: Arial, Helvetica, sans-serif;\"><strong style=\"padding: 0px; margin: 0px;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">Set up and Deploy API</span></strong></h2>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">The contestants are also required to update active docs and integrate the new APIs to 3scale. This set of APIs should be deployed in its own war.&nbsp;<br style=\"padding: 0px; margin: 0px;\" />\nRefer to this document to deploy the API locally or on VM<br style=\"padding: 0px; margin: 0px;\" />\n<a href=\"https://coder.topcoder.com/tcs/clients/cronos/applications/tc_platform_api/trunk/doc/APIDG.docx\" style=\"color: rgb(51, 51, 51); padding: 0px; margin: 0px;\">https://coder.topcoder.com/tcs/clients/cronos/applications/tc_platform_api/trunk/doc/APIDG.docx</a><br style=\"padding: 0px; margin: 0px;\" />\nRefer to this document to setup 3scale integration<br style=\"padding: 0px; margin: 0px;\" />\n<a href=\"https://coder.topcoder.com/tcs/clients/cronos/applications/tc_platform_api/trunk/doc/3scale_DeploymentGuide.doc\" style=\"color: rgb(51, 51, 51); padding: 0px; margin: 0px;\">https://coder.topcoder.com/tcs/clients/cronos/applications/tc_platform_api/trunk/doc/3scale_DeploymentGuide.doc</a><br style=\"padding: 0px; margin: 0px;\" />\nRefer to this document for details about Active Docs deployment<br style=\"padding: 0px; margin: 0px;\" />\n<a href=\"https://coder.topcoder.com/tcs/clients/cronos/applications/tc_platform_api/trunk/doc/ActiveDocs_DG.doc\" style=\"color: rgb(51, 51, 51); padding: 0px; margin: 0px;\">https://coder.topcoder.com/tcs/clients/cronos/applications/tc_platform_api/trunk/doc/ActiveDocs_DG.doc</a></p>\n",
+  "digitalRunPoints": 630,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30035819",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2013-10-26T03:09:00.000Z",
+  "finalSubmissionGuidelines": "<p>N/A</p>\n",
+  "forumId": 19152,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=19152",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 23,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-16T16:00:00.000Z",
+      "actualStartTime": "2013-10-16T16:00:00.000Z",
+      "scheduledEndTime": "2013-10-16T16:01:00.000Z",
+      "actualendTime": "2013-10-16T16:01:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6db7"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-16T16:01:00.000Z",
+      "actualStartTime": "2013-10-16T16:01:00.000Z",
+      "scheduledEndTime": "2013-10-16T18:04:00.000Z",
+      "actualendTime": "2013-10-16T18:04:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6db6"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-16T18:04:00.000Z",
+      "actualStartTime": "2013-10-16T18:04:00.000Z",
+      "scheduledEndTime": "2013-10-18T18:04:00.000Z",
+      "actualendTime": "2013-10-18T18:04:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6db5"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-16T18:09:00.000Z",
+      "actualStartTime": "2013-10-16T18:09:00.000Z",
+      "scheduledEndTime": "2013-10-21T18:09:00.000Z",
+      "actualendTime": "2013-10-21T18:09:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6db4"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-21T18:10:00.000Z",
+      "actualStartTime": "2013-10-21T18:10:00.000Z",
+      "scheduledEndTime": "2013-10-22T06:18:00.000Z",
+      "actualendTime": "2013-10-22T06:18:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6db3"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-22T06:18:00.000Z",
+      "actualStartTime": "2013-10-22T06:18:00.000Z",
+      "scheduledEndTime": "2013-10-24T04:30:00.000Z",
+      "actualendTime": "2013-10-24T04:30:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6db2"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-24T04:30:00.000Z",
+      "actualStartTime": "2013-10-24T04:30:00.000Z",
+      "scheduledEndTime": "2013-10-25T04:30:00.000Z",
+      "actualendTime": "2013-10-25T04:30:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6db1"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-25T04:30:00.000Z",
+      "actualStartTime": "2013-10-25T04:30:00.000Z",
+      "scheduledEndTime": "2013-10-25T07:51:00.000Z",
+      "actualendTime": "2013-10-25T07:51:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6db0"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-25T07:51:00.000Z",
+      "actualStartTime": "2013-10-25T07:51:00.000Z",
+      "scheduledEndTime": "2013-10-25T12:41:00.000Z",
+      "actualendTime": "2013-10-25T12:41:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6daf"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-25T12:41:00.000Z",
+      "actualStartTime": "2013-10-25T12:41:00.000Z",
+      "scheduledEndTime": "2013-10-25T15:59:00.000Z",
+      "actualendTime": "2013-10-25T15:59:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6dae"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-25T15:59:00.000Z",
+      "actualStartTime": "2013-10-25T15:59:00.000Z",
+      "scheduledEndTime": "2013-10-26T01:52:00.000Z",
+      "actualendTime": "2013-10-26T01:52:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6dad"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-26T12:30:00.000Z",
+      "actualStartTime": "2013-10-26T12:30:00.000Z",
+      "scheduledEndTime": "2013-10-31T12:30:00.000Z",
+      "actualendTime": "2013-10-31T12:30:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6dac"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-26T01:52:00.000Z",
+      "actualStartTime": "2013-10-26T01:52:00.000Z",
+      "scheduledEndTime": "2013-10-26T03:09:00.000Z",
+      "actualendTime": "2013-10-26T03:09:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6dab"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-26T03:09:00.000Z",
+      "actualStartTime": "2013-10-26T03:09:00.000Z",
+      "scheduledEndTime": "2013-10-26T03:17:00.000Z",
+      "actualendTime": "2013-10-26T03:17:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6daa"
+    }
+  ],
+  "platforms": [],
+  "postingDate": "2013-10-16T18:04:00.000Z",
+  "prize": [
+    1400,
+    700
+  ],
+  "projectId": 4068,
+  "registrants": [
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2013-10-16T18:12:00.000Z",
+      "submissionDate": null,
+      "rating": "1479",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813dbbd550dfb3b52ea6da9"
+    },
+    {
+      "handle": "Ghost_141",
+      "reliability": "46%",
+      "registrationDate": "2013-10-16T18:14:00.000Z",
+      "submissionDate": "2013-10-21T17:53:00.000Z",
+      "rating": "978",
+      "colorStyle": "color: #00A900",
+      "_id": "5813dbbd550dfb3b52ea6da8"
+    },
+    {
+      "handle": "brain_cn",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-17T01:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6da7"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-16T19:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6da6"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2013-10-16T19:45:00.000Z",
+      "submissionDate": null,
+      "rating": "829",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6da5"
+    },
+    {
+      "handle": "O_O",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-16T23:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6da4"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-16T23:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6da3"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "13%",
+      "registrationDate": "2013-10-17T00:33:00.000Z",
+      "submissionDate": null,
+      "rating": "689",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6da2"
+    },
+    {
+      "handle": "huang_hws",
+      "reliability": "15%",
+      "registrationDate": "2013-10-17T01:15:00.000Z",
+      "submissionDate": null,
+      "rating": "456",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6da1"
+    },
+    {
+      "handle": "gonia_119",
+      "reliability": "0%",
+      "registrationDate": "2013-10-17T01:37:00.000Z",
+      "submissionDate": null,
+      "rating": "820",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6da0"
+    },
+    {
+      "handle": "bugbuka",
+      "reliability": "80%",
+      "registrationDate": "2013-10-17T01:49:00.000Z",
+      "submissionDate": null,
+      "rating": "929",
+      "colorStyle": "color: #00A900",
+      "_id": "5813dbbd550dfb3b52ea6d9f"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-17T01:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6d9e"
+    },
+    {
+      "handle": "freegod",
+      "reliability": "26%",
+      "registrationDate": "2013-10-17T02:15:00.000Z",
+      "submissionDate": "2013-10-21T16:33:00.000Z",
+      "rating": "649",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6d9d"
+    },
+    {
+      "handle": "ohyan07",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-17T02:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6d9c"
+    },
+    {
+      "handle": "KeSyren",
+      "reliability": "26%",
+      "registrationDate": "2013-10-17T03:09:00.000Z",
+      "submissionDate": null,
+      "rating": "833",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6d9b"
+    },
+    {
+      "handle": "flytoj2ee",
+      "reliability": "40%",
+      "registrationDate": "2013-10-17T03:29:00.000Z",
+      "submissionDate": null,
+      "rating": "1135",
+      "colorStyle": "color: #00A900",
+      "_id": "5813dbbd550dfb3b52ea6d9a"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-17T03:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6d99"
+    },
+    {
+      "handle": "codercat",
+      "reliability": "0%",
+      "registrationDate": "2013-10-17T03:50:00.000Z",
+      "submissionDate": null,
+      "rating": "838",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6d98"
+    },
+    {
+      "handle": "rajeshk87",
+      "reliability": "0%",
+      "registrationDate": "2013-10-17T05:42:00.000Z",
+      "submissionDate": null,
+      "rating": "600",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6d97"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "0%",
+      "registrationDate": "2013-10-17T08:11:00.000Z",
+      "submissionDate": null,
+      "rating": "885",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6d96"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "0%",
+      "registrationDate": "2013-10-17T10:47:00.000Z",
+      "submissionDate": null,
+      "rating": "997",
+      "colorStyle": "color: #00A900",
+      "_id": "5813dbbd550dfb3b52ea6d95"
+    },
+    {
+      "handle": "Veve",
+      "reliability": "13%",
+      "registrationDate": "2013-10-17T19:37:00.000Z",
+      "submissionDate": null,
+      "rating": "1410",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813dbbd550dfb3b52ea6d94"
+    },
+    {
+      "handle": "sweetu",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-17T13:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6d93"
+    }
+  ],
+  "registrationEndDate": "2013-10-18T18:04:00.000Z",
+  "reliabilityBonus": 280,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2013-10-21T18:09:00.000Z",
+  "submissions": [
+    {
+      "handle": "Ghost_141",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 95.81,
+      "finalScore": 96.38,
+      "points": 441,
+      "submissionStatus": "Active",
+      "submissionDate": "2013-10-21T17:53:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6db9"
+    },
+    {
+      "handle": "freegod",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 76.91,
+      "finalScore": 79.94,
+      "points": 189,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2013-10-21T16:33:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6db8"
+    }
+  ],
+  "technology": [
+    "Java"
+  ]
+}

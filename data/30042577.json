@@ -1,0 +1,331 @@
+{
+  "_id": 30042577,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:06:23.292Z",
+  "appealsEndDate": "2014-05-20T15:44:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Module Assembly - Web Arena UI - Contest Phase Movement",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<div class=\"previewMask\">\n<div class=\"previewMask\">\n<h1><span><span><span><span><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></span></span></span></span></h1>\n\n<p><span><span><span><span>TopCoder is implementing a Web-based Arena by using Web Socket protocol, </span></span>AngularJS Framework (<a href=\"http://angularjs.org/\">http://angularjs.org</a>,&nbsp;<a href=\"http://docs.angularjs.org/guide\">http://docs.angularjs.org/guide</a>) and Bootstrap 3 (<a href=\"http://getbootstrap.com/getting-started\">http://getbootstrap.com/getting-started</a>). </span></span></p>\n\n<p><span>The frontend application is using <span>AngularJS Framework (<a href=\"http://angularjs.org/\">http://angularjs.org</a>,&nbsp;<a href=\"http://docs.angularjs.org/guide\">http://docs.angularjs.org/guide</a>) and Bootstrap 3 (<a href=\"http://getbootstrap.com/getting-started\">http://getbootstrap.com/getting-started</a>), and using web socket protocol to exchange data with backend web socket listener.</span></span></p>\n\n<p><span><span>The backend web socket listener is ready for exchanging messages over web socket protocol.</span></span></p>\n\n<h1><span><span><span><span><span style=\"color:#FF0000\">Competition Task Overview</span></span></span></span></span></h1>\n\n<p><span><span>We have implemented the Login and Logout functionality</span>, the code can be found at <a href=\"https://github.com/cloudspokes/arena-web\">cloudspokes/arena-web</a></span>.</p>\n\n<p>For this contest, we are going to implement the phase movement related event in contest page.</p>\n\n<p><span style=\"color:#0000FF\">About UI</span></p>\n\n<p>Previously, we have prototyped the Count Down Widget and Contest Stats Widget, you can check <a href=\"http://www.topcoder.com/challenge-details/30041644\">Fast 72hr!!! TC Arena HTML5 - Contest Page</a></p>\n\n<p><span><span><span><span><span><span><span style=\"font-size:12px\"><span style=\"color:#0000FF\">Phase Change Response</span></span></span></span></span></span></span></span></p>\n\n<p>a <u>com.topcoder.netCommon.contestantMessages.response.PhaseDataResponse</u> is the main response about the phase changes. When receiving this event, the current phase of the round should be immediately changed to the phase in this response, even if the phases are the same.</p>\n\n<p>following are the examples,</p>\n\n<p><u>Registration Phase</u></p>\n\n<p>(com.topcoder.netCommon.contestantMessages.response.PhaseDataResponse) [data = (com.topcoder.netCommon.contestantMessages.response.data.PhaseData) [roundID = 13672, phaseType = 2, startTime = 1396877400000, endTime = 1396878120000, ], ]</p>\n\n<p><u>Almost Contest Phase</u></p>\n\n<p>(com.topcoder.netCommon.contestantMessages.response.PhaseDataResponse) [data = (com.topcoder.netCommon.contestantMessages.response.data.PhaseData) [roundID = 13672, phaseType = 3, startTime = 1396877700000, endTime = 1396878000000, ], ]</p>\n\n<p><u>Coding Phase</u></p>\n\n<p>(com.topcoder.netCommon.contestantMessages.response.PhaseDataResponse) [data = (com.topcoder.netCommon.contestantMessages.response.data.PhaseData) [roundID = 13672, phaseType = 4, startTime = 1396878000000, endTime = 1396878900000, ], ]</p>\n\n<p>You can find all phase type related info at <a href=\"https://github.com/cloudspokes/compeng-common/blob/master/src/main/com/topcoder/netCommon/contest/ContestConstants.java\">https://github.com/cloudspokes/compeng-common/blob/master/src/main/com/topcoder/netCommon/contest/ContestConstants.java</a></p>\n\n<p><span style=\"color:#0000FF\">Count Down Widget Update</span></p>\n\n<p>The widget should properly tracks the phase movement, and properly count down, it should mimic similar functionality as arena.</p>\n\n<p><span style=\"color:#0000FF\">Contest Stats Update</span></p>\n\n<p>The content in widget should be changed when phase movement, before the starting of the coding phase, it will show Contest Overview; during the coding phase and Intermission phase, it will show the list of problems to open.</p>\n\n<p>during the challenges and systems, show messages like &quot;Please click View Detail link in Room Summary to do further actions&quot;.</p>\n\n<p><span style=\"color:#0000FF\">Verification</span></p>\n\n<p>Please check the SRM Problem Guide (attached in forum) to properly setup the SRM. <span style=\"color:#FF0000\">Notes</span>, one Test SRM is already setup, you just need to change the times.</p>\n\n<p>in order to test the contest movement,</p>\n\n<p>the user should registered the SRM and move into the contest page, for testing purpose, you can add some dummy logic to by-pass it.</p>\n\n<p>1. use Admin Tool to register user.</p>\n\n<p>2. sending the following requests to enter contest</p>\n\n<ul>\n\t<li><span><span><span><span style=\"font-family:courier new,courier,monospace\"><a href=\"https://github.com/cloudspokes/compeng-common/blob/master/src/main/com/topcoder/netCommon/contestantMessages/request/MoveRequest.java\"><span>com</span><span>.</span><span>topcoder</span><span>.</span><span>netCommon</span><span>.</span><span>contestantMessages</span><span>.</span><span>request</span>.<span>MoveRequest</span></a><span> </span></span></span></span></span></li>\n\t<li><span><span><span><span style=\"font-family:courier new,courier,monospace\"><a href=\"https://github.com/cloudspokes/compeng-common/blob/master/src/main/com/topcoder/netCommon/contestantMessages/request/EnterRequest.java\"><span>com</span><span>.</span><span>topcoder</span><span>.</span><span>netCommon</span><span>.</span><span>contestantMessages</span><span>.</span><span>request</span>.<span>EnterRequest</span></a><span> </span></span></span></span></span></li>\n\t<li><span><span><span><span style=\"font-family:courier new,courier,monospace\"><a href=\"https://github.com/cloudspokes/compeng-common/blob/master/src/main/com/topcoder/netCommon/contestantMessages/request/EnterRoundRequest.java\"><span>com</span><span>.</span><span>topcoder</span><span>.</span><span>netCommon</span><span>.</span><span>contestantMessages</span><span>.</span><span>request</span>.<span>EnterRoundRequest</span></a></span></span></span></span></li>\n</ul>\n\n<p><span><span style=\"color:#0000FF\">Where to setup the Arena Web</span></span></p>\n\n<p><span>You are expected to have your own environment to setup web arena, </span><span style=\"color:#FF0000\">Linux environment is perferred.</span></p>\n\n<p>for backend, an Arena VM wi<span>ll be allocated to each competitor, to setup SRM contests datas.</span></p>\n\n<p><span><span><span><span><span><span><span style=\"color:#0000FF\">Winner Responsibility</span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span>Winner will be responsible to:</span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span>1. Merge with the UI, it will be ready in final fix phase.</span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span>2. Create pull request in final fix phase for merging.</span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span style=\"color:#0000FF\">About Code Base</span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span>For the code under /home/apps/dev directory, some are hosted in internal svn repositories, some are hosted in private repositories in github.</span></span></span></span></p>\n\n<p><span><span><span><span>You can check <a href=\"http://apps.topcoder.com/wiki/display/%7Efireice/Source+Code+Management+For+TopCoder+Competition+Engine\">Source Code Management For TopCoder Competition Engine - TopCoder Wiki</a></span></span></span></span></p>\n\n<p><span><span><span><span>For SVN Access, please send request to support@topcoder.com, For github access, please post your github account in forum to ask PM to grant you access.</span></span></span></span></p>\n<span><span style=\"color:#0000FF\"><span><span><span>Arena VM</span></span> </span></span> </span>\n\n<p><span><span style=\"color:#FF0000\"><span><span><span>Before asking your own VM, you need to have a public key on your profile before asking for the VM.</span></span></span></span></span></p>\n<span> <span> </span> </span>\n\n<p><span><span><span><span>You can find more details on how to generate a key <span><a href=\"http://apps.topcoder.com/wiki/display/projects/Generate+SSH+Key\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/projects/Generate+SSH+Key</a></span> and how to connect using it <span><a href=\"http://apps.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key</a></span>.</span></span></span></span></p>\n<span> <span> </span> </span>\n\n<p><span><span><span><span>To use the Arena VM, please follow <span><a href=\"http://apps.topcoder.com/wiki/display/docs/Competition+Engine+VM+Setup\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/docs/Competition+Engine+VM+Setup</a></span></span></span></span></span></p>\n\n<p><span><strong><span style=\"color:#0000FF\">Specific HTML/CSS/JavaScript Requirements:</span><br />\n<span style=\"color:#FF0000\">HTML/CSS Requirements:</span></strong><br />\n- Your HTML code must be valid HTML5 and follow best practices<br />\n- Validate your code - reviewers may accept minor validation errors, but please comment your reason for any validation errors. Use the validators listed in the scorecard.<br />\n- Use CSS to space out objects, not clear/transparent images (GIFs or PNGs) and use proper structural CSS to layout your page. Only use table tags for tables of data/information and not for page layout.<br />\n- No inline CSS styles - all styles must be placed in an external style-sheet.<br />\n- Use semantically correct tags - use H tags for headers, etc. Use strong and em tags instead of bold and italic tags.<br />\n- Element and Attribute names should be in lowercase and use a &quot;-&quot; or camel naming to separate multiple-word classes (i.e.. &quot;main-content&quot;, or &quot;mainContent)<br />\n- <strong>Label all CSS, JavaScript, or HTML hacks with explanations so others will understand.</strong><br />\n- Your code must render properly in all browsers listed in the scorecard in both Mac and PC environments.<br />\n<br />\n<span style=\"color:#FF0000\"><strong>JavaScript Requirements:</strong></span><br />\n<strong>-</strong>&nbsp;<a href=\"http://jquery.com/download/\">jQuery</a><br />\n<strong>-</strong>&nbsp;<a href=\"http://angularjs.org/\">AngularJS</a><br />\n- All custom javascript (written by the competitors) must pass jslint checks</span></p>\n<span> </span>\n\n<p><span><span style=\"color:#FF0000\"><strong>Browsers Requirements:</strong></span><br />\n- IE10<br />\n- IE11<br />\n- Latest Safari<br />\n- Latest Firefox<br />\n- Latest Chrome</span></p>\n</div>\n</div>\n",
+  "digitalRunPoints": 495,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30042577",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2014-05-21T08:09:00.000Z",
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<h2><span><span><span><span><span><span><span style=\"color:#FF0000\">Submission Deliverables</span></span></span></span></span></span></span></h2>\n\n<p><span><span><span><span><span><span><span style=\"font-size:12px\">Below is an overview of the deliverables:</span></span></span></span></span></span></span></p>\n\n<ul>\n\t<li><span><span><span><span><span><span><span style=\"font-size:12px\">Code Changes for the solution, please include the svn revision and git commit hash</span></span></span></span></span></span></span></li>\n\t<li><span><span><span><span><span><span><span style=\"font-size:12px\">A complete and detailed deployment document explaining how to deploy the application including configuration information.</span></span></span></span></span></span></span></li>\n</ul>\n\n<h2><span><span><span><span><span><span><span style=\"color:#FF0000\">Final Submission</span></span></span></span></span></span></span></h2>\n\n<p><span><span><span><span><span><span><span style=\"font-size:12px\">For each member, the final submission should be uploaded to the Online Review Tool.</span></span></span></span></span></span></span></p>\n</div>\n</div>\n</div>\n</div>\n</div>\n\n<p><span><span><span style=\"color:#0000FF\"><strong>PROTOTYPE GOALS:</strong></span><br />\n- We need clean documentation of the code. Please create detailed comments for the different HTML5, CSS3 and JavaScript code.<br />\n- Please note, we are expecting the HTML5 prototype to work on mobiles.<br />\n- Use&nbsp;<a href=\"http://www.w3.org/TR/css3-mediaqueries/\">CSS3 Media Queries</a>&nbsp;to&nbsp;load different styles for each page and don&#39;t build different page for different device/layout.<br />\n- Remember, all pages should link where possible. Please help us show correct page flow.<br />\n- Please use&nbsp;<a href=\"http://getbootstrap.com/getting-started/\">Bootstrap 3</a>&nbsp;for css.<br />\n- Please use&nbsp;<a href=\"http://angularjs.org/\">AngularJS</a>&nbsp;framework for data binding.<br />\n- Please use&nbsp;<a href=\"http://angular-ui.github.io/\">angular-ui</a>&nbsp;components:<br />\n1- ui-bootstrap<br />\n2- ui-router (for app structure as a state machine)<br />\n3- ui-ace or ui-codemirror (for the code editor)<br />\n4- other ui components as needed (date, calendar)</span></span></p>\n\n<p><span><span><span style=\"color:#0000FF\"><strong>TECHNOLOGY GUIDELINES:</strong></span><br />\n<span style=\"color:#FF0000\"><strong>1. HTML5</strong></span><br />\n- Provide comments on the page elements to give clear explanation of code usage. The goal is to help future developers understand the code.<br />\n- Please use clean INDENTATION for all HTML code so future developers can follow the code.<br />\n- All HTML code naming should not have any conflicts<br />\n- Make sure all HTML files pass Validation without Error/Warning.</span></span></p>\n\n<p><span><span><span style=\"color:#FF0000\"><strong>2. CSS3</strong></span><br />\n- Provide comments on the CSS code, we need CSS comments to give clear explanation of the code usage. The goal is to help future developers understand the code.<br />\n- Please use clean INDENTATION for all CSS so future developers can follow the code.<br />\n- All CSS naming should not have any conflicts<br />\n- Make sure all CSS files pass validation without Error/Warning.</span></span></p>\n\n<p><span><span><span style=\"color:#FF0000\"><strong>3. JAVASCRIPT</strong></span><br />\n- Provide comments on the JavaScript code to give clear explanation of the code usage. The goal is to help future developers understand the code and know what needs to be developer further.<br />\n- Please use clean INDENTATION for all JavaScript code so future developers can follow the code.<br />\n<br />\n<span style=\"color:#FF0000\"><strong>4. ANGULAR JS</strong></span><br />\n- Angular models are plain old JavaScript objects. Use JSON objects for data binding with view.<br />\n- Data-binding is an automatic way of updating the view whenever the model changes, as well as updating the model whenever the view changes.<br />\n- Controllers are the behavior behind the DOM elements. AngularJS lets you express the behavior in a clean readable form.<br />\n- Use AngularJS Framework (<a href=\"http://angularjs.org/\">http://angularjs.org</a>,&nbsp;<a href=\"http://docs.angularjs.org/guide\">http://docs.angularjs.org/guide</a>) to populate JSON data.</span></span></p>\n\n<p><span><span><span style=\"color:#FF0000\"><strong>5. IMAGES</strong></span><br />\n-&nbsp;For mobile development, images should be properly compressed while still having good visual quality.<br />\n- If possible, using background color properties, instead of repetition usage of background based image.<br />\n-&nbsp;Use sprites technique for the image slicing.&nbsp;<a href=\"http://css-tricks.com/css-sprites/\">Page reference</a></span></span></p>\n</div>\n</div>\n",
+  "forumId": 22866,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=22866",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 17,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-13T01:55:00.000Z",
+      "actualStartTime": "2014-05-13T01:55:00.000Z",
+      "scheduledEndTime": "2014-05-13T01:55:00.000Z",
+      "actualendTime": "2014-05-13T01:55:00.000Z",
+      "_id": "5813231f550dfb3b52b3cf53"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-13T01:55:00.000Z",
+      "actualStartTime": "2014-05-13T01:55:00.000Z",
+      "scheduledEndTime": "2014-05-13T03:32:00.000Z",
+      "actualendTime": "2014-05-13T03:32:00.000Z",
+      "_id": "5813231f550dfb3b52b3cf52"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-13T13:00:00.000Z",
+      "actualStartTime": "2014-05-13T13:00:00.000Z",
+      "scheduledEndTime": "2014-05-15T13:00:00.000Z",
+      "actualendTime": "2014-05-15T13:00:00.000Z",
+      "_id": "5813231f550dfb3b52b3cf51"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-13T13:05:00.000Z",
+      "actualStartTime": "2014-05-13T13:05:00.000Z",
+      "scheduledEndTime": "2014-05-17T13:00:00.000Z",
+      "actualendTime": "2014-05-17T13:00:00.000Z",
+      "_id": "5813231f550dfb3b52b3cf50"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-17T13:00:00.000Z",
+      "actualStartTime": "2014-05-17T13:00:00.000Z",
+      "scheduledEndTime": "2014-05-17T13:23:00.000Z",
+      "actualendTime": "2014-05-17T13:23:00.000Z",
+      "_id": "5813231f550dfb3b52b3cf4f"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-17T13:23:00.000Z",
+      "actualStartTime": "2014-05-17T13:23:00.000Z",
+      "scheduledEndTime": "2014-05-19T13:15:00.000Z",
+      "actualendTime": "2014-05-19T13:15:00.000Z",
+      "_id": "5813231f550dfb3b52b3cf4e"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-19T13:15:00.000Z",
+      "actualStartTime": "2014-05-19T13:15:00.000Z",
+      "scheduledEndTime": "2014-05-20T13:15:00.000Z",
+      "actualendTime": "2014-05-20T13:15:00.000Z",
+      "_id": "5813231f550dfb3b52b3cf4d"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-20T13:15:00.000Z",
+      "actualStartTime": "2014-05-20T13:15:00.000Z",
+      "scheduledEndTime": "2014-05-20T15:44:00.000Z",
+      "actualendTime": "2014-05-20T15:44:00.000Z",
+      "_id": "5813231f550dfb3b52b3cf4c"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-20T15:44:00.000Z",
+      "actualStartTime": "2014-05-20T15:44:00.000Z",
+      "scheduledEndTime": "2014-05-20T16:11:00.000Z",
+      "actualendTime": "2014-05-20T16:11:00.000Z",
+      "_id": "5813231f550dfb3b52b3cf4b"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-20T16:11:00.000Z",
+      "actualStartTime": "2014-05-20T16:11:00.000Z",
+      "scheduledEndTime": "2014-05-21T08:09:00.000Z",
+      "actualendTime": "2014-05-21T08:09:00.000Z",
+      "_id": "5813231f550dfb3b52b3cf4a"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-21T08:09:00.000Z",
+      "actualStartTime": "2014-05-21T08:09:00.000Z",
+      "scheduledEndTime": "2014-05-21T12:08:00.000Z",
+      "actualendTime": "2014-05-21T12:08:00.000Z",
+      "_id": "5813231f550dfb3b52b3cf49"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-21T12:08:00.000Z",
+      "actualStartTime": "2014-05-21T12:08:00.000Z",
+      "scheduledEndTime": "2014-05-26T12:08:00.000Z",
+      "actualendTime": "2014-05-26T12:08:00.000Z",
+      "_id": "5813231f550dfb3b52b3cf48"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2014-05-13T13:00:00.000Z",
+  "prize": [
+    1100,
+    550
+  ],
+  "projectId": 7377,
+  "registrants": [
+    {
+      "handle": "woodjhon",
+      "reliability": "6%",
+      "registrationDate": "2014-05-13T13:51:00.000Z",
+      "submissionDate": null,
+      "rating": "810",
+      "colorStyle": "color: #999999",
+      "_id": "5813231f550dfb3b52b3cf47"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "33%",
+      "registrationDate": "2014-05-13T14:18:00.000Z",
+      "submissionDate": null,
+      "rating": "1363",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813231f550dfb3b52b3cf46"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-13T15:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813231f550dfb3b52b3cf45"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "0%",
+      "registrationDate": "2014-05-13T15:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813231f550dfb3b52b3cf44"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "0%",
+      "registrationDate": "2014-05-13T15:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813231f550dfb3b52b3cf43"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2014-05-13T17:11:00.000Z",
+      "submissionDate": null,
+      "rating": "1373",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813231f550dfb3b52b3cf42"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-13T17:41:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "5813231f550dfb3b52b3cf41"
+    },
+    {
+      "handle": "tangzx",
+      "reliability": "86%",
+      "registrationDate": "2014-05-13T19:56:00.000Z",
+      "submissionDate": "2014-05-17T06:20:00.000Z",
+      "rating": "2123",
+      "colorStyle": "color: #DDCC00",
+      "_id": "5813231f550dfb3b52b3cf40"
+    },
+    {
+      "handle": "rajeshk87",
+      "reliability": "0%",
+      "registrationDate": "2014-05-13T22:34:00.000Z",
+      "submissionDate": null,
+      "rating": "600",
+      "colorStyle": "color: #999999",
+      "_id": "5813231f550dfb3b52b3cf3f"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "0%",
+      "registrationDate": "2014-05-14T00:27:00.000Z",
+      "submissionDate": null,
+      "rating": "1457",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813231f550dfb3b52b3cf3e"
+    },
+    {
+      "handle": "devmodugu",
+      "reliability": "0%",
+      "registrationDate": "2014-05-14T01:40:00.000Z",
+      "submissionDate": null,
+      "rating": "855",
+      "colorStyle": "color: #999999",
+      "_id": "5813231f550dfb3b52b3cf3d"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-14T07:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813231f550dfb3b52b3cf3c"
+    },
+    {
+      "handle": "gonia_119",
+      "reliability": "26%",
+      "registrationDate": "2014-05-14T10:02:00.000Z",
+      "submissionDate": null,
+      "rating": "908",
+      "colorStyle": "color: #00A900",
+      "_id": "5813231f550dfb3b52b3cf3b"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-14T10:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813231f550dfb3b52b3cf3a"
+    },
+    {
+      "handle": "ananthhh",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-14T16:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813231f550dfb3b52b3cf39"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "20%",
+      "registrationDate": "2014-05-15T06:31:00.000Z",
+      "submissionDate": null,
+      "rating": "1011",
+      "colorStyle": "color: #00A900",
+      "_id": "5813231f550dfb3b52b3cf38"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-05-15T06:59:00.000Z",
+      "submissionDate": null,
+      "rating": "1135",
+      "colorStyle": "color: #00A900",
+      "_id": "5813231f550dfb3b52b3cf37"
+    }
+  ],
+  "registrationEndDate": "2014-05-15T13:00:00.000Z",
+  "reliabilityBonus": 220,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-05-17T13:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "tangzx",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 98.7,
+      "finalScore": 99.89,
+      "points": 495,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-05-17T06:20:00.000Z",
+      "_id": "5813231f550dfb3b52b3cf54"
+    }
+  ],
+  "technology": [
+    "Angular.js",
+    "Bootstrap",
+    "CSS",
+    "HTML5",
+    "JavaScript"
+  ]
+}

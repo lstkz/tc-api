@@ -1,0 +1,245 @@
+{
+  "_id": 30046578,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T09:54:42.956Z",
+  "appealsEndDate": "2014-10-30T03:19:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "[serenity] Challenge Edit App Refactor",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><span style=\"background-color:transparent; font-family:arial; font-size:15px\">The mean.io framework has served us well but now we are ready to run a slimed down implementation. &nbsp;&nbsp;&nbsp;In this repo ( </span><a href=\"https://github.com/appirio-tech/lc1-challenge-app\" style=\"text-decoration:none;\"><u>https://github.com/appirio-tech/lc1-challenge-app</u></a><span style=\"background-color:transparent; font-family:arial; font-size:15px\">) &nbsp;you will find a working prototype of our challenge app. &nbsp;It has two main pages, the challenge listing page and the challenge edit page (which is opened from the &ldquo;+ New Challenge Button&rdquo;). &nbsp;&nbsp;This challenge will focus on the create/edit page. &nbsp;&nbsp;This is a working app except that it is not wired to our api service and all data is read from json files in the data directory. &nbsp;&nbsp;We are holding off integrating this to our Service layer since we are working on some code that will generate client stubs which we want to try. &nbsp;&nbsp;&nbsp;The focus of this challenge is to refactor the challenge edit/create page into some new standards. &nbsp;&nbsp;The genesis of this code was from a design challenge and we modified it slightly to work and follow some of the new guidelines. &nbsp;&nbsp;You may use our existing serenity core repo (</span><a href=\"https://github.com/topcoderinc/serenity-core\" style=\"text-decoration:none;\"><u>https://github.com/topcoderinc/serenity-core</u></a><span style=\"background-color:transparent; font-family:arial; font-size:15px\">) for reference but please follow the guide lines below rather than copy code from there. &nbsp;As you might tell this working prototype has been put together from the design side so it is defiently lacking in best practices.</span></p>\n\n<p><em><strong>Installation</strong>:<br />\nclone the repo https://github.com/appirio-tech/lc1-challenge-app and run npm install. &nbsp; This should call postinstall.sh which will run bower in both the client/edit-challenge dir and client/manage-challenge dir. &nbsp; Please not each of these directories have their own bower.json file and if you have problems with the post install script just run bower install by hand in those two directories. &nbsp; You should now be able to start the app with node web.js and navigate to localhost:8000. &nbsp; Click on the &ldquo;+ New Challenge&rdquo; button and this will be the page/controller/service you will be working on for this challenge. &nbsp;Fill out the form and note the challenge map changes color when the sections are complete.</em></p>\n\n<p>&nbsp;</p>\n\n<p><strong>Requirements:</strong></p>\n\n<p>1. &nbsp;Break the single index.html file into 5 files: &nbsp;public-info.html, challenge-map.html, &nbsp;requirement.html, timeline.html and prizes.html. &nbsp;The &nbsp;public-info.html file should be the main page and include everything from the main panel down to just before the requirements and all other should be partials. &nbsp; &nbsp;The contents of the partial should be pretty self explanatory by its title. &nbsp; &nbsp;Optional you may break the header and footer into separate partials as well.</p>\n\n<p>2. &nbsp;The public-info.html should replace the index file and all others should go into a subdir called templates. &nbsp; (client/edit-challenge/templates)</p>\n\n<p>3. &nbsp;The logic for the controllers should be broken into three controllers and three corresponding files. CreateChallengeController, RequirementsController, and ChallengeFileUploadController and have corresponding file name in train case (- as separator aka spine case.)</p>\n\n<p>4. &nbsp;CreateChallengeController has 7 methods: &nbsp;See the <a href=\"https://github.com/topcoderinc/serenity-core/blob/master/packages%2Fchallenges%2Fpublic%2Fcontrollers%2Fchallenges.js\">serenity core controlle</a>r &nbsp;for all the logic behind the first four methods.<br />\n&nbsp; 4.1. &nbsp;checkNew() pattern used to determine if this is a create or edit. &nbsp;launchChallenge(challenge) validates logic,<br />\n&nbsp; 4.2. updateChallenge()&nbsp;<br />\n&nbsp; 4.3. getAccounts(query) &nbsp;- &nbsp;also&nbsp;on the UI add the ablity to clear (unset) &nbsp;the account value<br />\n&nbsp; 4.4. getAllTags()<br />\n&nbsp; 4.5. &nbsp;concatenateDateTime(date, hour) &nbsp;- this method does not exsting the the core1 repo. &nbsp; Since we are sending the regStartDate and subEndDate as datetimestamps and they are separate forms inputs we need them concatenated. &nbsp; If you can do this in the view, you may omit this method.<br />\n&nbsp; 4.6. calculateDuration(regStart,subEnd) use moment.js to calculate the durationn.<br />\n&nbsp; 4.7. prizeReorder() &nbsp;- there is some logic behind how the prizes:<br />\n&nbsp; &nbsp; &nbsp;4.7.1. &nbsp; &nbsp;#155 defaults: &nbsp;make 1st place = 1200 and 2nd 600, only default these two values and corresponding ribbon icons.<br />\n&nbsp; &nbsp; &nbsp;4.7.2. &nbsp;make it possible to delete any prize in any position but insure we have at least one prize(1st). &nbsp;If a prize is deleted the remaining prize should shifted to the left. &nbsp; i.e. if 2nd place is delete and there is a third, the third place should move into the second position.<br />\n&nbsp; &nbsp; &nbsp;4.7.3. &nbsp;#148 Based on the value of the prize amount reorder the prizes so they are always in descending order when the text box loses focus, ng-animate would be nice but not required.<br />\n&nbsp; &nbsp; &nbsp;4.7.4. &nbsp;#153 there is currently a bug that if you add 5 prizes you can not delete the 5th one. &nbsp; Since we are changing the behavior such that you can delete any prize in any order this should no longer be an issue but be sure to test the deleting of the 5th prize.</p>\n\n<p>5. &nbsp;RequirementsController &nbsp;see the<a href=\"https://github.com/topcoderinc/serenity-core/blob/master/packages/challenges/public/controllers/challenges.js\"> serenity-core1</a> repo for this controller logic<br />\n&nbsp; 5.1. &nbsp;create(challengeId, text)<br />\n&nbsp; 5.2 &nbsp;save(requirementId)<br />\n&nbsp; 5.3. delete(reuquirementid)</p>\n\n<p>6. &nbsp;ChallengeFileUploadController &nbsp;see the serenity-core1 repo for this controller logic<br />\n&nbsp; 6.1. uploadFile(challengeId, fileMeta-data)<br />\n&nbsp; 6.2. &nbsp;resetUploadForm()<br />\n&nbsp; 6.3. deleteFile()</p>\n\n<p>7. <em><strong>Services</strong></em> - Since we are using JSON data and not real api calls your angular services should call server controllers that either pull data from a json file of post data to the console -- for now. &nbsp; &nbsp;When we are ready to wire this to the real api, the modifications to the angular services should be minimal however the changes to the node controllers will be dramatic and use http get/post methods via restify or restangular. &nbsp; The following is a list of angular services which should be pretty self explanatory but for now just create the node controllers to either get from json or post to console.<br />\n&nbsp; 7.1 &nbsp;getChallenge(id) -get a LC challenge<br />\n&nbsp; 7.2 &nbsp;*createChallenge(data) - create a new LC challenge<br />\n&nbsp; 7.3 &nbsp;*updateChallenge(challengeId, data) &nbsp;- update a new LC challenge<br />\n&nbsp; 7.4 &nbsp;*deleteChallenge(challengeId) deletes a challenge<br />\n&nbsp; 7.5 &nbsp;*createRequirement(challengeId, data) - add a requirement to a challenge<br />\n&nbsp; 7.6 &nbsp;*updateRequirement(requirementId, data) - update a requirement on a challenge<br />\n&nbsp; 7.7 &nbsp;*deleteRequirement(requirementId) - delete a requirement on a challenge<br />\n&nbsp; 7.8 &nbsp;getAllTags() - retrieve all tags to be attached to a challenge<br />\n&nbsp; 7.9 &nbsp;getAccounts(query) - find a account by query string to be attached to a challenge<br />\n&nbsp; 7.10 *uploadChallengeFile(challengeId, file, file-metadata) &nbsp;- a file upload for a challenge spec<br />\n<em>The services above with a * should do mock post to the console however the payload should be valid such that we can modify the controller to do an actual POST and the payload still be valid. &nbsp;You should look at the challenge api service ( https://github.com/topcoderinc/lc1-serenity-challenge-service) to see the spec of the signatures but for this challenge you are not requierd for you payload to match since this code base is not compliant with the work we have done so far. &nbsp; We will handle that in later challenges.</em></p>\n\n<p><em>8. &nbsp;</em>Please review and follow the guidelines in the docs dir.</p>\n\n<p>9. &nbsp;Provide any &nbsp;additional recommendations on the organization or Best Practices to be added to this code.</p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30046578",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalSubmissionGuidelines": "<p>Please submit a video of your solution in action.<br />\nPlease submit a detailed document that highlights the changes you have made.<br />\nPlease let us know if you have any recommendations on this new organization structure.<br />\nThere is $100 built into the first place prize to make any changes required by the reviewers and then create a pull request.</p>\n",
+  "forumId": 26172,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=26172",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 15,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-20T15:27:00.000Z",
+      "actualStartTime": "2014-10-20T15:27:00.000Z",
+      "scheduledEndTime": "2014-10-24T15:28:00.000Z",
+      "actualendTime": "2014-10-24T15:28:00.000Z",
+      "_id": "58132062550dfb3b52b2be58"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-20T15:33:00.000Z",
+      "actualStartTime": "2014-10-20T15:33:00.000Z",
+      "scheduledEndTime": "2014-10-27T15:28:00.000Z",
+      "actualendTime": "2014-10-27T15:28:00.000Z",
+      "_id": "58132062550dfb3b52b2be57"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-27T15:28:00.000Z",
+      "actualStartTime": "2014-10-27T15:28:00.000Z",
+      "scheduledEndTime": "2014-10-29T15:30:00.000Z",
+      "actualendTime": "2014-10-29T15:30:00.000Z",
+      "_id": "58132062550dfb3b52b2be56"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-29T15:30:00.000Z",
+      "actualStartTime": "2014-10-29T15:30:00.000Z",
+      "scheduledEndTime": "2014-10-30T03:17:00.000Z",
+      "actualendTime": "2014-10-30T03:17:00.000Z",
+      "_id": "58132062550dfb3b52b2be55"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-30T03:17:00.000Z",
+      "actualStartTime": "2014-10-30T03:17:00.000Z",
+      "scheduledEndTime": "2014-10-30T03:19:00.000Z",
+      "actualendTime": "2014-10-30T03:19:00.000Z",
+      "_id": "58132062550dfb3b52b2be54"
+    }
+  ],
+  "platforms": [
+    "NodeJS"
+  ],
+  "postingDate": "2014-10-20T15:27:00.000Z",
+  "prize": [
+    950,
+    550,
+    300
+  ],
+  "projectId": 7971,
+  "registrants": [
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-22T04:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2be53"
+    },
+    {
+      "handle": "tamikasue",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-22T13:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2be52"
+    },
+    {
+      "handle": "sidthekid",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-22T18:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2be51"
+    },
+    {
+      "handle": "spanhawk",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-23T05:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2be50"
+    },
+    {
+      "handle": "lovefreya",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-24T13:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2be4f"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-20T15:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2be4e"
+    },
+    {
+      "handle": "gmagniez",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-20T15:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2be4d"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-20T15:46:00.000Z",
+      "submissionDate": "2014-10-27T06:28:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2be4c"
+    },
+    {
+      "handle": "BharathMG",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-20T15:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2be4b"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-20T16:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2be4a"
+    },
+    {
+      "handle": "iCare",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-20T21:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2be49"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-21T00:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2be48"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-21T03:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2be47"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-21T10:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2be46"
+    },
+    {
+      "handle": "getaasciesh",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-21T11:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132062550dfb3b52b2be45"
+    }
+  ],
+  "registrationEndDate": "2014-10-24T15:28:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2014-10-27T15:28:00.000Z",
+  "submissions": [
+    {
+      "handle": "peakpado",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 95.63,
+      "finalScore": 95.63,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-10-27T06:28:00.000Z",
+      "_id": "58132062550dfb3b52b2be59"
+    }
+  ],
+  "technology": [
+    "Angular.js"
+  ]
+}

@@ -1,0 +1,356 @@
+{
+  "_id": 30051645,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T11:00:19.544Z",
+  "appealsEndDate": "2015-10-29T05:21:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "SunShot - Solar Doctor Python Code Challenge 2",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\"><span>Many residential solar owners have small, undetected maintenance problems that are leading to massive downtime for their solar panels.</span></p>\n\n<p><span>Using classification algorithms that detect different types of problems, Solar Doctor provides an automated alert to customers whenever there&#39;s a problem. We also provide a detailed description of the maintenance needed and offer a referral service.</span></p>\n\n<p><span>Solar Doctor customers opt-in to give Solar Doctor access to their Enphase inverters through the Enphase API. Solar Doctor runs a nightly job to grab the latest solar production data, check for problems indicated by the latest data, and send automated HTML email alerts when a problem is detected.</span></p>\n\n<p dir=\"ltr\">The goal of this challenge is to add analytical and tracking services to detect problems and notify customers.</p>\n\n<h1 dir=\"ltr\">Challenge Requirements</h1>\n\n<p dir=\"ltr\">You will address the following in this challenge :</p>\n\n<h2 dir=\"ltr\">UI Requirements</h2>\n\n<p dir=\"ltr\">We don&rsquo;t have a UI prototype or a design, you will follow same existing website UI styling :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The UI changes should look good.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- AngularJS is used in frontend JS library.</p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Database Model</h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- email_preference Model: This will record user preferences</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- user_id (reference User model)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- send_email : true/false</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- useHtml : true/false</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">// this can be extended to set specific days in week, specific hour, and repeat notification settings</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- notification_data model: used to record alerts to be sent to users</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- user_id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- alert_needed : true/false</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- alert_name : string</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- alert_description :string</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- isRead : true/false</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- isSent : true/false</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Required Pages</h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Alerts Page</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The page will list notification_data model in a table, user will be able to see the past notifications.</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- if record is not read display it highlighted.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Add a form at top to allow user to set email_preference settings with &lsquo;save&rsquo; button. Display message on save (success or failure).</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Backend Functionality</h2>\n\n<p dir=\"ltr\">Required backend :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- You will create database tables for models you are adding in this challenge.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Analytics service that have the following:</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- (checkForAlerts) function that is used to see if there is any problem in solar production data in specific date for specific user</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Input parameters are user id and date, date is optional (default to yesterday)</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Check if user has an enphase data recorded in EnphaseEnergyLifeTime:</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- if not and user did not connect with enphase return error.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- if no data and user connected enphase, call refreshUserData</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- if EnphaseEnergyLifeTime last updated date is older than specified date, then run refreshUserData.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Exclude current date&rsquo;s data, compute the average daily Watt hours of solar production data.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Retrieve average daily Watt hours of provided date.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- create notification_data record :</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- If it has lower than average solar production then data will be :</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- user id (input)</p>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- alert_needed : true</p>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- alert_name : &nbsp;Below Average Performance</p>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- alert_description: The production of the solar installation is lower than average.</p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- else :</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- user id (input)</p>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- alert_needed : false</p>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- alert_name : &nbsp;n/a</p>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- alert_description: n/a</p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Alert service that is used to send alert emails</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- It can have single email (checkAlertsAndSendEmails)</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- it will use same email service as the one used in the app.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- get all notification_data records that have alert_needed is true and isSent equal to false.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- For each user pull user email preferences and send email if send_email is true, use proper email template based on useHtml field.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Email template should be configured.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- On successful email set isSent to true.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Job Scheduler</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Write a python script that runs as standalone script.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The script logic:</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- the method will call checkAlertsAndSendEmails</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The purpose of this script is to run as job schedular out of the box.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Email Tracking</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- We will enable email tracking out of the box using SendGrid, use this guide to enable Email Tracking&nbsp;<a href=\"https://sendgrid.com/docs/User_Guide/Settings/tracking.html\">https://sendgrid.com/docs/User_Guide/Settings/tracking.html</a></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">General Note</h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logging, validation, error handling must be properly implemented.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- All sensitive information, and environment specific information should be configurable.</p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Hosting</h2>\n\n<p dir=\"ltr\">It is preferred if you host your solution in Heroku.</p>\n\n<h2 dir=\"ltr\">Python Web Framework</h2>\n\n<p dir=\"ltr\">Use Django framework.</p>\n\n<h2 dir=\"ltr\">Technology</h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Python version 3.x running on Ubuntu</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Postgres 9.4</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Django 1.8.x</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- AngularJS</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Bootstrap</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Enphase API</p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Abstracting and Design Patterns</h2>\n\n<p dir=\"ltr\">Please make sure to create helper/interface to include the common code/functionality.</p>\n\n<p dir=\"ltr\">Also please make sure your design is flexible, use facade design pattern and adapter design pattern (and any other proper design pattern) to enable future extensibility of the solution.</p>\n\n<h2 dir=\"ltr\">Coding Standard</h2>\n\n<p dir=\"ltr\">Follow python coding best practices :&nbsp;<a href=\"http://www.python.org/dev/peps/pep-0008/\">PEP 8</a>&nbsp;for the main text, and<a href=\"http://www.python.org/dev/peps/pep-0257/\">&nbsp;PEP 257</a>&nbsp;for docstring conventions</p>\n\n<h2 dir=\"ltr\">Documentation</h2>\n\n<p dir=\"ltr\">Your solution must be well documented.</p>\n\n<h2 dir=\"ltr\">Readme</h2>\n\n<p dir=\"ltr\">Update existing readme file using Markdown language with following information :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Overview</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Setup Prerequisites</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Usage Example</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Reference this Python Documentation</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Any details about any limitations of your solution.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Verification Steps should be provided on separate document.</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\">Please note, we&#39;re judging this competition not just on the code, but also on the quality of the documentation, and ease of use.</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30051645",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<h1 dir=\"ltr\"><span>Submission</span></h1>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Upload documentation for how to run your submission</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Upload all your updated code as a git patch file.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Add&nbsp;elkhawajah&nbsp;as a member of your forked repository</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Winner will be required to submit a merge request on gitlab against the branch specified</p>\n\t</li>\n</ul>\n",
+  "forumId": 30756,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=30756",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 26,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-21T00:07:00.000Z",
+      "actualStartTime": "2015-10-21T00:07:00.000Z",
+      "scheduledEndTime": "2015-10-26T00:07:00.000Z",
+      "actualendTime": "2015-10-26T00:07:00.000Z",
+      "_id": "58132fc3550dfb3b52b8af05"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-21T00:12:00.000Z",
+      "actualStartTime": "2015-10-21T00:12:00.000Z",
+      "scheduledEndTime": "2015-10-26T00:07:00.000Z",
+      "actualendTime": "2015-10-26T00:07:00.000Z",
+      "_id": "58132fc3550dfb3b52b8af04"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-26T00:07:00.000Z",
+      "actualStartTime": "2015-10-26T00:07:00.000Z",
+      "scheduledEndTime": "2015-10-27T19:28:00.000Z",
+      "actualendTime": "2015-10-27T19:28:00.000Z",
+      "_id": "58132fc3550dfb3b52b8af03"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-27T19:28:00.000Z",
+      "actualStartTime": "2015-10-27T19:28:00.000Z",
+      "scheduledEndTime": "2015-10-28T19:28:00.000Z",
+      "actualendTime": "2015-10-28T19:28:00.000Z",
+      "_id": "58132fc3550dfb3b52b8af02"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-28T19:28:00.000Z",
+      "actualStartTime": "2015-10-28T19:28:00.000Z",
+      "scheduledEndTime": "2015-10-29T05:21:00.000Z",
+      "actualendTime": "2015-10-29T05:21:00.000Z",
+      "_id": "58132fc3550dfb3b52b8af01"
+    }
+  ],
+  "platforms": [
+    "Heroku"
+  ],
+  "postingDate": "2015-10-21T00:07:00.000Z",
+  "prize": [
+    1200,
+    600,
+    300
+  ],
+  "projectId": 9188,
+  "registrants": [
+    {
+      "handle": "Luckyodell",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-21T00:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af00"
+    },
+    {
+      "handle": "vvvpig",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-21T01:10:00.000Z",
+      "submissionDate": "2015-10-25T22:48:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aeff"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-21T01:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aefe"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-21T02:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aefd"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-21T02:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aefc"
+    },
+    {
+      "handle": "mkaziz",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-21T03:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aefb"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-21T03:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aefa"
+    },
+    {
+      "handle": "gvir",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-21T03:59:00.000Z",
+      "submissionDate": "2015-10-25T19:17:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aef9"
+    },
+    {
+      "handle": "son4moon",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-21T04:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aef8"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-21T08:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aef7"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-21T09:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aef6"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-21T12:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aef5"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-21T14:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aef4"
+    },
+    {
+      "handle": "esteer",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-21T16:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aef3"
+    },
+    {
+      "handle": "jaindsonvs",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-21T18:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aef2"
+    },
+    {
+      "handle": "SPChoria",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-21T19:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aef1"
+    },
+    {
+      "handle": "rtriv",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-22T02:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aef0"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-22T09:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aeef"
+    },
+    {
+      "handle": "herodolphin",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-22T12:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aeee"
+    },
+    {
+      "handle": "ifox",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-22T13:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aeed"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-22T18:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aeec"
+    },
+    {
+      "handle": "orirmi",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-22T20:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aeeb"
+    },
+    {
+      "handle": "Shadrach",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-23T17:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aeea"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-24T05:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aee9"
+    },
+    {
+      "handle": "altaironfire",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-24T06:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aee8"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-24T20:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aee7"
+    }
+  ],
+  "registrationEndDate": "2015-10-26T00:07:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-10-26T00:07:00.000Z",
+  "submissions": [
+    {
+      "handle": "vvvpig",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 94.38,
+      "finalScore": 97.5,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-10-25T22:48:00.000Z",
+      "_id": "58132fc3550dfb3b52b8af07"
+    },
+    {
+      "handle": "gvir",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 87.5,
+      "finalScore": 96.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-10-25T19:17:00.000Z",
+      "_id": "58132fc3550dfb3b52b8af06"
+    }
+  ],
+  "technology": [
+    "PostgreSQL",
+    "Python"
+  ]
+}

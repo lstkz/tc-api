@@ -1,0 +1,2316 @@
+{
+  "_id": 30053925,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:07:40.375Z",
+  "appealsEndDate": "2016-05-25T11:22:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "The Gates Foundation - Binary to Text Software Performance Challenge in C",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><strong>Problem Statement:</strong>&nbsp;</p>\n\n<p>Scalable, flexible, efficient C code for parsing a large binary file containing a set of tuples and corresponding scores, and creating text output files containing subsets of tuples in the required format.&nbsp;</p>\n\n<p><strong>Description:</strong>&nbsp;</p>\n\n<p>The input file is a set of unordered tuples, each with a corresponding score. A tuple is a vector of integers &gt;= 0, with no repeating integer. Each tuple also has a floating point score that can be positive or negative.&nbsp;</p>\n\n<p>The executable must take the following as inputs.</p>\n\n<p><strong>Input:</strong>&nbsp;</p>\n\n<p>- 2 binary files, format described below<br />\n- 1 unsigned int <strong>n </strong>(4 bytes, 0 &lt;= n &lt;= 1,000,000)<br />\n- 1 unsigned int <strong>k </strong>(4 bytes, 0 &lt;= k &lt;= 100,000)<br />\n- 1 double <strong>b </strong>(8 bytes, 0 &lt;= b &lt;= 1)</p>\n\n<p>Optional:</p>\n\n<p>- 1 double <strong>s </strong>(8 bytes, -100,000 &lt;= s &lt;= 100,000)</p>\n\n<p><strong>Output:</strong></p>\n\n<p>The software should produce be 4 or 5 ascii text files, as described below.&nbsp;</p>\n\n<p><strong>Input File Specifications:</strong></p>\n\n<p>Input file 1:<br />\nThis binary file gives information about the main binary file. It is exactly 28 bytes.</p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">type&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; | bytes &nbsp; &nbsp; &nbsp; | field &nbsp; &nbsp; | description<br />\n-----------------------------------------------------<br />\nsigned int&nbsp; &nbsp; | 4 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 0 &nbsp; &nbsp; &nbsp; &nbsp; | zero<br />\nsigned int&nbsp; &nbsp; | 4 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | d &nbsp; &nbsp; &nbsp; &nbsp; | dimension (# ints in each tuple)&nbsp;<br />\nsigned int&nbsp; &nbsp; | 4 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | n_vars&nbsp; &nbsp; | number of variables total<br />\nunsigned long | 8 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | n_tups&nbsp; &nbsp; | number of tuples<br />\ndouble&nbsp; &nbsp; &nbsp; &nbsp; | 8 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | avg &nbsp; &nbsp; &nbsp; | average of all scores<br />\n----------------------------------------------------------------<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 28 bytes total</span></p>\n\n<p>Input file 2:<br />\nThis is the main input file. It&#39;s size is determined by the values in the first binary file.</p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">type&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; | bytes &nbsp; &nbsp; &nbsp; | field &nbsp; &nbsp; | description<br />\n-----------------------------------------------------<br />\nint[] &nbsp; &nbsp; &nbsp; &nbsp; | d*4 &nbsp; &nbsp; &nbsp; &nbsp; | t1&nbsp; &nbsp; &nbsp; &nbsp; | tuple 1<br />\ndouble&nbsp; &nbsp; &nbsp; &nbsp; | 8 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | t1_s&nbsp; &nbsp; &nbsp; | tuple 1 score<br />\nint[] &nbsp; &nbsp; &nbsp; &nbsp; | d*4 &nbsp; &nbsp; &nbsp; &nbsp; | t2&nbsp; &nbsp; &nbsp; &nbsp; | tuple 2<br />\ndouble&nbsp; &nbsp; &nbsp; &nbsp; | 8 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | t2_s&nbsp; &nbsp; &nbsp; | tuple 2 score<br />\n...&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;...&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;...&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;...<br />\nint[] &nbsp; &nbsp; &nbsp; &nbsp; | d*4 &nbsp; &nbsp; &nbsp; &nbsp; | tlast &nbsp; &nbsp; | last tuple<br />\ndouble&nbsp; &nbsp; &nbsp; &nbsp; | 8 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | tlast_s &nbsp; | last tuple score<br />\n-----------------------------------------------------------<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | n_tups*((4*d)+8) bytes total</span></p>\n\n<p>Every int in a tuple vector will be in the range [0,n_vars-1]. There will be no duplicate values in a tuple, which means n_tups &lt;= nCr(n_vars, d). There is no ordering of the values within a tuple, and no ordering across all tuples. The dimension of each tuple will be between 2 and 8. (2 &lt;= d &lt;= 8).&nbsp;</p>\n\n<p><strong>Output File Specifications:</strong></p>\n\n<p>All floating point values in the output files should have 10 significant digits beyond the decimal point.</p>\n\n<p><strong>out1.txt: top tuples sorted</strong></p>\n\n<p>Text file containing <strong>n </strong>tuples with the highest score, sorted by maximum score. If n=0, this file is empty.</p>\n\n<p><strong>out2.txt: bottom tuples sorted</strong></p>\n\n<p>Similar to out1.txt. Text file containing <strong>n </strong>tuples, with the lowest score, sorted by minimum score. If n=0, this file is empty.</p>\n\n<p>For out1.txt and out2.txt, tuples are printed 1 per line, values separated by a tab, and the score of the tuple at the end with 10 digits beyond the decimal points. For example, a tuple of dimension 3, with the variables 4 5 and 6 and a score of 0.01 would look like:</p>\n\n<p>4&nbsp;&nbsp; &nbsp;5&nbsp;&nbsp; &nbsp;6&nbsp;&nbsp; &nbsp;0.0100000000</p>\n\n<p><strong>out3.txt: sorted tuples by variable</strong></p>\n\n<p>This file contains at most (2*k) + 1 lines for each value (variable) that appears in at least 1 tuple. The first line contains the variable number, the average of scores for all tuples that contain the variable, all separated by a tab. The next k lines are the highest scoring tuples that contain the variable , sorted by maximal score. The next k lines are the lowest scoring tuples that contain the variable, sorted by minimal score. If there are fewer than k tuples that contain the value, print all of the tuples that contain the value.</p>\n\n<p><strong>out4.txt: histogram</strong></p>\n\n<p>The first line of this file will be the minimum and maximum score in the file, respectively, separated by a tab. If b &gt; 0, there will be floor((max-min)/b)+1 lines following the first line. Each line has a count of how many scores fall in the range determined by the bin size b, starting at the minimum value. So line 2 should have a count of scores in the range [min, b+min), line 3 has count of scores in [min+b, (2*b)+min), etc.</p>\n\n<p>For example, if b=0.01, and the scores in the input file are 0.0100, 0.0120, 0.0299, 0.0300, 0.0310, 0.060, 0.100 then the output file should have 11 lines total and look like.</p>\n\n<p>0.0100000000&nbsp;&nbsp; &nbsp;0.1000000000<br />\n2<br />\n1<br />\n2<br />\n0<br />\n0<br />\n1<br />\n0<br />\n0<br />\n0<br />\n1</p>\n\n<p>The sum of the numbers in each line (excluding first line) should equal total number of tuples in the input file (n_tups).<br />\nNote that there are 10 bins: [0.01, 0.02),&nbsp;[0.02, 0.03), ...,&nbsp;[0.09, 0.10),&nbsp;[0.10, 0.11). There is a need for the 10th bin in order to include the border value 0.100, which is not included in the 9th bin.</p>\n\n<p><strong>out5.txt: extra, unsorted tuples and distance from avg score</strong></p>\n\n<p>This file is only created if the value <strong>s</strong> is passed.&nbsp;</p>\n\n<p>This file will contain all tuples and corresponding scores above avg + (s*std) if dimension d is even, or below avg-(s*std) if dimension d is odd. The format of each tuple will look like out1.txt and out2.txt, except there will be an extra column (separated by tab) indicating how many standard deviations away from the mean the tuple score is.</p>\n\n<p>A few things to note:</p>\n\n<p>- avg is already calculated and given in the first binary file.</p>\n\n<p>- This file will require calculating the standard deviation of all scores beforehand.</p>\n\n<p>- These tuples do NOT need to be sorted by their score.</p>\n\n<p><strong>Command Line options:</strong></p>\n\n<p>- The software should use the command line options as used in the demo application:</p>\n\n<div>Usage: &nbsp; run [options] &lt;input1&gt; &lt;input2&gt;</div>\n\n<div>Options:</div>\n\n<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-n INT &nbsp; &nbsp;number of sorted tuples for out1.txt and out2.txt</div>\n\n<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-k INT &nbsp; &nbsp;number of sorted tuples for out3.txt</div>\n\n<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-b FLOAT &nbsp;bin width for out4.txt</div>\n\n<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-s FLOAT &nbsp;number of standard deviations for out5.txt</div>\n\n<div>&nbsp;</div>\n\n<div>For threads we could have such option:<br />\n&nbsp;</div>\n\n<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-t INT &nbsp;number of threads</div>\n\n<div><br />\nIf you use threads, you&nbsp;should choose what you consider the best configuration, and use it as the default configuration if the -t command line option is not used. Please mention in the documentation which is the default value. If you do use threads, you may suggest some other option you think might be better, and we&#39;ll test with that option also.<br />\nFor performance testing we will use big values for the -n and -k options (the maximum values, or close to the maximum).<br />\nFor -b and -s options, we will choose some values that will produce files containing a number of records equal to&nbsp;25%-75% of the number of tuples from the input file.<br />\n&nbsp;</div>\n\n<p><strong>Other Requirements:</strong></p>\n\n<p>- The software should only pass through the input file 1 time, or 2 times if the optional value <strong>s </strong>is passed.</p>\n\n<p>- The software can keep all tuples and scores needed for output files in RAM (determined by k and n), and should not use more than 4GB of RAM on top of this. If k=0, n=0, and b=0, the program should not use more than 4GB RAM. &nbsp;We will be scoring the submissions based on the efficiency of their RAM usage compared to each other. &nbsp;The weighting for RAM Usage is 25% of the total score. &nbsp;&nbsp;<br />\n<strong>Note:&nbsp;<span style=\"color:rgb(34, 34, 34); font-family:arial,sans-serif; font-size:12.8px\">Valgrind compatibility is a requirement.</span></strong><span style=\"color:rgb(34, 34, 34); font-family:arial,sans-serif; font-size:12.8px\">&nbsp; &nbsp;</span>We will test it with the command below and will take into consideration the maximum live memory. If the test crashes and we get no result, the score will be 1.<br />\n&nbsp;&nbsp; &nbsp;valgrind --tool=exp-dhat &lt;command&gt;</p>\n\n<p>- Parallelization is OK using pthreads.</p>\n\n<p>- The test system architecture is x86_64 GNU/Linux. &nbsp; &nbsp;All the solutions will be executed on a common AWS m4.large 14.04 Ubuntu with 8 GB RAM and provisioned IOPS.</p>\n\n<p>- You must provide all source files, along with Makefile or other instructions for compilation and execution.</p>\n\n<p>- No external libraries can be used, except for the C standard libraries , pthread library, and other POSIX compliant functions.</p>\n\n<p>- The software will be judged on speed for various input files and values of n,k,b. The program should run fastest when n,k, and b are 0. &nbsp;The submissions will be compared to each other to generate a execution speed score. &nbsp;The weighting for this execution speed element is 25%. &nbsp;Please review the scorecard to understand the details of the performance scoring elements.</p>\n\n<p><strong>Source code and Sample input files:</strong></p>\n\n<div>Here is a link to the existing source code and sample input files that we will use for testing:<br />\n<a href=\"https://drive.google.com/open?id=0BycYpuMUQwQwdnRtSFBjcFIzcnM\">https://drive.google.com/open?id=0BycYpuMUQwQwdnRtSFBjcFIzcnM</a><br />\n<br />\nThe source code handles the command line arguments and provides an implementation for reading the input files and producing file out5.txt.<br />\nYou need to implement the rest of the functionality, and you are encouraged to try to improve the existing code, because all the functionality will count during testing.</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30053925",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<p>- Please submit all your source code and documentation in a zip format. &nbsp;There is existing code provided as a starting point for this challenge but the use of this code is optional provided your code maintains the interfaces defined above.</p>\n\n<p>- You should submit a Makefile to build your application. An existing Makefile has been provided as a starting point.</p>\n\n<p>- The previously written code for this application can be found in the Code Documents forums attached to this challenge. &nbsp;Instructions on how to execute the existing code are provided in the readme.txt</p>\n",
+  "forumId": 32816,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=32816",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 206,
+  "numberOfSubmissions": 33,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-05T16:01:00.000Z",
+      "actualStartTime": "2016-05-05T16:01:00.000Z",
+      "scheduledEndTime": "2016-05-16T16:01:00.000Z",
+      "actualendTime": "2016-05-16T16:01:00.000Z",
+      "_id": "58133f8c550dfb3b52bdeff8"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-05T16:07:00.000Z",
+      "actualStartTime": "2016-05-05T16:07:00.000Z",
+      "scheduledEndTime": "2016-05-16T16:01:00.000Z",
+      "actualendTime": "2016-05-16T16:01:00.000Z",
+      "_id": "58133f8c550dfb3b52bdeff7"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-16T16:02:00.000Z",
+      "actualStartTime": "2016-05-16T16:02:00.000Z",
+      "scheduledEndTime": "2016-05-24T02:51:00.000Z",
+      "actualendTime": "2016-05-24T02:51:00.000Z",
+      "_id": "58133f8c550dfb3b52bdeff6"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-24T02:52:00.000Z",
+      "actualStartTime": "2016-05-24T02:52:00.000Z",
+      "scheduledEndTime": "2016-05-25T02:53:00.000Z",
+      "actualendTime": "2016-05-25T02:53:00.000Z",
+      "_id": "58133f8c550dfb3b52bdeff5"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-25T02:54:00.000Z",
+      "actualStartTime": "2016-05-25T02:54:00.000Z",
+      "scheduledEndTime": "2016-05-25T11:22:00.000Z",
+      "actualendTime": "2016-05-25T11:22:00.000Z",
+      "_id": "58133f8c550dfb3b52bdeff4"
+    }
+  ],
+  "platforms": [
+    "Linux"
+  ],
+  "postingDate": "2016-05-05T16:01:00.000Z",
+  "prize": [
+    1800,
+    900
+  ],
+  "projectId": 9462,
+  "registrants": [
+    {
+      "handle": "gondzo",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T16:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdeff3"
+    },
+    {
+      "handle": "J.Bogusz",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T16:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdeff2"
+    },
+    {
+      "handle": "gpbencke",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T16:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdeff1"
+    },
+    {
+      "handle": "TheKingOfWrong",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T16:20:00.000Z",
+      "submissionDate": "2016-05-15T23:09:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdeff0"
+    },
+    {
+      "handle": "Rushikesh.Deshp",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T17:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefef"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T17:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefee"
+    },
+    {
+      "handle": "alazyrabbit",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T17:09:00.000Z",
+      "submissionDate": "2016-05-16T11:28:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefed"
+    },
+    {
+      "handle": "xiufei",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T17:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefec"
+    },
+    {
+      "handle": "dufresne",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T18:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefeb"
+    },
+    {
+      "handle": "Ksys",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T18:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefea"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T18:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefe9"
+    },
+    {
+      "handle": "freeaion",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T18:45:00.000Z",
+      "submissionDate": "2016-05-15T18:39:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefe8"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T18:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefe7"
+    },
+    {
+      "handle": "mehblahwhatever",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T19:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefe6"
+    },
+    {
+      "handle": "VenturaDelMonte",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T19:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefe5"
+    },
+    {
+      "handle": "binit92",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T19:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefe4"
+    },
+    {
+      "handle": "indebt",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T20:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefe3"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T20:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefe2"
+    },
+    {
+      "handle": "seda",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T21:31:00.000Z",
+      "submissionDate": "2016-05-16T15:27:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefe1"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T22:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefe0"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T23:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefdf"
+    },
+    {
+      "handle": "1ps3",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-05T23:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefde"
+    },
+    {
+      "handle": "CrazyCoderLZB",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T00:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefdd"
+    },
+    {
+      "handle": "Space_Cowboy",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T00:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefdc"
+    },
+    {
+      "handle": "Shizhouxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T00:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefdb"
+    },
+    {
+      "handle": "arch_angel",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T01:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefda"
+    },
+    {
+      "handle": "wood387",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T01:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefd9"
+    },
+    {
+      "handle": "he_eH",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T02:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefd8"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T03:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefd7"
+    },
+    {
+      "handle": "jkf",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T05:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefd6"
+    },
+    {
+      "handle": "capn-ace",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T07:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefd5"
+    },
+    {
+      "handle": "osamir",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T08:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefd4"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T09:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefd3"
+    },
+    {
+      "handle": "adibond",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T09:22:00.000Z",
+      "submissionDate": "2016-05-12T08:21:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefd2"
+    },
+    {
+      "handle": "utkarshkukreti",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T09:28:00.000Z",
+      "submissionDate": "2016-05-16T04:15:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefd1"
+    },
+    {
+      "handle": "moshu",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T09:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefd0"
+    },
+    {
+      "handle": "WojciechMigda",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T10:02:00.000Z",
+      "submissionDate": "2016-05-16T15:38:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefcf"
+    },
+    {
+      "handle": "shashidharg",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T10:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefce"
+    },
+    {
+      "handle": "OmarIbrahem",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T11:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefcd"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T14:56:00.000Z",
+      "submissionDate": "2016-05-16T15:22:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefcc"
+    },
+    {
+      "handle": "serkankaygin",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T15:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefcb"
+    },
+    {
+      "handle": "c30zD",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T17:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefca"
+    },
+    {
+      "handle": "GNAM",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T17:12:00.000Z",
+      "submissionDate": "2016-05-16T15:40:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefc9"
+    },
+    {
+      "handle": "lehuyqb",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T17:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefc8"
+    },
+    {
+      "handle": "_g_r_",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T17:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefc7"
+    },
+    {
+      "handle": "kumaranurag",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T18:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefc6"
+    },
+    {
+      "handle": "timmantuana",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T19:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefc5"
+    },
+    {
+      "handle": "mac007",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T19:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefc4"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T19:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefc3"
+    },
+    {
+      "handle": "gardn999",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T20:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefc2"
+    },
+    {
+      "handle": "syush",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T20:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefc1"
+    },
+    {
+      "handle": "zschoenb",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T20:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefc0"
+    },
+    {
+      "handle": "charango7",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T20:44:00.000Z",
+      "submissionDate": "2016-05-16T15:30:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefbf"
+    },
+    {
+      "handle": "jleonw5",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T20:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefbe"
+    },
+    {
+      "handle": "zackel",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T20:53:00.000Z",
+      "submissionDate": "2016-05-16T11:48:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefbd"
+    },
+    {
+      "handle": "kondakovdmitry",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T21:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefbc"
+    },
+    {
+      "handle": "lantonov",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T21:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefbb"
+    },
+    {
+      "handle": "Mw1993",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T21:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefba"
+    },
+    {
+      "handle": "priyanka.tayade",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T22:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefb9"
+    },
+    {
+      "handle": "JaydevMehta",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-06T22:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefb8"
+    },
+    {
+      "handle": "wstn",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T02:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefb7"
+    },
+    {
+      "handle": "kybconnor",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T03:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefb6"
+    },
+    {
+      "handle": "thtse",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T04:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefb5"
+    },
+    {
+      "handle": "wsobolewski",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T04:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefb4"
+    },
+    {
+      "handle": "crips",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T06:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefb3"
+    },
+    {
+      "handle": "chitta",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T06:12:00.000Z",
+      "submissionDate": "2016-05-16T09:21:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefb2"
+    },
+    {
+      "handle": "samlighty",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T15:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefb1"
+    },
+    {
+      "handle": "AjoyBhatia",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T06:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefb0"
+    },
+    {
+      "handle": "rad114",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T07:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefaf"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T07:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefae"
+    },
+    {
+      "handle": "flcoder",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T11:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefad"
+    },
+    {
+      "handle": "sgc",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T13:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefac"
+    },
+    {
+      "handle": "ged",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T14:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefab"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T14:16:00.000Z",
+      "submissionDate": "2016-05-16T13:31:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefaa"
+    },
+    {
+      "handle": "net_buster",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T11:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefa9"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T16:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefa8"
+    },
+    {
+      "handle": "Esther.Lin",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T17:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefa7"
+    },
+    {
+      "handle": "Pag2",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T18:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefa6"
+    },
+    {
+      "handle": "chiranjit90",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T18:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefa5"
+    },
+    {
+      "handle": "sfaxiano",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T20:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefa4"
+    },
+    {
+      "handle": "tienchil",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T21:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefa3"
+    },
+    {
+      "handle": "kuritzky",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T22:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefa2"
+    },
+    {
+      "handle": "webdevelopernyc",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T22:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefa1"
+    },
+    {
+      "handle": "jlin2552",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T23:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdefa0"
+    },
+    {
+      "handle": "albet.januar",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T00:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef9f"
+    },
+    {
+      "handle": "argetlam5",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T01:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef9e"
+    },
+    {
+      "handle": "hyy5159",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T16:12:00.000Z",
+      "submissionDate": "2016-05-16T05:35:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef9d"
+    },
+    {
+      "handle": "zamini",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T08:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef9c"
+    },
+    {
+      "handle": "codingpan",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T01:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef9b"
+    },
+    {
+      "handle": "beesazee",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T03:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef9a"
+    },
+    {
+      "handle": "BW_Hugh",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T06:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef99"
+    },
+    {
+      "handle": "J.J.",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T06:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef98"
+    },
+    {
+      "handle": "andr113",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T08:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef97"
+    },
+    {
+      "handle": "brunch",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T08:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef96"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T08:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef95"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T09:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef94"
+    },
+    {
+      "handle": "qwer_zcc",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T11:17:00.000Z",
+      "submissionDate": "2016-05-16T06:58:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef93"
+    },
+    {
+      "handle": "federico_zb",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T11:46:00.000Z",
+      "submissionDate": "2016-05-16T14:32:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef92"
+    },
+    {
+      "handle": "tojan",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T12:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef91"
+    },
+    {
+      "handle": "AadityaDev",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T14:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef90"
+    },
+    {
+      "handle": "geek_geek",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T14:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef8f"
+    },
+    {
+      "handle": "yankyo",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T14:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef8e"
+    },
+    {
+      "handle": "srikanth1920",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T15:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef8d"
+    },
+    {
+      "handle": "vparinov",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T15:26:00.000Z",
+      "submissionDate": "2016-05-16T15:32:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef8c"
+    },
+    {
+      "handle": "jusizela",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T16:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef8b"
+    },
+    {
+      "handle": "osullisg",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T16:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef8a"
+    },
+    {
+      "handle": "beekalam",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T16:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef89"
+    },
+    {
+      "handle": "giantsoft",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T16:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef88"
+    },
+    {
+      "handle": "klo86min",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T16:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef87"
+    },
+    {
+      "handle": "makedoge",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T19:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef86"
+    },
+    {
+      "handle": "rachit340",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T23:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef85"
+    },
+    {
+      "handle": "karansuraj",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T23:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef84"
+    },
+    {
+      "handle": "montreal6",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T01:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef83"
+    },
+    {
+      "handle": "blackguess",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T02:51:00.000Z",
+      "submissionDate": "2016-05-14T04:28:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef82"
+    },
+    {
+      "handle": "bluenet",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T02:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef81"
+    },
+    {
+      "handle": "emiaozang",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T04:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef80"
+    },
+    {
+      "handle": "TeddyYe",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T06:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef7f"
+    },
+    {
+      "handle": "Denis.Abrosimov",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T08:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef7e"
+    },
+    {
+      "handle": "SelcukB",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T08:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef7d"
+    },
+    {
+      "handle": "kkarthi",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T08:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef7c"
+    },
+    {
+      "handle": "AlexeyProkopnev",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T05:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef7b"
+    },
+    {
+      "handle": "scot",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T14:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef7a"
+    },
+    {
+      "handle": "code_now",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T15:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef79"
+    },
+    {
+      "handle": "bluescorp",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T17:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef78"
+    },
+    {
+      "handle": "marius.pungaru",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T18:34:00.000Z",
+      "submissionDate": "2016-05-16T15:40:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef77"
+    },
+    {
+      "handle": "prokal93",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T18:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef76"
+    },
+    {
+      "handle": "paul.koehring",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T21:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef75"
+    },
+    {
+      "handle": "matthew.hall8",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T03:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef74"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T04:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef73"
+    },
+    {
+      "handle": "x5fhayling",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T05:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef72"
+    },
+    {
+      "handle": "sophyphilo",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T06:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef71"
+    },
+    {
+      "handle": "cookiesandcrazy",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T06:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef70"
+    },
+    {
+      "handle": "LetoZL",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T07:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef6f"
+    },
+    {
+      "handle": "prasant94",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T07:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef6e"
+    },
+    {
+      "handle": "guiroddallas",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T17:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef6d"
+    },
+    {
+      "handle": "sofmonk",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T09:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef6c"
+    },
+    {
+      "handle": "sriharshavk",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T10:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef6b"
+    },
+    {
+      "handle": "kphmd",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T13:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef6a"
+    },
+    {
+      "handle": "ashersyed",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T15:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef69"
+    },
+    {
+      "handle": "liuguiyangnwpu",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T15:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef68"
+    },
+    {
+      "handle": "asr1986",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T16:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef67"
+    },
+    {
+      "handle": "summergrass",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T16:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef66"
+    },
+    {
+      "handle": "bharatcoder",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T16:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef65"
+    },
+    {
+      "handle": "amdn",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T17:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef64"
+    },
+    {
+      "handle": "republic82",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T19:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef63"
+    },
+    {
+      "handle": "dtb85",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-11T07:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef62"
+    },
+    {
+      "handle": "nshal",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-11T11:03:00.000Z",
+      "submissionDate": "2016-05-16T14:46:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef61"
+    },
+    {
+      "handle": "bert.bei",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-11T12:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef60"
+    },
+    {
+      "handle": "TechnoViking",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-11T16:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef5f"
+    },
+    {
+      "handle": "asd52403",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-11T16:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef5e"
+    },
+    {
+      "handle": "cbbjames2",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-12T03:25:00.000Z",
+      "submissionDate": "2016-05-15T13:37:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef5d"
+    },
+    {
+      "handle": "nf071590",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-11T18:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef5c"
+    },
+    {
+      "handle": "chandan047",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-11T19:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef5b"
+    },
+    {
+      "handle": "alexsusu",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-11T21:11:00.000Z",
+      "submissionDate": "2016-05-16T15:53:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef5a"
+    },
+    {
+      "handle": "haricoding",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-12T02:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef59"
+    },
+    {
+      "handle": "Escapecharacter",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-12T06:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef58"
+    },
+    {
+      "handle": "cjalmeida",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-12T06:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef57"
+    },
+    {
+      "handle": "naveenknagineni",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-12T06:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef56"
+    },
+    {
+      "handle": "daga_sumit",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-12T06:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef55"
+    },
+    {
+      "handle": "GhOsTFaCe",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-12T07:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef54"
+    },
+    {
+      "handle": "patibandla",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-12T07:55:00.000Z",
+      "submissionDate": "2016-05-16T12:00:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef53"
+    },
+    {
+      "handle": "tongkunvwang",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-12T08:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef52"
+    },
+    {
+      "handle": "thomasytchen",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-12T12:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef51"
+    },
+    {
+      "handle": "NightFlash",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-12T14:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef50"
+    },
+    {
+      "handle": "shrayanth",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-12T15:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef4f"
+    },
+    {
+      "handle": "defaultMaster",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-12T16:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef4e"
+    },
+    {
+      "handle": "abdeaitali",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-12T18:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef4d"
+    },
+    {
+      "handle": "acarrabba6",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-12T20:21:00.000Z",
+      "submissionDate": "2016-05-16T01:58:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef4c"
+    },
+    {
+      "handle": "WarLust",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-13T02:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef4b"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-13T04:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef4a"
+    },
+    {
+      "handle": "wm624",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-13T05:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef49"
+    },
+    {
+      "handle": "henriqdp",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-13T13:56:00.000Z",
+      "submissionDate": "2016-05-16T15:14:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef48"
+    },
+    {
+      "handle": "vinoblade",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-13T06:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef47"
+    },
+    {
+      "handle": "Setako",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-13T10:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef46"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-13T16:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef45"
+    },
+    {
+      "handle": "xport",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-13T16:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef44"
+    },
+    {
+      "handle": "dirkb",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-15T18:42:00.000Z",
+      "submissionDate": "2016-05-16T15:59:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef43"
+    },
+    {
+      "handle": "smatsumoto",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-14T13:14:00.000Z",
+      "submissionDate": "2016-05-16T12:51:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef42"
+    },
+    {
+      "handle": "rseal",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-14T14:04:00.000Z",
+      "submissionDate": "2016-05-16T13:10:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef41"
+    },
+    {
+      "handle": "kishuagarwal",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-14T17:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef40"
+    },
+    {
+      "handle": "mohammedjabreel",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-15T03:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef3f"
+    },
+    {
+      "handle": "achampion",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-15T07:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef3e"
+    },
+    {
+      "handle": "voalge",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-15T12:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef3d"
+    },
+    {
+      "handle": "cr.anil",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-15T10:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef3c"
+    },
+    {
+      "handle": "brasspots",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-15T10:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef3b"
+    },
+    {
+      "handle": "erhanuman9010",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-15T12:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef3a"
+    },
+    {
+      "handle": "ungoliant",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-15T12:31:00.000Z",
+      "submissionDate": "2016-05-15T12:39:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef39"
+    },
+    {
+      "handle": "aswinraj94",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-15T13:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef38"
+    },
+    {
+      "handle": "winterflame",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-15T14:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef37"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-15T16:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef36"
+    },
+    {
+      "handle": "rickmatter",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-15T18:50:00.000Z",
+      "submissionDate": "2016-05-16T07:35:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef35"
+    },
+    {
+      "handle": "TriHard8",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-16T00:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef34"
+    },
+    {
+      "handle": "miao.bigface",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-16T01:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef33"
+    },
+    {
+      "handle": "g0dzilli",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-16T01:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef32"
+    },
+    {
+      "handle": "NuII",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-16T02:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef31"
+    },
+    {
+      "handle": "suniltholia",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-16T03:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef30"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-16T06:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef2f"
+    },
+    {
+      "handle": "shivam0217",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-16T06:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef2e"
+    },
+    {
+      "handle": "kyerise",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-16T07:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef2d"
+    },
+    {
+      "handle": "jeevaniith",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-16T09:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef2c"
+    },
+    {
+      "handle": "kpoxa2l",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-16T10:25:00.000Z",
+      "submissionDate": "2016-05-16T10:27:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef2b"
+    },
+    {
+      "handle": "mograbi.moawiya",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-16T11:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef2a"
+    },
+    {
+      "handle": "lightmare",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-16T12:38:00.000Z",
+      "submissionDate": "2016-05-16T14:32:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef29"
+    },
+    {
+      "handle": "Nilezor82",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-16T13:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef28"
+    },
+    {
+      "handle": "frozar",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-16T13:54:00.000Z",
+      "submissionDate": "2016-05-16T13:58:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef27"
+    },
+    {
+      "handle": "elarousy79",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-16T14:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdef26"
+    }
+  ],
+  "registrationEndDate": "2016-05-16T16:01:00.000Z",
+  "reviewScorecardId": 30001950,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-05-16T16:01:00.000Z",
+  "submissions": [
+    {
+      "handle": "nshal",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 91.88,
+      "finalScore": 91.88,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-05-16T14:46:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf019"
+    },
+    {
+      "handle": "hyy5159",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 88.75,
+      "finalScore": 91.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-16T05:35:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf018"
+    },
+    {
+      "handle": "charango7",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 89.38,
+      "finalScore": 89.38,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-16T15:30:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf017"
+    },
+    {
+      "handle": "TheKingOfWrong",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 86.25,
+      "finalScore": 86.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-15T23:09:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf016"
+    },
+    {
+      "handle": "lightmare",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 84.38,
+      "finalScore": 84.38,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-16T14:32:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf015"
+    },
+    {
+      "handle": "utkarshkukreti",
+      "placement": 6,
+      "screeningScore": null,
+      "initialScore": 79.38,
+      "finalScore": 80,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-16T04:15:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf014"
+    },
+    {
+      "handle": "WojciechMigda",
+      "placement": 7,
+      "screeningScore": null,
+      "initialScore": 77.5,
+      "finalScore": 78.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-16T15:38:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf013"
+    },
+    {
+      "handle": "smatsumoto",
+      "placement": 8,
+      "screeningScore": null,
+      "initialScore": 70.63,
+      "finalScore": 70.63,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-16T12:51:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf012"
+    },
+    {
+      "handle": "adibond",
+      "placement": 9,
+      "screeningScore": null,
+      "initialScore": 66.25,
+      "finalScore": 66.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-12T08:21:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf011"
+    },
+    {
+      "handle": "vparinov",
+      "placement": 10,
+      "screeningScore": null,
+      "initialScore": 60,
+      "finalScore": 60,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-16T15:32:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf010"
+    },
+    {
+      "handle": "alazyrabbit",
+      "placement": 11,
+      "screeningScore": null,
+      "initialScore": 49.38,
+      "finalScore": 49.38,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-16T11:28:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf00f"
+    },
+    {
+      "handle": "federico_zb",
+      "placement": 12,
+      "screeningScore": null,
+      "initialScore": 48.75,
+      "finalScore": 48.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-16T14:32:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf00e"
+    },
+    {
+      "handle": "dexy",
+      "placement": 13,
+      "screeningScore": null,
+      "initialScore": 46.88,
+      "finalScore": 46.88,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-16T15:22:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf00d"
+    },
+    {
+      "handle": "patibandla",
+      "placement": 14,
+      "screeningScore": null,
+      "initialScore": 46.25,
+      "finalScore": 46.25,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-16T12:00:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf00c"
+    },
+    {
+      "handle": "rseal",
+      "placement": 15,
+      "screeningScore": null,
+      "initialScore": 45.63,
+      "finalScore": 45.63,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-16T13:10:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf00b"
+    },
+    {
+      "handle": "ungoliant",
+      "placement": 16,
+      "screeningScore": null,
+      "initialScore": 45,
+      "finalScore": 45,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-15T12:39:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf00a"
+    },
+    {
+      "handle": "zackel",
+      "placement": 17,
+      "screeningScore": null,
+      "initialScore": 45,
+      "finalScore": 45,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-16T11:48:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf009"
+    },
+    {
+      "handle": "qwer_zcc",
+      "placement": 18,
+      "screeningScore": null,
+      "initialScore": 44.38,
+      "finalScore": 44.38,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-16T06:58:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf008"
+    },
+    {
+      "handle": "frozar",
+      "placement": 19,
+      "screeningScore": null,
+      "initialScore": 43.75,
+      "finalScore": 43.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-16T13:58:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf007"
+    },
+    {
+      "handle": "kpoxa2l",
+      "placement": 20,
+      "screeningScore": null,
+      "initialScore": 42.5,
+      "finalScore": 42.5,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-16T10:27:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf006"
+    },
+    {
+      "handle": "acarrabba6",
+      "placement": 21,
+      "screeningScore": null,
+      "initialScore": 41.88,
+      "finalScore": 41.88,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-16T01:58:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf005"
+    },
+    {
+      "handle": "chitta",
+      "placement": 22,
+      "screeningScore": null,
+      "initialScore": 41.88,
+      "finalScore": 41.88,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-16T09:21:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf004"
+    },
+    {
+      "handle": "GNAM",
+      "placement": 23,
+      "screeningScore": null,
+      "initialScore": 41.88,
+      "finalScore": 41.88,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-16T15:40:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf003"
+    },
+    {
+      "handle": "marius.pungaru",
+      "placement": 24,
+      "screeningScore": null,
+      "initialScore": 39.38,
+      "finalScore": 39.38,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-16T15:40:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf002"
+    },
+    {
+      "handle": "alexsusu",
+      "placement": 25,
+      "screeningScore": null,
+      "initialScore": 38.13,
+      "finalScore": 38.13,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-16T15:53:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf001"
+    },
+    {
+      "handle": "blackguess",
+      "placement": 26,
+      "screeningScore": null,
+      "initialScore": 36.88,
+      "finalScore": 36.88,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-14T04:28:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf000"
+    },
+    {
+      "handle": "cbbjames2",
+      "placement": 27,
+      "screeningScore": null,
+      "initialScore": 35.63,
+      "finalScore": 35.63,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-15T13:37:00.000Z",
+      "_id": "58133f8c550dfb3b52bdefff"
+    },
+    {
+      "handle": "rickmatter",
+      "placement": 28,
+      "screeningScore": null,
+      "initialScore": 35,
+      "finalScore": 35,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-16T07:35:00.000Z",
+      "_id": "58133f8c550dfb3b52bdeffe"
+    },
+    {
+      "handle": "dirkb",
+      "placement": 29,
+      "screeningScore": null,
+      "initialScore": 34.38,
+      "finalScore": 34.38,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-16T15:59:00.000Z",
+      "_id": "58133f8c550dfb3b52bdeffd"
+    },
+    {
+      "handle": "freeaion",
+      "placement": 30,
+      "screeningScore": null,
+      "initialScore": 32.5,
+      "finalScore": 33.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-15T18:39:00.000Z",
+      "_id": "58133f8c550dfb3b52bdeffc"
+    },
+    {
+      "handle": "seda",
+      "placement": 31,
+      "screeningScore": null,
+      "initialScore": 33.13,
+      "finalScore": 33.13,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-16T15:27:00.000Z",
+      "_id": "58133f8c550dfb3b52bdeffb"
+    },
+    {
+      "handle": "henriqdp",
+      "placement": 32,
+      "screeningScore": null,
+      "initialScore": 26.25,
+      "finalScore": 26.25,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-16T15:14:00.000Z",
+      "_id": "58133f8c550dfb3b52bdeffa"
+    },
+    {
+      "handle": "testXuSanping",
+      "placement": 33,
+      "screeningScore": null,
+      "initialScore": 23.75,
+      "finalScore": 23.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-16T13:31:00.000Z",
+      "_id": "58133f8c550dfb3b52bdeff9"
+    }
+  ],
+  "technology": [
+    "C",
+    "Data Science"
+  ]
+}

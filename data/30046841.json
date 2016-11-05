@@ -1,7 +1,7 @@
 {
   "_id": 30046841,
   "_isComplete": true,
-  "__v": 1,
+  "__v": 0,
   "_lastUpdate": "2016-10-27T17:48:11.529Z",
   "appealsEndDate": "2014-11-08T04:12:00.000Z",
   "challengeCommunity": "develop",
@@ -15,11 +15,6 @@
   "detailedRequirements": "<h2><span><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></span></h2>\n\n<p><span>Our client want to use Amazon mturk to invite game players to play set of games. Each Human Intelligence Task (HIT) will be for completing a &quot;task&quot; (analogous to a subset of levels in the game versions) in exchange for payment. Ideally, we would keep this as short and simple as possible - i.e. one &quot;task&quot; gets the payment (instead of multiple progressive levels).</span></p>\n\n<p>In this challenge we are making several changes and update to the mturk web dashboard, and mturk api to implement the FULL flow from creating a hit until the assignment review is submitted.</p>\n\n<h2><span style=\"color:#FF0000\">Challenge Requirements</span></h2>\n\n<p>You will address the following in this challenge :</p>\n\n<ul>\n\t<li>Creating a hit - We need to change the creation to support creation of hit using <a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_ExternalQuestionArticle.html\">ExternalQuestion</a>\n\n\t<ul>\n\t\t<li>We need to store the form as template to be used by all hits created that use External Questions.\n\t\t<ul>\n\t\t\t<li><a href=\"https://aws.amazon.com/code/555\">This is a sample of javascript-only of External Qustion html.</a></li>\n\t\t\t<li>The template should be modified to have following in the form :\n\t\t\t<ul>\n\t\t\t\t<li>Please open this link in a new page/tab to play the game (add a link with target=&quot;_blank&quot;), let&#39;s call the link : playLink</li>\n\t\t\t\t<li>Read and follow instructions there</li>\n\t\t\t\t<li>After completing the task, you will receive a confirmation code. Pasteit here [______________] (note to developer : this to be submitted to mturk result)</li>\n\t\t\t\t<li>hidden fields contains : assignmentId, taskId (note to developer : to be submitted to mturk result)</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>Update the sample to address the following :\n\t\t\t<ul>\n\t\t\t\t<li>Write a javascript that read assignmentID, workerID, and taskID from the ExternalURL query string. Call generateToken endpoint to generate a unique Token and append it to the playLink as a query string parameter with parameter name &quot;token&quot;</li>\n\t\t\t\t<li>If assignemntID is ASSIGNMENT_ID_NOT_AVAILABLE as outlined in the ExternalQuestion documentation then don&#39;t generate/call the generate unique token endpoint. Don&#39;t display link, display &quot;<span>&quot;&lt;p&gt;&lt;b&gt;You are previewing this HIT.&lt;/b&gt; To view play link of this HIT, please accept it.&lt;/p&gt;&quot;;</span></li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>In mturk admin web dashboard add radio button groups so user select between using External Question vs. Regular Question. The question area should be disabled if user select External Question option.\n\t\t<ul>\n\t\t\t<li>The external quesiton html form will be stored in Amazon S3. But for flexibilty read the external question form link from configuration and send it to mturk when creating the hit.</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Update preview in mturk admin web dashboard to render the external question form.</li>\n\t</ul>\n\t</li>\n\t<li>Create public endpoint /generateToken that accepts assignmentID, workerID and taskID to generate unique token.\n\t<ul>\n\t\t<li>Endpoint should validate assigmentID exists, and workerID passed is associated with assignment.</li>\n\t\t<li>use crypto.js generate a unique random token code with length of 10 characters.</li>\n\t\t<li>Store the generated unique token in database in new table called worker_tokens with assignmentID, workerID, and taskID.</li>\n\t\t<li>Return token to caller, If error occurred, return error without exposing any stacktrace or critical info.</li>\n\t</ul>\n\t</li>\n\t<li>When worker view the hit, accept it, and click the link, It will navigate user to the link to play the page.\n\t<ul>\n\t\t<li>Simulate this process by creating a page that parse the token, and validate it exists.</li>\n\t\t<li>If exists give user random confirmation code, and store the confirmation code in the worker_tokens table. Add new field for that.</li>\n\t\t<li>If not exists, give user friendly message &quot;Not assignment found for your request&quot;</li>\n\t\t<li>worker will fill confirmation code in the hit and submit it.</li>\n\t</ul>\n\t</li>\n\t<li>Assignments mturk admin web dashboard :\n\t<ul>\n\t\t<li>Add new action button in hits table in dashboard page to &#39;view assignments&#39;</li>\n\t\t<li>&#39;view assignments&#39; page will include a table of assignments with brief info about it.</li>\n\t\t<li>the &#39;view assignments&#39; table should link to &#39;assignment details&#39; page where user can view the assignment details.\n\t\t<ul>\n\t\t\t<li>The page should render the response from mturk properly.</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>&#39;assignment details&#39;&nbsp; page should have a form to submit (accept/reject) assignment and provide feedback (optional).\n\t\t<ul>\n\t\t\t<li>The page should also retrieve the corresponding field from worker_tokens and display if the assignment is valid or not depends on whether the worker_tokens&#39;s record values match the one returned from the assignment answer.</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>You will need to add required endpoints to mturk api that are missing and needed to address this flow.</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h2><span style=\"color:#FF0000\">Testing</span></h2>\n\n<ul>\n\t<li>You will use mturk sandbox for testing.</li>\n\t<li>You can view created hit by navigation to worker sandbox search for the title of the hit.</li>\n\t<li>You will need to accept it and manually navigate to the website to simulate the player flow.</li>\n\t<li>Make sure you can complete the outlined flow above as described. Reviewers are expected to do the same.</li>\n</ul>\n\n<h2><span><span style=\"color:#FF0000\">General Notes</span></span></h2>\n\n<ul>\n\t<li>Add audit fields to new table.</li>\n</ul>\n\n<h2><span><span style=\"color:#FF0000\">Github Repository</span></span></h2>\n\n<p>API exists in private repository <a href=\"https://github.com/topcoderinc/csfv_mturk_api\">https://github.com/topcoderinc/csfv_mturk_api</a> request access in challenge forums if you don&#39;t have it already.</p>\n\n<p>The mturk admin web dashboard is attached in challenge forums.</p>\n\n<h2><span style=\"color:#FF0000\">References</span></h2>\n\n<ul>\n\t<li><a href=\"http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/Welcome.html\">Mturk Amazon API Documentation</a></li>\n\t<li><a href=\"https://aws.amazon.com/code/555\">Sample External Question API</a></li>\n</ul>\n",
   "digitalRunPoints": 675,
   "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30046841",
-  "event": {
-    "id": 3442,
-    "description": "2015 topcoder Open",
-    "shortDescription": "tco15"
-  },
   "finalFixEndDate": "2014-11-08T19:19:00.000Z",
   "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<h2><span><strong><span style=\"color:#FF0000\"><span>Submission Deliverables</span></span></strong></span></h2>\n\n<p><span><span style=\"font-size:12px\">Below is an overview of the deliverables:</span></span></p>\n\n<ul>\n\t<li>Git patch of the changes.</li>\n\t<li>Text file with notes to reviewer.</li>\n\t<li>Update README.md in the API and admin web dashboard git folders, this file should also be part of the patch file.</li>\n\t<li><span>You don&#39;t need to submit a word document for deployment guide.</span></li>\n\t<li><span>Submitting a video for how to setup and test api is a plus.</span></li>\n</ul>\n\n<h2><span><span style=\"color:#FF0000\"><strong>Final Submission</strong></span></span></h2>\n\n<p><span><span style=\"font-size:12px\">For each member, the final submission should be uploaded via the challenge detail page on <a href=\"http://www.topcoder.com\">topcoder.com</a>.</span></span></p>\n</div>\n",
   "forumId": 26392,
@@ -28,6 +23,49 @@
   "numberOfCheckpointsPrizes": 0,
   "numberOfRegistrants": 23,
   "numberOfSubmissions": 3,
+  "postingDate": "2014-10-30T14:17:00.000Z",
+  "projectId": 5104,
+  "registrationEndDate": "2014-11-01T14:18:00.000Z",
+  "reliabilityBonus": 300,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-11-04T15:18:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 98.27,
+      "finalScore": 99.53,
+      "points": 438.75,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-11-02T21:12:00.000Z",
+      "_id": "58123ddb0659262e95e005ab"
+    },
+    {
+      "handle": "LieutenantRoger",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 88.93,
+      "finalScore": 97.32,
+      "points": 168.75,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-11-04T00:32:00.000Z",
+      "_id": "58123ddb0659262e95e005aa"
+    },
+    {
+      "handle": "peakpado",
+      "placement": 3,
+      "screeningScore": 100,
+      "initialScore": 89.93,
+      "finalScore": 90.52,
+      "points": 67.5,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-11-04T02:26:00.000Z",
+      "_id": "58123ddb0659262e95e005a9"
+    }
+  ],
   "phases": [
     {
       "type": "Specification Submission",
@@ -138,15 +176,6 @@
       "_id": "58123ddb0659262e95e0059d"
     }
   ],
-  "platforms": [
-    "Other"
-  ],
-  "postingDate": "2014-10-30T14:17:00.000Z",
-  "prize": [
-    1500,
-    750
-  ],
-  "projectId": 5104,
   "registrants": [
     {
       "handle": "kaiGG",
@@ -356,46 +385,14 @@
       "_id": "58123ddb0659262e95e00586"
     }
   ],
-  "registrationEndDate": "2014-11-01T14:18:00.000Z",
-  "reliabilityBonus": 300,
-  "reviewScorecardId": 30001470,
-  "reviewType": "COMMUNITY",
-  "screeningScorecardId": 30000412,
-  "submissionEndDate": "2014-11-04T15:18:00.000Z",
-  "submissions": [
-    {
-      "handle": "Sky_",
-      "placement": 1,
-      "screeningScore": 100,
-      "initialScore": 98.27,
-      "finalScore": 99.53,
-      "points": 438.75,
-      "submissionStatus": "Active",
-      "submissionDate": "2014-11-02T21:12:00.000Z",
-      "_id": "58123ddb0659262e95e005ab"
-    },
-    {
-      "handle": "LieutenantRoger",
-      "placement": 2,
-      "screeningScore": 100,
-      "initialScore": 88.93,
-      "finalScore": 97.32,
-      "points": 168.75,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2014-11-04T00:32:00.000Z",
-      "_id": "58123ddb0659262e95e005aa"
-    },
-    {
-      "handle": "peakpado",
-      "placement": 3,
-      "screeningScore": 100,
-      "initialScore": 89.93,
-      "finalScore": 90.52,
-      "points": 67.5,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2014-11-04T02:26:00.000Z",
-      "_id": "58123ddb0659262e95e005a9"
-    }
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "prize": [
+    1500,
+    750
   ],
   "technology": [
     "Angular.js",
@@ -405,5 +402,8 @@
     "Node.js",
     "PostgreSQL",
     "jQuery"
+  ],
+  "platforms": [
+    "Other"
   ]
 }

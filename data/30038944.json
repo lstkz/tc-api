@@ -1,7 +1,7 @@
 {
   "_id": 30038944,
   "_isComplete": true,
-  "__v": 1,
+  "__v": 0,
   "_lastUpdate": "2016-10-27T17:46:23.210Z",
   "appealsEndDate": "2014-01-20T23:11:00.000Z",
   "challengeCommunity": "develop",
@@ -15,11 +15,6 @@
   "detailedRequirements": "<h2 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Project Overview</span></span></span></span></h2>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">TopCoder and the TopCoder community have worked hard to get the platform to its currently level of maturity, but we&#39;re far from done. It&#39;s time to take the platform to the next level. TopCoder is going to start taking some steps to open up the platform API to the outside and community developers so they could incorporate it in their websites, applications or build their own applications (web, mobile or desktop).</span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">The ultimate goal is to open up and build an &quot;API&quot; that is targeting all different type of audiences - Software and Studio Competitors, SRM/MM competitors, Copilots, Admins and TopCoder partners - each audience will have different interests and usages of the API, so it will be a huge project and we need to make sure that we are in the right direction from the beginning.</span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">This contest is going to implement the general authorization/authentication strategy that the API will use.</span></p>\n\n<h2 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Competition Task Overview</span></span></span></span></h2>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\"><span style=\"font-size: 12px;\"><img align=\"absmiddle\" alt=\"\" border=\"0\" height=\"16\" src=\"http://apps.topcoder.com/wiki/images/icons/emoticons/warning.gif\" width=\"16\" />&nbsp;<strong>Please raise questions as quick as you can, I am familiar with related database and code base, I can provide as much support as I can.</strong></span></span></span></span></span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\"><span style=\"font-size: 12px;\"><img align=\"absmiddle\" alt=\"\" border=\"0\" height=\"16\" src=\"http://apps.topcoder.com/wiki/images/icons/emoticons/warning.gif\" width=\"16\" /></span><strong>The updated code must still deploy and work on heroku - any submission which can&#39;t be deployed on heroku successfully will be failed in screening phase - primary reviewer must check this.</strong></span></span></span></span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">The implementation will base on the node.js version of TC platform API -&nbsp;<span class=\"nobr\"><a href=\"https://github.com/cloudspokes/tc-api\" rel=\"nofollow\">https://github.com/cloudspokes/tc-api</a>.</span>&nbsp;<strong>Please follow the existing actionhero pattern for your development.</strong></span></span></span></p>\n\n<p style=\"font-size: 13px;\">TopCoder has recently integrated with <a href=\"http://auth0.com\">Auth0</a>, a company that provides login as a service. Auth0 allows uses to login with multiple social providers (Google, Twitter, etc), or with TopCoder credentials. Auth0 provides a central integration point, and normalizes the user profiles into a standard format. Auth0 then (optionally)&nbsp;returns a <a href=\"http://www.intridea.com/blog/2013/11/7/json-web-token-the-useful-little-standard-you-haven-t-heard-about\">JSON Web Token</a>&nbsp;to the client. This JWT can be used by the client on subsequent calls to authenticate. This is the approach we will follow for the API.</p>\n\n<p style=\"font-size: 13px;\">Your tasks:</p>\n\n<ol>\n\t<li style=\"font-size: 13px;\">Remove the existing <a href=\"https://github.com/cloudspokes/tc-api/blob/master/initializers/middleware.js#L60-L145\">oauth middleware</a>, and all related dependencies and code.</li>\n\t<li style=\"font-size: 13px;\">Add a new middleware preprocessor that looks for an Authorization header with contents of &quot;Bearer jwt&quot;, where jwt is the JSON Web Token.</li>\n\t<li style=\"font-size: 13px;\">Parse the JWT using the <a href=\"https://npmjs.org/package/jsonwebtoken\">jsonwebtoken</a> package.</li>\n\t<li style=\"font-size: 13px;\">Based on parsed JWT, retrieve the user from TC&#39;s DB.</li>\n\t<li style=\"font-size: 13px;\">Set a property on the actionHero connection object indicating who the caller is and his&nbsp;access level. For this first contest we define access level simply as &quot;anon,&quot; &quot;member,&quot; and &quot;admin.&quot;</li>\n</ol>\n\n<p style=\"font-size: 13px;\">For those tasks, your code must:</p>\n\n<ul>\n\t<li style=\"font-size: 13px;\">Allow for NO authorization header to be passed - many API methods are entirely public and anonymously accessible. In such a case define the caller and access level correctly as an anonymous caller.</li>\n\t<li style=\"font-size: 13px;\">Gracefully handle and provide informative error messages with correct HTTP response codes for at least the following scenarios:\n\t<ul>\n\t\t<li style=\"font-size: 13px;\">&nbsp;Malformed Auth header</li>\n\t\t<li style=\"font-size: 13px;\">JWT is expired</li>\n\t</ul>\n\t</li>\n\t<li style=\"font-size: 13px;\">Cache the TC user info (step 4), so that we don&#39;t have to make a trip to the DB on every call. However, the JWT must be passed, parsed and validated on *every* call in order to set caller info and access level in step 5.</li>\n</ul>\n\n<p style=\"font-size: 13px;\">&nbsp;</p>\n\n<h3 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Testing</span></span></span></span></h3>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"font-size: 12px;\">The API Framework supports tests.&nbsp;</span>Use&nbsp;<a href=\"https://github.com/visionmedia/supertest\">supertest</a>&nbsp;with&nbsp;<a href=\"http://visionmedia.github.io/mocha/\">mocha</a>. Don&#39;t install mocha globally.</span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\">Your tests must completely validate the JWT logic. Since JWTs expire, you will have to generate new JWTs as part of your testing code! You can use the same jsonwebtoken library to do this.</span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">you must use mocha BDD style (which is the default), within that, you can optionally use chai.</span></span></span></span></p>\n\n<h3 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Code Format</span></span></span></span></h3>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">All code must pass&nbsp;<a href=\"http://www.jslint.com/\">jslint</a>. You may use &quot;nomen: true&quot;.</span></p>\n\n<h3 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Winner Only</span></span></span></span></h3>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Winner will create pull request against the main github repo in final fix phase and help merge with master.&nbsp;<span style=\"color: rgb(255, 0, 0);\">The changed files should be unix style, you can use dos2unix command to convert it before commiting.</span></span></span></span></p>\n\n<h3 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Reviewer Responsiblities</span></span></span></span></h3>\n\n<p style=\"font-size: 13px; margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Reviewers need to write/update Supertest tests for the these APIs.</span></p>\n\n<p style=\"font-size: 13px; margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><strong style=\"padding: 0px; margin: 0px; line-height: 18px;\">Note: Tests must&nbsp;follow this standard -&nbsp;</strong><span class=\"css-truncate css-truncate-target\"><a class=\"js-directory-link\" href=\"https://github.com/cloudspokes/tc-api/blob/master/docs/Tests%20Creation%20Guide.docx\" id=\"a27028a2293e67cad481e88fad7bc18e-d4ffffe0ae5799ce363e89b27a50d54393e80be0\" title=\"Tests Creation Guide.docx\">Tests Creation Guide.docx</a></span></span></span></p>\n\n<p style=\"font-size: 13px; margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">There are three roles:</span></p>\n\n<ul style=\"font-size: 13px;\">\n\t<li style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Accuracy - Tests the implementation on the accuracy of the results when using the component.</span></li>\n\t<li style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Failure - Tests the implementation&#39;s ability to handle bad data and incorrect usage.</span></li>\n\t<li style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Security - Tests the oauth, sql inject and other security related requirements.</span></li>\n</ul>\n\n<p style=\"font-size: 13px; margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Reviewer could send preferred role by Contact Manager&nbsp;after system selected the reviwer.</span></p>\n\n<p style=\"font-size: 13px; margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Copilot will assign the role to reviewers if reviewer didn&#39;t send the preferred role information.</span></p>\n\n<p style=\"font-size: 13px; margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Reviewer must create pull request from GitHub for the tests.</span></p>\n\n<h3 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Virutal Machines (VMs)</span></span></span></span></h3>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">VM specific information is found here:&nbsp;<span class=\"nobr\"><a href=\"http://www.topcoder.com/wiki/display/docs/VM+Image+2.5\" rel=\"nofollow\">http://www.topcoder.com/wiki/display/docs/VM+Image+2.5</a></span></span></span></span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Upon registration as a submitter or reviewer you will need to request a VM based on the TopCoder systems image. The VM will be active through aggregation review, after which it will be terminated except for the winner&#39;s and the reviewers&#39;. To request your image, please post in contest forum.</span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Before requesting your VM, you need to ensure that you have an SSH key created and in your member profile. Instructions to do so are here:&nbsp;<span class=\"nobr\"><a href=\"http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key\" rel=\"nofollow\">http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key</a></span>, and instructions to connect afterwards are here:&nbsp;<span class=\"nobr\"><a href=\"http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key\" rel=\"nofollow\">http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key</a></span>.</span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Please realize that VMs are currently issued manually. We make every attempt to issue the VM as soon as it is requested, however, there may be delays of up to 12 hours depending on time of day when you request. We encourage everyone to request a VM as soon as possible to minimize any such delays.</span></p>\n\n<h2 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Technology Overview</span></span></span></span></h2>\n\n<ul style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">\n\t<li><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">JavaScript</span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"nobr\"><a href=\"http://nodejs.org/\" rel=\"nofollow\">Node.js 0.10.x</a></span></span></span></span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><a href=\"https://github.com/evantahler/actionHero\">actionhero.js framework</a></span></span></span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><a href=\"https://github.com/visionmedia/supertest\">supertest</a></span></span></span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><a href=\"http://visionmedia.github.io/mocha/\">mocha</a></span></span></span></li>\n</ul>\n\n<h2 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Documentation Provided</span></span></span></span></h2>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Please check the deployment guide in codebase for reference.</span></p>\n",
   "digitalRunPoints": 585,
   "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30038944",
-  "event": {
-    "id": 3437,
-    "description": "2014 TopCoder(R) Open",
-    "shortDescription": "tco14"
-  },
   "finalFixEndDate": "2014-01-23T11:47:00.000Z",
   "finalSubmissionGuidelines": "<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><strong><span style=\"color: rgb(255, 0, 0);\">Submission Deliverables</span></strong></span></span></span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span style=\"font-size: 12px;\">A complete list of deliverables can be viewed in the TopCoder Assembly competition Tutorial at:&nbsp;</span><a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a></span></span></span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span style=\"font-size: 12px;\">Below is an overview of the deliverables:</span></span></span></span></p>\n\n<ul style=\"font-size: 13px;\">\n\t<li><span class=\"small_info_spec\" id=\"rswGuidelines\">Source Code.</span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswGuidelines\">Deployment guide to configure and verify the application.</span></li>\n</ul>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><strong><span style=\"color: rgb(255, 0, 0);\">Final Submission</span></strong></span></span></span></p>\n\n<p style=\"font-size: 13px;\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span class=\"small_info_spec\" id=\"rswGuidelines\"><span style=\"font-size: 12px;\">For each member, the final submission should be uploaded to the Online Review Tool.</span></span></span></span></p>\n",
   "forumId": 20911,
@@ -28,6 +23,38 @@
   "numberOfCheckpointsPrizes": 0,
   "numberOfRegistrants": 26,
   "numberOfSubmissions": 2,
+  "postingDate": "2014-01-11T14:00:00.000Z",
+  "projectId": 6757,
+  "registrationEndDate": "2014-01-13T14:00:00.000Z",
+  "reliabilityBonus": 260,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-01-16T14:05:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 96.38,
+      "finalScore": 99.22,
+      "points": 409.5,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-01-15T13:23:00.000Z",
+      "_id": "58123d6f0659262e95dff7db"
+    },
+    {
+      "handle": "ZeKoU",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 88.3,
+      "finalScore": 88.56,
+      "points": 175.5,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-01-16T14:00:00.000Z",
+      "_id": "58123d6f0659262e95dff7da"
+    }
+  ],
   "phases": [
     {
       "type": "Specification Submission",
@@ -183,16 +210,6 @@
       "_id": "58123d6f0659262e95dff7c9"
     }
   ],
-  "platforms": [
-    "Heroku",
-    "NodeJS"
-  ],
-  "postingDate": "2014-01-11T14:00:00.000Z",
-  "prize": [
-    1300,
-    650
-  ],
-  "projectId": 6757,
   "registrants": [
     {
       "handle": "Standlove",
@@ -429,37 +446,20 @@
       "_id": "58123d6f0659262e95dff7af"
     }
   ],
-  "registrationEndDate": "2014-01-13T14:00:00.000Z",
-  "reliabilityBonus": 260,
-  "reviewScorecardId": 30001470,
-  "reviewType": null,
-  "screeningScorecardId": 30000412,
-  "submissionEndDate": "2014-01-16T14:05:00.000Z",
-  "submissions": [
-    {
-      "handle": "Sky_",
-      "placement": 1,
-      "screeningScore": 100,
-      "initialScore": 96.38,
-      "finalScore": 99.22,
-      "points": 409.5,
-      "submissionStatus": "Active",
-      "submissionDate": "2014-01-15T13:23:00.000Z",
-      "_id": "58123d6f0659262e95dff7db"
-    },
-    {
-      "handle": "ZeKoU",
-      "placement": 2,
-      "screeningScore": 100,
-      "initialScore": 88.3,
-      "finalScore": 88.56,
-      "points": 175.5,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2014-01-16T14:00:00.000Z",
-      "_id": "58123d6f0659262e95dff7da"
-    }
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "prize": [
+    1300,
+    650
   ],
   "technology": [
     "Node.js"
+  ],
+  "platforms": [
+    "Heroku",
+    "NodeJS"
   ]
 }

@@ -1,7 +1,7 @@
 {
   "_id": 30054215,
   "_isComplete": true,
-  "__v": 1,
+  "__v": 0,
   "_lastUpdate": "2016-10-27T17:50:28.020Z",
   "appealsEndDate": "2016-05-21T13:50:00.000Z",
   "challengeCommunity": "develop",
@@ -15,11 +15,6 @@
   "detailedRequirements": "For this challenge, we are going to implement the Update Task API and Register Task API.<br />\n<br />\n<u>General Requirements</u>\n<p>1. Initial PG schema can be found at&nbsp;<a href=\"https://github.com/appirio-tech/tc-tasks-service/blob/dev/app/dbmigrations/01_initial.sql\">app/dbmigrations/01_initial.sql</a></p>\n\n<p>2. Implement the Update Task API, see <a href=\"https://github.com/appirio-tech/tc-tasks-service/blob/dev/swagger.yaml#L90-L110\">swagger API</a> for detail description<br />\n<br />\n<span style=\"color:rgb(150, 152, 150)\">Only the following fields are edittable by a user who has write access&nbsp;</span><span style=\"color:rgb(150, 152, 150)\">- title, details, prizes, taskEligibility, tags, maxAllowedRegistrants, and&nbsp;</span><span style=\"color:rgb(24, 54, 145); font-family:consolas,liberation mono,menlo,courier,monospace; font-size:12px\">modifiedBy</span><span style=\"color:rgb(150, 152, 150)\"> and </span><span style=\"color:rgb(24, 54, 145); font-family:consolas,liberation mono,menlo,courier,monospace; font-size:12px\">modifiedAt</span><span style=\"color:rgb(150, 152, 150)\">&nbsp;should be auto-updated.</span><br />\n<br />\n3. Implement the Register Task API, see the <a href=\"https://github.com/appirio-tech/tc-tasks-service/blob/dev/swagger.yaml#L123-L145\">swagger API</a> for detail description<br />\n<br />\n3.1 The reigstration can only be allowed when there is no registration for this task or these is less registrations than maxAlloedRegistrants. &nbsp;Otherwise, return properly error code.<br />\n3.2 Please reference&nbsp;<span style=\"color:rgb(121, 93, 163); font-family:consolas,liberation mono,menlo,courier,monospace; font-size:12px\">tasks_registrants table </span>for understanding<span style=\"color:rgb(121, 93, 163); font-family:consolas,liberation mono,menlo,courier,monospace; font-size:12px\">.</span><br />\n3.3&nbsp;there are a few additional checks, described following.<br />\n<br />\na user can register only if their account is listed under task eligibility for that specific role. Following is an example that task eligibility can be defined on the task<br />\n<br />\ntaskEligibility: {<br />\n&nbsp; [<br />\n&nbsp; &nbsp; {<br />\n&nbsp; &nbsp; &nbsp; role: &quot;submitter&quot;,<br />\n&nbsp; &nbsp; &nbsp; users: [123,23433],<br />\n&nbsp; &nbsp; &nbsp; groups: []<br />\n&nbsp; &nbsp; },<br />\n&nbsp; &nbsp; {<br />\n&nbsp; &nbsp; &nbsp; role: &quot;copilot&quot;,<br />\n&nbsp; &nbsp; &nbsp; users: [123,23433],<br />\n&nbsp; &nbsp; &nbsp; groups: []<br />\n&nbsp; &nbsp; },<br />\n&nbsp; &nbsp; {<br />\n&nbsp; &nbsp; &nbsp; role: &quot;reviewer&quot;,<br />\n&nbsp; &nbsp; &nbsp; users: [123,23433],<br />\n&nbsp; &nbsp; &nbsp; groups: []<br />\n&nbsp; &nbsp; }<br />\n&nbsp; ]<br />\n}</p>\n\n<p>if taskEligibility object is empty or no eligibility is defined for that role or user list is empty - anyone can register<br />\nalso only admins can register on behalf of another user, return 400 bad request if user A is registering for user B and user A is not administrator<br />\nAs far as task Registration response goes - we can ignore the queuing part. We may implement that in a future release</p>\n\n<p>4. Please write tests for the new APIs, follow the same approach as&nbsp;<a href=\"https://github.com/appirio-tech/tc-tasks-service/blob/dev/app/tests/test.spec.js\">app/tests/test.spec.js</a>.<br />\n4.1 We have already added a dependency on mocha (http://mochajs.org/) for mocking.. we can use that to inject test dependencies<br />\n4.2&nbsp;executing `npm test` runs all test files (**/*.spec.js)<br />\n4.3 All test files should live along with the source but named *.spec.js,&nbsp;for eg. routes/tasks.js test file should be routes/tasks.spec.js<br />\n5. Existing approach should be followed for consistency<br />\n5.1&nbsp;JSON field validations:&nbsp;<span style=\"color:rgb(34, 34, 34); font-family:arial,sans-serif; font-size:12.8px\">use <a href=\"https://github.com/AndrewKeig/express-validation\">express-validation</a> &nbsp;which is already used in current implemented APIs</span><br />\n5.2&nbsp;Connection pooling:&nbsp; service should initialize a connection pool (configurable params) during startup. Each request should request a connection from the pool to perform its database transaction<br />\n5.3&nbsp;Support for transactions: we will need support for transactions&nbsp;<br />\n5.4 Using ORMs: stick to&nbsp;<span style=\"color:rgb(34, 34, 34); font-family:arial,sans-serif; font-size:12.8px\">Sequelize&nbsp;<br />\n5.5&nbsp;</span>Promises: Use promises over callbacks. If library doesn&rsquo;t provide promise support consider wrapping it using bluebird (<a href=\"http://bluebirdjs.com/docs/getting-started.html\" style=\"line-height: 1.6; padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">http://bluebirdjs.com/docs/getting-started.html</a>)</p>\n\n<p><u>Codebase</u><br />\n<br />\nplease use the&nbsp;<a href=\"https://github.com/appirio-tech/tc-tasks-service/tree/dev\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">dev</a>&nbsp;branch for development, source code attached in forum.<br />\n<br />\n<u>Testing</u><br />\n<br />\nWe use docker &amp; docker compose for all local dependencies. Here&rsquo;s the link to setup local dependencies (<a href=\"https://github.com/appirio-tech/tc-tasks-service/blob/dev/README.md\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">https://github.com/appirio-tech/tc-tasks-service/blob/dev/README.md</a>)</p>\n",
   "digitalRunPoints": null,
   "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30054215",
-  "event": {
-    "id": 3446,
-    "description": "2016 TopCoder(R) Open",
-    "shortDescription": "tco16"
-  },
   "finalSubmissionGuidelines": "1. Code changes for implemented APIs.<br />\n2. Tests for the implemented APIs.<br />\n3. Manually API invokation by using POSTMAN",
   "forumId": 33074,
   "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33074",
@@ -27,6 +22,48 @@
   "numberOfCheckpointsPrizes": 0,
   "numberOfRegistrants": 34,
   "numberOfSubmissions": 3,
+  "postingDate": "2016-05-13T03:16:00.000Z",
+  "projectId": 9602,
+  "registrationEndDate": "2016-05-18T03:16:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-05-18T03:16:00.000Z",
+  "submissions": [
+    {
+      "handle": "Standlove",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 96.25,
+      "finalScore": 96.25,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-05-17T06:08:00.000Z",
+      "_id": "58123e64e0be5f30ae5614f8"
+    },
+    {
+      "handle": "cam.ashwini",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 90,
+      "finalScore": 91.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-17T05:37:00.000Z",
+      "_id": "58123e64e0be5f30ae5614f7"
+    },
+    {
+      "handle": "Jarnanchen",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 88.75,
+      "finalScore": 88.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-18T01:09:00.000Z",
+      "_id": "58123e64e0be5f30ae5614f6"
+    }
+  ],
   "phases": [
     {
       "type": "Registration",
@@ -74,15 +111,6 @@
       "_id": "58123e64e0be5f30ae5614f1"
     }
   ],
-  "platforms": [
-    "NodeJS"
-  ],
-  "postingDate": "2016-05-13T03:16:00.000Z",
-  "prize": [
-    400,
-    200
-  ],
-  "projectId": 9602,
   "registrants": [
     {
       "handle": "genycopedison",
@@ -391,47 +419,19 @@
       "_id": "58123e64e0be5f30ae5614cf"
     }
   ],
-  "registrationEndDate": "2016-05-18T03:16:00.000Z",
-  "reviewScorecardId": 30001610,
-  "reviewType": "COMMUNITY",
-  "screeningScorecardId": null,
-  "submissionEndDate": "2016-05-18T03:16:00.000Z",
-  "submissions": [
-    {
-      "handle": "Standlove",
-      "placement": 1,
-      "screeningScore": null,
-      "initialScore": 96.25,
-      "finalScore": 96.25,
-      "points": 0,
-      "submissionStatus": "Active",
-      "submissionDate": "2016-05-17T06:08:00.000Z",
-      "_id": "58123e64e0be5f30ae5614f8"
-    },
-    {
-      "handle": "cam.ashwini",
-      "placement": 2,
-      "screeningScore": null,
-      "initialScore": 90,
-      "finalScore": 91.25,
-      "points": 0,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2016-05-17T05:37:00.000Z",
-      "_id": "58123e64e0be5f30ae5614f7"
-    },
-    {
-      "handle": "Jarnanchen",
-      "placement": 3,
-      "screeningScore": null,
-      "initialScore": 88.75,
-      "finalScore": 88.75,
-      "points": 0,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2016-05-18T01:09:00.000Z",
-      "_id": "58123e64e0be5f30ae5614f6"
-    }
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "prize": [
+    400,
+    200
   ],
   "technology": [
     "Node.js"
+  ],
+  "platforms": [
+    "NodeJS"
   ]
 }

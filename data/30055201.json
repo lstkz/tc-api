@@ -1,0 +1,500 @@
+{
+  "_id": 30055201,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:13:33.084Z",
+  "appealsEndDate": "2016-09-19T14:20:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Hercules TV Web Apps - Live Scraper additions and cleanup",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<div>A previous challenge has implemented a set of REST APIs for handling video assets, including storing them and managing them (create, retrieve, update, delete). &nbsp;This challenge will add some new live TV scrapers and will update the YouTube scraper to read in / parse better descriptions.<br />\n<br />\n<strong>Existing API</strong><br />\n<br />\nThe existing Node application and deployment details are in Gitlab, and the URL to the repository can be found in the forum.<br />\n<br />\n<strong>YouTube scraper</strong><br />\n<br />\nThe current YouTube scraper is pulling in jumbled descriptions due to all sorts of URLs that users put in the text. &nbsp;Here is an example from SkyNews that is parsed:<br />\n<br />\n<span style=\"font-family:courier new,courier,monospace\">Am I Zlatan? People have been taking photos with this man outside Manchester United&#39;s football ground, but he&#39;s got a surprise for them.SUBSCRIBE to our YouTube channel for more videos: http://www.youtube.com/skynewsFollow us on Twitter: https://twitter.com/skynews and https://twitter.com/skynewsbreakLike us on Facebook: https://www.facebook.com/skynewsFor more content go to http://news.sky.com and download our apps:iPad https://itunes.apple.com/gb/app/Sky-News-for-iPad/id422583124iPhone https://itunes.apple.com/gb/app/sky-news/id316391924?mt=8Android https://play.google.com/store/apps/details?id=com.bskyb.skynews.android&amp;hl=en_GB</span><br />\n<br />\nThe actual description is &quot;<span style=\"font-family:courier new,courier,monospace\">Am I Zlatan? People have been taking photos with this man outside Manchester United&#39;s football ground, but he&#39;s got a surprise for them&quot;,&nbsp;<span style=\"font-family:arial,helvetica,sans-serif\">and everything after that is just junk that clutters up the final UI.<br />\n<br />\nWe need to update the YouTube scraper to be a bit smarter about how it pulls in descriptions, removing the &quot;SUBSCRIBE&quot; details and all the URL links in the text. &nbsp;This should be relatively portable, not just focused on SkyNews, but other things like Eater as well.</span></span><br />\n<br />\n<strong>Live TV scrapers</strong><br />\n<br />\nThis challenge will add new Live TV scrapers for:<br />\n<br />\n<em>ABC News:</em><br />\n<br />\n* Web&nbsp;URL: &nbsp;http://abcnews.com/&nbsp;<br />\n* Video URL:&nbsp;<a href=\"http://abclive.abcnews.com/i/abc_live4@136330/master.m3u8?b=500,300,700,900,1200\" rel=\"nofollow noreferrer\" style=\"color: rgb(126, 87, 194); z-index: 0; position: relative; font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; line-height: 19.5px;\" target=\"_blank\">http://abclive.abcnews.com/i/abc_live4@136330/master.m3u8?b=500,300,700,900,1200</a><br />\n<br />\n<em>CBS News:</em><br />\n<br />\n<strong>Note - this will be an update to the existing live TV scraper</strong><br />\n<br />\n* Web URL: http://cbsnews.com<br />\n* Video URL:&nbsp;<a href=\"http://cbsnews-linear.mdialog.com/video_assets/cbsnews.m3u8?api_key=563b80c1ae4ce359830f572d2496a947&amp;iu=/8264/vaw-can/mobile_web/cbsnews_mobile\" rel=\"nofollow noreferrer\" style=\"color: rgb(126, 87, 194); z-index: 0; position: relative; font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; line-height: 19.5px;\" target=\"_blank\"><font color=\"#7e57c2\" face=\"Helvetica Neue, Helvetica, Arial, sans-serif\"><span style=\"line-height:19.5px; position:relative; z-index:0\">http://cbsnews-linear.mdialog.com/video_assets/cbsnews.m3u8?api_key=563b80c1ae4ce359830f572d2496a947&amp;iu=/8264/vaw-can/mobile_web/cbsnews_mobile</span></font></a><br />\n<br />\n<em>NASA TV:</em><br />\n<br />\n* Web URL:&nbsp;http://www.nasa.gov/multimedia/nasatv/<br />\n* Video URL:&nbsp;<a href=\"http://nasatv-lh.akamaihd.net/i/NASA_101@319270/master.m3u8\" rel=\"nofollow noreferrer\" style=\"color: rgb(126, 87, 194); z-index: 0; position: relative; font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; line-height: 19.5px;\" target=\"_blank\"><font color=\"#7e57c2\" face=\"Helvetica Neue, Helvetica, Arial, sans-serif\"><span style=\"line-height:19.5px; position:relative; z-index:0\">http://nasatv-lh.akamaihd.net/i/NASA_101@319270/master.m3u8</span></font></a><br />\n<br />\n<em>Reuters:</em><br />\n<br />\n* Web URL:&nbsp;http://www.reuters.tv/live<br />\n* Video URL:&nbsp;<a href=\"http://37.58.85.156/rlo001/ngrp:rlo001.stream_all/playlist.m3u8\" rel=\"nofollow noreferrer\" style=\"color: rgb(126, 87, 194); z-index: 0; position: relative; font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; line-height: 19.5px;\" target=\"_blank\">http://37.58.85.156/rlo001/ngrp:rlo001.stream_all/playlist.m3u8</a><br />\n<br />\nNote that the video URLs are just samples and could be different in the actual implementation. &nbsp;The goal is to get out the M3U8 URLs for playback.<br />\n<br />\n<br />\n<strong style=\"line-height:1.6\">README</strong></div>\n\n<div><br />\nMake sure the README is updated with verification information about the new features and configuration information so they can be easily added.<br />\n<br />\n<strong>Unit tests</strong><br />\n<br />\nAs with the other scrapers, unit tests are&nbsp;<strong>required</strong>&nbsp;for these new changes.<br />\n<br />\n<strong>Heroku deploy</strong><br />\n<br />\nMake sure the Heroku deployment information is up-to-date and that you keep the package.json up to date as well. &nbsp;Don&#39;t expect the deployment to be anything other than &quot;npm install&quot; / &quot;npm start&quot; locally and &quot;git push heroku master&quot; for Heroku deployment.</div>\n\n<div><br />\n<strong>Submission format</strong><br />\n<br />\nYour submission should be provided as a Git patch file against the commit hash mentioned in the forum. &nbsp;<strong>MAKE SURE TO TEST YOUR PATCH FILE!</strong></div>\n\n<div>&nbsp;</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30055201",
+  "finalSubmissionGuidelines": "Please see above",
+  "forumId": 33988,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33988",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 44,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-13T02:30:00.000Z",
+      "actualStartTime": "2016-09-13T02:30:00.000Z",
+      "scheduledEndTime": "2016-09-17T02:30:00.000Z",
+      "actualendTime": "2016-09-17T02:30:00.000Z",
+      "_id": "581340ed550dfb3b52be7068"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-13T02:35:00.000Z",
+      "actualStartTime": "2016-09-13T02:35:00.000Z",
+      "scheduledEndTime": "2016-09-17T02:30:00.000Z",
+      "actualendTime": "2016-09-17T02:30:00.000Z",
+      "_id": "581340ed550dfb3b52be7067"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-17T02:30:00.000Z",
+      "actualStartTime": "2016-09-17T02:30:00.000Z",
+      "scheduledEndTime": "2016-09-19T11:31:00.000Z",
+      "actualendTime": "2016-09-19T11:31:00.000Z",
+      "_id": "581340ed550dfb3b52be7066"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-19T11:31:00.000Z",
+      "actualStartTime": "2016-09-19T11:31:00.000Z",
+      "scheduledEndTime": "2016-09-19T14:19:00.000Z",
+      "actualendTime": "2016-09-19T14:19:00.000Z",
+      "_id": "581340ed550dfb3b52be7065"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-19T14:19:00.000Z",
+      "actualStartTime": "2016-09-19T14:19:00.000Z",
+      "scheduledEndTime": "2016-09-19T14:20:00.000Z",
+      "actualendTime": "2016-09-19T14:20:00.000Z",
+      "_id": "581340ed550dfb3b52be7064"
+    }
+  ],
+  "platforms": [
+    "Heroku"
+  ],
+  "postingDate": "2016-09-13T02:30:00.000Z",
+  "prize": [
+    500,
+    250
+  ],
+  "projectId": 9599,
+  "registrants": [
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T02:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7063"
+    },
+    {
+      "handle": "clydep",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T02:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7062"
+    },
+    {
+      "handle": "WhiteJade",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T03:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7061"
+    },
+    {
+      "handle": "GeetaMamuni",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T03:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7060"
+    },
+    {
+      "handle": "anhtuannd",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T04:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be705f"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T04:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be705e"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T04:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be705d"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T04:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be705c"
+    },
+    {
+      "handle": "ouyangki",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T05:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be705b"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T05:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be705a"
+    },
+    {
+      "handle": "isv",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T05:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7059"
+    },
+    {
+      "handle": "androiditya",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T06:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7058"
+    },
+    {
+      "handle": "ngoctay",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T07:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7057"
+    },
+    {
+      "handle": "jz10",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T08:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7056"
+    },
+    {
+      "handle": "Rushikesh.Deshp",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T09:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7055"
+    },
+    {
+      "handle": "Colinh84",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T09:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7054"
+    },
+    {
+      "handle": "thkang91",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T09:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7053"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T09:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7052"
+    },
+    {
+      "handle": "MonicaMuranyi",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T10:12:00.000Z",
+      "submissionDate": "2016-09-14T21:51:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7051"
+    },
+    {
+      "handle": "gopalrmd90",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T11:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7050"
+    },
+    {
+      "handle": "ecavalier313",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T12:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be704f"
+    },
+    {
+      "handle": "code_now",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T12:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be704e"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T12:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be704d"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T12:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be704c"
+    },
+    {
+      "handle": "mohhasbias",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T13:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be704b"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T13:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be704a"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T14:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7049"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T16:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7048"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-13T21:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7047"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-14T02:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7046"
+    },
+    {
+      "handle": "alazyrabbit",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-14T02:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7045"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-14T03:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7044"
+    },
+    {
+      "handle": "mohanwidu",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-14T12:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7043"
+    },
+    {
+      "handle": "faisalbasha1982",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-14T13:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7042"
+    },
+    {
+      "handle": "qwp0",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-14T14:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7041"
+    },
+    {
+      "handle": "ShindouHikaru",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-14T15:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7040"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-14T16:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be703f"
+    },
+    {
+      "handle": "LucasAI",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-14T17:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be703e"
+    },
+    {
+      "handle": "felsites4p",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-14T17:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be703d"
+    },
+    {
+      "handle": "haint504",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-14T20:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be703c"
+    },
+    {
+      "handle": "XinScirpt",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-14T20:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be703b"
+    },
+    {
+      "handle": "ace_code",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-15T15:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be703a"
+    },
+    {
+      "handle": "aprajitasingh16",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-16T04:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7039"
+    },
+    {
+      "handle": "iHashtable",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-16T10:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ed550dfb3b52be7038"
+    }
+  ],
+  "registrationEndDate": "2016-09-17T02:30:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-09-17T02:30:00.000Z",
+  "submissions": [
+    {
+      "handle": "MonicaMuranyi",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 99.38,
+      "finalScore": 99.38,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-09-14T21:51:00.000Z",
+      "_id": "581340ed550dfb3b52be7069"
+    }
+  ],
+  "technology": [
+    "Node.js"
+  ]
+}

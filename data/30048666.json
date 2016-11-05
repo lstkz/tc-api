@@ -1,0 +1,524 @@
+{
+  "_id": 30048666,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T11:01:03.231Z",
+  "appealsEndDate": "2015-03-02T15:31:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "SunShot - Sunmetrix - Green Button Python Script",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:21px\">Challenge Overview</span></span></p>\n\n<p>&nbsp;\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">The</span><a href=\"http://www.greenbuttondata.org/\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\"> </span><u>Green Button</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\"> Standard is a secure way of transmitting energy usage information developed by the US Department of Energy and National Institute of Standards and Technology.</span></span></p>\n</p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">The goal of this challenge is to develop a Python script to allow third-party applications to retrieve electricity consumption information by downloading the Green Button XML formatted data, validate it, parse it, and generate hourly electricity consumption data (including cost and start time) for every hour of the day and store it in MySQL data table.</span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">This follows the path known as </span><em>Green Button Connect</em><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\"> in the Green Button</span><a href=\"http://www.greenbuttondata.org/developers/#examples\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\"> </span><u>Documentation</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">.</span></span></p>\n\n<h1 dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:21px\">Challenge Requirements</span></span></h1>\n\n<h4 dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><u>General Notes</u></span></h4>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">This version will only handle UsagePoints of service category (kind) = 0 (Electricity), if the downloaded data is not of type Electricity, the service will then return an error to the caller stating that we only support Electricity data in this version.</span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">For more information about UsagePoints kinds, refer to this</span><a href=\"https://github.com/energyos/OpenESPI-Common-java/blob/master/etc/espiDerived.xsd#LC3027\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\"> </span><u>xsd</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\"> file that has rich documentation about the entities in GreenButton.</span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Refer to </span><a href=\"https://github.com/teeterc/gbapi\" style=\"text-decoration:none;\"><u>this python library</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\"> as you will find useful for how we should do parsing.</span></span></p>\n\t</li>\n</ul>\n\n<h4 dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><u>Python script Requirements</u></span></h4>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-size:14px\">It is a command line script</span>.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Be compatible with Python version 2.7.3 running on Ubuntu 12.04.2 LTS</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">MySQL database - latest stable version will be used.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">The script will read following configuration : </span></span></p>\n\n\t<ul>\n\t\t<li>\n\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">resourceURI : this is the retail customer GreenButton API Endpoint template used to download the usage data. (in sandbox it is:</span><a href=\"https://services.greenbuttondata.org/DataCustodian/espi/1_1/resource/Batch/Subscription/%7bSubscriptionID%7d\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\"> </span></a><a href=\"https://services.greenbuttondata.org/DataCustodian/espi/1_1/resource/Batch/Subscription/%7BsubscriptionId\" style=\"text-decoration:none;\"><u>https://services.greenbuttondata.org/DataCustodian/espi/1_1/resource/Batch/Subscription/{subscriptionId</u></a><a href=\"https://services.greenbuttondata.org/DataCustodian/espi/1_1/resource/Batch/Subscription/%7bSubscriptionID%7d\" style=\"text-decoration:none;\"><u>}</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">)</span></span></p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">log file path</span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">The execution of the scription : </span></span></p>\n\n\t<ul>\n\t\t<li>\n\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">It firsts read records from &lsquo;sm_gbUsers&rsquo; table</span></span></p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">for each returned record :</span></span></p>\n\n\t\t<ul>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">If case is &lsquo;api&rsquo;</span></span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">construct the API url by using resourceURI configuration and sm_gbUser.user_id (user_id will be used to fill the {subscriptionId} path parameter in resourceURI)</span></span></p>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">invoke the API to download the XML data, use &lsquo;sm_gbUser.access_token&rsquo; to set &lsquo;Authorization&rsquo; header</span></span></p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">if case is &lsquo;datafile&rsquo; </span></span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Read the xml file from &lsquo;sm_gbUsers.path&rsquo;</span></span></p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">validate the XML data (use </span><a href=\"https://github.com/energyos/OpenESPI-Common-java/blob/master/etc/espiDerived.xsd\" style=\"text-decoration:none;\"><u>this xsd file</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">)</span></span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">If not valid, log the information and continue to next record</span></span></p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">parse the interval readings and convert it into hourly data : </span></span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Parse interval reading duration : </span></span></p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li>\n\t\t\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&lt;espi:intervalblock&gt; &rarr; &lt;espi:IntervalReading&gt; &rarr; &lt;espi:timePeriod&gt; &rarr;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&nbsp;&nbsp;&nbsp; </span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\"> &lt;espi:duration&gt;</span></span></p>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li>\n\t\t\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">The duration is in seconds</span></span></p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">if the time duration represents an a hour (3600 seconds) then group all interval readings into a collection where key is the interval reading timestamp and value is an object with cost/value.</span></span></p>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">if the time duration is more or less than 3600 seconds then you need to implement an algorithm that calculate average hourly data for the interval reading. </span></span></p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li>\n\t\t\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">This part of requirement is tricky, but for the algorithm you write you can assume : </span></span></p>\n\n\t\t\t\t\t<ul>\n\t\t\t\t\t\t<li>\n\t\t\t\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">That the Data Custodian standard supports any duration &nbsp;from 1 second to 2^32-1.</span></span></p>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t\t<li>\n\t\t\t\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">IntervalBlock has a start and duration that should bracket all IntervalReadings contained. You can expect that they (IntervalReadings) will not be overlapping but might be discontiguous (in case readings were missed in communications, for example from meter to utility). So you need also to take discontiguous data into account when calculating average hourly data.</span></span></p>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t</ul>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Group the parsed data into collection of key/value pairs, where key is the interval reading hour start time (in seconds) and value is an object holding two attributes : cost and value.</span></span></p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">For each entry in the key/value collection insert new record into &lsquo;sm_hourlyDataDummy&rsquo; table :</span></span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&lsquo;ID&rsquo; is auto increment column</span></span></p>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&lsquo;user_id&rsquo; should be taken from &lsquo;sm_gbUsers.ID&rsquo; field</span></span></p>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&lsquo;start_time&rsquo; is read from collection item key - convert it to db datetime.</span></span></p>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&lsquo;SiteID&rsquo;, &lsquo;GHI&rsquo;, &lsquo;clearness&rsquo;, and &lsquo;electricity&rsquo; should be set to null</span></span></p>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&lsquo;GBD_consumption&rsquo; is read from collection item value object (object#value)</span></span></p>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&lsquo;GBD_cost&rsquo; is read from collection item value object (object#cost)</span></span></p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h4 dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><u>Abstracting and Design Patters</u></span></h4>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Please make sure to create helper/interface to include the common code/functionality.</span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Also please make sure your design is flexible, use facade design pattern and adapter design pattern (and any other proper design pattern) to enable future extensibility of the solution.</span></span></p>\n\n<h4 dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><u>GreenButton Data Model</u></span></h4>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">You can find details about Greenbutton model definition in this</span><a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\"> </span><u>page</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">.</span></span></p>\n\n<h4 dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><u>Testing and Sample Data</u></span></h4>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>For &lsquo;api&rsquo; case : </strong></span></p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">You need to pass OAuth 2.0 access token when communicating with the API.</span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Sandbox has OAuth server turned-off so you will be using a predefined-tokens listed in</span><a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\"> </span><u>this page</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\"> for testing purpose.</span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">You will use Sandbox </span><a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/\" style=\"text-decoration:none;\"><u>http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/</u></a></span></p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Sometimes sandbox goes down for unknown reasons, you can use this XML to simulate call to the API</span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">(</span><a href=\"https://drive.google.com/open?id=0By6n2kEXozMwVzhhc2U3S3o0NE5xeGQyRGRleTFoQnNwTnlZ&amp;authuser=0\" style=\"text-decoration:none;\"><u>https://drive.google.com/open?id=0By6n2kEXozMwVzhhc2U3S3o0NE5xeGQyRGRleTFoQnNwTnlZ&amp;authuser=0</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">) </span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>For &lsquo;datafile&rsquo; case : </strong></span></p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">You can simply download a sample XML file from API or google drive and store locally. There should be no difference between XML structure between API or local file.</span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">You can get sample data from here </span><a href=\"http://services.greenbuttondata.org/sample-data.html\" style=\"text-decoration:none;\"><u>http://services.greenbuttondata.org/sample-data.html</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\"> </span></span></p>\n\n<h4 dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><u>MySQL Table Structure</u></span></h4>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">`sm_gbUsers` (</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&nbsp;`ID` : integer, auto-increment, non-null, primary key</span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&nbsp;`case` : ENUM(&lsquo;api&rsquo;, &lsquo;datafile&rsquo;) not null</span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&nbsp;&lsquo;path&rsquo; : string, nullable, represents path to xml file</span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&nbsp;&lsquo;access_token&rsquo; : string, nullable, represents the retail customer access token</span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&nbsp;&lsquo;user_id&rsquo; : integer, nullable, represents the subscription id</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">)</span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">`sm_hourlyDataDummy` (</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&nbsp;`ID` : integer, auto-increment, not null, primary key</span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&nbsp;`user_id` : reference &lsquo;sm_gbUsers.ID&rsquo;, not null, foreign key</span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&nbsp;`siteID` int(11) NULL, always null in this challenge</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&nbsp;`GHI` float(10,6) NULL, always null in this challenge</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&nbsp;`clearness` float(10,6) NULL, always null in this challenge</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&nbsp;`electricity` float NULL, always null in this challenge</span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&nbsp;&lsquo;start_time&rsquo; : date time, not null</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&nbsp;`GBD_consumption` float(10,6) NOT NULL</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">&nbsp;`GBD_cost` float(10,6) NOT NULL</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">)</span></span></p>\n\n<h4 dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><u>Writing Tests</u></span></h4>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">All of your code should be test covered.</span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">As mentioned above, you can use the Sandbox or host the sample data to test your solution.</span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">If you see any problem with sandbox stopped behaving normally, post in challenge forums, and we will reset it (Sandbox).</span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><em>Please note that your tests must cover both Data Usage that are hourly and non-hourly. You can use data file to test that, and also you can use API in sandbox.</em></span></p>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><em>If sandbox does not contain hourly or non-houly interval readings you can use the POST endpoints to create test data by uploading the sample xml files.</em></span></p>\n\n<h4 dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><u>Coding Standard</u></span></h4>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Follow python coding best practices : </span><a href=\"http://www.python.org/dev/peps/pep-0008/\" style=\"text-decoration:none;\"><u>PEP 8</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\"> for the main text, and</span><a href=\"http://www.python.org/dev/peps/pep-0257/\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\"> </span><u>PEP 257</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\"> for docstring conventions</span></span></p>\n\n<h4 dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><u>Documentation</u></span></h4>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Your solution must be well documented.</span></span></p>\n\n<h4 dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><u>Readme</u></span></h4>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Provide a detailed readme file using Markdown language with following information :</span></span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Overview</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Setup Prerequisites</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Usage Example</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Reference to GreenButton API Documentation</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Reference this Python Documentation</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Any details about any limitations of your solution.</span></span></p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Please note, we&#39;re judging this competition not just on the code, but also on the quality of the documentation, </span><span style=\"background-color:transparent; color:rgb(255, 0, 0); font-size:15px\">test coverage</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">, and ease of use.</span></span></p>\n\n<h4 dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><u>References</u></span></h4>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><a href=\"http://www.greenbuttondata.org/espi/access_tokens/\" style=\"text-decoration:none;\"><u>http://www.greenbuttondata.org/espi/access_tokens/</u></a></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/\" style=\"text-decoration:none;\"><u>http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/</u></a></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><a href=\"http://www.greenbuttondata.org/build/\" style=\"text-decoration:none;\"><u>http://www.greenbuttondata.org/build/</u></a></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/\" style=\"text-decoration:none;\"><u>energyos.github.io/OpenESPI-GreenButton-API-Documentation/</u></a></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Green Button API test access tokens and sandbox:</span><a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\"> http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/</span></a></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Sample data:</span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Generic:</span><a href=\"http://services.greenbuttondata.org/sample-data.html\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\"> http://services.greenbuttondata.org/sample-data.html</span></a></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Pacific Gas &amp; Electric:</span><a href=\"http://energy.gov/downloads/green-button-sample-data-pge\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\"> http://energy.gov/downloads/green-button-sample-data-pge</span></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\"> use file:</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><a href=\"http://energy.gov/sites/prod/files/pge_electric_interval_data_2011-03-06_to_2012-04-06%20E1%20Residential%20Large%20Usage.xml_1.zip\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">pge_electric_interval_data_2011-03-06_to_2012-04-06 E1 Residential Large Usage.xml_1.zip</span></a></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">San Diego Gas &amp; Electric:</span><a href=\"http://www.sdge.com/sites/default/files/documents/SDGEElectricIntervalDataFeb12011toJan312012.xml?nid=2945\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\"> http://www.sdge.com/sites/default/files/documents/SDGEElectricIntervalDataFeb12011toJan312012.xml?nid=2945</span></a></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": 630,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30048666",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2015-03-05T21:06:00.000Z",
+  "finalSubmissionGuidelines": "<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:21px\">Deliverable</span></span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">All source code files and scripts that addresses the challenge requirement.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:15px\">Detailed readme file as clarified above.</span></span></span></p>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n",
+  "forumId": 28011,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=28011",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 32,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-20T21:27:00.000Z",
+      "actualStartTime": "2015-02-20T21:27:00.000Z",
+      "scheduledEndTime": "2015-02-20T21:29:00.000Z",
+      "actualendTime": "2015-02-20T21:29:00.000Z",
+      "_id": "58132fef550dfb3b52b8d8c6"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-20T21:29:00.000Z",
+      "actualStartTime": "2015-02-20T21:29:00.000Z",
+      "scheduledEndTime": "2015-02-21T00:44:00.000Z",
+      "actualendTime": "2015-02-21T00:44:00.000Z",
+      "_id": "58132fef550dfb3b52b8d8c5"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-21T00:44:00.000Z",
+      "actualStartTime": "2015-02-21T00:44:00.000Z",
+      "scheduledEndTime": "2015-02-23T00:45:00.000Z",
+      "actualendTime": "2015-02-23T00:45:00.000Z",
+      "_id": "58132fef550dfb3b52b8d8c4"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-21T00:50:00.000Z",
+      "actualStartTime": "2015-02-21T00:50:00.000Z",
+      "scheduledEndTime": "2015-02-27T00:47:00.000Z",
+      "actualendTime": "2015-02-27T00:47:00.000Z",
+      "_id": "58132fef550dfb3b52b8d8c3"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-27T00:47:00.000Z",
+      "actualStartTime": "2015-02-27T00:47:00.000Z",
+      "scheduledEndTime": "2015-02-27T08:59:00.000Z",
+      "actualendTime": "2015-02-27T08:59:00.000Z",
+      "_id": "58132fef550dfb3b52b8d8c2"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-27T08:59:00.000Z",
+      "actualStartTime": "2015-02-27T08:59:00.000Z",
+      "scheduledEndTime": "2015-03-01T03:19:00.000Z",
+      "actualendTime": "2015-03-01T03:19:00.000Z",
+      "_id": "58132fef550dfb3b52b8d8c1"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-01T03:19:00.000Z",
+      "actualStartTime": "2015-03-01T03:19:00.000Z",
+      "scheduledEndTime": "2015-03-02T03:20:00.000Z",
+      "actualendTime": "2015-03-02T03:20:00.000Z",
+      "_id": "58132fef550dfb3b52b8d8c0"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-02T03:20:00.000Z",
+      "actualStartTime": "2015-03-02T03:20:00.000Z",
+      "scheduledEndTime": "2015-03-02T15:31:00.000Z",
+      "actualendTime": "2015-03-02T15:31:00.000Z",
+      "_id": "58132fef550dfb3b52b8d8bf"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-02T15:31:00.000Z",
+      "actualStartTime": "2015-03-02T15:31:00.000Z",
+      "scheduledEndTime": "2015-03-03T00:56:00.000Z",
+      "actualendTime": "2015-03-03T00:56:00.000Z",
+      "_id": "58132fef550dfb3b52b8d8be"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-03T00:56:00.000Z",
+      "actualStartTime": "2015-03-03T00:56:00.000Z",
+      "scheduledEndTime": "2015-03-04T00:29:00.000Z",
+      "actualendTime": "2015-03-04T00:29:00.000Z",
+      "_id": "58132fef550dfb3b52b8d8bd"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-04T00:29:00.000Z",
+      "actualStartTime": "2015-03-04T00:29:00.000Z",
+      "scheduledEndTime": "2015-03-04T04:04:00.000Z",
+      "actualendTime": "2015-03-04T04:04:00.000Z",
+      "_id": "58132fef550dfb3b52b8d8bc"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-06T01:20:00.000Z",
+      "actualStartTime": "2015-03-06T01:20:00.000Z",
+      "scheduledEndTime": "2015-03-11T01:21:00.000Z",
+      "actualendTime": "2015-03-11T01:21:00.000Z",
+      "_id": "58132fef550dfb3b52b8d8bb"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-04T04:04:00.000Z",
+      "actualStartTime": "2015-03-04T04:04:00.000Z",
+      "scheduledEndTime": "2015-03-04T20:53:00.000Z",
+      "actualendTime": "2015-03-04T20:53:00.000Z",
+      "_id": "58132fef550dfb3b52b8d8ba"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-04T20:53:00.000Z",
+      "actualStartTime": "2015-03-04T20:53:00.000Z",
+      "scheduledEndTime": "2015-03-05T00:03:00.000Z",
+      "actualendTime": "2015-03-05T00:03:00.000Z",
+      "_id": "58132fef550dfb3b52b8d8b9"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-05T00:04:00.000Z",
+      "actualStartTime": "2015-03-05T00:04:00.000Z",
+      "scheduledEndTime": "2015-03-05T21:06:00.000Z",
+      "actualendTime": "2015-03-05T21:06:00.000Z",
+      "_id": "58132fef550dfb3b52b8d8b8"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-05T21:06:00.000Z",
+      "actualStartTime": "2015-03-05T21:06:00.000Z",
+      "scheduledEndTime": "2015-03-06T01:20:00.000Z",
+      "actualendTime": "2015-03-06T01:20:00.000Z",
+      "_id": "58132fef550dfb3b52b8d8b7"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-02-21T00:44:00.000Z",
+  "prize": [
+    1400,
+    700
+  ],
+  "projectId": 8533,
+  "registrants": [
+    {
+      "handle": "gpbencke",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-21T01:17:00.000Z",
+      "submissionDate": null,
+      "rating": "740",
+      "colorStyle": "color: #999999",
+      "_id": "58132fef550dfb3b52b8d8b6"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "6%",
+      "registrationDate": "2015-02-21T04:27:00.000Z",
+      "submissionDate": null,
+      "rating": "868",
+      "colorStyle": "color: #999999",
+      "_id": "58132fef550dfb3b52b8d8b5"
+    },
+    {
+      "handle": "albertwang",
+      "reliability": "80%",
+      "registrationDate": "2015-02-21T06:08:00.000Z",
+      "submissionDate": null,
+      "rating": "1538",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58132fef550dfb3b52b8d8b4"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-21T06:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fef550dfb3b52b8d8b3"
+    },
+    {
+      "handle": "Safadurimo",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-21T07:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fef550dfb3b52b8d8b2"
+    },
+    {
+      "handle": "samsundar88",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-21T08:41:00.000Z",
+      "submissionDate": "2015-02-27T00:37:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fef550dfb3b52b8d8b1"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-21T09:31:00.000Z",
+      "submissionDate": null,
+      "rating": "717",
+      "colorStyle": "color: #999999",
+      "_id": "58132fef550dfb3b52b8d8b0"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2015-02-21T09:41:00.000Z",
+      "submissionDate": null,
+      "rating": "1028",
+      "colorStyle": "color: #00A900",
+      "_id": "58132fef550dfb3b52b8d8af"
+    },
+    {
+      "handle": "yash123",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-21T09:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fef550dfb3b52b8d8ae"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-21T10:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fef550dfb3b52b8d8ad"
+    },
+    {
+      "handle": "Luckyodell",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-21T14:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fef550dfb3b52b8d8ac"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2015-02-21T14:50:00.000Z",
+      "submissionDate": null,
+      "rating": "1055",
+      "colorStyle": "color: #00A900",
+      "_id": "58132fef550dfb3b52b8d8ab"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "46%",
+      "registrationDate": "2015-02-21T14:51:00.000Z",
+      "submissionDate": null,
+      "rating": "1037",
+      "colorStyle": "color: #00A900",
+      "_id": "58132fef550dfb3b52b8d8aa"
+    },
+    {
+      "handle": "ashel",
+      "reliability": "100%",
+      "registrationDate": "2015-02-21T14:54:00.000Z",
+      "submissionDate": "2015-02-26T02:14:00.000Z",
+      "rating": "896",
+      "colorStyle": "color: #999999",
+      "_id": "58132fef550dfb3b52b8d8a9"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-21T15:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fef550dfb3b52b8d8a8"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-21T16:39:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58132fef550dfb3b52b8d8a7"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-21T16:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fef550dfb3b52b8d8a6"
+    },
+    {
+      "handle": "thunderfish24",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-21T18:35:00.000Z",
+      "submissionDate": "2015-02-26T23:47:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fef550dfb3b52b8d8a5"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-21T20:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fef550dfb3b52b8d8a4"
+    },
+    {
+      "handle": "asareh",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-22T02:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fef550dfb3b52b8d8a3"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2015-02-22T03:03:00.000Z",
+      "submissionDate": null,
+      "rating": "1373",
+      "colorStyle": "color: #6666FF",
+      "_id": "58132fef550dfb3b52b8d8a2"
+    },
+    {
+      "handle": "demo.b",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-22T03:25:00.000Z",
+      "submissionDate": null,
+      "rating": "421",
+      "colorStyle": "color: #999999",
+      "_id": "58132fef550dfb3b52b8d8a1"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2015-02-22T04:18:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58132fef550dfb3b52b8d8a0"
+    },
+    {
+      "handle": "afrhu",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-22T05:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fef550dfb3b52b8d89f"
+    },
+    {
+      "handle": "dweng",
+      "reliability": "60%",
+      "registrationDate": "2015-02-22T06:07:00.000Z",
+      "submissionDate": null,
+      "rating": "1334",
+      "colorStyle": "color: #6666FF",
+      "_id": "58132fef550dfb3b52b8d89e"
+    },
+    {
+      "handle": "Mloody2000",
+      "reliability": "66%",
+      "registrationDate": "2015-02-22T08:38:00.000Z",
+      "submissionDate": null,
+      "rating": "1162",
+      "colorStyle": "color: #00A900",
+      "_id": "58132fef550dfb3b52b8d89d"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-22T11:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fef550dfb3b52b8d89c"
+    },
+    {
+      "handle": "Ninja91",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-22T14:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fef550dfb3b52b8d89b"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-22T15:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fef550dfb3b52b8d89a"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2015-02-22T17:56:00.000Z",
+      "submissionDate": null,
+      "rating": "267",
+      "colorStyle": "color: #999999",
+      "_id": "58132fef550dfb3b52b8d899"
+    },
+    {
+      "handle": "rajeshk87",
+      "reliability": "6%",
+      "registrationDate": "2015-02-22T19:08:00.000Z",
+      "submissionDate": null,
+      "rating": "577",
+      "colorStyle": "color: #999999",
+      "_id": "58132fef550dfb3b52b8d898"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "0%",
+      "registrationDate": "2015-02-23T00:07:00.000Z",
+      "submissionDate": null,
+      "rating": "618",
+      "colorStyle": "color: #999999",
+      "_id": "58132fef550dfb3b52b8d897"
+    }
+  ],
+  "registrationEndDate": "2015-02-23T00:45:00.000Z",
+  "reliabilityBonus": 280,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-02-27T00:47:00.000Z",
+  "submissions": [
+    {
+      "handle": "ashel",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 91.74,
+      "finalScore": 92.82,
+      "points": 441,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-02-26T02:14:00.000Z",
+      "_id": "58132fef550dfb3b52b8d8c9"
+    },
+    {
+      "handle": "samsundar88",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 80.52,
+      "finalScore": 80.52,
+      "points": 189,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-02-27T00:37:00.000Z",
+      "_id": "58132fef550dfb3b52b8d8c8"
+    },
+    {
+      "handle": "thunderfish24",
+      "placement": null,
+      "screeningScore": 0,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Failed Screening",
+      "submissionDate": "2015-02-26T23:47:00.000Z",
+      "_id": "58132fef550dfb3b52b8d8c7"
+    }
+  ],
+  "technology": [
+    "API",
+    "MySQL",
+    "Python",
+    "REST",
+    "XML"
+  ]
+}

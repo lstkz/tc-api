@@ -1,0 +1,295 @@
+{
+  "_id": 30041311,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:15:05.864Z",
+  "appealsEndDate": "2014-04-03T20:06:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "topcoder Forgot Password WordPress Theme Update",
+  "challengeType": "UI Prototype Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p>&nbsp;</p>\n\n<p><span style=\"font-size: 13px; line-height: 1.6em;\">Welcome to topcoder Forgot Password WordPress Theme Update contest! The goal of this challenge is to get a new &quot;forgot password&quot; functionality built on the new topcoder site.</span></p>\n\n<p><strong>Resources Provided:</strong><br />\n- latest topcoder theme as your base, get it from github <a href=\"https://github.com/topcoderinc/tc-site/tree/dev/wp-content/themes/tcs-responsive\">https://github.com/topcoderinc/tc-site/tree/dev/wp-content/themes/tcs-responsive</a></p>\n\n<h3>Challenge Task Overview</h3>\n\n<p>The goal of this challenge is to create the new &quot;forgot password&quot; functionality of the new topcoder site. There are no storyboard involved, used the site&#39;s (<a href=\"http://www.topcoder.com/\">http://www.topcoder.com/</a>) general look and feel and with the instructions outlined below.<span style=\"line-height: 1.6em;\">&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span></p>\n\n<p><strong>UI Look and Feel Reference:</strong></p>\n\n<ul>\n\t<li>utilize any existing styles from contact us page <a href=\"http://www.topcoder.com/contact-us/\">http://www.topcoder.com/contact-us/</a></li>\n\t<li>use the existing template and layout (main pane + sidebar) of contact us page for the new pages</li>\n\t<li>use the sidebar content/data as well</li>\n</ul>\n\n<p><strong>Required Pages:</strong><br />\n1. Password Recovery page</p>\n\n<ul>\n\t<li>name of the page is &quot;Password Recovery&quot;</li>\n\t<li>there will be one field to be use to enter email address or handle</li>\n\t<li>the label of this field will be &quot;Enter your handle or email:&quot;</li>\n\t<li>include a button to submit the handle/email</li>\n</ul>\n\n<p>1.1 Functionality of this page will be:</p>\n\n<ul>\n\t<li>user will enter his/her handle or email address</li>\n\t<li>use &quot;Generate Reset Token&quot; API (outlined below) to check whether the user has social login or not</li>\n\t<li>if this API request returns that the user has social login, the system should return the following message:<br />\n\t&quot;You have registered using social login. Please login using X service&quot;&nbsp;<br />\n\t(where X is the social provider name)</li>\n\t<li>otherwise, the user has a topcoder password.\n\t<ul>\n\t\t<li>Display message on top of page: &quot;Sit tight we have emailed you a confirmation code&quot;</li>\n\t\t<li>Send an email to the user, the content this email should be editable in WP Admin. The email content will have variables that needs to be replaced with the actual values prior in sending the email. Sample content is <a href=\"https://docs.google.com/document/d/1yUziXz7FdkDBtu9tQ956DdP9pJBP7lG1j1FMl4kWKrc/edit?usp=sharing\" target=\"_blank\">https://docs.google.com/document/d/1yUziXz7FdkDBtu9tQ956DdP9pJBP7lG1j1FMl4kWKrc/edit?usp=sharing</a></li>\n\t\t<li>the variables to be replaced are:\n\t\t<ul>\n\t\t\t<li>user handle ($handle)</li>\n\t\t\t<li>reset code from &quot;Generate Reset Token&quot; API request ($code)</li>\n\t\t\t<li>the link for &quot;Change my Password&quot; which will also have a reset code var</li>\n\t\t\t<li>variable for&nbsp;the url of &quot;page&quot; link</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li>Once the email is sent and after a few seconds, redirect the page to the Reset Password page&nbsp;</li>\n</ul>\n\n<p>2. Reset Password page</p>\n\n<ul>\n\t<li>name of the page is &quot;Reset Password&quot;</li>\n\t<li>this page will have the following text fields:\n\t<ul>\n\t\t<li>New password</li>\n\t\t<li>Confirm password</li>\n\t\t<li>If the current page URL doesn&#39;t contain unlock code, provide a text field to enter the unlock code. This&nbsp;&quot;unlock&quot; code is the generated token from the API request &quot;Generate Reset Token&quot;</li>\n\t</ul>\n\t</li>\n\t<li>include a submit button to update the new password</li>\n</ul>\n\n<p>2.1 Functionality for this page:</p>\n\n<ul>\n\t<li>the purpose of this page is to save the new password</li>\n\t<li>it is important to verify the level of strength of the password using the same logic we do on the main site. See line 75 of this <a href=\"https://github.com/topcoderinc/tc-site/blob/dev/wp-content/themes/tcs-responsive/js/register-login.js\" target=\"_blank\">file</a>.</li>\n\t<li>All passwords must have a strength of at least 3.</li>\n\t<li><span style=\"font-size: 13px;\">use &quot;Reset Password&quot; API function to save the new password</span></li>\n</ul>\n\n<p><strong>API to use:</strong><br />\n1. Generate Reset Token</p>\n\n<ul>\n\t<li>this API function returns reset token for topcoder user or the social provider name for social login user</li>\n\t<li>URL: http://tcapi.apiary.io/v2/users/resetToken/?handle={handle}&amp;email={email}</li>\n\t<li>Method: GET</li>\n\t<li>Parameters (either of the one should be used):\n\t<ul>\n\t\t<li>handle - the member handle, string and optional</li>\n\t\t<li>email - an email address, string and optional</li>\n\t</ul>\n\t</li>\n</ul>\n\n<ul>\n\t<li><span style=\"line-height: 1.6em;\">���</span>Response (these are the possible response):\n\n\t<ul>\n\t\t<li><code>200 (OK)<br />\n\t\tContent-Type: application/json<br />\n\t\t{<br />\n\t\t&nbsp; &nbsp; &quot;token&quot;:&quot;a3cbG&quot;<br />\n\t\t}</code></li>\n\t\t<li><code>200 (OK)<br />\n\t\tContent-Type: application/json<br />\n\t\t{<br />\n\t\t&nbsp; &nbsp; &quot;socialProvider&quot;:&quot;Google&quot;<br />\n\t\t}</code></li>\n\t\t<li><code><span style=\"line-height: 1.6em;\">400 (Bad Request)<br />\n\t\tContent-Type: application/json<br />\n\t\t{<br />\n\t\t&nbsp; &nbsp; &quot;name&quot;:&quot;Bad Request&quot;,<br />\n\t\t&nbsp; &nbsp; &quot;value&quot;:&quot;400&quot;,<br />\n\t\t&nbsp; &nbsp; &quot;description&quot;:&quot;The handle you entered is not valid&quot;<br />\n\t\t}</span></code></li>\n\t\t<li><code><span style=\"line-height: 1.6em;\">500 (Internal Server Error)<br />\n\t\tContent-Type: application/json<br />\n\t\t{<br />\n\t\t&nbsp; &nbsp; &quot;name&quot;:&quot;Internal Server Error&quot;,<br />\n\t\t&nbsp; &nbsp; &quot;value&quot;:&quot;500&quot;,<br />\n\t\t&nbsp; &nbsp; &quot;description&quot;:&quot;Unknown server error. Please contact support.&quot;<br />\n\t\t}</span></code></li>\n\t\t<li><code><span style=\"line-height: 1.6em;\">503 (Service Unavailable)<br />\n\t\tContent-Type: application/json<br />\n\t\t{<br />\n\t\t&nbsp; &nbsp; &quot;name&quot;:&quot;Service Unavailable&quot;,<br />\n\t\t&nbsp; &nbsp; &quot;value&quot;:&quot;503&quot;,<br />\n\t\t&nbsp; &nbsp; &quot;description&quot;:&quot;Servers are up but overloaded. Try again later.&quot;<br />\n\t\t}</span></code></li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>2. Reset Password</p>\n\n<ul>\n\t<li>URL: http://tcapi.apiary.io/v2/users/resetPassword/{handle}</li>\n\t<li>Method: POST</li>\n\t<li>Parameters:\n\t<ul>\n\t\t<li>handle - the member handle, string and required</li>\n\t\t<li>token - the reset password token, string and required. Example: snABCD</li>\n\t\t<li>password - the new password, string and required</li>\n\t</ul>\n\t</li>\n\t<li>Response<span style=\"font-size: 13px;\">&nbsp;(these are the possible response):</span>\n\t<ul>\n\t\t<li><code>200 (OK)<br />\n\t\tContent-Type: application/json<br />\n\t\t{<br />\n\t\t&nbsp; &nbsp; &nbsp;&quot;description&quot;: &quot;Your password has been reset!&quot;<br />\n\t\t}</code></li>\n\t\t<li><code>400 (Bad Request)<br />\n\t\tContent-Type: application/json<br />\n\t\t{<br />\n\t\t&nbsp; &nbsp; &quot;name&quot;:&quot;Bad Request&quot;,<br />\n\t\t&nbsp; &nbsp; &quot;value&quot;:&quot;400&quot;,<br />\n\t\t&nbsp; &nbsp; &quot;description&quot;:&quot;This message will explain why the request is invalid or cannot be served.&quot;<br />\n\t\t}</code></li>\n\t\t<li><code>401 (Unauthorized)<br />\n\t\tContent-Type: application/json<br />\n\t\t{<br />\n\t\t&nbsp; &nbsp; &quot;name&quot;:&quot;Unauthorized&quot;,<br />\n\t\t&nbsp; &nbsp; &quot;value&quot;:&quot;401&quot;,<br />\n\t\t&nbsp; &nbsp; &quot;description&quot;:&quot;Authentication credentials were missing or incorrect.&quot;<br />\n\t\t}</code></li>\n\t\t<li><code>403 (Forbidden)<br />\n\t\tContent-Type: application/json<br />\n\t\t{<br />\n\t\t&nbsp; &nbsp; &quot;name&quot;:&quot;Forbidden&quot;,<br />\n\t\t&nbsp; &nbsp; &quot;value&quot;:&quot;403&quot;,<br />\n\t\t&nbsp; &nbsp; &quot;description&quot;:&quot;The request is understood, but it has been refused or access is not allowed.&quot;<br />\n\t\t}</code></li>\n\t\t<li><code><samp>500 (Internal Server Error)<br />\n\t\tContent-Type: application/json<br />\n\t\t{<br />\n\t\t&nbsp; &nbsp; &quot;name&quot;:&quot;Internal Server Error&quot;,<br />\n\t\t&nbsp; &nbsp; &quot;value&quot;:&quot;500&quot;,<br />\n\t\t&nbsp; &nbsp; &quot;description&quot;:&quot;Unknown server error. Please contact support.&quot;<br />\n\t\t}</samp></code></li>\n\t\t<li><code>503 (Service Unavailable)<br />\n\t\tContent-Type: application/json<br />\n\t\t{<br />\n\t\t&nbsp; &nbsp; &quot;name&quot;:&quot;Service Unavailable&quot;,<br />\n\t\t&nbsp; &nbsp; &quot;value&quot;:&quot;503&quot;,<br />\n\t\t&nbsp; &nbsp; &quot;description&quot;:&quot;Servers are up but overloaded. Try again later.&quot;<br />\n\t\t}</code></li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": 270,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30041311",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2014-04-04T15:09:00.000Z",
+  "finalSubmissionGuidelines": "<p>Please make sure to <span style=\"color:#FF0000;\"><strong>ONLY </strong></span>submit updated&nbsp;files instead of overall themes. Reviewer will download theme from git and try to merge your submission into git version</p>\n",
+  "forumId": 21874,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=21874",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 11,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-03-23T03:53:00.000Z",
+      "actualStartTime": "2014-03-23T03:53:00.000Z",
+      "scheduledEndTime": "2014-03-23T03:54:00.000Z",
+      "actualendTime": "2014-03-23T03:54:00.000Z",
+      "_id": "58134f59550dfb3b52c2f39f"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-03-23T03:54:00.000Z",
+      "actualStartTime": "2014-03-23T03:54:00.000Z",
+      "scheduledEndTime": "2014-03-23T06:56:00.000Z",
+      "actualendTime": "2014-03-23T06:56:00.000Z",
+      "_id": "58134f59550dfb3b52c2f39e"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-03-23T13:00:00.000Z",
+      "actualStartTime": "2014-03-23T13:00:00.000Z",
+      "scheduledEndTime": "2014-03-25T13:00:00.000Z",
+      "actualendTime": "2014-03-25T13:00:00.000Z",
+      "_id": "58134f59550dfb3b52c2f39d"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-03-23T13:05:00.000Z",
+      "actualStartTime": "2014-03-23T13:05:00.000Z",
+      "scheduledEndTime": "2014-03-28T13:00:00.000Z",
+      "actualendTime": "2014-03-28T13:00:00.000Z",
+      "_id": "58134f59550dfb3b52c2f39c"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-03-28T13:00:00.000Z",
+      "actualStartTime": "2014-03-28T13:00:00.000Z",
+      "scheduledEndTime": "2014-03-28T22:03:00.000Z",
+      "actualendTime": "2014-03-28T22:03:00.000Z",
+      "_id": "58134f59550dfb3b52c2f39b"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-03-28T22:03:00.000Z",
+      "actualStartTime": "2014-03-28T22:03:00.000Z",
+      "scheduledEndTime": "2014-04-02T17:26:00.000Z",
+      "actualendTime": "2014-04-02T17:26:00.000Z",
+      "_id": "58134f59550dfb3b52c2f39a"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-04-02T17:26:00.000Z",
+      "actualStartTime": "2014-04-02T17:26:00.000Z",
+      "scheduledEndTime": "2014-04-03T17:26:00.000Z",
+      "actualendTime": "2014-04-03T17:26:00.000Z",
+      "_id": "58134f59550dfb3b52c2f399"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-04-03T17:26:00.000Z",
+      "actualStartTime": "2014-04-03T17:26:00.000Z",
+      "scheduledEndTime": "2014-04-03T20:06:00.000Z",
+      "actualendTime": "2014-04-03T20:06:00.000Z",
+      "_id": "58134f59550dfb3b52c2f398"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-04-03T20:06:00.000Z",
+      "actualStartTime": "2014-04-03T20:06:00.000Z",
+      "scheduledEndTime": "2014-04-03T20:08:00.000Z",
+      "actualendTime": "2014-04-03T20:08:00.000Z",
+      "_id": "58134f59550dfb3b52c2f397"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-04-03T20:08:00.000Z",
+      "actualStartTime": "2014-04-03T20:08:00.000Z",
+      "scheduledEndTime": "2014-04-04T15:09:00.000Z",
+      "actualendTime": "2014-04-04T15:09:00.000Z",
+      "_id": "58134f59550dfb3b52c2f396"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-04-04T15:09:00.000Z",
+      "actualStartTime": "2014-04-04T15:09:00.000Z",
+      "scheduledEndTime": "2014-04-04T22:59:00.000Z",
+      "actualendTime": "2014-04-04T22:59:00.000Z",
+      "_id": "58134f59550dfb3b52c2f395"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-04-04T22:59:00.000Z",
+      "actualStartTime": "2014-04-04T22:59:00.000Z",
+      "scheduledEndTime": "2014-04-11T22:59:00.000Z",
+      "actualendTime": "2014-04-11T22:59:00.000Z",
+      "_id": "58134f59550dfb3b52c2f394"
+    }
+  ],
+  "platforms": [
+    "Wordpress"
+  ],
+  "postingDate": "2014-03-23T13:00:00.000Z",
+  "prize": [
+    600,
+    300
+  ],
+  "projectId": 6753,
+  "registrants": [
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-24T00:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f59550dfb3b52c2f393"
+    },
+    {
+      "handle": "evilkyro1965",
+      "reliability": "93%",
+      "registrationDate": "2014-03-24T01:51:00.000Z",
+      "submissionDate": "2014-03-28T06:31:00.000Z",
+      "rating": "1134",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f59550dfb3b52c2f392"
+    },
+    {
+      "handle": "jol",
+      "reliability": "0%",
+      "registrationDate": "2014-03-24T02:43:00.000Z",
+      "submissionDate": null,
+      "rating": "1015",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f59550dfb3b52c2f391"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-24T04:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f59550dfb3b52c2f390"
+    },
+    {
+      "handle": "utkarshkukreti",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-24T04:43:00.000Z",
+      "submissionDate": "2014-03-27T19:01:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f59550dfb3b52c2f38f"
+    },
+    {
+      "handle": "rh_abror",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-24T06:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f59550dfb3b52c2f38e"
+    },
+    {
+      "handle": "vikasverma",
+      "reliability": "0%",
+      "registrationDate": "2014-03-24T07:24:00.000Z",
+      "submissionDate": null,
+      "rating": "681",
+      "colorStyle": "color: #999999",
+      "_id": "58134f59550dfb3b52c2f38d"
+    },
+    {
+      "handle": "prasenjitroy",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-24T08:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f59550dfb3b52c2f38c"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "0%",
+      "registrationDate": "2014-03-24T10:20:00.000Z",
+      "submissionDate": null,
+      "rating": "923",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f59550dfb3b52c2f38b"
+    },
+    {
+      "handle": "Colinh84",
+      "reliability": "100%",
+      "registrationDate": "2014-03-24T22:28:00.000Z",
+      "submissionDate": "2014-03-28T12:54:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f59550dfb3b52c2f38a"
+    },
+    {
+      "handle": "azukun",
+      "reliability": "0%",
+      "registrationDate": "2014-03-25T04:02:00.000Z",
+      "submissionDate": null,
+      "rating": "1629",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58134f59550dfb3b52c2f389"
+    }
+  ],
+  "registrationEndDate": "2014-03-25T13:00:00.000Z",
+  "reliabilityBonus": 120,
+  "reviewScorecardId": 30001381,
+  "reviewType": null,
+  "screeningScorecardId": 30000591,
+  "submissionEndDate": "2014-03-28T13:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "evilkyro1965",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 93.33,
+      "finalScore": 96,
+      "points": 175.5,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-03-28T06:31:00.000Z",
+      "_id": "58134f59550dfb3b52c2f3a2"
+    },
+    {
+      "handle": "utkarshkukreti",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 83.67,
+      "finalScore": 86.67,
+      "points": 67.5,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-03-27T19:01:00.000Z",
+      "_id": "58134f59550dfb3b52c2f3a1"
+    },
+    {
+      "handle": "Colinh84",
+      "placement": 3,
+      "screeningScore": 100,
+      "initialScore": 75.17,
+      "finalScore": 80.83,
+      "points": 27,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-03-28T12:54:00.000Z",
+      "_id": "58134f59550dfb3b52c2f3a0"
+    }
+  ],
+  "technology": [
+    "PHP"
+  ]
+}

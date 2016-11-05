@@ -1,0 +1,386 @@
+{
+  "_id": 30043715,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:07:43.942Z",
+  "appealsEndDate": "2014-07-07T01:01:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Hercules PCDVR Android App - UI update release assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": "2014-06-28T21:43:00.000Z",
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h1>Overview</h1>\n\n<p>The Hercules Personal Content DVR application is a stand-alone Android app, allowing users to upload their own video content they recorded on their phone or tablet camera into their DVR for playback on their TV and syncing with other devices.</p>\n\n<p>This assembly will implement a number of UI updates that have been requested by the client.</p>\n\n<h2><strong>New navigation:</strong></h2>\n\n<p>New options are going to be added for navigation. &nbsp;We are going to do this as a side menu on phones and footer tabs on tablets. &nbsp;The tabs will be:</p>\n\n<ul>\n\t<li><em>Albums&nbsp;</em>&nbsp;- Will display the list of all albums in a vertically scrolling list, similar to the &quot;All Albums&quot; screen shown now when clicking &quot;View All&quot; at the end of the albums list&nbsp;</li>\n\t<li><em>Library -&nbsp;</em><strong>&nbsp;</strong>Will display the entire list of all content available in the cloud</li>\n\t<li><em>Recent -&nbsp;</em>Will display the recently uploaded or changed media</li>\n</ul>\n\n<h2>Tabs on tablets</h2>\n\n<p>On the tablet, the navigation to the 3 screens (Albums, Library, Recent) is going to be done through footer tabs (UITabBar items). &nbsp;We have a similar implementation on the University application, and the code for the University application will be available for reference. &nbsp;</p>\n\n<p>We will remove the settings icon from the upper menu on the tablets and move it to the bottom right portion of the tab bar. &nbsp;It will be a small icon only, not a full tab, and without text underneath it. &nbsp;In addition, we are going to move the trash can icon down to the left of the settings button. &nbsp;This will take the user directly to the Deleted Items album.</p>\n\n<p>The tabs will be centered, not spread out evenly. &nbsp;This will match what is seen in the University app.</p>\n\n<h2>Side menu on phones</h2>\n\n<p>On the phones, we will replace the settings button in the upper left with a menu button on&nbsp;the root screens (Albums, Recent, Library). &nbsp;The side menu will have a list containing the 3 different menu options at the top, along with their icons (Albums, Recent, Library). &nbsp;At the bottom left of the side menu will be the buttons for settings and the deleted items. &nbsp;Whenever a side menu option is selected, the navigation should change and the side menu should close.</p>\n\n<p>The side menu should match the app in look and feel with regards to color and fonts. &nbsp;It should slide in and out as an animation.</p>\n\n<p>Feel free to use the Android Navigation Drawer for this:</p>\n\n<p>https://developer.android.com/design/patterns/navigation-drawer.html</p>\n\n<p><span>In addition to pressing the menu button to open and close the side menu, the implementation must support swiping left and right to open and close the side menu.</span></p>\n\n<h2><strong>Albums screen:</strong></h2>\n\n<div style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif; font-size: 12px; line-height: normal;\">The new albums screen will list all the albums vertically, as opposed to the current Home Media screen implementation where they scroll horizontally. &nbsp;The Welcome and Automatic Uploads albums will remain first in the list, even when sorting. &nbsp;We will also remove the background behind each cell that makes the album look &quot;stacked&quot;. &nbsp;</div>\n\n<div style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif; font-size: 12px; line-height: normal;\">&nbsp;</div>\n\n<div style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif; font-size: 12px; line-height: normal;\"><strong>All</strong>&nbsp;albums will appear on this screen, sorted alphabetically ascending, by default. &nbsp;There will be no more &quot;View All&quot; album in the list, and &quot;Deleted Items&quot; will be removed as well, in favor of the trash can image added to the navigation.</div>\n\n<div style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif; font-size: 12px; line-height: normal;\">&nbsp;</div>\n\n<div style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif; font-size: 12px; line-height: normal;\">\n<h2><strong>Recent screen:</strong></h2>\n\n<div style=\"padding: 0px; margin: 0px;\">The new recent screen will show all the recently updated media, sorted by last modified date descending. &nbsp;The user can click an item and the app will navigate to the album where the item was uploaded and select it. &nbsp;Like it does now, the Recent list will not show any deleted items.</div>\n\n<div style=\"padding: 0px; margin: 0px;\">&nbsp;</div>\n\n<div style=\"padding: 0px; margin: 0px;\">This &quot;Recent&quot; display should follow these requirements:</div>\n\n<div style=\"padding: 0px; margin: 0px;\">\n<p>A few months ago, we disabled the &quot;Recent Videos&quot; display on the home screen and the size display and date and size sorting in the albums. &nbsp;In the API now, we have a &quot;lastModifiedDate&quot; and a &quot;size&quot; parameter being returned for files, so we can now show this information again.</p>\n</div>\n\n<div style=\"padding: 0px; margin: 0px;\">\n<p>1) Re-enable the Recent Videos display. &nbsp;This should show all videos with a modified date in the last 7 days, but the date range should be configurable in the Configurations.plist. &nbsp;I should be able to change this to 5 days, or 10, as the client tests and wants to tweak it.</p>\n\n<p>2) Re-enable the sorting menu on albums (size, least recent, most recent)</p>\n\n<p>3) Add in a new version to the data model</p>\n\n<p>4) Add the new fields and JSON parsing for the new parameters from the data service</p>\n\n<p>5) Wire in the functionality to use the new fields. &nbsp;</p>\n\n<p>6) The list should be all files with a lastModDate within the last 5 days. &nbsp;This value should be configurable. &nbsp;This list should not include any items in the &quot;Deleted Items&quot; album (with the logical delete flag set)</p>\n\n<p>7) The list should match the display of the items in an album, including the same spacing, the picture / video overlay, and the name under the item</p>\n\n<p>8) Instead of going right to a video player, when an item is tapped, the corresponding album should be opened with that item selected and displayed in the top section</p>\n\n<p>9) If an item doesn&#39;t have a valid thumbnail, the correct placeholder should be used.</p>\n</div>\n\n<div style=\"padding: 0px; margin: 0px;\">\n<h2><strong>Library screen:</strong></h2>\n\n<p>The library screen will list&nbsp;<strong>all</strong>&nbsp;media in the cloud, in the same look and feel as the &quot;Recent&quot; screen. &nbsp;This screen will also have some additional filtering features.</p>\n\n<ul>\n\t<li>By default, the sorting will be by last modified date descending</li>\n\t<li>There will be 4 filter options in tabs at the top of the list: &quot;All&quot;, &quot;Photos&quot;, &quot;Videos&quot;, &quot;Favorites&quot;\n\t<ul>\n\t\t<li>&quot;All&quot; will show all media from the cloud</li>\n\t\t<li>&quot;Photos&quot; will filter out the videos and show only the photos</li>\n\t\t<li>&quot;Videos&quot; will filter out the photos and show only the videos</li>\n\t\t<li>&quot;Favorites&quot; will show only the media that has been downloaded to the device</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>When the user clicks an item, we will navigate to the containing album and select the file, similar to the Recent screen. &nbsp;Also, similar to the Recent screen, no deleted items will show.</p>\n</div>\n</div>\n\n<h2>New &quot;Add a video or photo&quot; cell</h2>\n\n<p>In the album list, next to Welcome, we are going to add a new, empty cell, containing the text &quot;Add a video or photo&quot;. &nbsp;When clicked, this will go to the upload screen, the same as if the user clicked the &quot;+&quot; item in the upper right. &nbsp;A screenshot showing what this should look like will be in the forum.</p>\n\n<h2>Milestone</h2>\n\n<p>For the milestone, please show the side menu and tabs working. &nbsp;The new screens don&#39;t have to be implemented, but the navigation should be in place for the 3 tabs and the settings and deleted items buttons.</p>\n\n<p>All user accounts, source code, screenshots, and updated icons and images will be available in the forum.</p>\n",
+  "digitalRunPoints": 990,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30043715",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2014-07-07T23:51:00.000Z",
+  "finalSubmissionGuidelines": "<p>Please see above</p>\n",
+  "forumId": 23771,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=23771",
+  "numberOfCheckpointSubmissions": 3,
+  "numberOfCheckpointsPrizes": 2,
+  "numberOfRegistrants": 19,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-25T18:38:00.000Z",
+      "actualStartTime": "2014-06-25T18:38:00.000Z",
+      "scheduledEndTime": "2014-06-25T18:38:00.000Z",
+      "actualendTime": "2014-06-25T18:38:00.000Z",
+      "_id": "58133f8f550dfb3b52bdf5f0"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-25T18:38:00.000Z",
+      "actualStartTime": "2014-06-25T18:38:00.000Z",
+      "scheduledEndTime": "2014-06-25T21:21:00.000Z",
+      "actualendTime": "2014-06-25T21:21:00.000Z",
+      "_id": "58133f8f550dfb3b52bdf5ef"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-25T21:38:00.000Z",
+      "actualStartTime": "2014-06-25T21:38:00.000Z",
+      "scheduledEndTime": "2014-06-28T21:38:00.000Z",
+      "actualendTime": "2014-06-28T21:38:00.000Z",
+      "_id": "58133f8f550dfb3b52bdf5ee"
+    },
+    {
+      "type": "Checkpoint Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-25T21:43:00.000Z",
+      "actualStartTime": "2014-06-25T21:43:00.000Z",
+      "scheduledEndTime": "2014-06-28T21:43:00.000Z",
+      "actualendTime": "2014-06-28T21:43:00.000Z",
+      "_id": "58133f8f550dfb3b52bdf5ed"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-25T21:43:00.000Z",
+      "actualStartTime": "2014-06-25T21:43:00.000Z",
+      "scheduledEndTime": "2014-07-02T21:43:00.000Z",
+      "actualendTime": "2014-07-02T21:43:00.000Z",
+      "_id": "58133f8f550dfb3b52bdf5ec"
+    },
+    {
+      "type": "Checkpoint Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-28T21:43:00.000Z",
+      "actualStartTime": "2014-06-28T21:43:00.000Z",
+      "scheduledEndTime": "2014-07-04T20:23:00.000Z",
+      "actualendTime": "2014-07-04T20:23:00.000Z",
+      "_id": "58133f8f550dfb3b52bdf5eb"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-02T21:43:00.000Z",
+      "actualStartTime": "2014-07-02T21:43:00.000Z",
+      "scheduledEndTime": "2014-07-03T02:54:00.000Z",
+      "actualendTime": "2014-07-03T02:54:00.000Z",
+      "_id": "58133f8f550dfb3b52bdf5ea"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-03T02:54:00.000Z",
+      "actualStartTime": "2014-07-03T02:54:00.000Z",
+      "scheduledEndTime": "2014-07-05T12:26:00.000Z",
+      "actualendTime": "2014-07-05T12:26:00.000Z",
+      "_id": "58133f8f550dfb3b52bdf5e9"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-05T12:26:00.000Z",
+      "actualStartTime": "2014-07-05T12:26:00.000Z",
+      "scheduledEndTime": "2014-07-06T12:26:00.000Z",
+      "actualendTime": "2014-07-06T12:26:00.000Z",
+      "_id": "58133f8f550dfb3b52bdf5e8"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-06T12:26:00.000Z",
+      "actualStartTime": "2014-07-06T12:26:00.000Z",
+      "scheduledEndTime": "2014-07-07T01:01:00.000Z",
+      "actualendTime": "2014-07-07T01:01:00.000Z",
+      "_id": "58133f8f550dfb3b52bdf5e7"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-07T01:01:00.000Z",
+      "actualStartTime": "2014-07-07T01:01:00.000Z",
+      "scheduledEndTime": "2014-07-07T01:34:00.000Z",
+      "actualendTime": "2014-07-07T01:34:00.000Z",
+      "_id": "58133f8f550dfb3b52bdf5e6"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-07T01:34:00.000Z",
+      "actualStartTime": "2014-07-07T01:34:00.000Z",
+      "scheduledEndTime": "2014-07-07T23:51:00.000Z",
+      "actualendTime": "2014-07-07T23:51:00.000Z",
+      "_id": "58133f8f550dfb3b52bdf5e5"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-07T23:51:00.000Z",
+      "actualStartTime": "2014-07-07T23:51:00.000Z",
+      "scheduledEndTime": "2014-07-08T15:39:00.000Z",
+      "actualendTime": "2014-07-08T15:39:00.000Z",
+      "_id": "58133f8f550dfb3b52bdf5e4"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-08T15:39:00.000Z",
+      "actualStartTime": "2014-07-08T15:39:00.000Z",
+      "scheduledEndTime": "2014-07-13T15:39:00.000Z",
+      "actualendTime": "2014-07-13T15:39:00.000Z",
+      "_id": "58133f8f550dfb3b52bdf5e3"
+    }
+  ],
+  "platforms": [
+    "Android"
+  ],
+  "postingDate": "2014-06-25T21:38:00.000Z",
+  "prize": [
+    2200,
+    1100,
+    1100
+  ],
+  "projectId": 6680,
+  "registrants": [
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-25T22:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8f550dfb3b52bdf5e2"
+    },
+    {
+      "handle": "akinwale",
+      "reliability": "20%",
+      "registrationDate": "2014-06-26T00:22:00.000Z",
+      "submissionDate": "2014-07-02T17:08:00.000Z",
+      "rating": "848",
+      "colorStyle": "color: #999999",
+      "_id": "58133f8f550dfb3b52bdf5e1"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "0%",
+      "registrationDate": "2014-06-26T00:26:00.000Z",
+      "submissionDate": null,
+      "rating": "58",
+      "colorStyle": "color: #999999",
+      "_id": "58133f8f550dfb3b52bdf5e0"
+    },
+    {
+      "handle": "duxiaoyang",
+      "reliability": "20%",
+      "registrationDate": "2014-06-26T00:38:00.000Z",
+      "submissionDate": "2014-07-02T14:46:00.000Z",
+      "rating": "969",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f8f550dfb3b52bdf5df"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-26T01:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8f550dfb3b52bdf5de"
+    },
+    {
+      "handle": "cmax",
+      "reliability": "20%",
+      "registrationDate": "2014-06-26T02:56:00.000Z",
+      "submissionDate": "2014-07-02T20:56:00.000Z",
+      "rating": "849",
+      "colorStyle": "color: #999999",
+      "_id": "58133f8f550dfb3b52bdf5dd"
+    },
+    {
+      "handle": "codercat",
+      "reliability": "0%",
+      "registrationDate": "2014-06-26T03:32:00.000Z",
+      "submissionDate": null,
+      "rating": "838",
+      "colorStyle": "color: #999999",
+      "_id": "58133f8f550dfb3b52bdf5dc"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-26T03:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8f550dfb3b52bdf5db"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-26T06:06:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58133f8f550dfb3b52bdf5da"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-06-26T06:10:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58133f8f550dfb3b52bdf5d9"
+    },
+    {
+      "handle": "raj.karthik777",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-26T09:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8f550dfb3b52bdf5d8"
+    },
+    {
+      "handle": "michael_tang",
+      "reliability": "0%",
+      "registrationDate": "2014-06-26T10:06:00.000Z",
+      "submissionDate": null,
+      "rating": "497",
+      "colorStyle": "color: #999999",
+      "_id": "58133f8f550dfb3b52bdf5d7"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2014-06-27T08:49:00.000Z",
+      "submissionDate": null,
+      "rating": "1373",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133f8f550dfb3b52bdf5d6"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-26T15:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8f550dfb3b52bdf5d5"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-26T16:52:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58133f8f550dfb3b52bdf5d4"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-06-27T00:38:00.000Z",
+      "submissionDate": null,
+      "rating": "1093",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f8f550dfb3b52bdf5d3"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "0%",
+      "registrationDate": "2014-06-27T08:07:00.000Z",
+      "submissionDate": null,
+      "rating": "1447",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133f8f550dfb3b52bdf5d2"
+    },
+    {
+      "handle": "pirosl_tc",
+      "reliability": "0%",
+      "registrationDate": "2014-06-27T12:07:00.000Z",
+      "submissionDate": null,
+      "rating": "738",
+      "colorStyle": "color: #999999",
+      "_id": "58133f8f550dfb3b52bdf5d1"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "26%",
+      "registrationDate": "2014-06-27T22:01:00.000Z",
+      "submissionDate": null,
+      "rating": "857",
+      "colorStyle": "color: #999999",
+      "_id": "58133f8f550dfb3b52bdf5d0"
+    }
+  ],
+  "registrationEndDate": "2014-06-28T21:38:00.000Z",
+  "reliabilityBonus": 440,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-07-02T21:43:00.000Z",
+  "submissions": [
+    {
+      "handle": "akinwale",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 96.53,
+      "finalScore": 97.39,
+      "points": 643.5,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-07-02T17:08:00.000Z",
+      "_id": "58133f8f550dfb3b52bdf5f3"
+    },
+    {
+      "handle": "duxiaoyang",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 87.49,
+      "finalScore": 88.34,
+      "points": 247.5,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-07-02T14:46:00.000Z",
+      "_id": "58133f8f550dfb3b52bdf5f2"
+    },
+    {
+      "handle": "cmax",
+      "placement": 3,
+      "screeningScore": 100,
+      "initialScore": 87.27,
+      "finalScore": 87.27,
+      "points": 99,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-07-02T20:56:00.000Z",
+      "_id": "58133f8f550dfb3b52bdf5f1"
+    }
+  ],
+  "technology": [
+    "Android"
+  ]
+}

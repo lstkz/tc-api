@@ -1,0 +1,333 @@
+{
+  "_id": 30047313,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T09:54:34.703Z",
+  "appealsEndDate": "2014-12-01T04:56:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Mail Proxy OAuth support for GMail Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></h2>\n\n<p>You may remember Go learning challenge series:&nbsp;http://www.topcoder.com/challenge-details/30046224/?type=develop&amp;noncache=true</p>\n\n<p>Now we began the real project with Go language!</p>\n\n<p>The client is a leading cloud-based security provider in Japan.&nbsp;</p>\n\n<p>In this project, we will develop a mail proxy server which talks to&nbsp;POP/IMAP servers and MUA(Mail Client Software).</p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Competition Task Overview</span></h2>\n\n<p>In this challenge, you need to OAuth authentication to the code we built that already supports some POP commands.</p>\n\n<p>In a <a href=\"http://community.topcoder.com/tc?module=ProjectDetail&amp;pj=30046224\">past challenge</a> we created a PoC to do this, code is provided in <a href=\"http://apps.topcoder.com/forums/?module=Thread&amp;threadID=838248\">forum</a> for reference.</p>\n\n<p>We&#39;ve also attached some sequence diagrams to help you better understand this, see <a href=\"http://apps.topcoder.com/forums/?module=Thread&amp;threadID=838249\">this post</a>.</p>\n\n<p><span style=\"color:rgb(255, 0, 0)\">Requirements &amp; Notes</span></p>\n\n<p>To complete this:</p>\n\n<ul>\n\t<li>The developer needs to have an admin access of Google Apps (not public GMail. You can create a <a href=\"https://www.google.com/work/apps/business/learn-more/setup.html\">Google Apps trial</a> for free)</li>\n\t<li>Then needs to create &quot;Service Account&quot; and have these data in the proxy code.</li>\n\t<li>The proxy needs to handle XOAuth2 to connect to Google Apps.</li>\n</ul>\n\n<p>Also if you check the sequence diagram:</p>\n\n<ul>\n\t<li>The proxy authenticates a user with domains.json of the mock server (e.g. &quot;takumi&quot; and &quot;ilovego&quot;).&nbsp;Then it connects to the Google Apps Mail server using the username and domain (e.g. &quot;takumi@topcoder.com&quot;).</li>\n\t<li>To connect, you need to get an access_token for Google Apps and&nbsp;authenticate with XOAuth2. After that, it works as a normal mail proxy as it was, check <a href=\"https://developers.google.com/gmail/xoauth2_protocol\">this reference</a>.</li>\n\t<li>To get the access_token, you need to use the &quot;Service Account&quot; and&nbsp;the impersonate users email, check <a href=\"https://developers.google.com/accounts/docs/OAuth2\">this</a> and <a href=\"https://developers.google.com/accounts/docs/OAuth2ServiceAccount#authorizingrequests\">this</a>,</li>\n\t<li>For the above reason, you cannot develop this challenge with GMail only,&nbsp;but need to have an administrator account of Google Apps. (And update domains.json with your domain and account info.) You&nbsp;<span>can create a&nbsp;</span><a href=\"https://www.google.com/work/apps/business/learn-more/setup.html\" style=\"line-height: 20.7999992370605px;\">Google Apps trial</a><span>&nbsp;for free.</span></li>\n</ul>\n\n<h3><span style=\"color:rgb(255, 0, 0)\">Testing</span></h3>\n\n<p>You must test your solution to make sure &quot;POP min&quot; test scenario works properly after adding OAuth. You can record and attach some application log between the servers in the submission to proof it. You can find the test scenario and in the forum.</p>\n\n<h3><span style=\"color:rgb(255, 0, 0)\">Dev Process</span></h3>\n\n<p><span>We&#39;re going to use gitlab for this project and we&#39;ll follow the following process:</span></p>\n\n<ol>\n\t<li><span>���</span>We push the original source tree to the private repository and&nbsp;create a challenge to update it (we&#39;ll provide link to source tree in forum)</li>\n\t<li>You should request access to it in the forum by providing your gitlab username. We will add you as &quot;Developer&quot; to the repo</li>\n\t<li>You can fork our tree and make updates to your local branch. You must add&nbsp;tiwasaki&nbsp;and huangqun as &quot;Master&quot; and reviewers as &quot;Reporter&quot; to your private branch.</li>\n\t<li>You must submit the branch name on topcoder. &nbsp;You should NEVER make a&nbsp;merge request because it can be visible to other registrants</li>\n\t<li>The reviewers review your submission based on the code in the branch and score the submission</li>\n\t<li>Once winner is selected, the winner will need to fix all issues found in review and submit a pull/merge request</li>\n\t<li>The winner will also help with merging in case of conflicts</li>\n</ol>\n\n<h3><span style=\"color:rgb(255, 0, 0)\">Code Guidelines</span></h3>\n\n<p>Follow practices mentioned in the articles below:</p>\n\n<ul>\n\t<li><span>http://golang.org/doc/effective_go.html</span></li>\n\t<li><span>https://code.google.com/p/go-wiki/wiki/CodeReviewComments#Go_Code_Review_Comments</span></li>\n</ul>\n\n<p>The client has a following naming conventions:</p>\n\n<ul>\n\t<li>Use &lsquo;lower_case_with_underscore&rsquo; name for package, file or directory.&nbsp;However, try to avoid underscores and prefer short names.</li>\n</ul>\n\n<h3><span style=\"color:rgb(255, 0, 0)\">External Libraries</span></h3>\n\n<p>If you would like to use external libraries please follow the guidelines below:</p>\n\n<ul>\n\t<li>Do not use libraries developed with languages other than Golang</li>\n\t<li>Do not use GPL libraries and LGPL libraries</li>\n\t<li>MIT, Apache and BSD libraries are fine</li>\n\t<li>Please mention about external libraries you used in your README</li>\n</ul>\n\n<h3><span style=\"color:rgb(255, 0, 0)\">Code Design</span></h3>\n\n<p>We will enhance the code in future challenges and so your code should prepare for it (which is related to scorecard question 1.1.6).</p>\n\n<p>You can see from the test scenarios we&#39;ll have the following implemented in future challenges:</p>\n\n<ul>\n\t<li><span>POP/IMAP support in the single source</span></li>\n\t<li><span style=\"color:rgb(38, 38, 38); font-family:arial,sans-serif\">We are going to support more POP commands</span></li>\n\t<li><span style=\"color:rgb(38, 38, 38); font-family:arial,sans-serif\">SSL connection</span></li>\n\t<li><span style=\"color:rgb(38, 38, 38); font-family:arial,sans-serif\">POP UIDL command performance improvement</span></li>\n</ul>\n\n<h3><span style=\"color:rgb(255, 0, 0)\">Scorecard</span></h3>\n\n<p>We are using a&nbsp;<a href=\"https://software.topcoder.com/review/actions/ViewScorecard?scid=30001750\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">custom scorecard</a>&nbsp;for this challenge.</p>\n\n<h3><span style=\"color:rgb(255, 0, 0)\">Test Code</span></h3>\n\n<p>- You should write at least one unit test file (*_test.go) for each go file.<br />\n<span>- You should NOT use a shell script for test, you should write any test script with go only.</span><br />\n- Functional test which follows the test scenario with go file.<br />\n- It should cover more than 75% code (You can measure it with `go test -cover`)</p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Technology Overview</span></h2>\n\n<ul>\n\t<li><span>Go</span></li>\n\t<li><span>POP</span></li>\n\t<li><span>Gmail OAuth</span></li>\n</ul>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Documentation Provided</span></h2>\n\n<p>Register to see resources in challenge forum.</p>\n",
+  "digitalRunPoints": 630,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30047313",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2014-12-01T19:54:00.000Z",
+  "finalSubmissionGuidelines": "<h2><strong><span style=\"color:rgb(255, 0, 0)\">Submission Deliverables</span></strong></h2>\n\n<ul>\n\t<li>Source code (Format your code with &lsquo;gofmt&rsquo; command)</li>\n\t<li>Test code (*_test.go).</li>\n\t<li>README to explain your deliverables and how to setup your submission and verify the features. This README should be included in your own gitlab repo.</li>\n</ul>\n\n<h2><span style=\"color:rgb(255, 0, 0)\"><strong>Final Submission</strong></span></h2>\n\n<p><span>For each member, the private gitlab repo / branch name and link must be uploaded via the challenge detail page on&nbsp;<a href=\"http://www.topcoder.com/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">topcoder.com</a></span></p>\n",
+  "forumId": 26199,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=26199",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 14,
+  "numberOfSubmissions": 4,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-20T06:21:00.000Z",
+      "actualStartTime": "2014-11-20T06:21:00.000Z",
+      "scheduledEndTime": "2014-11-20T06:22:00.000Z",
+      "actualendTime": "2014-11-20T06:22:00.000Z",
+      "_id": "5813205a550dfb3b52b2b674"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-20T06:22:00.000Z",
+      "actualStartTime": "2014-11-20T06:22:00.000Z",
+      "scheduledEndTime": "2014-11-20T08:43:00.000Z",
+      "actualendTime": "2014-11-20T08:43:00.000Z",
+      "_id": "5813205a550dfb3b52b2b673"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-21T02:00:00.000Z",
+      "actualStartTime": "2014-11-21T02:00:00.000Z",
+      "scheduledEndTime": "2014-11-23T02:00:00.000Z",
+      "actualendTime": "2014-11-23T02:00:00.000Z",
+      "_id": "5813205a550dfb3b52b2b672"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-21T02:05:00.000Z",
+      "actualStartTime": "2014-11-21T02:05:00.000Z",
+      "scheduledEndTime": "2014-11-27T01:59:00.000Z",
+      "actualendTime": "2014-11-27T01:59:00.000Z",
+      "_id": "5813205a550dfb3b52b2b671"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-27T01:59:00.000Z",
+      "actualStartTime": "2014-11-27T01:59:00.000Z",
+      "scheduledEndTime": "2014-11-27T16:48:00.000Z",
+      "actualendTime": "2014-11-27T16:48:00.000Z",
+      "_id": "5813205a550dfb3b52b2b670"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-27T16:48:00.000Z",
+      "actualStartTime": "2014-11-27T16:48:00.000Z",
+      "scheduledEndTime": "2014-11-29T16:50:00.000Z",
+      "actualendTime": "2014-11-29T16:50:00.000Z",
+      "_id": "5813205a550dfb3b52b2b66f"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-29T16:50:00.000Z",
+      "actualStartTime": "2014-11-29T16:50:00.000Z",
+      "scheduledEndTime": "2014-11-30T16:50:00.000Z",
+      "actualendTime": "2014-11-30T16:50:00.000Z",
+      "_id": "5813205a550dfb3b52b2b66e"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-30T16:50:00.000Z",
+      "actualStartTime": "2014-11-30T16:50:00.000Z",
+      "scheduledEndTime": "2014-12-01T04:56:00.000Z",
+      "actualendTime": "2014-12-01T04:56:00.000Z",
+      "_id": "5813205a550dfb3b52b2b66d"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-01T04:56:00.000Z",
+      "actualStartTime": "2014-12-01T04:56:00.000Z",
+      "scheduledEndTime": "2014-12-01T05:48:00.000Z",
+      "actualendTime": "2014-12-01T05:48:00.000Z",
+      "_id": "5813205a550dfb3b52b2b66c"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-01T05:48:00.000Z",
+      "actualStartTime": "2014-12-01T05:48:00.000Z",
+      "scheduledEndTime": "2014-12-01T19:54:00.000Z",
+      "actualendTime": "2014-12-01T19:54:00.000Z",
+      "_id": "5813205a550dfb3b52b2b66b"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-01T19:54:00.000Z",
+      "actualStartTime": "2014-12-01T19:54:00.000Z",
+      "scheduledEndTime": "2014-12-01T20:25:00.000Z",
+      "actualendTime": "2014-12-01T20:25:00.000Z",
+      "_id": "5813205a550dfb3b52b2b66a"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-01T20:25:00.000Z",
+      "actualStartTime": "2014-12-01T20:25:00.000Z",
+      "scheduledEndTime": "2014-12-06T20:25:00.000Z",
+      "actualendTime": "2014-12-06T20:25:00.000Z",
+      "_id": "5813205a550dfb3b52b2b669"
+    }
+  ],
+  "platforms": [
+    "Google"
+  ],
+  "postingDate": "2014-11-21T02:00:00.000Z",
+  "prize": [
+    1400,
+    700
+  ],
+  "projectId": 8195,
+  "registrants": [
+    {
+      "handle": "callmekatootie",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-21T02:43:00.000Z",
+      "submissionDate": null,
+      "rating": "381",
+      "colorStyle": "color: #999999",
+      "_id": "5813205a550dfb3b52b2b668"
+    },
+    {
+      "handle": "orirmi",
+      "reliability": "33%",
+      "registrationDate": "2014-11-21T06:38:00.000Z",
+      "submissionDate": "2014-11-26T15:43:00.000Z",
+      "rating": "1024",
+      "colorStyle": "color: #00A900",
+      "_id": "5813205a550dfb3b52b2b667"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-21T06:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813205a550dfb3b52b2b666"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-21T07:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813205a550dfb3b52b2b665"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "6%",
+      "registrationDate": "2014-11-21T07:56:00.000Z",
+      "submissionDate": "2014-11-27T01:53:00.000Z",
+      "rating": "1256",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813205a550dfb3b52b2b664"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "6%",
+      "registrationDate": "2014-11-21T08:55:00.000Z",
+      "submissionDate": null,
+      "rating": "1447",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813205a550dfb3b52b2b663"
+    },
+    {
+      "handle": "chicapi",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-21T09:03:00.000Z",
+      "submissionDate": "2014-11-27T01:46:00.000Z",
+      "rating": "445",
+      "colorStyle": "color: #999999",
+      "_id": "5813205a550dfb3b52b2b662"
+    },
+    {
+      "handle": "AceHypocrisy",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-21T09:05:00.000Z",
+      "submissionDate": "2014-11-26T18:37:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813205a550dfb3b52b2b661"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-21T14:51:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "5813205a550dfb3b52b2b660"
+    },
+    {
+      "handle": "fox000002",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-21T14:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813205a550dfb3b52b2b65f"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-11-21T15:03:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "5813205a550dfb3b52b2b65e"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-21T15:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813205a550dfb3b52b2b65d"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "6%",
+      "registrationDate": "2014-11-23T01:12:00.000Z",
+      "submissionDate": null,
+      "rating": "714",
+      "colorStyle": "color: #999999",
+      "_id": "5813205a550dfb3b52b2b65c"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2014-11-23T01:32:00.000Z",
+      "submissionDate": null,
+      "rating": "400",
+      "colorStyle": "color: #999999",
+      "_id": "5813205a550dfb3b52b2b65b"
+    }
+  ],
+  "registrationEndDate": "2014-11-23T02:00:00.000Z",
+  "reliabilityBonus": 280,
+  "reviewScorecardId": 30001750,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-11-27T01:59:00.000Z",
+  "submissions": [
+    {
+      "handle": "orirmi",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 88.33,
+      "finalScore": 92.5,
+      "points": 378,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-11-26T15:43:00.000Z",
+      "_id": "5813205a550dfb3b52b2b678"
+    },
+    {
+      "handle": "chicapi",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 87.5,
+      "finalScore": 87.5,
+      "points": 138.6,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-11-27T01:46:00.000Z",
+      "_id": "5813205a550dfb3b52b2b677"
+    },
+    {
+      "handle": "AceHypocrisy",
+      "placement": 3,
+      "screeningScore": 100,
+      "initialScore": 85,
+      "finalScore": 85,
+      "points": 63,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-11-26T18:37:00.000Z",
+      "_id": "5813205a550dfb3b52b2b676"
+    },
+    {
+      "handle": "panoptimum",
+      "placement": 4,
+      "screeningScore": 100,
+      "initialScore": 77.5,
+      "finalScore": 80,
+      "points": 50.4,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-11-27T01:53:00.000Z",
+      "_id": "5813205a550dfb3b52b2b675"
+    }
+  ],
+  "technology": [
+    "Go"
+  ]
+}

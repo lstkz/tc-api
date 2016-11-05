@@ -1,0 +1,349 @@
+{
+  "_id": 30046926,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:14:43.693Z",
+  "appealsEndDate": "2014-11-14T06:28:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "topcoder leaderboard page AngularJS assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p>We are adding a new, comprehensive leaderboard to the topcoder site and we need your help to lay down the functional base of this new leaderboard. We have a UI prototype of the leaderboard here (<a href=\"http://appirio-tc-leaderboard.herokuapp.com/\">http://appirio-tc-leaderboard.herokuapp.com/</a>), which should give you a good idea of what we&#39;re aiming for. However, since that UI prototype was built, requirements have changed a good amount, so we want to start from scratch with the new requirements in mind. What we&#39;re hoping you&#39;ll provide us with is completely clean and functional Angular code that follows our styleguide (<a href=\"https://gitlab.com/topcoderinc/angularjs-styleguide/tree/master\">https://gitlab.com/topcoderinc/angularjs-styleguide/tree/master</a>) and fulfills all our requirements, and hooks up to a simple, stripped down UI which you&#39;ll create. The UI should behave like the Heroku app linked above, and roughly resemble it in terms of form, but you need not pay close attention to style or closely imitate the exact look and feel of the Heroku app. What we&#39;re looking for is clean, concise Javascript that follows are styleguide, and review scores will reflect this.</p>\n\n<p>Here&#39;s what we&#39;re providing you with:</p>\n\n<ol>\n\t<li>A skeleton of the topcoder UI (essentially just a header and footer -- basically everything you see in the Heroku app, minus the main content section that holds the leaderboard). -&nbsp;LB-submission-frame.zip in the download section. You need to run it under nodeJS\n\t<ul>\n\t\t<li>Install NodeJS</li>\n\t\t<li>Browse to the archive folder and run &#39;npm install&#39;</li>\n\t\t<li>run &#39;node web.js&#39;</li>\n\t\t<li>Check&nbsp;http://localhost:5051/</li>\n\t</ul>\n\t</li>\n\t<li>JSON that you&#39;ll deliver with a mock backend for each track (the real backend isn&#39;t ready, so this will have to do for now. You can decide how to mock out the backend, but the services should be very close to what the finished product will look like).\n\t<ul>\n\t\t<li>The data is avaiable at&nbsp;LB-submission-frame\\public\\js\\app\\leader-board\\data</li>\n\t</ul>\n\t</li>\n</ol>\n\n<p>And naturally, we&#39;re also going to give you some more detailed requirements:</p>\n\n<ul>\n\t<li>Things will generally mirror the prototype\n\t<ul>\n\t\t<li>same tabs</li>\n\t\t<li>same structure: the overall tab will lack a table, but the different tracks will have a table</li>\n\t</ul>\n\t</li>\n\t<li>...but there are lots of changes\n\t<ul>\n\t\t<li>there won&#39;t be a hover effect when your mouse is over a member&#39;s picture.</li>\n\t\t<li>things will generally reflect what the design tab is like in the prototype, which was updated from the initial version\n\t\t<ul>\n\t\t\t<li>no sorting in the table</li>\n\t\t\t<li>no indication of change in place</li>\n\t\t\t<li>everything will be determined by total first place wins, and there will be no indication of rank or points</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>pagination will happen on the front end���</li>\n\t\t<li>some indication should be given of the current index (e.g., 1-25 of 342)</li>\n\t</ul>\n\t</li>\n\t<li>there will be two templates\n\t<ul>\n\t\t<li>an overall template for the overall leaders\n\t\t<ul>\n\t\t\t<li>no table</li>\n\t\t\t<li>just shows the top leader of each track</li>\n\t\t\t<li>no selection of challenge type</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>a &#39;track&#39; template that will be used for the three tracks\n\t\t<ul>\n\t\t\t<li>top section with pictures of top 10 leaders, plus a table that the user can page through</li>\n\t\t\t<li>should have a selector for challenge type\n\t\t\t<ul>\n\t\t\t\t<li>will be populated at controller level</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li>controllers\n\t<ul>\n\t\t<li>two controllers:\n\t\t<ul>\n\t\t\t<li>OverallLeaderController\n\t\t\t<ul>\n\t\t\t\t<li>no methods</li>\n\t\t\t\t<li>vars\n\t\t\t\t<ul>\n\t\t\t\t\t<li>lastUpdatedAt</li>\n\t\t\t\t\t<li>members\n\t\t\t\t\t<ul>\n\t\t\t\t\t\t<li>{data: { ... }, design: { ... }, dev: { ... }}</li>\n\t\t\t\t\t</ul>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>TrackLeaderController\n\t\t\t<ul>\n\t\t\t\t<li>methods\n\t\t\t\t<ul>\n\t\t\t\t\t<li>getLeaders(track, challengeType)\n\t\t\t\t\t<ul>\n\t\t\t\t\t\t<li>second var is optional -- default to all challenge types</li>\n\t\t\t\t\t\t<li>load all data, handle paging in grid</li>\n\t\t\t\t\t</ul>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li>loadPage(n)\n\t\t\t\t\t<ul>\n\t\t\t\t\t\t<li>loads the nth page using the members that are currently in scope</li>\n\t\t\t\t\t\t<li>maybe this won&#39;t be necessary if the grid handles everything</li>\n\t\t\t\t\t</ul>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li>variables (this isn&#39;t comprehensive, but should get you started)\n\t\t\t\t<ul>\n\t\t\t\t\t<li>leaders\n\t\t\t\t\t<ul>\n\t\t\t\t\t\t<li>the list of leaders currently in scope</li>\n\t\t\t\t\t</ul>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li>pageSize</li>\n\t\t\t\t\t<li>track</li>\n\t\t\t\t\t<li>challengeType</li>\n\t\t\t\t\t<li>lastUpdatedDate</li>\n\t\t\t\t\t<li>etc.</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li>table\n\t<ul>\n\t\t<li>for the table, we&#39;re going to use ng-grid stylings created for the topcoder challenge listings page (<a href=\"http://www.topcoder.com/challenges\">http://www.topcoder.com/challenges</a>)\n\t\t<ul>\n\t\t\t<li>see the &#39;challenges&#39; app in the tc-site repo here (<a href=\"https://gitlab.com/topcoderinc/tc-site/tree/master/wp-content/themes/tcs-responsive/js/app/challenges\">https://gitlab.com/topcoderinc/tc-site/tree/master/wp-content/themes/tcs-responsive/js/app/challenges</a>)</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>obviously, manipulate this to fit what we&#39;re trying to show, but this should easily enable us to do paging, etc. and have a nice looking table</li>\n\t\t<li>this table can potentially be wrapped in a directive. If it is, it will be the&nbsp;<strong>only directive we use.</strong></li>\n\t</ul>\n\t</li>\n\t<li>routes\n\t<ul>\n\t\t<li>/overall\n\t\t<ul>\n\t\t\t<li>doesn&#39;t take any inputs</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>/:track/:challengeType\n\t\t<ul>\n\t\t\t<li>should also be able to handle pagination in routes\n\t\t\t<ul>\n\t\t\t\t<li>/:track/:pageNumber</li>\n\t\t\t\t<li>/:track/:challengeType/:pageNumber</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>try to use resolve on the route level to resolve promises and load data</li>\n\t</ul>\n\t</li>\n\t<li>services (only one)\n\t<ul>\n\t\t<li>LeaderboardService\n\t\t<ul>\n\t\t\t<li>init()\n\t\t\t<ul>\n\t\t\t\t<li>returns top 25 leaders of each track and challenge types for each track</li>\n\t\t\t\t<li>data should be loaded once and shared between controllers</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>getLeaders(track, challengeType)\n\t\t\t<ul>\n\t\t\t\t<li>same logic as controller method</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>mock out the backend so that the service is basically doing the same AJAX stuff it&#39;ll do when hooked up to a real backend</li>\n\t\t<li>for the different challenge types, just return the same data as you&#39;re returning for the track\n\t\t<ul>\n\t\t\t<li>for now this is fine, since we&#39;re just using static JSON</li>\n\t\t\t<li>but still, actually make the AJAX call</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>nothing to POST, only GET calls</li>\n\t</ul>\n\t</li>\n\t<li>All code must adhere to our styleguide (linked above)\n\t<ul>\n\t\t<li>use our challenge details page (<a href=\"https://gitlab.com/topcoderinc/tc-site/tree/master/wp-content/themes/tcs-responsive/js/app/challenge-details\">https://gitlab.com/topcoderinc/tc-site/tree/master/wp-content/themes/tcs-responsive/js/app/challenge-details</a>) as a reference app</li>\n\t\t<li>the styleguide will be considered during review and how closely you adhere to our standards will have a significant effect on submission scores</li>\n\t</ul>\n\t</li>\n\t<li>Should implement some basic error handling\n\t<ul>\n\t\t<li>for routes\n\t\t<ul>\n\t\t\t<li>/ -&gt; /overall</li>\n\t\t\t<li>/asfdsa (invalid track) -&gt; /overall</li>\n\t\t\t<li>/design/afsd (invalid challenge type) -&gt; /design</li>\n\t\t\t<li>/design/9999 (out of scope page number) -&gt; /design</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>Please post questions in the forum and I&#39;ll update the spec as they&#39;re answered. This should be enough to get started, but I&#39;m sure questions will come up.</p>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": 540,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30046926",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2014-11-15T01:31:00.000Z",
+  "finalSubmissionGuidelines": "<p>Use the included download &#39;LB-submission-frame.zip&#39; to build your submission on. Since we&#39;re building from scratch, submissions should be as a zip file. The app should be built in public/js/app/leader-board.</p>\n",
+  "forumId": 25973,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=25973",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 18,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-03T07:54:00.000Z",
+      "actualStartTime": "2014-11-03T07:54:00.000Z",
+      "scheduledEndTime": "2014-11-03T07:56:00.000Z",
+      "actualendTime": "2014-11-03T07:56:00.000Z",
+      "_id": "58134f43550dfb3b52c2db75"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-03T07:56:00.000Z",
+      "actualStartTime": "2014-11-03T07:56:00.000Z",
+      "scheduledEndTime": "2014-11-03T09:58:00.000Z",
+      "actualendTime": "2014-11-03T09:58:00.000Z",
+      "_id": "58134f43550dfb3b52c2db74"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-03T14:00:00.000Z",
+      "actualStartTime": "2014-11-03T14:00:00.000Z",
+      "scheduledEndTime": "2014-11-05T14:00:00.000Z",
+      "actualendTime": "2014-11-05T14:00:00.000Z",
+      "_id": "58134f43550dfb3b52c2db73"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-03T14:05:00.000Z",
+      "actualStartTime": "2014-11-03T14:05:00.000Z",
+      "scheduledEndTime": "2014-11-09T14:00:00.000Z",
+      "actualendTime": "2014-11-09T14:00:00.000Z",
+      "_id": "58134f43550dfb3b52c2db72"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-09T14:00:00.000Z",
+      "actualStartTime": "2014-11-09T14:00:00.000Z",
+      "scheduledEndTime": "2014-11-09T21:01:00.000Z",
+      "actualendTime": "2014-11-09T21:01:00.000Z",
+      "_id": "58134f43550dfb3b52c2db71"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-09T21:01:00.000Z",
+      "actualStartTime": "2014-11-09T21:01:00.000Z",
+      "scheduledEndTime": "2014-11-12T20:40:00.000Z",
+      "actualendTime": "2014-11-12T20:40:00.000Z",
+      "_id": "58134f43550dfb3b52c2db70"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-12T20:40:00.000Z",
+      "actualStartTime": "2014-11-12T20:40:00.000Z",
+      "scheduledEndTime": "2014-11-13T20:40:00.000Z",
+      "actualendTime": "2014-11-13T20:40:00.000Z",
+      "_id": "58134f43550dfb3b52c2db6f"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-13T20:40:00.000Z",
+      "actualStartTime": "2014-11-13T20:40:00.000Z",
+      "scheduledEndTime": "2014-11-14T06:28:00.000Z",
+      "actualendTime": "2014-11-14T06:28:00.000Z",
+      "_id": "58134f43550dfb3b52c2db6e"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-14T06:28:00.000Z",
+      "actualStartTime": "2014-11-14T06:28:00.000Z",
+      "scheduledEndTime": "2014-11-14T07:58:00.000Z",
+      "actualendTime": "2014-11-14T07:58:00.000Z",
+      "_id": "58134f43550dfb3b52c2db6d"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-14T07:58:00.000Z",
+      "actualStartTime": "2014-11-14T07:58:00.000Z",
+      "scheduledEndTime": "2014-11-15T01:31:00.000Z",
+      "actualendTime": "2014-11-15T01:31:00.000Z",
+      "_id": "58134f43550dfb3b52c2db6c"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-15T01:31:00.000Z",
+      "actualStartTime": "2014-11-15T01:31:00.000Z",
+      "scheduledEndTime": "2014-11-15T22:48:00.000Z",
+      "actualendTime": "2014-11-15T22:48:00.000Z",
+      "_id": "58134f43550dfb3b52c2db6b"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-15T22:48:00.000Z",
+      "actualStartTime": "2014-11-15T22:48:00.000Z",
+      "scheduledEndTime": "2014-11-20T22:48:00.000Z",
+      "actualendTime": "2014-11-20T22:48:00.000Z",
+      "_id": "58134f43550dfb3b52c2db6a"
+    }
+  ],
+  "platforms": [
+    "HTML"
+  ],
+  "postingDate": "2014-11-03T14:00:00.000Z",
+  "prize": [
+    1200,
+    600
+  ],
+  "projectId": 6753,
+  "registrants": [
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2014-11-03T14:03:00.000Z",
+      "submissionDate": null,
+      "rating": "1088",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f43550dfb3b52c2db69"
+    },
+    {
+      "handle": "amrsaqr",
+      "reliability": "20%",
+      "registrationDate": "2014-11-03T14:07:00.000Z",
+      "submissionDate": null,
+      "rating": "1147",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f43550dfb3b52c2db68"
+    },
+    {
+      "handle": "iCare",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-03T14:36:00.000Z",
+      "submissionDate": null,
+      "rating": "568",
+      "colorStyle": "color: #999999",
+      "_id": "58134f43550dfb3b52c2db67"
+    },
+    {
+      "handle": "hyc",
+      "reliability": "100%",
+      "registrationDate": "2014-11-03T14:51:00.000Z",
+      "submissionDate": null,
+      "rating": "832",
+      "colorStyle": "color: #999999",
+      "_id": "58134f43550dfb3b52c2db66"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-03T15:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f43550dfb3b52c2db65"
+    },
+    {
+      "handle": "gmagniez",
+      "reliability": "26%",
+      "registrationDate": "2014-11-03T16:35:00.000Z",
+      "submissionDate": "2014-11-09T04:13:00.000Z",
+      "rating": "1067",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f43550dfb3b52c2db64"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-04T00:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f43550dfb3b52c2db63"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2014-11-04T00:40:00.000Z",
+      "submissionDate": null,
+      "rating": "400",
+      "colorStyle": "color: #999999",
+      "_id": "58134f43550dfb3b52c2db62"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "0%",
+      "registrationDate": "2014-11-04T01:38:00.000Z",
+      "submissionDate": null,
+      "rating": "1391",
+      "colorStyle": "color: #6666FF",
+      "_id": "58134f43550dfb3b52c2db61"
+    },
+    {
+      "handle": "pinoydream",
+      "reliability": "6%",
+      "registrationDate": "2014-11-04T01:55:00.000Z",
+      "submissionDate": null,
+      "rating": "1152",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f43550dfb3b52c2db60"
+    },
+    {
+      "handle": "evilkyro1965",
+      "reliability": "0%",
+      "registrationDate": "2014-11-04T04:55:00.000Z",
+      "submissionDate": null,
+      "rating": "770",
+      "colorStyle": "color: #999999",
+      "_id": "58134f43550dfb3b52c2db5f"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "0%",
+      "registrationDate": "2014-11-04T10:16:00.000Z",
+      "submissionDate": null,
+      "rating": "1447",
+      "colorStyle": "color: #6666FF",
+      "_id": "58134f43550dfb3b52c2db5e"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-11-04T11:08:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58134f43550dfb3b52c2db5d"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-04T19:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f43550dfb3b52c2db5c"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "6%",
+      "registrationDate": "2014-11-05T02:33:00.000Z",
+      "submissionDate": null,
+      "rating": "673",
+      "colorStyle": "color: #999999",
+      "_id": "58134f43550dfb3b52c2db5b"
+    },
+    {
+      "handle": "kaiGG",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-05T06:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f43550dfb3b52c2db5a"
+    },
+    {
+      "handle": "sidthekid",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-05T09:04:00.000Z",
+      "submissionDate": "2014-11-09T11:42:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f43550dfb3b52c2db59"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "13%",
+      "registrationDate": "2014-11-05T13:37:00.000Z",
+      "submissionDate": null,
+      "rating": "1773",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58134f43550dfb3b52c2db58"
+    }
+  ],
+  "registrationEndDate": "2014-11-05T14:00:00.000Z",
+  "reliabilityBonus": 240,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-11-09T14:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "gmagniez",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 86.39,
+      "finalScore": 86.54,
+      "points": 378,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-11-09T04:13:00.000Z",
+      "_id": "58134f43550dfb3b52c2db77"
+    },
+    {
+      "handle": "sidthekid",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 78.74,
+      "finalScore": 78.74,
+      "points": 162,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-11-09T11:42:00.000Z",
+      "_id": "58134f43550dfb3b52c2db76"
+    }
+  ],
+  "technology": [
+    "Angular.js",
+    "CSS",
+    "HTML5"
+  ]
+}

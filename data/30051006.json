@@ -1,0 +1,478 @@
+{
+  "_id": 30051006,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T09:53:36.767Z",
+  "appealsEndDate": "2015-08-17T06:27:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Omega Microservices - Course correction",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\">Welcome to the Omega Microservices / API challenge. This challenge is the seventh in a series of challenges where will build an application for a world leading retail hardware and software solution manufacturer.</p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\">Project Overview</p>\n\n<p dir=\"ltr\">The goal of this application is to allow retail store operators to manage and provision security for their fleet of hardware and POS software. In this series we will be building our application APIs. This will be a series of microservices built in Golang connecting to a <a href=\"http://cassandra.apache.org/\">Cassandra</a> database. We will be creating 13 <a href=\"http://martinfowler.com/articles/microservices.html\">microservices</a> in total and have already completed seven of them so you will have some good examples.</p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\">Challenge Details</p>\n\n<p dir=\"ltr\">We have the following resources that will be built out as microservices:</p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><img src=\"https://docs.google.com/drawings/d/srL_Rz6I40shheCnDu0K8yA/image?w=715&amp;h=372&amp;rev=405&amp;ac=1\" /></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\">For this challenge, we will be refactoring code and the API to provide a cleaner separation between resources within the DGES hierarchy. In an effort to reduce confusion and ensure that the YAML specification properly represents what the resources do, we need to refactor some microservice JSON object properties overall. Below is the bulk of the work necessary. There may be modules I missed, however it&rsquo;s up to the developer to perform a thorough check and determine where all changes should be made across the microservice projects.</p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\">Specific guidelines:</p>\n\n<p>&nbsp;</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">We will not embed downstream hierarchies as sub-objects, instead we&#39;ll include an absolute resource URL (excluding host) for the client to fetch the downstream object or object collection. This will apply to Locations, Terminals, Endpoints, Endpoint Services, Peripherals, Manifests, Manifest Templates, Manifest Endpoints and Manifest Policies.</p>\n\t</li>\n</ol>\n\n<p>&nbsp;</p>\n\n<ol start=\"2\">\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The following microservices need to be enhanced based on the YAML specification 0.0.9. Specifically:</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Add a locations resource property to the Enterprise Group object that can be used to retrieve Location objects. Hint: the URL should formatted as per the GET operation to retrieve the same, i.e. <code>GET /urlbase/customers/{customerId}/enterpriseGroups/{groupId}/locations.</code></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Add a terminals property to the Location object that can be used to retrieve all terminals at a Location. &nbsp;e.g. <code>GET /urlbase/customers/{customerId}/locations/{locationId}/terminals &nbsp;</code></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Add an endpointServices property to the Location object that can be used to retrieve all endpoint services associated with a Location. &nbsp;e.g. <code>GET /urlbase/customers/{customerId}/locations/{locationId}/endpointServices</code></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Replace the embedded Manifest object of the terminal with a resource URL that directs to the manifest e.g. <code>GET /urlbase/customers/{customerId}/terminals/{terminalId}/manifests.</code></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Add a peripherals property to the Terminal object that can be used to retrieve all peripherals associated with a Terminal. &nbsp;e.g. <code>GET /urlbase/customers/{customerId}/terminals/{terminalId}/peripherals.</code></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Add an endpoints property to the Peripheral object that can be used to retrieve all endpoints associated with a Peripheral. &nbsp;e.g. <code>GET /urlbase/customers/{customerId}/peripherals/{peripheralId}/endpoints.</code></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Add a terminals property to the EndpointService object that can be used to retrieve all terminals associated with an EndpointService. &nbsp;e.g. <code>GET /urlbase/customers/{customerId}/endpointServices/{endpointServiceId}/terminals.</code></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Replace the embedded ManifestEndpoint collection of the manifest template with a resource URL that fetches the associated manifest endpoints e.g. <code>GET /urlbase/customers/{customerId}/manifestTemplates/{manifestTemplateId}/manifestEndpoints.</code></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Replace the embedded ManifestEndpoint collection of the manifest with a resource URL that fetches the associated manifest endpoints e.g. <code>GET /urlbase/customers/{customerId}/manifests/{manifestId}/manifestEndpoints.</code></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Replace the embedded ManifestPolicy collection of the manifest endpoint with a resource URL that fetches the associated manifest policies e.g. <code>GET /urlbase/customers/{customerId}/manifestEndpoints/{manifestEndpointId}/manifestPolicies.</code></p>\n\t\t</li>\n\t</ol>\n\t</li>\n</ol>\n\n<p>&nbsp;</p>\n\n<ol start=\"3\">\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Terminals currently stores the manifest and its children (manifest, manifest endpoints, manifest endpoint permissions) in a database text field. Now that we have created the manifest microservice we need to refactor terminals so that it makes use of those APIs for fetching the manifest and its corresponding child collections. Some of what needs to be addressed:</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">When deleting a terminal, remove the manifest association from the terminal - the manifest will be orphan but still exist on its own.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Remove the code in the update terminal that allows for manifest data to be included. A Manifest would be associated in a separate operation via the manifests microservice.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Remove the code in the create terminal that allows for including manifest data. A manifest will be associated in a separate operation via the manifests microservice.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">When retrieving one or a list of terminals, do not retrieve the manifests. The manifest can be retrieved (when needed) via the manifests microservice.</p>\n\t\t</li>\n\t</ol>\n\t</li>\n</ol>\n\n<p><br />\n&nbsp;</p>\n\n<p dir=\"ltr\">As part of this challenge, you also need to make sure that you take care of the following:</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Update the &ldquo;dgestool&rdquo; utility if required</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Update the Unit Tests if required.</p>\n\t</li>\n</ol>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\">Following are points that you need to take care of:</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Domain data isolation: each microservice &ldquo;owns&rdquo; its respective Cassandra keyspace, if another microservice wants to access data that is not its own, it must do so through the foreign microservice&rsquo;s API and not attempt to access the Cassandra keyspace directly. &nbsp;A good example of this can be found in the locations service where the service verifies the existence of the parent enterprisegroup by creating a web service client and querying enterprisegroups microservice for the enterprisegroup in question.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Sanitize the input data and ensure that the microservice that you build is not prone to SQL-injection type of attacks: use parameters for querying which will also allow special characters from being interpreted as part of the CQL script. &nbsp;&nbsp;</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">For all purposes, we strongly suggest that you follow the design and architecture of the &ldquo;Locations&rdquo; microservice.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">You are developing microservices. As such, we expect that your submission for the Manifests microservice should be independent of the other existing microservices. Under no circumstances should any of the microservice be dependent on the other. Do not create any common code outside of the microservice that you are working on. This may result in redundant code that is present across all the microservices and we are fine with that.</p>\n\t</li>\n</ol>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30051006",
+  "finalSubmissionGuidelines": "<p>Submit your source code in zip file to TopCoder Online Review. Your submission must include the following:</p>\n\n<ul>\n\t<li>Detailed setup instructions. We have already provided our setup instructions. If there are any changes to that, ensure that you update it.</li>\n\t<li>Unit tests</li>\n\t<li>No Video required.</li>\n\t<li>Code coverage is NOT required. However, kindly note that you should not remove tests which break after the refactor. The current spirit of the test coverage mush remain consistent.</li>\n</ul>\n",
+  "forumId": 30146,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=30146",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 39,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-08-04T23:00:00.000Z",
+      "actualStartTime": "2015-08-04T23:00:00.000Z",
+      "scheduledEndTime": "2015-08-13T22:59:00.000Z",
+      "actualendTime": "2015-08-13T22:59:00.000Z",
+      "_id": "58132020550dfb3b52b28553"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-08-04T23:05:00.000Z",
+      "actualStartTime": "2015-08-04T23:05:00.000Z",
+      "scheduledEndTime": "2015-08-13T22:59:00.000Z",
+      "actualendTime": "2015-08-13T22:59:00.000Z",
+      "_id": "58132020550dfb3b52b28552"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-08-13T22:59:00.000Z",
+      "actualStartTime": "2015-08-13T22:59:00.000Z",
+      "scheduledEndTime": "2015-08-16T02:48:00.000Z",
+      "actualendTime": "2015-08-16T02:48:00.000Z",
+      "_id": "58132020550dfb3b52b28551"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-08-16T02:48:00.000Z",
+      "actualStartTime": "2015-08-16T02:48:00.000Z",
+      "scheduledEndTime": "2015-08-17T02:48:00.000Z",
+      "actualendTime": "2015-08-17T02:48:00.000Z",
+      "_id": "58132020550dfb3b52b28550"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-08-17T02:48:00.000Z",
+      "actualStartTime": "2015-08-17T02:48:00.000Z",
+      "scheduledEndTime": "2015-08-17T06:27:00.000Z",
+      "actualendTime": "2015-08-17T06:27:00.000Z",
+      "_id": "58132020550dfb3b52b2854f"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-08-04T23:00:00.000Z",
+  "prize": [
+    1800,
+    800
+  ],
+  "projectId": 8463,
+  "registrants": [
+    {
+      "handle": "progloco",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T01:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b2854e"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T01:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b2854d"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T01:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b2854c"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T02:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b2854b"
+    },
+    {
+      "handle": "leelong",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T02:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b2854a"
+    },
+    {
+      "handle": "jaindsonvs",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T03:13:00.000Z",
+      "submissionDate": "2015-08-13T20:41:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28549"
+    },
+    {
+      "handle": "sngrmkr",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T03:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28548"
+    },
+    {
+      "handle": "deas",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T04:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28547"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T05:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28546"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T05:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28545"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T07:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28544"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T08:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28543"
+    },
+    {
+      "handle": "ananthhh",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T08:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28542"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T11:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28541"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T11:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28540"
+    },
+    {
+      "handle": "chicapi",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T11:39:00.000Z",
+      "submissionDate": "2015-08-13T17:05:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b2853f"
+    },
+    {
+      "handle": "lbotsch",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T11:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b2853e"
+    },
+    {
+      "handle": "gpbencke",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T13:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b2853d"
+    },
+    {
+      "handle": "mawueli",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T13:47:00.000Z",
+      "submissionDate": "2015-08-13T21:38:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b2853c"
+    },
+    {
+      "handle": "Ksys",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T14:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b2853b"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T14:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b2853a"
+    },
+    {
+      "handle": "sabbirhs",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T14:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28539"
+    },
+    {
+      "handle": "maniek",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T15:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28538"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-05T15:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28537"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-06T07:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28536"
+    },
+    {
+      "handle": "architm",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-06T11:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28535"
+    },
+    {
+      "handle": "daga_sumit",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-06T11:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28534"
+    },
+    {
+      "handle": "ChenXiaoTemp",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-06T12:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28533"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-07T01:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28532"
+    },
+    {
+      "handle": "rominirani",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-07T04:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28531"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-07T13:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28530"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-08T18:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b2852f"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-09T15:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b2852e"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-09T17:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b2852d"
+    },
+    {
+      "handle": "dnlrn",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-09T18:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b2852c"
+    },
+    {
+      "handle": "xanx",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-10T05:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b2852b"
+    },
+    {
+      "handle": "notpad",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-10T14:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b2852a"
+    },
+    {
+      "handle": "rtty",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-10T15:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28529"
+    },
+    {
+      "handle": "Simon24601",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-10T21:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132020550dfb3b52b28528"
+    }
+  ],
+  "registrationEndDate": "2015-08-13T22:59:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-08-13T22:59:00.000Z",
+  "submissions": [
+    {
+      "handle": "chicapi",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 95,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-08-13T17:05:00.000Z",
+      "_id": "58132020550dfb3b52b28556"
+    },
+    {
+      "handle": "jaindsonvs",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 92.5,
+      "finalScore": 93.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-08-13T20:41:00.000Z",
+      "_id": "58132020550dfb3b52b28555"
+    },
+    {
+      "handle": "mawueli",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 75,
+      "finalScore": 75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-08-13T21:38:00.000Z",
+      "_id": "58132020550dfb3b52b28554"
+    }
+  ],
+  "technology": [
+    "API",
+    "Go"
+  ]
+}

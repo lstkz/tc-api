@@ -1,0 +1,283 @@
+{
+  "_id": 30043038,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:42:33.222Z",
+  "appealsEndDate": "2014-06-05T08:06:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "NASA Astronaut Email - MS-RPC over HTTP - Proxy Module Architecture",
+  "challengeType": "Architecture",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span>Overall Requirements</span></h2>\n\n<p><span>The objective of the NASA DTN Project is to develop an overall set of data communications protocols and associated deployment infrastructure to enable space agencies to incrementally build up a Solar System Internetwork (SSI).&nbsp; The NASA Space DTN Project will develop and mature the necessary and generic DTN technology for use on a wide range of human and robotic space missions that will be part of the SSI.</span></p>\n\n<p><span>The DTN protocol suite can run over the existing Internet Protocol (IP) suite or it can operate by itself as a full Internetworking protocol. DTN provides assured delivery of data using an automatic store-and-forward mechanism, while IP generally does not.</span></p>\n\n<p><span>NASA needs to integrate the ION Disruption Tolerant Networking (DTN) implementation of Bundle Protocol (BP) with <strong>Microsoft Outlook and Microsoft Exchange Server</strong> to support the transfer of astronaut email to/from the International Space Station (ISS).</span></p>\n\n<p>Microsoft Exchange Server currently supports RPC over HTTP(s) protocol (a.k.a. Outlook Anywhere -&nbsp; <a href=\"http://msdn.microsoft.com/en-us/library/cc243950.aspx\">http://msdn.microsoft.com/en-us/library/cc243950.aspx</a>). TopCoder will architect and assemble a pair of gateways that will be responsible for bundling the RPC over HTTP payload and send them using <u>ION-DTN Bundle Protocol</u>.</p>\n\n<p>One gateway is located on the ISS and the other is located on earth. The space gateway will be developed as an HTTP module and the ground gateway as a daemon process. Both run on Linux. The picture bellow presents the technology stack:</p>\n\n<p><img alt=\"\" src=\"https://romanotc.s3.amazonaws.com/picture1.png\" /></p>\n\n<p>The communication between layer is depicted bellow:</p>\n\n<p><img alt=\"\" src=\"https://romanotc.s3.amazonaws.com/picture2.png\" /></p>\n\n<p>The scope of this architecture <u><strong>does </strong></u>not involve ION-DTN. We want to be able to use Outlook Anywhere through a proxy designed in a way that the transport of the HTTP payload is pluggable and asynchronous. The picture bellow illustrates that the DTN modules can be used as C callbacks, but not at this moment. They will be hooked in the future.</p>\n\n<p><img alt=\"\" src=\"https://romanotc.s3.amazonaws.com/picture3.png\" /></p>\n\n<p>As a starting point, consider the following callback signatures. You should not be limited to only these functions. You may want to add a close connection function and an alert data expiration, etc. You may need to add expiration date to this signature and so on.</p>\n\n<p><strong>RPCH module will provide a callback registration for callback #1:</strong></p>\n\n<pre>\ntype int /* return Code */ (*sendRequestCallbackFuncPtr)(int /*id*/, byte* /*buffer*/);\nvoid registerOutgoingCallback(sendRequestCallbackFuncPtr func);</pre>\n\n<p><br />\nRPCH client will implement a function with this signature and register.</p>\n\n<pre>\nint sendRequestToExchangeServer(int id, byte* buffer);\nMODULE::registerOutgoingCallback(sendRequestToExchangeServer);</pre>\n\n<p>&nbsp;</p>\n\n<p><strong>RPCH client will provide a callback registration for callback #2:</strong></p>\n\n<pre>\ntype int /* return Code */ (*receiveResponseCallbackFuncPtr)(int /*id*/, int /*error code/*, char* /*response buffer*/);\nvoid registerIncomingCallback(receiveResponseCallbackFuncPtr func);</pre>\n\n<p><br />\nRPCH module will implement a function with this signature and register.</p>\n\n<pre>\nint receiveResponse(int id, int errorCode, byte* buffer);\nCLIENT::registerIncomingCallback(receiveResponse);</pre>\n",
+  "digitalRunPoints": 630,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30043038",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2014-06-06T03:34:00.000Z",
+  "finalSubmissionGuidelines": "<h2><span><strong>Submission Deliverables</strong></span></h2>\n\n<p>The space MS-RPCH module will be delivered as an<strong><u> HTTP server proxy module </u></strong>(mod_proxy_msrpc_dtn). Out http server will be <strong>Lighthttpd </strong>(http://www.lighttpd.net/) - but you may present other options you are familiar with. The ground MS-RPCH client should be an external library that could be linked with the HTTP server proxy module for testing purposes. The ground client will use existing HTTP C client libraries, such as serf (<a href=\"https://code.google.com/p/serf/\">https://code.google.com/p/serf/</a>) to access the Exchange Outlook Anywhere server. The ground client must issue the HTTP request asynchronously and send its result through registered callback. The proxy should hold the incoming HTTP connection until it gets the response from the client.</p>\n\n<p>SSL certification as well as authentication will be handled by the HTTP APIs: SSL on the server side and basic authentication on the client side, where the credentials should be passed by the proxy module in order to be used in the client request.</p>\n\n<p>Your submission will be used as an input for assembly competitions. There is no design / development phases.</p>\n\n<p>There is an existing implementation of a mod_proxy_msrpc that can be used as a reference - <a href=\"https://github.com/bombadil/mod_proxy_msrpc\">https://github.com/bombadil/mod_proxy_msrpc</a> . It works on Apache HTTP server and delegates to mod_proxy_http, so it does not directly fit needs, but it might provide some clues for implementating ours on Lighthttpd.</p>\n\n<p><span>Please, see attached System Design Specification document for more details.</span></p>\n\n<p><span>Your Module Architecture submission will contain a combination of the following documents (from </span><a href=\"http://apps.topcoder.com/wiki/display/tc/Module+Architecture+Tutorial+-+Deliverables\">http://apps.topcoder.com/wiki/display/tc/Module+Architecture+Tutorial+-+Deliverables</a> )<span>:</span></p>\n\n<ul>\n\t<li><span>Application Design Specification</span></li>\n\t<li><span>Sequence Diagrams</span></li>\n\t<li><span>Class Diagrams</span></li>\n\t<li><span>Component Diagrams</span></li>\n\t<li><span>Assembly Specification(s)</span>: we can support up to 2 assemblies, but we believe one might be enough.</li>\n</ul>\n\n<p>Please, see attached System Design Specification document for more details.</p>\n\n<h2><span><strong>Project Resources</strong></span></h2>\n\n<p><span>Reference documentation. You have the bundle protocol specification as well as the link to download and setup the tools, if needed:</span></p>\n\n<ul>\n\t<li>Light HTTPd: <a href=\"http://www.lighttpd.net/\">http://www.lighttpd.net/</a></li>\n\t<li>Existing mod_proxy_msrpc: <a href=\"https://github.com/bombadil/mod_proxy_msrpc\">https://github.com/bombadil/mod_proxy_msrpc</a></li>\n\t<li>Microsoft RPC over HTTP specification: <a href=\"http://msdn.microsoft.com/en-us/library/cc243950.aspx\">http://msdn.microsoft.com/en-us/library/cc243950.aspx</a></li>\n\t<li><span>ION Disruption Tolerant Networking (DTN) implementation of Bundle Protocol (BP) - <a href=\"http://sourceforge.net/projects/ion-dtn/\">http://sourceforge.net/projects/ion-dtn/</a></span></li>\n\t<li><span>BP for Consultative Committee for Space Data Systems (CCSDS) Protocol - <a href=\"http://cwe.ccsds.org/sis/docs/SIS-DTN/Draft%20Documents/DTN%20Protocol/734x2r2_FC2_clean.docx\">http://cwe.ccsds.org/sis/docs/SIS-DTN/Draft Documents/DTN Protocol/734x2r2_FC2_clean.docx</a></span></li>\n\t<li>Delay&nbsp; Tolerant&nbsp; Payload&nbsp; Conditioning&nbsp; (DTPC)&nbsp; Protocol - <a href=\"http://www.spacedatarouters.eu/wp-content/uploads/2012/11/D3.4-Transport-Mechanisms-Description.pdf\">http://www.spacedatarouters.eu/wp-content/uploads/2012/11/D3.4-Transport-Mechanisms-Description.pdf</a></li>\n\t<li><span>TopCoder Astrounaut Email Microsite: <a href=\"http://www.topcoder.com/dtn/astronaut-email/\">http://www.topcoder.com/dtn/astronaut-email/</a></span></li>\n</ul>\n\n<h2><span><strong>Environment</strong></span></h2>\n\n<ul>\n\t<li>Linux (Redhat or Ubuntu)</li>\n\t<li>Outlook client 2010</li>\n\t<li>Exchange server 2010</li>\n\t<li>Light HTTP Daemon</li>\n\t<li>HTTP client (serf, for example - <a href=\"https://code.google.com/p/serf/\">https://code.google.com/p/serf</a> )</li>\n\t<li>C</li>\n</ul>\n\n<h2><span><strong>Final Submission Guidelines</strong></span></h2>\n\n<p><span>Submissions must adhere to the following guidelines:</span></p>\n\n<p><span><strong>1. Third Party Code/Libraries</strong> - All third party code/libraries must be open source and you must include the license in your submission. The license must allow us to modify/re-package the code as necessary. If you have any questions regarding this, please post in the forums. Submissions that include third party code without the proper license information will be disqualified if the third party code is found to be non-usable due to license restrictions.</span></p>\n\n<p><span><strong>2. Attribution/References</strong>- You must properly attribute and or reference any sentences, paragraphs or quotes that you cite in your text-based submission. If your submission is found to include text that has been copied and pasted from an online source without properly attributing the source, you will receive a not-so-nice email from the topcoder competition manager.</span></p>\n\n<p><span><strong>3. Spell Check </strong>- We understand that not all submitters will be native English speakers and that there will be spelling/grammatical mistakes. We request that you first run your submission through a grammar/spell checker before submission so as to fix simple mistakes.</span></p>\n",
+  "forumId": 22214,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=22214",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 12,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-27T03:11:00.000Z",
+      "actualStartTime": "2014-05-27T03:11:00.000Z",
+      "scheduledEndTime": "2014-05-27T03:11:00.000Z",
+      "actualendTime": "2014-05-27T03:11:00.000Z",
+      "_id": "581355c9550dfb3b52c51b51"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-27T03:12:00.000Z",
+      "actualStartTime": "2014-05-27T03:12:00.000Z",
+      "scheduledEndTime": "2014-05-27T05:00:00.000Z",
+      "actualendTime": "2014-05-27T05:00:00.000Z",
+      "_id": "581355c9550dfb3b52c51b50"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-27T16:00:00.000Z",
+      "actualStartTime": "2014-05-27T16:00:00.000Z",
+      "scheduledEndTime": "2014-05-29T16:00:00.000Z",
+      "actualendTime": "2014-05-29T16:00:00.000Z",
+      "_id": "581355c9550dfb3b52c51b4f"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-27T16:05:00.000Z",
+      "actualStartTime": "2014-05-27T16:05:00.000Z",
+      "scheduledEndTime": "2014-06-01T16:00:00.000Z",
+      "actualendTime": "2014-06-01T16:00:00.000Z",
+      "_id": "581355c9550dfb3b52c51b4e"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-01T16:00:00.000Z",
+      "actualStartTime": "2014-06-01T16:00:00.000Z",
+      "scheduledEndTime": "2014-06-01T22:18:00.000Z",
+      "actualendTime": "2014-06-01T22:18:00.000Z",
+      "_id": "581355c9550dfb3b52c51b4d"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-01T22:18:00.000Z",
+      "actualStartTime": "2014-06-01T22:18:00.000Z",
+      "scheduledEndTime": "2014-06-03T22:04:00.000Z",
+      "actualendTime": "2014-06-03T22:04:00.000Z",
+      "_id": "581355c9550dfb3b52c51b4c"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-03T22:04:00.000Z",
+      "actualStartTime": "2014-06-03T22:04:00.000Z",
+      "scheduledEndTime": "2014-06-04T22:04:00.000Z",
+      "actualendTime": "2014-06-04T22:04:00.000Z",
+      "_id": "581355c9550dfb3b52c51b4b"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-04T22:04:00.000Z",
+      "actualStartTime": "2014-06-04T22:04:00.000Z",
+      "scheduledEndTime": "2014-06-05T08:06:00.000Z",
+      "actualendTime": "2014-06-05T08:06:00.000Z",
+      "_id": "581355c9550dfb3b52c51b4a"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-05T08:06:00.000Z",
+      "actualStartTime": "2014-06-05T08:06:00.000Z",
+      "scheduledEndTime": "2014-06-05T09:05:00.000Z",
+      "actualendTime": "2014-06-05T09:05:00.000Z",
+      "_id": "581355c9550dfb3b52c51b49"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-05T09:05:00.000Z",
+      "actualStartTime": "2014-06-05T09:05:00.000Z",
+      "scheduledEndTime": "2014-06-06T03:34:00.000Z",
+      "actualendTime": "2014-06-06T03:34:00.000Z",
+      "_id": "581355c9550dfb3b52c51b48"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-06T03:34:00.000Z",
+      "actualStartTime": "2014-06-06T03:34:00.000Z",
+      "scheduledEndTime": "2014-06-06T07:43:00.000Z",
+      "actualendTime": "2014-06-06T07:43:00.000Z",
+      "_id": "581355c9550dfb3b52c51b47"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-06T07:43:00.000Z",
+      "actualStartTime": "2014-06-06T07:43:00.000Z",
+      "scheduledEndTime": "2014-06-08T20:15:00.000Z",
+      "actualendTime": "2014-06-08T20:15:00.000Z",
+      "_id": "581355c9550dfb3b52c51b46"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2014-05-27T16:00:00.000Z",
+  "prize": [
+    1400,
+    700
+  ],
+  "projectId": 7519,
+  "registrants": [
+    {
+      "handle": "albertwang",
+      "reliability": "100%",
+      "registrationDate": "2014-05-27T16:09:00.000Z",
+      "submissionDate": "2014-06-01T11:35:00.000Z",
+      "rating": "2424",
+      "colorStyle": "color: #EE0000",
+      "_id": "581355c9550dfb3b52c51b45"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-27T16:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c9550dfb3b52c51b44"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-27T16:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c9550dfb3b52c51b43"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "13%",
+      "registrationDate": "2014-05-27T16:59:00.000Z",
+      "submissionDate": null,
+      "rating": "537",
+      "colorStyle": "color: #999999",
+      "_id": "581355c9550dfb3b52c51b42"
+    },
+    {
+      "handle": "didi_baga",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-27T17:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c9550dfb3b52c51b41"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-27T18:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c9550dfb3b52c51b40"
+    },
+    {
+      "handle": "shreen19",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-28T02:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c9550dfb3b52c51b3f"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-28T04:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c9550dfb3b52c51b3e"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-28T08:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c9550dfb3b52c51b3d"
+    },
+    {
+      "handle": "supercharger",
+      "reliability": "0%",
+      "registrationDate": "2014-05-28T10:15:00.000Z",
+      "submissionDate": null,
+      "rating": "765",
+      "colorStyle": "color: #999999",
+      "_id": "581355c9550dfb3b52c51b3c"
+    },
+    {
+      "handle": "dilip.thapa",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-29T04:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c9550dfb3b52c51b3b"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-05-29T06:57:00.000Z",
+      "submissionDate": null,
+      "rating": "541",
+      "colorStyle": "color: #999999",
+      "_id": "581355c9550dfb3b52c51b3a"
+    }
+  ],
+  "registrationEndDate": "2014-05-29T16:00:00.000Z",
+  "reliabilityBonus": 280,
+  "reviewScorecardId": 30001463,
+  "reviewType": null,
+  "screeningScorecardId": 30001330,
+  "submissionEndDate": "2014-06-01T16:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "albertwang",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 91.83,
+      "finalScore": 94.17,
+      "points": 630,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-06-01T11:35:00.000Z",
+      "_id": "581355c9550dfb3b52c51b52"
+    }
+  ],
+  "technology": [
+    "C",
+    "Other"
+  ]
+}

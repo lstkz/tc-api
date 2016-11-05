@@ -1,0 +1,160 @@
+{
+  "_id": 30045797,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:42:12.549Z",
+  "appealsEndDate": "2014-09-22T14:47:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "NASA Astronaut Email -  Proxy DTN Integration Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><span><span>NASA needs to integrate the ION Disruption Tolerant Networking (DTN) implementation of Bundle Protocol (BP) with Microsoft Outlook and Microsoft Exchange Server to support the transfer of astronaut email to/from the International Space Station (ISS).</span></span></p>\n\n<p><span><span>Microsoft Exchange Server currently supports RPC over HTTP(s) protocol (a.k.a. Outlook Anywhere -&nbsp; http://msdn.microsoft.com/en-us/library/cc243950.aspx). TopCoder will assemble an HTTP(s) proxy that will use DTN to transport the data to earth.</span></span></p>\n\n<p><span><span>This objective will be divided in 3 parts. This is the third part of the competition which is to divide the working HTTP(s) </span>proxy and Notification Manager Layer into <strong>two</strong> applications (<strong>space_ssl_proxy</strong> and <strong>ground_dtn_proxy</strong>). This competition will introduce DTN. The space and ground proxy will use </span><span>Delay&nbsp; Tolerant&nbsp; Payload&nbsp; Conditioning&nbsp; (DTPC)&nbsp; Protocol over Bundle Protocol to exchange information.</span></p>\n\n<p>The picture bellow illustrates the delivered SSL proxy from the second assembly. This assembly introduced some actions (C functions) named:</p>\n\n<ul>\n\t<li>int action_request_data(int, enum peer, struct chunk *);</li>\n\t<li>void action_request_close_conn(int, enum peer);</li>\n\t<li>void action_request_release_ctx(int);</li>\n</ul>\n\n<p>These functions were created to start the proxy decoupling so DTN could be integrated more smoothly.</p>\n\n<p><img alt=\"\" src=\"https://s3.amazonaws.com/romanotc/AE+arch-2.jpg\" /></p>\n\n<p>You can read about the second assembly in its <a href=\"http://www.topcoder.com/challenge-details/30041739/?type=develop&amp;noncache=true\" target=\"_blank\">contest detail page</a>.</p>\n\n<p>The image bellow shows the division of the current SSL Proxy into two applications.</p>\n\n<p><br />\n<img alt=\"\" src=\"http://romanotc.s3.amazonaws.com/proxy3.jpg\" /></p>\n\n<p>&nbsp;</p>\n\n<p>We tried this approach using an existing HTTP proxy (lighttpd). The source code is available and the DTN part of the code may be used with a few adjustments.</p>\n\n<p>The basic design is having the Space and Ground communicate with each other using DTN. A simple C struct can be used to hold the exchanged message:</p>\n\n<p><code>struct { int connection_id, int action_type, char data[DATA_SIZE] };</code></p>\n\n<p>There might be several action_types, it is up to the assembler to defined the actions needed, but there are three that we can foresee:</p>\n\n<ul>\n\t<li>OPEN_CONN: the space gateway indicates the ground gateway should establish a communication with the exchange server</li>\n\t<li>CLOSE_CONN: any party requests the peer to close its connection</li>\n\t<li>SEND_DATA: send the data read from the socket to the other side. Whenever a peer receives this message it will write it to the open socket.</li>\n</ul>\n\n<p>Since DTN is not real time and the information may be store to be send later, the peer that sends the message should not wait for a confirmation message. It can assume the delivery was successful.</p>\n\n<p>&nbsp;</p>\n\n<h3><span><span style=\"color:#FF0000\"><strong>The assembly is complete if one is able to send and receive emails through the proxy and the email is sent to ground using DTPC.</strong></span></span></h3>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30045797",
+  "finalFixEndDate": "2014-09-23T07:17:00.000Z",
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<div class=\"previewMask\">\n<p><span><span>A complete list of deliverables can be found in the TopCoder Assembly competition Tutorial at:</span></span></p>\n\n<h2><span><span><a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a><br />\n&nbsp;<br />\n<u>Deliverables</u></span></span></h2>\n\n<p><span><span>&nbsp;&nbsp;&nbsp; Source code and configuration files.<br />\n&nbsp;&nbsp;&nbsp; Deployment guide to configure and verify the application.</span></span></p>\n\n<h2><span><span>&nbsp;<br />\n<u>Technology overview</u></span></span></h2>\n\n<ul>\n\t<li><span><span>&nbsp;&nbsp;&nbsp; Linux (Redhat or Ubuntu)</span></span></li>\n\t<li><span><span>&nbsp;&nbsp;&nbsp; C</span></span></li>\n\t<li><span><span>&nbsp;&nbsp;&nbsp; </span>ION-DTN 3.2.0: <a href=\"http://sourceforge.net/projects/ion-dtn/\">http://sourceforge.net/projects/ion-dtn/</a></span></li>\n\t<li><span><span>&nbsp;&nbsp;&nbsp; HTTP 1.0/1.1</span></span></li>\n\t<li><span><span>&nbsp;&nbsp;&nbsp; Microsoft Outlook 2010</span></span></li>\n\t<li><span><span>&nbsp;&nbsp;&nbsp; Exchange Server 2010</span></span></li>\n\t<li><span><span>&nbsp;&nbsp;&nbsp; Outlook Anywhere (aka RPC over HTTP)</span></span></li>\n</ul>\n\n<h2><span><span>&nbsp;<br />\n<u>Development Environment</u></span></span></h2>\n\n<ul>\n\t<li><span><span>We can provide Amazon VMs with ION-DTN installed. Send request a VM by email to romanoTC: romanotc@copilots.topcoder.com.</span></span> We recommend using VM since deploying ION locally may take some time.</li>\n\t<li><span>Attached to this contest is the previous assembly code with deployment guide and <span>instructions on how to setup your Outlook client.</span></span></li>\n\t<li>Also attached is a previous assembly attempt to use DTN/DTPC with Lighttpd proxy. There is useful DTN code as well as configuration files.</li>\n</ul>\n</div>\n</div>\n",
+  "forumId": 22223,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=22223",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 1,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-17T12:47:00.000Z",
+      "actualStartTime": "2014-09-17T12:47:00.000Z",
+      "scheduledEndTime": "2014-09-17T12:47:00.000Z",
+      "actualendTime": "2014-09-17T12:47:00.000Z",
+      "_id": "581355b4550dfb3b52c4ff4a"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-17T12:52:00.000Z",
+      "actualStartTime": "2014-09-17T12:52:00.000Z",
+      "scheduledEndTime": "2014-09-20T00:51:00.000Z",
+      "actualendTime": "2014-09-20T00:51:00.000Z",
+      "_id": "581355b4550dfb3b52c4ff49"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-20T00:51:00.000Z",
+      "actualStartTime": "2014-09-20T00:51:00.000Z",
+      "scheduledEndTime": "2014-09-20T00:59:00.000Z",
+      "actualendTime": "2014-09-20T00:59:00.000Z",
+      "_id": "581355b4550dfb3b52c4ff48"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-20T00:59:00.000Z",
+      "actualStartTime": "2014-09-20T00:59:00.000Z",
+      "scheduledEndTime": "2014-09-21T23:27:00.000Z",
+      "actualendTime": "2014-09-21T23:27:00.000Z",
+      "_id": "581355b4550dfb3b52c4ff47"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-21T23:27:00.000Z",
+      "actualStartTime": "2014-09-21T23:27:00.000Z",
+      "scheduledEndTime": "2014-09-22T14:46:00.000Z",
+      "actualendTime": "2014-09-22T14:46:00.000Z",
+      "_id": "581355b4550dfb3b52c4ff46"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-22T14:46:00.000Z",
+      "actualStartTime": "2014-09-22T14:46:00.000Z",
+      "scheduledEndTime": "2014-09-22T14:47:00.000Z",
+      "actualendTime": "2014-09-22T14:47:00.000Z",
+      "_id": "581355b4550dfb3b52c4ff45"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-22T19:47:00.000Z",
+      "actualStartTime": "2014-09-22T19:47:00.000Z",
+      "scheduledEndTime": "2014-09-22T19:49:00.000Z",
+      "actualendTime": "2014-09-22T19:49:00.000Z",
+      "_id": "581355b4550dfb3b52c4ff44"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-22T19:49:00.000Z",
+      "actualStartTime": "2014-09-22T19:49:00.000Z",
+      "scheduledEndTime": "2014-09-23T07:17:00.000Z",
+      "actualendTime": "2014-09-23T07:17:00.000Z",
+      "_id": "581355b4550dfb3b52c4ff43"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-23T07:17:00.000Z",
+      "actualStartTime": "2014-09-23T07:17:00.000Z",
+      "scheduledEndTime": "2014-09-23T18:25:00.000Z",
+      "actualendTime": "2014-09-23T18:25:00.000Z",
+      "_id": "581355b4550dfb3b52c4ff42"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-23T18:25:00.000Z",
+      "actualStartTime": "2014-09-23T18:25:00.000Z",
+      "scheduledEndTime": "2014-09-24T13:55:00.000Z",
+      "actualendTime": "2014-09-24T13:55:00.000Z",
+      "_id": "581355b4550dfb3b52c4ff41"
+    }
+  ],
+  "platforms": [
+    "AWS"
+  ],
+  "postingDate": "2014-09-17T12:47:00.000Z",
+  "prize": [
+    1500,
+    750
+  ],
+  "projectId": 7519,
+  "registrants": [
+    {
+      "handle": "rawuza",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-15T17:19:00.000Z",
+      "submissionDate": "2014-09-20T00:25:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b4550dfb3b52c4ff40"
+    }
+  ],
+  "registrationEndDate": "2014-09-17T12:47:00.000Z",
+  "reliabilityBonus": 300,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-09-20T00:51:00.000Z",
+  "submissions": [
+    {
+      "handle": "rawuza",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 99.02,
+      "finalScore": 99.02,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-09-20T00:25:00.000Z",
+      "_id": "581355b4550dfb3b52c4ff4b"
+    }
+  ],
+  "technology": [
+    "C"
+  ]
+}

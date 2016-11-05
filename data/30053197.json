@@ -1,0 +1,515 @@
+{
+  "_id": 30053197,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:06:25.953Z",
+  "appealsEndDate": "2016-04-10T11:12:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Hercules Fog Recorder - Python Tester - HTTP UI and Playback",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<div class=\"page\" title=\"Page 1\">\n<div class=\"section\">\n<div class=\"layoutArea\">\n<div class=\"column\">\n<p><span style=\"font-family:helvetica; font-size:12.000000pt\">The Hercules Player is an application that allows customers to download videos to their computer or device for offline playback, along with streaming playback of videos for online playback. </span></p>\n\n<p><span style=\"font-family:helvetica; font-size:12.000000pt\">The Hercules Fog project has stripped out some key portions of the Hercules Player application into a new test application for downloading videos from a server, modifying the manifest, and then playing back on various mobile and TV devices. </span></p>\n\n<p><span style=\"font-family:helvetica; font-size:12.000000pt\">The current implementation is C++ and will run on: </span></p>\n\n<p><span style=\"font-family:helvetica; font-size:12.000000pt\">&bull; </span><span style=\"font-family:helvetica; font-size:12.000000pt\">Windows </span></p>\n\n<p><span style=\"font-family:helvetica; font-size:12.000000pt\">&bull; </span><span style=\"font-family:helvetica; font-size:12.000000pt\">Linux</span><span style=\"font-family:helvetica; font-size:12.000000pt\"> </span><br />\n<span style=\"font-family:helvetica; font-size:12.000000pt\">&bull; </span><span style=\"font-family:helvetica; font-size:12.000000pt\">Mac </span></p>\n\n<p><span style=\"font-family:helvetica; font-size:12.000000pt\">We have been going over the code in anticipation of it being updated and put onto embedded devices. We don&rsquo;t have a good base for validation and testing, with a lot of the required testing being manual validation, which isn&rsquo;t good.</span><span style=\"font-family:helvetica; font-size:12.000000pt\"> </span></p>\n\n<p><span style=\"font-family:helvetica; font-size:12.000000pt\">This contest will extend a Python / CLI based interface that can be used to test the application. &nbsp;Previous versions have targeted ncurses, but we need more flexibility than what that offered, so we are going to use this challenge to convert the UI to be web based.</span></p>\n\n<p><strong>Fog REST API </strong></p>\n\n<p><span style=\"font-family:helvetica; font-size:12.000000pt\">The Fog application exposes a REST API when it runs. By default this is on port 8080. Here is documentation on the REST API that will eventually be fully testable through this interface: </span></p>\n\n<p><span style=\"font-family:helvetica; font-size:12.000000pt\">http://docs.fogrecorder.apiary.io </span></p>\n\n<p><strong>Requirements summary </strong></p>\n\n<p><span style=\"font-family:helvetica; font-size:12.000000pt\">This challenge will convert the UI from ncurses to web-based using a simple Bootstrap theme. &nbsp;It will also integrate playback so we can more easily test. </span></p>\n\n<p><strong>Web server</strong></p>\n\n<p><span style=\"font-family:helvetica; font-size:16px\">The Python tester should start a web server when the tester launches. &nbsp;The implementation of this is at your discretion, but the SimpleHTTPServer would be an option (</span><a href=\"https://docs.python.org/2/library/simplehttpserver.html\">https://docs.python.org/2/library/simplehttpserver.html)</a></p>\n\n<p><font face=\"helvetica\"><span style=\"font-size:16px; line-height:25.6px\">The server will need to support some basic AJAX functionality for updating status.</span></font></p>\n\n<p><strong style=\"line-height:1.6\">UI Theme</strong></p>\n\n<p><span style=\"font-family:helvetica; font-size:16px\">The web UI should generally match the ncurses UI, with some changes to the navigation to make it easier to use. &nbsp;These requirements apply:</span></p>\n\n<ul>\n\t<li><font face=\"helvetica\"><span style=\"font-size:16px; line-height:25.6px\">Please use a free Bootstrap theme to build the UI layout. &nbsp;This is preferred: &nbsp;</span></font><span style=\"font-size:16px\"><a href=\"https://bootswatch.com/lumen/\">https://bootswatch.com/lumen/</a></span></li>\n\t<li><span style=\"font-family:helvetica; font-size:16px\">There should be a top header with drop down menus so the user can easily get to pages for:</span>\n\t<ul>\n\t\t<li><span style=\"font-family:helvetica; font-size:16px\">Viewing the list of current recordings</span>\n\t\t<ul>\n\t\t\t<li><span style=\"font-family:helvetica; font-size:16px\">���Viewing the status and summary page of a single recording</span></li>\n\t\t</ul>\n\t\t</li>\n\t\t<li><span style=\"font-family:helvetica; font-size:16px\">Adding a TSB recording</span></li>\n\t\t<li><span style=\"font-family:helvetica; font-size:16px\">Adding a VOD recording</span></li>\n\t\t<li><span style=\"font-family:helvetica; font-size:16px\">Adding a scheduled recording</span></li>\n\t</ul>\n\t</li>\n\t<li><span style=\"font-family:helvetica; font-size:16px\">���The summary page should update via AJAX the same way it does in the ncurses UI now</span></li>\n\t<li><span style=\"font-family:helvetica; font-size:16px\">We won&#39;t have a top menu for selecting tests anymore, since the navigation above will be enough for that</span></li>\n\t<li><span style=\"font-family:helvetica; font-size:16px\">The default page should just show the list of current recordings</span></li>\n\t<li><span style=\"font-size:16px\">Please use FontAwesome for any graphics: &nbsp;<a href=\"http://fontawesome.io/\">http://fontawesome.io/</a></span></li>\n</ul>\n\n<p><strong>Playback</strong></p>\n\n<p><span style=\"font-size:16px; line-height:25.6px\">This challenge will implement a new playback page that can be used to test playback. &nbsp;We are going to take the functionality here: &nbsp;</span><a href=\"http://nh.lab.xcal.tv/heslip/player/dev/#\">nh.lab.xcal.tv/heslip/player/dev/#</a>&nbsp;<span style=\"font-size:16px\">and we are going to build a new playback page around it. &nbsp;From that page, we are going to show:</span></p>\n\n<ul>\n\t<li><span style=\"font-size:16px\">The play state on the right</span></li>\n\t<li><span style=\"font-size:16px\">The playback area, with the playback controls</span></li>\n\t<li><span style=\"font-size:16px\">The log underneath the playback area</span></li>\n\t<li><span style=\"font-size:16px\">The menu on top won&#39;t be needed</span></li>\n\t<li><span style=\"font-size:16px\">The options on the left won&#39;t be needed</span></li>\n\t<li><span style=\"font-size:16px\">The HLS Manifest URL text box and button won&#39;t be needed</span></li>\n</ul>\n\n<p><span style=\"font-size:16px\">There should be a &quot;Play&quot; button on the summary page for a single recording that will open up this playback screen in a new tab and start playback.</span></p>\n\n<p><span style=\"font-size:16px\">To support DRM playback, we will allow the user to configure a username and password in the config for the tester. &nbsp;If a username and password are configured, the playback screen will first provision using that username and password, and then it will start playback of the Fog URL provided by the recording summary page. &nbsp;</span></p>\n\n<p><span style=\"font-size:16px\">Feel free to copy in the SWFs and JS as-is from the dev site above. &nbsp;Further hints will be available in the forum.</span></p>\n\n<p><strong style=\"line-height:1.6\">Code encapsulation</strong></p>\n</div>\n</div>\n</div>\n</div>\n\n<div class=\"page\" title=\"Page 5\">\n<div class=\"section\">\n<div class=\"layoutArea\">\n<div class=\"column\">\n<p><span style=\"font-family:helvetica; font-size:12.000000pt\">Proper code design is important here because we will be adding on to this project quite a bit. Make sure that we can easily add new menu items, menu screens, and summary screens, and make sure the warnings can be extended to add new checks.&nbsp;</span></p>\n</div>\n</div>\n</div>\n</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30053197",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<p>Please see above</p>\n",
+  "forumId": 32188,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=32188",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 39,
+  "numberOfSubmissions": 6,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-30T06:15:00.000Z",
+      "actualStartTime": "2016-03-30T06:15:00.000Z",
+      "scheduledEndTime": "2016-04-04T06:15:00.000Z",
+      "actualendTime": "2016-04-04T06:15:00.000Z",
+      "_id": "58132321550dfb3b52b3d3b5"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-30T06:20:00.000Z",
+      "actualStartTime": "2016-03-30T06:20:00.000Z",
+      "scheduledEndTime": "2016-04-06T06:20:00.000Z",
+      "actualendTime": "2016-04-06T06:20:00.000Z",
+      "_id": "58132321550dfb3b52b3d3b4"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-06T06:20:00.000Z",
+      "actualStartTime": "2016-04-06T06:20:00.000Z",
+      "scheduledEndTime": "2016-04-09T10:44:00.000Z",
+      "actualendTime": "2016-04-09T10:44:00.000Z",
+      "_id": "58132321550dfb3b52b3d3b3"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-09T10:44:00.000Z",
+      "actualStartTime": "2016-04-09T10:44:00.000Z",
+      "scheduledEndTime": "2016-04-10T10:44:00.000Z",
+      "actualendTime": "2016-04-10T10:44:00.000Z",
+      "_id": "58132321550dfb3b52b3d3b2"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-10T10:44:00.000Z",
+      "actualStartTime": "2016-04-10T10:44:00.000Z",
+      "scheduledEndTime": "2016-04-10T11:12:00.000Z",
+      "actualendTime": "2016-04-10T11:12:00.000Z",
+      "_id": "58132321550dfb3b52b3d3b1"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-03-30T06:15:00.000Z",
+  "prize": [
+    1700,
+    850
+  ],
+  "projectId": 9391,
+  "registrants": [
+    {
+      "handle": "freegod",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-30T06:34:00.000Z",
+      "submissionDate": "2016-04-06T06:14:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d3b0"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-30T06:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d3af"
+    },
+    {
+      "handle": "ananthhh",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-30T06:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d3ae"
+    },
+    {
+      "handle": "appbead",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-30T07:16:00.000Z",
+      "submissionDate": "2016-04-06T06:18:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d3ad"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-30T07:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d3ac"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-30T08:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d3ab"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-30T08:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d3aa"
+    },
+    {
+      "handle": "Dobrokhvalov",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-30T08:44:00.000Z",
+      "submissionDate": "2016-04-05T23:48:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d3a9"
+    },
+    {
+      "handle": "kata.choi",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-30T09:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d3a8"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-30T10:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d3a7"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-30T10:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d3a6"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-30T10:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d3a5"
+    },
+    {
+      "handle": "wangolo",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-30T11:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d3a4"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-30T13:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d3a3"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-30T13:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d3a2"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-30T13:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d3a1"
+    },
+    {
+      "handle": "samlighty",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-30T17:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d3a0"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-30T17:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d39f"
+    },
+    {
+      "handle": "TiTrias",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-30T18:26:00.000Z",
+      "submissionDate": "2016-04-05T19:20:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d39e"
+    },
+    {
+      "handle": "tcdevels",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-30T18:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d39d"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-30T20:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d39c"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-31T01:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d39b"
+    },
+    {
+      "handle": "chok68",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-31T06:57:00.000Z",
+      "submissionDate": "2016-04-06T04:57:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d39a"
+    },
+    {
+      "handle": "moagi.anela",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-31T08:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d399"
+    },
+    {
+      "handle": "ptarunn",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-31T09:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d398"
+    },
+    {
+      "handle": "d00kl1",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-31T15:04:00.000Z",
+      "submissionDate": "2016-04-06T01:36:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d397"
+    },
+    {
+      "handle": "tanmayagrawal1",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-31T15:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d396"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-31T17:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d395"
+    },
+    {
+      "handle": "avbngera",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-31T20:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d394"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-01T03:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d393"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-01T07:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d392"
+    },
+    {
+      "handle": "jackchongs",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-01T14:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d391"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-01T19:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d390"
+    },
+    {
+      "handle": "republic82",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-01T19:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d38f"
+    },
+    {
+      "handle": "hi4sandy",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-01T20:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d38e"
+    },
+    {
+      "handle": "rixiac",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-02T15:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d38d"
+    },
+    {
+      "handle": "zohaib.amjad",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-02T19:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d38c"
+    },
+    {
+      "handle": "Acyn",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-03T03:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d38b"
+    },
+    {
+      "handle": "karthikbecse",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-03T16:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132321550dfb3b52b3d38a"
+    }
+  ],
+  "registrationEndDate": "2016-04-04T06:15:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-04-06T06:20:00.000Z",
+  "submissions": [
+    {
+      "handle": "Dobrokhvalov",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 97.5,
+      "finalScore": 97.5,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-04-05T23:48:00.000Z",
+      "_id": "58132321550dfb3b52b3d3bb"
+    },
+    {
+      "handle": "TiTrias",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 93.75,
+      "finalScore": 93.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-04-05T19:20:00.000Z",
+      "_id": "58132321550dfb3b52b3d3ba"
+    },
+    {
+      "handle": "chok68",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 91.25,
+      "finalScore": 91.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-04-06T04:57:00.000Z",
+      "_id": "58132321550dfb3b52b3d3b9"
+    },
+    {
+      "handle": "appbead",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 88.75,
+      "finalScore": 88.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-04-06T06:18:00.000Z",
+      "_id": "58132321550dfb3b52b3d3b8"
+    },
+    {
+      "handle": "d00kl1",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 86.25,
+      "finalScore": 86.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-04-06T01:36:00.000Z",
+      "_id": "58132321550dfb3b52b3d3b7"
+    },
+    {
+      "handle": "freegod",
+      "placement": 6,
+      "screeningScore": null,
+      "initialScore": 81.25,
+      "finalScore": 83.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-04-06T06:14:00.000Z",
+      "_id": "58132321550dfb3b52b3d3b6"
+    }
+  ],
+  "technology": [
+    "Python"
+  ]
+}

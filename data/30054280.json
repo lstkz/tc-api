@@ -1,0 +1,454 @@
+{
+  "_id": 30054280,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:07:40.739Z",
+  "appealsEndDate": "2016-05-25T08:46:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Topcoder - Create Tool For Aggregating Cost Report Data into Single Table",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2>Background</h2>\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">Currently, the billing costs report (</span><a href=\"https://www.topcoder.com/direct/dashboardBillingCostReport.action\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif; font-size: 12px; line-height: normal;\">https://www.topcoder.com/direct/dashboardBillingCostReport.action</a><span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">) in Topcoder Direct is very slow to execute. &nbsp;The main reason is that there are several complex queries to execute which takes times.</span><br />\n<br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">We&#39;d like to improve this by aggregating the related cost report data into a single table, so we can revise the billing costs report logic in Topcoder Direct&nbsp;</span>\n\n<h2>Scope</h2>\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">For this challenge, we&#39;d like to you create a tool to export cost report data from a list of queries.</span><br />\n<br />\n<u><span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">General Requirements</span></u><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">1. Understand the queries (attached in forum) and define a new table that contains every information used (query parameters in WHERE statement) and returned (data in the SELECT statement), so we can easily refine the logic in Topcoder direct to use the same query parameters to do against the new table. but it will be simple and fast. the queries are grouped into two commands&nbsp;with/without inovice number, see following. If needed, you can define two tables for each group</span>\n\n<pre>\n<strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command(command_id<span style=\"color:#cc7832\">,</span>command_desc<span style=\"color:#cc7832\">,</span>command_group_id) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32369</span><span style=\"color:#cc7832\">, </span><strong>&#39;dashboard_billing_cost_invoice_report_aggregation&#39;</strong><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">13343</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command(command_id<span style=\"color:#cc7832\">,</span>command_desc<span style=\"color:#cc7832\">,</span>command_group_id) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32379</span><span style=\"color:#cc7832\">, </span><strong>&#39;dashboard_billing_cost_invoice_report_invoice_number_aggregation&#39;</strong><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">13343</span>)<span style=\"color:#cc7832\">;\n</span>\n</pre>\n\n<pre>\n<strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32369</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32866</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32369</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32867</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32369</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32868</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32369</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32869</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32369</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32870</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32369</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32871</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32369</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32876</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32369</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32877</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32369</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32882</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32369</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32947</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32369</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32948</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32369</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32949</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;</span>\n</pre>\n\n<pre>\n<strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32379</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32872</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32379</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32873</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32379</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32874</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32379</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32875</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32379</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32878</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32379</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32879</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32379</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32880</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32379</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32881</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32379</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32883</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32379</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32950</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32379</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32951</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;\n</span><strong>INSERT INTO </strong><strong>&#39;informix&#39;</strong>.command_query_xref(command_id<span style=\"color:#cc7832\">,</span>query_id<span style=\"color:#cc7832\">,</span>sort_order) <strong>VALUES </strong>(<span style=\"color:#6897bb\">32379</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">32958</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6897bb\">0</span>)<span style=\"color:#cc7832\">;</span></pre>\n<br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">2. Update the queries by removing the query parameters and the user permission check, this make it avaiable for following execution, please make it work for the following, even it return no data.<br />\n2.1 By removing the query parameters, we can get all the cost report data export, then we can query the new table by using these query parameters instead.<br />\n2.2 For removing the user permission check, what I mean is to remove the following logic in all queries.</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">(</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;exists (</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;select resource_id from user_permission_grant upg</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;where upg.user_id=DECODE(@uid@,0,upg.user_id,@uid@) and upg.permission_type_id IN (0,1,2,3) and upg.resource_id = p.tc_direct_project_id</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;)</span><br />\n<br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; OR</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;exists (</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;SELECT</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; tdp2.project_id as tc_direct_project_id</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;FROM tc_direct_project tdp2</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;INNER JOIN group_associated_direct_projects gadp ON tdp2.project_id = gadp.tc_direct_project_id</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;INNER JOIN customer_group sg ON sg.group_id = gadp.group_id</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;INNER JOIN group_member gm ON gm.group_id = sg.group_id</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;WHERE gm.user_id = DECODE(@uid@, 0, gm.user_id, @uid@)</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;AND &nbsp; gm.active = 1</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;AND &nbsp; sg.archived = 0</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;AND &nbsp; tdp2.project_id = p.tc_direct_project_id</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;)</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; OR</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; exists (</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; SELECT</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;tdp2.project_id as tc_direct_project_id</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; FROM tc_direct_project tdp2</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; INNER JOIN corporate_oltp:direct_project_account dpa ON tdp2.project_id = dpa.project_id</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; INNER JOIN group_associated_billing_accounts gaba ON gaba.billing_account_id = dpa.billing_account_id</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; INNER JOIN customer_group sg ON sg.group_id = gaba.group_id</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; INNER JOIN group_member gm ON gm.group_id = sg.group_id</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; WHERE gm.user_id = DECODE(@uid@, 0, gm.user_id, @uid@)</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; AND &nbsp; gm.active = 1</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; AND &nbsp; sg.archived = 0</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; AND tdp2.project_id = p.tc_direct_project_id</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; )</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; OR</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;exists (</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;SELECT sg.group_id</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;FROM customer_group sg</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;INNER JOIN group_member gm ON gm.group_id = sg.group_id</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;WHERE gm.user_id = DECODE(@uid@, 0, gm.user_id, @uid@)</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;AND &nbsp; gm.active = 1</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;AND &nbsp; sg.archived = 0</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;AND &nbsp; sg.auto_grant = 1</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;AND &nbsp; sg.client_id = ttc.client_id</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; )</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">3. Create A General Export Tool which<br />\n3.1 Execute the queries in files, and save the data in CSV files separately.<br />\n3.2 The initial queries to execute will be the updated queries above, but the informix database is lacking of these data, so for testing, &nbsp;you just need to demonstration by using queries that can query and export data from multiple database, like tcs_catalog, common_oltp etc.<br />\n3.3 Previously, we have a informix export tool which exports one table, you can use that as your codebase or create completely new source code.<br />\n3.4 the tool should be ready configuration from file, the configuration should contains informix database configuration, queries to execute, the export directory, the csv separator etc, making the tool easy to use.<br />\n3.5 the tool should be built as &nbsp;a single executable jar file, and it can ready the configuration file in a parameter.<br />\n<br />\n<u>About Informix Database</u></span><br />\nTo run the docker informix instance, I would suggest to use<br />\n<br />\n`docker run -it -p 2020:2021 appiriodevops/informix:1.2`<br />\n<br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\"><u>Winner Responsibility</u><br />\nwe will carry out the export against our dev database after completion of this challenge to see if it works properly as we expect, if not, winner will be responsible to troubleshoot and make changes.</span><br />\n&nbsp;",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30054280",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "1. Source Code for the export tool<br />\n2. schema to create the new tables<br />\n3. Updated queries related to cost report<br />\n4. README.md file about how to use the tool<br />\n5. test data and test queries to demonstrate the tool can be used properly.",
+  "forumId": 33132,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33132",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 37,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-17T04:00:00.000Z",
+      "actualStartTime": "2016-05-17T04:00:00.000Z",
+      "scheduledEndTime": "2016-05-21T04:01:00.000Z",
+      "actualendTime": "2016-05-21T04:01:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf0b0"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-17T04:05:00.000Z",
+      "actualStartTime": "2016-05-17T04:05:00.000Z",
+      "scheduledEndTime": "2016-05-21T04:01:00.000Z",
+      "actualendTime": "2016-05-21T04:01:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf0af"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-21T04:01:00.000Z",
+      "actualStartTime": "2016-05-21T04:01:00.000Z",
+      "scheduledEndTime": "2016-05-24T16:08:00.000Z",
+      "actualendTime": "2016-05-24T16:08:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf0ae"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-24T16:08:00.000Z",
+      "actualStartTime": "2016-05-24T16:08:00.000Z",
+      "scheduledEndTime": "2016-05-25T03:04:00.000Z",
+      "actualendTime": "2016-05-25T03:04:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf0ad"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-25T03:04:00.000Z",
+      "actualStartTime": "2016-05-25T03:04:00.000Z",
+      "scheduledEndTime": "2016-05-25T08:46:00.000Z",
+      "actualendTime": "2016-05-25T08:46:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf0ac"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-05-17T04:00:00.000Z",
+  "prize": [
+    500,
+    250
+  ],
+  "projectId": 9479,
+  "registrants": [
+    {
+      "handle": "thkang91",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T04:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf0ab"
+    },
+    {
+      "handle": "phaniram",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T04:55:00.000Z",
+      "submissionDate": "2016-05-20T20:30:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf0aa"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T05:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf0a9"
+    },
+    {
+      "handle": "Blackhole08",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T05:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf0a8"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T06:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf0a7"
+    },
+    {
+      "handle": "gondzo",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T06:33:00.000Z",
+      "submissionDate": "2016-05-20T23:42:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf0a6"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T06:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf0a5"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T07:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf0a4"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T07:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf0a3"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T07:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf0a2"
+    },
+    {
+      "handle": "BrainScorn",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T07:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf0a1"
+    },
+    {
+      "handle": "gvir",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T07:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf0a0"
+    },
+    {
+      "handle": "gets0ul",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T07:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf09f"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T09:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf09e"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T10:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf09d"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T10:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf09c"
+    },
+    {
+      "handle": "DHEERAJSONI",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T10:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf09b"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T10:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf09a"
+    },
+    {
+      "handle": "republic82",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T13:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf099"
+    },
+    {
+      "handle": "popyy0202",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T14:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf098"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T15:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf097"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T15:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf096"
+    },
+    {
+      "handle": "faisal1911",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T17:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf095"
+    },
+    {
+      "handle": "cairi",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-17T19:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf094"
+    },
+    {
+      "handle": "xiaosunzhu",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-18T01:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf093"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-18T03:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf092"
+    },
+    {
+      "handle": "fatma.atwa",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-18T09:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf091"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-19T03:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf090"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-18T18:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf08f"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-19T06:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf08e"
+    },
+    {
+      "handle": "Setako",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-19T11:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf08d"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-19T14:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf08c"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-19T15:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf08b"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-19T18:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf08a"
+    },
+    {
+      "handle": "xyjian",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-20T08:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf089"
+    },
+    {
+      "handle": "snji.khjuria",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-20T19:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf088"
+    },
+    {
+      "handle": "kotamanegi",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-21T03:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8c550dfb3b52bdf087"
+    }
+  ],
+  "registrationEndDate": "2016-05-21T04:01:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-05-21T04:01:00.000Z",
+  "submissions": [
+    {
+      "handle": "gondzo",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 92.5,
+      "finalScore": 94.38,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-05-20T23:42:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf0b2"
+    },
+    {
+      "handle": "phaniram",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 92.5,
+      "finalScore": 93.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-20T20:30:00.000Z",
+      "_id": "58133f8c550dfb3b52bdf0b1"
+    }
+  ],
+  "technology": [
+    "Java",
+    "SQL"
+  ]
+}

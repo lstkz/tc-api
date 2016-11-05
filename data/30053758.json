@@ -1,0 +1,462 @@
+{
+  "_id": 30053758,
+  "_isComplete": true,
+  "__v": 2530,
+  "_lastUpdate": "2016-11-05T11:07:28.793Z",
+  "appealsEndDate": "2016-04-22T11:00:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Visualization for Python Recommendation for Engine for Broadcaster - Part 3",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Cancelled - Zero Submissions",
+  "detailedRequirements": "<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Topcoder recently developed a </span><a href=\"http://www.topcoder.com/challenge-details/30052933/?type=develop&amp;noncache=true\" style=\"text-decoration:none;\"><u>Recommendation Engine</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> for a client by implementing &nbsp;&nbsp;Collaborative Filtering based on Apache Spark using a Python interface. &nbsp;</span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">We also developed a visualization on top of the basic recommendation engine to provide some intuition about the viewing habits of our client&rsquo;s customers and can illustrate how programs are related by common groups of viewers. &nbsp;However, our visualization web app isn&rsquo;t fully functional because of the amount of computation required by the underlying Recommendation Engine. &nbsp;Some requests to the Recommendation Engine were requiring minutes to serve.</span></span></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">To address this issue, we&rsquo;ve implemented a MongoDB document caching solution. &nbsp;&nbsp;Now by running a &ldquo;Warm Cache&rdquo; script you can stage all the requests required by the web application so that the responses from our Recommendation Engine are nearly instant. &nbsp;The goal of this challenge is to put the final touches on the solution and polish it so that we can deliver it to the client.</span></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Here are the specific requirements for this challenge:</span></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">1. Update the dockerstart.sh file so that it starts the NodeJS process in its own screen. &nbsp;The command to start the process is simply to execute the /opt/pyrec/pyrec-ui folder:</span></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">$ npm start</span></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">But users need to be able to access the standard out console to see what is happening with the web server. &nbsp;That&rsquo;s why the &ldquo;screen&rdquo; command/functionality will be helpful.</span></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">2. &nbsp;Update the warm_cache.py script to add caching for the following endpoints:</span></p>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">/reports/similar-programs/&lt;int:program_id&gt;</span></span></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">You will notice that the code for the /reports/related-programs-by-potential-viewers/&lt;int:program_id&gt; endpoint has been commented out. &nbsp;This is deliberate. &nbsp;It takes about 4 minutes to calculate the data for the potential data related to each program. &nbsp;It takes too long to cache all this &nbsp;-- (4 minutes * 1334)/60 = 88.93 hours</span></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">3. &nbsp;Our current visualization web app is build upon Angular and NodeJS. &nbsp;It needs some basic stylistic work to make it look more polished. &nbsp;For example, the title, &ldquo;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Welcome to Visualization for Python Spark Recommendation Engine for Broadcaster&rdquo; </span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">doesn&rsquo;t have any left margins and sits against the left side of the screen. &nbsp;Please change the title to &ldquo;Program Recommendations&rdquo;. &nbsp;Actually, I think we should remove the &ldquo;Home&rdquo; tab altogether as no information is really presented on this tab besides the title. &nbsp;Please use your creativity and make the application more appealing and add some detail to the look and feel. &nbsp;The app is going to be used by technical staff at the client to explain recommendation engine results to management.</span></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">4. &nbsp;The current visualization app isn&rsquo;t expecting immediate responses which are being delivered by our caching solution rather than job ids. &nbsp;Please update the service.js file so that it processes instant responses from the various endpoints if they are received but then also can process job requests if for some reason a particular request hasn&rsquo;t been cached. &nbsp;Right now the services.js code is hardcoded to one solution or the other for various types of requests.</span></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">5. The web application needs to allow CORS requests. The headers of the application need to be updated to allow the pages to access resources from the docker container which runs on a different IP address and port (on a Mac Laptop), even though it is local. &nbsp;Here is the error I&rsquo;m seeing often in my local browser:</span></p>\n\n<p style=\"margin-left:40px\"><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">XMLHttpRequest cannot load http://192.168.99.100:5555/reports/top-programs-by-actual-viewers?expand=1&amp;limit=10. No &#39;Access-Control-Allow-Origin&#39; header is present on the requested resource. Origin &#39;http://192.168.99.100:3000&#39; is therefore not allowed access.</span></p>\n\n<p dir=\"ltr\"><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">6. &nbsp;The Top Program tab/screen uses the following two endpoints:</span></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">/reports/top-programs-by-potential-viewers</span><br />\n<span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">/reports/top-programs-by-actual-viewers</span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">With caching the performance of these two requests should be excellent. &nbsp;I don&rsquo;t think we need to make major adjustments here besides making sure that the requests execute and the graphics render. &nbsp;Some stylistic updates to make the page more attractive would be appreciated -- (one example, the subtitle &ldquo;Top Programs&rdquo; shouldn&rsquo;t rest against the very edge of the screen -- some margins or padding here would be helpful).</span></span></p>\n\n<p dir=\"ltr\"><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">7. &nbsp;The Related Programs screen needs some adjustments. &nbsp;</span></p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14.6667px\">Remove the &ldquo;Sorted by Common&rdquo; dropdown which allows users to see programs related by potential or actual users. &nbsp;Our caching solution is only going to contain data about actual users so the screen should just default to that data.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14.6667px\">Let&rsquo;s replace the current visualization with something similar to the following: </span></span><a href=\"http://visjs.org/examples/network/layout/hierarchicalLayoutUserdefined.html\" style=\"text-decoration:none;\"><span style=\"color:#0000FF\"><u>http://visjs.org/examples/network/layout/hierarchicalLayoutUserdefined.html</u></span></a><br />\n\t<span style=\"color:#000000\"><span style=\"font-size:14.6667px\">There are a couple of changes that I would like to make in the visualization:</span></span></p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14.6667px\">The root node will be the program selected in the program dropdown.</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14.6667px\">When a leaf node is selected, we should highlight the path all the way from root node to the leaf node. &nbsp;We should also pop up Program Title, Genre, and Audience Size info for each node in the path from root to leaf.</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14.6667px\">Could we have a setting which makes the program names visible for all the nodes?</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14.6667px\">I think the Left-Right layout is the most appealing.</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14.6667px\">If possible, it would be nice to adjust the size of the nodes to reflect Audience size.</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14.6667px\">You&rsquo;ll need to figure out what is the depth and breadth of the graph that we can support. &nbsp;If we can have a depth of 3 and a breadth of 10 nodes at each level I think that is acceptable. &nbsp;If we can do more -- depth of 5 and breadth of 25 then that is ideal. &nbsp;We should update the user interface to only display what we&rsquo;re actually capable of displaying. &nbsp;&nbsp;We don&rsquo;t want the user to be waiting for 5 minutes for the page to render -- I think 30 seconds is the max.</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14.6667px\">At level of the hierarchy, you be showing the 10 most closely related programs by actual audience size. &nbsp;</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14.6667px\">You are welcome to suggest alternative visualizations if you can find one that has more of this functionality available out of the box. &nbsp;Just reach out to </span></span><a href=\"mailto:ward@topcoder.com\" style=\"text-decoration:none;\"><span style=\"color:#000000\"><u>ward@topcoder.com</u></span></a><span style=\"color:#000000\"><span style=\"font-size:14.6667px\"> if you have questions.</span></span></p>\n\t\t</li>\n\t</ol>\n\t</li>\n</ol>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">8. &nbsp;Create a new tab called &ldquo;Similar Programs&rdquo;. &nbsp;This tab will use the new similar programs endpoint that has been recently created and that you&rsquo;ve added to our warm_cache script:</span></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">/reports/similar-programs/&lt;int:program_id&gt;</span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Please implement the following visualization on this data:</span></span></p>\n\n<p dir=\"ltr\"><span><u><a href=\"http://codepen.io/mikefab/full/IDdts/\" style=\"text-decoration:none;\">http://codepen.io/mikefab/full/IDdts/</a></u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Additional requirements:</span></span></p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14.6667px\">The page should have a dropdown which contains all the programs just as in the Related &nbsp;Programs tab. &nbsp;The program selected with become the root node.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14.6667px\">The implementation here should be pretty much out of the box. &nbsp;The network of nodes will be determined by the programs returned by the endpoint. &nbsp;I don&rsquo;t think we need to worry about which programs are more or less similar. &nbsp;We&rsquo;ll just show the 5, 10, or 25 most similar programs based on the parent node. &nbsp;</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14.6667px\">We&rsquo;ll need to play around with the visualization to see what is the breadth and depth that we can support. &nbsp;We don&rsquo;t want the visualization to require more than 30 seconds to render.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14.6667px\">Please color the visualization so that is compatible with the rest of the application.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14.6667px\">It would nice to display genre information along with the program names. </span></span></p>\n\t</li>\n</ol>\n\n<p><strong>Setting up the Recommendation Engine:</strong></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">https://github.com/cloudspokes/recommendation_engine</span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">For the most part the configuration of the system is dockerized. &nbsp;Here are steps you should follow to get both the python recommendation engine and REST API up and running along with the NodeJS server:</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">1. &nbsp;Install Docker it by following the appropriate instructions in the Docker website:</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><a href=\"https://docs.docker.com/engine/installation/\" style=\"text-decoration:none;\"><u>https://docs.docker.com/engine/installation/</u></a></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">2. &nbsp;Download the data files zip from the Topcoder Code Documents forum. &nbsp;Unzip this and put the 3 data files - view.csv, viewers.csv, and programs.csv into the project-root/input folder.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">3. &nbsp;Navigate to the project root. &nbsp;Inside this folder, run the following command to build a docker image name pyrec:</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">$ docker build -t pyrec .</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">4. &nbsp;Start an interactive shell in the image. &nbsp;Note that the string &quot;56c4c54897c7&quot; below is the container id. &nbsp;This will change every time you create a new container. &nbsp;The -m 6g paramter indicates that you&#39;re starting a container with six gigabytes of RAM. &nbsp;Note that if you run Docker from a Mac you&#39;ll actually be starting up a Virtual Machine which hosts your Docker containers. &nbsp;The -P parameter exposes the ports required to access the docker container from outside the container itself. </span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">$ docker run -t -i -p 3000:3000 -p 5555:5555 -m 6g pyrec /bin/bash</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">root@56c4c54897c7:/opt/pyrec#</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">5. &nbsp;You&#39;ll need 1 more shell to run the tests on a running server. On the other terminal window, exec a second bash session by running:</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">$ docker exec -t -i &lt;container_id&gt; /bin/bash</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">root@56c4c54897c7:/opt/pyrec#</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">&ldquo;56c4c54897c7&rdquo; is the container id. &nbsp;Note on a Mac you can bring up a Docker Quickstart terminal from your Applications-&gt;Docker folder to access the Docker daemon. &nbsp;</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">6. &nbsp;You&#39;re ready to start the verification of the recommendation engine. &nbsp;From here you should refer to the verification steps in section 8 the docs/Deployment-Guide.doc. &nbsp;&nbsp;There are some API calls -- the ones using potential viewers -- that take some time to execute.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">7. &nbsp;You start the web application by creating another Docker Quickstart Terminal as discussed in step 5 above. &nbsp;Then do the following:</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">root@6a9cfcbbd567:/opt/pyrec# cd pyrec-ui</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">root@6a9cfcbbd567:/opt/pyrec/pyrec-ui# npm start</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">8. &nbsp;Accessing the Docker containers from outside Docker can be a little tricky on Mac environment. &nbsp;You can see all the docker-machine instances by executing the following command:</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Wards-MacBook-Pro:recommendation_engine Ward$ docker-machine ls</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:10.6667px\">NAME &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ACTIVE &nbsp;&nbsp;DRIVER &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;STATE &nbsp;&nbsp;&nbsp;&nbsp;URL &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SWARM &nbsp;&nbsp;DOCKER &nbsp;&nbsp;&nbsp;ERRORS</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:10.6667px\">default &nbsp;&nbsp;* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;virtualbox &nbsp;&nbsp;Running &nbsp;&nbsp;tcp://192.168.99.100:2376 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v1.10.3 &nbsp;&nbsp;</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Then you you need to find the port of the docker container. &nbsp;You can do this by using the following command: </span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Wards-MacBook-Pro:recommendation_engine Ward$ docker ps</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:10.6667px\">CONTAINER ID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IMAGE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;COMMAND &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CREATED &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;STATUS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PORTS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NAMES</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:10.6667px\">f4c148a5aaf6 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pyrec &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;/bin/bash&quot; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7 days ago &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Up 6 days &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0.0.0:3000-&gt;3000/tcp, 0.0.0.0:5555-&gt;5555/tcp &nbsp;&nbsp;high_joliot</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">In my case, I can access the REST service in the container by combining the ip from the Docker Machine with the port from the container. &nbsp;The REST Service can be accessed at: &nbsp;</span></span></p>\n\n<p dir=\"ltr\"><span><a href=\"http://192.168.99.100:5555/all-programs\" style=\"text-decoration:none;\"><u>http://192.168.99.100:5555/all-programs</u></a></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">And the web app can be accessed at:</span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:12px\"> </span></span></p>\n\n<p dir=\"ltr\"><span><u><a href=\"http://192.168.99.100:3000/\" style=\"text-decoration:none;\">http://192.168.99.100:3000/</a></u></span></p>\n\n<div>&nbsp;</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30053758",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">1. &nbsp;You should use the existing code for this submission. &nbsp;You can find the existing code here: &nbsp;https://github.com/cloudspokes/recommendation_engine</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">2. &nbsp;Please request access to the repository by posting your github id in the forums.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">3. &nbsp;You&#39;ll be given read-only access to the repository which will allow you fork it. &nbsp;Please do this. &nbsp;If you win the competition you&#39;ll be asked to submit a pull request.</span></span></p>\n\n<p><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">4. &nbsp;Your solution will be verified using Docker.</span></span></p>\n",
+  "forumId": 32666,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=32666",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 40,
+  "numberOfSubmissions": 0,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-12T23:00:00.000Z",
+      "actualStartTime": "2016-04-12T23:00:00.000Z",
+      "scheduledEndTime": "2016-04-18T23:00:00.000Z",
+      "actualendTime": "2016-04-18T23:00:00.000Z",
+      "_id": "581dbd70550dfb3b52be4476"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-12T23:05:00.000Z",
+      "actualStartTime": "2016-04-12T23:05:00.000Z",
+      "scheduledEndTime": "2016-04-18T23:00:00.000Z",
+      "actualendTime": "2016-04-18T23:00:00.000Z",
+      "_id": "581dbd70550dfb3b52be4475"
+    },
+    {
+      "type": "Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2016-04-18T23:00:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2016-04-20T23:00:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd70550dfb3b52be4474"
+    },
+    {
+      "type": "Appeals",
+      "status": "Scheduled",
+      "scheduledStartTime": "2016-04-20T23:00:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2016-04-21T23:00:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd70550dfb3b52be4473"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2016-04-21T23:00:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2016-04-22T11:00:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd70550dfb3b52be4472"
+    }
+  ],
+  "platforms": [
+    "HTML",
+    "Other"
+  ],
+  "postingDate": "2016-04-12T23:00:00.000Z",
+  "prize": [
+    1400,
+    700
+  ],
+  "projectId": 9454,
+  "registrants": [
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T18:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4471"
+    },
+    {
+      "handle": "capn-ace",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T16:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4470"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T00:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be446f"
+    },
+    {
+      "handle": "vvvpig",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T01:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be446e"
+    },
+    {
+      "handle": "bannie2492",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T01:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be446d"
+    },
+    {
+      "handle": "diegowilson",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T01:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be446c"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T02:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be446b"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T02:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be446a"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T02:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4469"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T03:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4468"
+    },
+    {
+      "handle": "Erona",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T05:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4467"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T05:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4466"
+    },
+    {
+      "handle": "hellojr",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T08:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4465"
+    },
+    {
+      "handle": "deas",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T09:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4464"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T10:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4463"
+    },
+    {
+      "handle": "keith7",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T10:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4462"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T11:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4461"
+    },
+    {
+      "handle": "aayush1996",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T13:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4460"
+    },
+    {
+      "handle": "BrainScorn",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T13:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be445f"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T13:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be445e"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T14:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be445d"
+    },
+    {
+      "handle": "mehblahwhatever",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T14:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be445c"
+    },
+    {
+      "handle": "freegod",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T16:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be445b"
+    },
+    {
+      "handle": "hikerclimb",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T23:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be445a"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-14T09:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4459"
+    },
+    {
+      "handle": "tcdevels",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-14T17:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4458"
+    },
+    {
+      "handle": "CrazyCoderLZB",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-14T17:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4457"
+    },
+    {
+      "handle": "_koji",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-15T11:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4456"
+    },
+    {
+      "handle": "mekala.madhu",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-15T14:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4455"
+    },
+    {
+      "handle": "narasimha.dvnr",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-16T04:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4454"
+    },
+    {
+      "handle": "polikeiji",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-16T11:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4453"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-16T15:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4452"
+    },
+    {
+      "handle": "ecavalier313",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-16T17:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4451"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-17T02:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be4450"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-17T08:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be444f"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-17T15:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be444e"
+    },
+    {
+      "handle": "LieutenantRoger",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-17T23:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be444d"
+    },
+    {
+      "handle": "dashitou",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-18T14:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be444c"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-18T20:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be444b"
+    },
+    {
+      "handle": "sagerkevin",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-18T21:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd70550dfb3b52be444a"
+    }
+  ],
+  "registrationEndDate": "2016-04-18T23:00:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-04-18T23:00:00.000Z",
+  "submissions": [],
+  "technology": [
+    "Angular.js",
+    "JSON",
+    "Node.js",
+    "Python",
+    "REST"
+  ]
+}

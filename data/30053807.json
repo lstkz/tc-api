@@ -1,0 +1,334 @@
+{
+  "_id": 30053807,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:14:55.567Z",
+  "appealsEndDate": "2016-04-27T02:14:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Topcoder Direct AWS Lambda Function - Add/Remove Copilot",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span>Background&nbsp;</span></h2>\n\n<p><span>Topcoder is considering to refactor the TC Direct application by using RESTful APIs instead of calling various EJBs and directly contacting the underline database, which will allow us to begin decoupling TC Direct from its existing backend and provide exposure to some of its core services. As a first step, we want to avoid rewriting some of the complex business logic.</span></p>\n\n<p><span>For the initial stage, we&#39;d like to use AWS Lambda Function and AWS API Gateway to wrap around the EJB calls and database calls, and make the TC Direct to call the AWS API gateway instead. &nbsp;This way we isolate the depenencies between TC Direct and EJB services/informix, then we can move ahead quickly.</span></p>\n\n<h2><span>Scope</span></h2>\n\n<p><span>Previously in we have launched severeal challenges like&nbsp;<strong>Proof Of Concept - AWS Lambda Function to Invoke Direct EJB Service etc,&nbsp;</strong>and sorted out the way to use AWS Lambda Function to wrap arround the EJB calls and &nbsp;Database calls.</span></p>\n\n<p><span>For this challenge, we&#39;d like to follow the same approach to create AWS Lambda Function for add/remove copilot.&nbsp;</span></p>\n\n<h3><span><u><span>Requirements</span></u></span></h3>\n\n<p><span>1.&nbsp;</span><span style=\"font-family:source sans pro,arial,helvetica,sans-serif\">We&#39;d like to mimic the similar logic in Topcoder Direct, please learn from the existing logic to implement properly.</span></p>\n\n<p><span style=\"font-family:source sans pro,arial,helvetica,sans-serif\">2. There will be two aws lambda functions to be created, in the same codebase.</span></p>\n\n<ul>\n\t<li><span style=\"font-family:source sans pro,arial,helvetica,sans-serif\">Add Copilot (The input should be projectId and userId).</span></li>\n\t<li><span style=\"font-family:source sans pro,arial,helvetica,sans-serif\">Remove Copilot (The input should be projectId and userId).</span></li>\n</ul>\n\n<p>3. Currently, in TC Direct, we are using a complex mangement UI for copilot (add and remove in the same time), but for this AWS Lambda functions, the Lambda function will do single responsibilty, which mean <u>Add Copilot</u> will just do add copilot and grant permissions, <u>Remove Copilot</u> will remove copilot and revoke the permissions.</p>\n\n<p><span>5. Please create the swagger api doc for the created aws lambda functions, please following the example provided in forum.</span></p>\n\n<p><span>6. Please use&nbsp;<span>AWS lambda swagger&nbsp;<a href=\"https://github.com/awslabs/aws-apigateway-importer\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\"><span>https://github.com/awslabs/aws-apigateway-importer</span></a>&nbsp;to create api gateway endpoint using the created swagger api doc, and hook it with the aws lambda function</span></span></p>\n\n<p><span>7. The json response should be simple and clear, and properly handle the error cases with proper messages.</span></p>\n\n<p><u><span style=\"line-height:1.6\">Code Reference</span></u></p>\n\n<p><span style=\"line-height:1.6\">You are not supposed to directly call ContestServiceFacadeBean, &nbsp;but need to split the logic in </span></p>\n\n<pre>\ncom.topcoder.service.facade.contest.ejb.<span style=\"font-family:sans-serif,arial,verdana,trebuchet ms; line-height:1.6\">ContestServiceFacadeBean#</span>updateCopilotProjects(TCSubject currentUser,\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; List&lt;CopilotProject&gt; copilotProjects, List&lt;Boolean&gt; removeFlags)\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throws PermissionServiceException, ContestServiceException</pre>\n\n<h2><span>Reference</span></h2>\n\n<p><span>1. Competitors need to request your own VM for development and testing.</span></p>\n\n<p><span>2. For testing the getting general project info operation, &nbsp;you can directly create in Topcoder Direct for testing purpose.</span></p>\n\n<p><span>3. You can visit http://&lt;&lt;vm-ip&gt;&gt;:8580/ to find the JNDI lookup name for remote EJB calls.</span></p>\n\n<p><span>4. Please reuse any components in TC Direct instead of creating your own if possible.<span>&nbsp;</span></span></p>\n\n<p><span>5. The previous challenges will be provided in forum for reference.</span></p>\n\n<h2><span>VM ENVIRONMENT</span></h2>\n\n<p><span>If you need a Topcoder VM to work on this challenge, Please request the VM in the challenge forum.</span></p>\n\n<p><span>Information about VM can be found below:</span></p>\n\n<p><span>VM specific information is found here:&nbsp;<a href=\"http://www.topcoder.com/wiki/display/docs/VM+Image+2.5\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); text-decoration: none; outline: 0px; cursor: pointer; transition: all 0.2s ease-in-out; -webkit-tap-highlight-color: transparent; word-wrap: break-word; background: 0px 0px;\">http://www.topcoder.com/wiki/display/docs/VM+Image+2.5</a></span></p>\n\n<p><span>Upon registration as a submitter or reviewer you will need to request a VM based on the new TopCoder Cockpit/Direct image. To request your image, please use the forum. Before requesting your VM, you need to ensure that you have an SSH key created and in your member profile. Instructions to do so are here:&nbsp;<a href=\"http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); text-decoration: none; outline: 0px; cursor: pointer; transition: all 0.2s ease-in-out; -webkit-tap-highlight-color: transparent; word-wrap: break-word; background: 0px 0px;\">http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key</a>, and instructions to connect afterwards are here:<a href=\"http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); text-decoration: none; outline: 0px; cursor: pointer; transition: all 0.2s ease-in-out; -webkit-tap-highlight-color: transparent; word-wrap: break-word; background: 0px 0px;\">http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key</a>.</span></p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30053807",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<ul>\n\t<li>Complete source code for aws lambda function</li>\n\t<li>Working VM and aws lambda function for testing</li>\n\t<li>Deployment Guide and Verification Documentation</li>\n</ul>\n",
+  "forumId": 32705,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=32705",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 25,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-19T04:00:00.000Z",
+      "actualStartTime": "2016-04-19T04:00:00.000Z",
+      "scheduledEndTime": "2016-04-25T04:00:00.000Z",
+      "actualendTime": "2016-04-25T04:00:00.000Z",
+      "_id": "5813413f550dfb3b52be916b"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-19T04:05:00.000Z",
+      "actualStartTime": "2016-04-19T04:05:00.000Z",
+      "scheduledEndTime": "2016-04-25T04:00:00.000Z",
+      "actualendTime": "2016-04-25T04:00:00.000Z",
+      "_id": "5813413f550dfb3b52be916a"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-25T04:00:00.000Z",
+      "actualStartTime": "2016-04-25T04:00:00.000Z",
+      "scheduledEndTime": "2016-04-27T00:40:00.000Z",
+      "actualendTime": "2016-04-27T00:40:00.000Z",
+      "_id": "5813413f550dfb3b52be9169"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-27T00:40:00.000Z",
+      "actualStartTime": "2016-04-27T00:40:00.000Z",
+      "scheduledEndTime": "2016-04-27T02:13:00.000Z",
+      "actualendTime": "2016-04-27T02:13:00.000Z",
+      "_id": "5813413f550dfb3b52be9168"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-27T02:13:00.000Z",
+      "actualStartTime": "2016-04-27T02:13:00.000Z",
+      "scheduledEndTime": "2016-04-27T02:14:00.000Z",
+      "actualendTime": "2016-04-27T02:14:00.000Z",
+      "_id": "5813413f550dfb3b52be9167"
+    }
+  ],
+  "platforms": [
+    "AWS"
+  ],
+  "postingDate": "2016-04-19T04:00:00.000Z",
+  "prize": [
+    400,
+    200
+  ],
+  "projectId": 9512,
+  "registrants": [
+    {
+      "handle": "mehblahwhatever",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-19T11:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be9166"
+    },
+    {
+      "handle": "bannie2492",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-19T04:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be9165"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-19T04:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be9164"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-19T05:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be9163"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-19T05:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be9162"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-19T07:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be9161"
+    },
+    {
+      "handle": "alazyrabbit",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-19T08:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be9160"
+    },
+    {
+      "handle": "greenPadawan",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-19T08:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be915f"
+    },
+    {
+      "handle": "sribharathi1427",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-19T09:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be915e"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-19T13:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be915d"
+    },
+    {
+      "handle": "srikkbhat",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-19T14:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be915c"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-19T14:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be915b"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-19T15:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be915a"
+    },
+    {
+      "handle": "duxiaoyang",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-19T23:16:00.000Z",
+      "submissionDate": "2016-04-24T13:42:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be9159"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-20T11:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be9158"
+    },
+    {
+      "handle": "solokop",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-20T17:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be9157"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-21T01:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be9156"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-21T17:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be9155"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-22T04:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be9154"
+    },
+    {
+      "handle": "kinan52",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-22T12:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be9153"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-22T15:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be9152"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-23T11:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be9151"
+    },
+    {
+      "handle": "wood387",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-24T12:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be9150"
+    },
+    {
+      "handle": "kozadysseus",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-24T13:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be914f"
+    },
+    {
+      "handle": "nizam1992",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-24T14:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813413f550dfb3b52be914e"
+    }
+  ],
+  "registrationEndDate": "2016-04-25T04:00:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-04-25T04:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "duxiaoyang",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 98.75,
+      "finalScore": 98.75,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-04-24T13:42:00.000Z",
+      "_id": "5813413f550dfb3b52be916c"
+    }
+  ],
+  "technology": [
+    "Java"
+  ]
+}

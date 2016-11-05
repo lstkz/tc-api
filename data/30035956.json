@@ -1,0 +1,671 @@
+{
+  "_id": 30035956,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:42:27.194Z",
+  "appealsEndDate": "2013-10-30T22:30:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Open Payments - Data Host - NPI checker Java Program - Module Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p>&nbsp;</p>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Project Overview</span></h2>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px 0.5in; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">The client of this application is CPI (Center for Program Integrity) which is a part of CMS (Centers for Medicare and Medicaid Services). CPI wants to ensure transparency of payment giving from manufacturers to healthcare providers. This project will help to ensure that the rules for payment giving are followed and that there is a record keeping regarding the payments that have been given.</p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px 0.5in; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">The purpose of this project is to create an iOS application and a report host web application that will make it easier for users to comply with the new transparency law. The iOS application will be used by payers (the manufacturer and its field agents) to record information about their payments and other transfers of value to payment recipients (physicians, teaching hospitals, and other healthcare providers).</p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px 0.5in; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">The recorded payment contains payment recipients identifier NPI (National Provider Identifier). The client wants to validate the NPI numbers recorded against a Web service (a PVS web service).</p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px 0.5in; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">The NPI checker is a Java Program that will access Report Host database to retrieve all The new NPI numbers and checks them one by one against a web service that will be provided. The result is stored in the &quot;NPI status&quot; field in the Report Host database.</p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px 0.5in; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">In this assembly you will develop the NPI checker program. You will be provided with the Report Host Backend and the web service end point.</p>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Competition Task Overview</span></h2>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; font-size: 12px; line-height: 16px;\"><span style=\"font-family: sans-serif, Arial, Verdana, 'Trebuchet MS'; line-height: 1.6em;\">You need to develop a java program that will do the following operations:</span></p>\n\n<ul>\n\t<li><span style=\"font-size: 12px;\">Access Report Host Database and look up for the NPI code in all new payment records or modified payment records since the last time the NPI checker was run</span></li>\n\t<li><span style=\"font-size: 12px;\">For each of these NPI codes, send a request to the following web service&nbsp;</span><a href=\"http://ec2-50-16-65-237.compute-1.amazonaws.com:9080/cms-ext/ws/NPINumberLookupService?wsdl\">http://ec2-50-16-65-237.compute-1.amazonaws.com:9080/cms-ext/ws/NPINumberLookupService?wsdl</a>\n\t<ul>\n\t\t<li>If the NPI code was found (the web service response is not empty), compare the returned information with those in the data host:\n\t\t<ul>\n\t\t\t<li>if the returned data&nbsp;matches the data host data, set NPIstatus field to &quot;valid&quot; state</li>\n\t\t\t<li>if the returned data doesn&#39;t match, override data host data with the returned data and set NPIstatus field to &quot;corrected&quot;</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>If the NPI code wasn&#39;t found (the web service response is empty), set NPIstatus field to &quot;invalid&quot;</li>\n\t</ul>\n\t</li>\n\t<li>log and audit the performed operations to track NPI checker changes made to the database.</li>\n</ul>\n\n<p>The NPI checker will be scheduled to run using a script (out of the scope of this assembly)</p>\n\n<p>The web service end point and database access information should be configurable.</p>\n\n<p>The NPI checker should be cross-platform.</p>\n\n<p>The Data Host, PVS web services along with the NPI checker will be installed using an automated GUI installer (out of the scope of this assembly)</p>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Testing</span></h3>\n\n<p><span style=\"font-size: 12px;\">Unit tests are required.</span></p>\n\n<p><span style=\"font-size:12px;\">You need to provide manual demos to verify your implementation.</span></p>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Technology Overview</span></h2>\n\n<ul style=\"font-family: Arial, Helvetica, Verdana, sans-serif; font-size: 12px; line-height: 16px;\">\n\t<li><span style=\"font-size:12px;\">Java 1.6</span></li>\n\t<li>MySQL 5.6</li>\n</ul>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Documentation Provided</span></h2>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; font-size: 12px; line-height: 16px;\">Documentation and Applications that will be provided to registered members:</p>\n\n<table class=\"confluenceTable\" style=\"border: 2px solid rgb(153, 153, 153); margin: 0px 0px 10px; padding: 0px; border-collapse: collapse; vertical-align: top; font-family: Arial, Helvetica, Verdana, sans-serif; font-size: 12px; line-height: 16px;\">\n\t<colgroup>\n\t\t<col width=\"200px\" />\n\t\t<col />\n\t</colgroup>\n\t<tbody>\n\t\t<tr>\n\t\t\t<th class=\"confluenceTh\" style=\"border: none; color: rgb(0, 0, 0); line-height: normal; padding: 2px 4px; background-color: rgb(229, 229, 229); vertical-align: middle;\"><b>Document Name</b></th>\n\t\t\t<th class=\"confluenceTh\" style=\"border: none; color: rgb(0, 0, 0); line-height: normal; padding: 2px 4px; background-color: rgb(229, 229, 229); vertical-align: middle;\"><b>Document Description &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</b></th>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td class=\"confluenceTd\" style=\"border-color: white; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: solid; line-height: normal; padding: 2px 4px; vertical-align: top; background-color: rgb(245, 245, 245);\">Data Host Backend</td>\n\t\t\t<td class=\"confluenceTd\" style=\"border-color: white; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: solid; line-height: normal; padding: 2px 4px; vertical-align: top; background-color: rgb(245, 245, 245);\">&nbsp;</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td class=\"confluenceTd\" style=\"border-color: white; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: solid; line-height: normal; padding: 2px 4px; vertical-align: top; background-color: rgb(245, 245, 245);\">Installer Package Architecture</td>\n\t\t\t<td class=\"confluenceTd\" style=\"border-color: white; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: solid; line-height: normal; padding: 2px 4px; vertical-align: top; background-color: rgb(245, 245, 245);\">&nbsp;</td>\n\t\t</tr>\n\t</tbody>\n</table>\n",
+  "digitalRunPoints": 360,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30035956",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2013-11-04T09:12:00.000Z",
+  "finalSubmissionGuidelines": "<p>&nbsp;</p>\n\n<h2><strong><span style=\"color:#FF0000;\"><span style=\"line-height: 1.6em;\">Submission Deliverables</span></span></strong></h2>\n\n<p><span style=\"font-size:12px;\">A complete list of deliverables can be viewed in the TopCoder Assembly competition Tutorial at: <a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorial\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorial&nbsp;</a></span></p>\n\n<ul>\n\t<li><span style=\"font-size:12px;\">Fully Implemented NPI checker functionality defined by the requirements specification</span></li>\n\t<li><span style=\"font-size:12px;\">A complete and detailed deployment documented explaining how to deploy the application including configuration information.</span></li>\n\t<li><span style=\"font-size:12px;\">JUNIT Tests to verify your application successfully meets the requirements of the application.</span></li>\n</ul>\n\n<h2><span style=\"color:#FF0000;\"><strong>Final Submission</strong></span></h2>\n\n<p><span style=\"font-size:12px;\">For each member, the final submission should be uploaded to the Online Review Tool.</span></p>\n\n<h2><strong style=\"color: rgb(255, 0, 0); line-height: 1.2em;\">Environment Setup</strong></h2>\n\n<p><span style=\"font-size: 12px;\">You need to deploy&nbsp;Data Host Backend to be able to test your NPI checker program.</span></p>\n",
+  "forumId": 19247,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=19247",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 46,
+  "numberOfSubmissions": 7,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-21T00:06:00.000Z",
+      "actualStartTime": "2013-10-21T00:06:00.000Z",
+      "scheduledEndTime": "2013-10-21T00:07:00.000Z",
+      "actualendTime": "2013-10-21T00:07:00.000Z",
+      "_id": "581355c3550dfb3b52c5129a"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-21T00:07:00.000Z",
+      "actualStartTime": "2013-10-21T00:07:00.000Z",
+      "scheduledEndTime": "2013-10-21T03:40:00.000Z",
+      "actualendTime": "2013-10-21T03:40:00.000Z",
+      "_id": "581355c3550dfb3b52c51299"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-21T13:00:00.000Z",
+      "actualStartTime": "2013-10-21T13:00:00.000Z",
+      "scheduledEndTime": "2013-10-23T13:00:00.000Z",
+      "actualendTime": "2013-10-23T13:00:00.000Z",
+      "_id": "581355c3550dfb3b52c51298"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-21T13:05:00.000Z",
+      "actualStartTime": "2013-10-21T13:05:00.000Z",
+      "scheduledEndTime": "2013-10-27T13:06:00.000Z",
+      "actualendTime": "2013-10-27T13:06:00.000Z",
+      "_id": "581355c3550dfb3b52c51297"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-27T13:06:00.000Z",
+      "actualStartTime": "2013-10-27T13:06:00.000Z",
+      "scheduledEndTime": "2013-10-27T14:48:00.000Z",
+      "actualendTime": "2013-10-27T14:48:00.000Z",
+      "_id": "581355c3550dfb3b52c51296"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-27T14:48:00.000Z",
+      "actualStartTime": "2013-10-27T14:48:00.000Z",
+      "scheduledEndTime": "2013-10-29T13:25:00.000Z",
+      "actualendTime": "2013-10-29T13:25:00.000Z",
+      "_id": "581355c3550dfb3b52c51295"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-29T13:25:00.000Z",
+      "actualStartTime": "2013-10-29T13:25:00.000Z",
+      "scheduledEndTime": "2013-10-30T13:25:00.000Z",
+      "actualendTime": "2013-10-30T13:25:00.000Z",
+      "_id": "581355c3550dfb3b52c51294"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-30T13:25:00.000Z",
+      "actualStartTime": "2013-10-30T13:25:00.000Z",
+      "scheduledEndTime": "2013-10-30T22:30:00.000Z",
+      "actualendTime": "2013-10-30T22:30:00.000Z",
+      "_id": "581355c3550dfb3b52c51293"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-30T22:31:00.000Z",
+      "actualStartTime": "2013-10-30T22:31:00.000Z",
+      "scheduledEndTime": "2013-10-31T02:10:00.000Z",
+      "actualendTime": "2013-10-31T02:10:00.000Z",
+      "_id": "581355c3550dfb3b52c51292"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-31T02:10:00.000Z",
+      "actualStartTime": "2013-10-31T02:10:00.000Z",
+      "scheduledEndTime": "2013-10-31T17:54:00.000Z",
+      "actualendTime": "2013-10-31T17:54:00.000Z",
+      "_id": "581355c3550dfb3b52c51291"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-31T17:54:00.000Z",
+      "actualStartTime": "2013-10-31T17:54:00.000Z",
+      "scheduledEndTime": "2013-11-01T04:16:00.000Z",
+      "actualendTime": "2013-11-01T04:16:00.000Z",
+      "_id": "581355c3550dfb3b52c51290"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-04T12:09:00.000Z",
+      "actualStartTime": "2013-11-04T12:09:00.000Z",
+      "scheduledEndTime": "2013-11-07T13:56:00.000Z",
+      "actualendTime": "2013-11-07T13:56:00.000Z",
+      "_id": "581355c3550dfb3b52c5128f"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-01T04:16:00.000Z",
+      "actualStartTime": "2013-11-01T04:16:00.000Z",
+      "scheduledEndTime": "2013-11-04T09:12:00.000Z",
+      "actualendTime": "2013-11-04T09:12:00.000Z",
+      "_id": "581355c3550dfb3b52c5128e"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-04T09:12:00.000Z",
+      "actualStartTime": "2013-11-04T09:12:00.000Z",
+      "scheduledEndTime": "2013-11-04T12:09:00.000Z",
+      "actualendTime": "2013-11-04T12:09:00.000Z",
+      "_id": "581355c3550dfb3b52c5128d"
+    }
+  ],
+  "platforms": [],
+  "postingDate": "2013-10-21T13:00:00.000Z",
+  "prize": [
+    800,
+    400
+  ],
+  "projectId": 6283,
+  "registrants": [
+    {
+      "handle": "BlackMagic",
+      "reliability": "100%",
+      "registrationDate": "2013-10-21T13:16:00.000Z",
+      "submissionDate": "2013-10-27T02:39:00.000Z",
+      "rating": "1002",
+      "colorStyle": "color: #00A900",
+      "_id": "581355c3550dfb3b52c5128c"
+    },
+    {
+      "handle": "muxjvduo",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-21T13:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c5128b"
+    },
+    {
+      "handle": "csy2012",
+      "reliability": "6%",
+      "registrationDate": "2013-10-21T13:31:00.000Z",
+      "submissionDate": null,
+      "rating": "245",
+      "colorStyle": "color: #999999",
+      "_id": "581355c3550dfb3b52c5128a"
+    },
+    {
+      "handle": "J.D.",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-21T13:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c51289"
+    },
+    {
+      "handle": "arylio",
+      "reliability": "66%",
+      "registrationDate": "2013-10-21T13:42:00.000Z",
+      "submissionDate": "2013-10-27T12:59:00.000Z",
+      "rating": "1616",
+      "colorStyle": "color: #DDCC00",
+      "_id": "581355c3550dfb3b52c51288"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-21T13:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c51287"
+    },
+    {
+      "handle": "srikkbhat",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-21T14:11:00.000Z",
+      "submissionDate": "2013-10-27T00:18:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c51286"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-21T14:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c51285"
+    },
+    {
+      "handle": "sweetu",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-21T14:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c51284"
+    },
+    {
+      "handle": "brain_cn",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-21T14:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c51283"
+    },
+    {
+      "handle": "gevak",
+      "reliability": "100%",
+      "registrationDate": "2013-10-21T14:42:00.000Z",
+      "submissionDate": "2013-10-27T11:38:00.000Z",
+      "rating": "1383",
+      "colorStyle": "color: #6666FF",
+      "_id": "581355c3550dfb3b52c51282"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "0%",
+      "registrationDate": "2013-10-21T14:44:00.000Z",
+      "submissionDate": null,
+      "rating": "689",
+      "colorStyle": "color: #999999",
+      "_id": "581355c3550dfb3b52c51281"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "6%",
+      "registrationDate": "2013-10-21T14:51:00.000Z",
+      "submissionDate": null,
+      "rating": "1479",
+      "colorStyle": "color: #6666FF",
+      "_id": "581355c3550dfb3b52c51280"
+    },
+    {
+      "handle": "VenkataLenin",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-21T15:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c5127f"
+    },
+    {
+      "handle": "DanLazar",
+      "reliability": "13%",
+      "registrationDate": "2013-10-21T15:36:00.000Z",
+      "submissionDate": null,
+      "rating": "928",
+      "colorStyle": "color: #00A900",
+      "_id": "581355c3550dfb3b52c5127e"
+    },
+    {
+      "handle": "zulo",
+      "reliability": "25%",
+      "registrationDate": "2013-10-21T15:53:00.000Z",
+      "submissionDate": null,
+      "rating": "1319",
+      "colorStyle": "color: #6666FF",
+      "_id": "581355c3550dfb3b52c5127d"
+    },
+    {
+      "handle": "jdwang",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-21T17:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c5127c"
+    },
+    {
+      "handle": "ravideliwala",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-21T17:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c5127b"
+    },
+    {
+      "handle": "ranj",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-21T17:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c5127a"
+    },
+    {
+      "handle": "carbonfish",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-21T17:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c51279"
+    },
+    {
+      "handle": "agus.mw",
+      "reliability": "0%",
+      "registrationDate": "2013-10-21T18:30:00.000Z",
+      "submissionDate": null,
+      "rating": "1351",
+      "colorStyle": "color: #6666FF",
+      "_id": "581355c3550dfb3b52c51278"
+    },
+    {
+      "handle": "dezl",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-21T18:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c51277"
+    },
+    {
+      "handle": "sunhong",
+      "reliability": "0%",
+      "registrationDate": "2013-10-21T19:26:00.000Z",
+      "submissionDate": null,
+      "rating": "1317",
+      "colorStyle": "color: #6666FF",
+      "_id": "581355c3550dfb3b52c51276"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2013-10-21T20:20:00.000Z",
+      "submissionDate": null,
+      "rating": "829",
+      "colorStyle": "color: #999999",
+      "_id": "581355c3550dfb3b52c51275"
+    },
+    {
+      "handle": "thientri",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-21T23:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c51274"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "0%",
+      "registrationDate": "2013-10-21T23:30:00.000Z",
+      "submissionDate": null,
+      "rating": "58",
+      "colorStyle": "color: #999999",
+      "_id": "581355c3550dfb3b52c51273"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2013-10-22T00:02:00.000Z",
+      "submissionDate": null,
+      "rating": "1062",
+      "colorStyle": "color: #00A900",
+      "_id": "581355c3550dfb3b52c51272"
+    },
+    {
+      "handle": "vokie",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-22T02:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c51271"
+    },
+    {
+      "handle": "sri02",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-22T03:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c51270"
+    },
+    {
+      "handle": "svenson",
+      "reliability": "53%",
+      "registrationDate": "2013-10-22T04:38:00.000Z",
+      "submissionDate": null,
+      "rating": "767",
+      "colorStyle": "color: #999999",
+      "_id": "581355c3550dfb3b52c5126f"
+    },
+    {
+      "handle": "ohyan07",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-22T05:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c5126e"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-22T05:49:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "581355c3550dfb3b52c5126d"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "13%",
+      "registrationDate": "2013-10-22T07:20:00.000Z",
+      "submissionDate": null,
+      "rating": "758",
+      "colorStyle": "color: #999999",
+      "_id": "581355c3550dfb3b52c5126c"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "20%",
+      "registrationDate": "2013-10-22T07:27:00.000Z",
+      "submissionDate": "2013-10-27T12:51:00.000Z",
+      "rating": "1116",
+      "colorStyle": "color: #00A900",
+      "_id": "581355c3550dfb3b52c5126b"
+    },
+    {
+      "handle": "progloco",
+      "reliability": "0%",
+      "registrationDate": "2013-10-22T08:44:00.000Z",
+      "submissionDate": null,
+      "rating": "866",
+      "colorStyle": "color: #999999",
+      "_id": "581355c3550dfb3b52c5126a"
+    },
+    {
+      "handle": "icarusk",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-22T09:19:00.000Z",
+      "submissionDate": "2013-10-26T00:58:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c51269"
+    },
+    {
+      "handle": "padegal12",
+      "reliability": "0%",
+      "registrationDate": "2013-10-22T10:16:00.000Z",
+      "submissionDate": null,
+      "rating": "693",
+      "colorStyle": "color: #999999",
+      "_id": "581355c3550dfb3b52c51268"
+    },
+    {
+      "handle": "GehadK",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-22T11:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c51267"
+    },
+    {
+      "handle": "hallow",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-22T12:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c51266"
+    },
+    {
+      "handle": "xiufei",
+      "reliability": "0%",
+      "registrationDate": "2013-10-22T17:54:00.000Z",
+      "submissionDate": null,
+      "rating": "887",
+      "colorStyle": "color: #999999",
+      "_id": "581355c3550dfb3b52c51265"
+    },
+    {
+      "handle": "freegod",
+      "reliability": "26%",
+      "registrationDate": "2013-10-23T02:41:00.000Z",
+      "submissionDate": "2013-10-26T12:15:00.000Z",
+      "rating": "606",
+      "colorStyle": "color: #999999",
+      "_id": "581355c3550dfb3b52c51264"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-21T16:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c51263"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-21T16:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c51262"
+    },
+    {
+      "handle": "izhari",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-21T20:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c51261"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "0%",
+      "registrationDate": "2013-10-23T00:50:00.000Z",
+      "submissionDate": null,
+      "rating": "997",
+      "colorStyle": "color: #00A900",
+      "_id": "581355c3550dfb3b52c51260"
+    },
+    {
+      "handle": "evilkyro1965",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-23T00:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c5125f"
+    }
+  ],
+  "registrationEndDate": "2013-10-23T13:00:00.000Z",
+  "reliabilityBonus": 160,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2013-10-27T13:06:00.000Z",
+  "submissions": [
+    {
+      "handle": "gevak",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 91.26,
+      "finalScore": 98.76,
+      "points": 201.60000000000002,
+      "submissionStatus": "Active",
+      "submissionDate": "2013-10-27T11:38:00.000Z",
+      "_id": "581355c3550dfb3b52c512a1"
+    },
+    {
+      "handle": "arylio",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 87.27,
+      "finalScore": 97.59,
+      "points": 72,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2013-10-27T12:59:00.000Z",
+      "_id": "581355c3550dfb3b52c512a0"
+    },
+    {
+      "handle": "yedtoss",
+      "placement": 3,
+      "screeningScore": 100,
+      "initialScore": 91.4,
+      "finalScore": 94.43,
+      "points": 36,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2013-10-27T12:51:00.000Z",
+      "_id": "581355c3550dfb3b52c5129f"
+    },
+    {
+      "handle": "icarusk",
+      "placement": 4,
+      "screeningScore": 100,
+      "initialScore": 91.94,
+      "finalScore": 91.94,
+      "points": 28.8,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2013-10-26T00:58:00.000Z",
+      "_id": "581355c3550dfb3b52c5129e"
+    },
+    {
+      "handle": "freegod",
+      "placement": 5,
+      "screeningScore": 100,
+      "initialScore": 87.66,
+      "finalScore": 87.7,
+      "points": 21.599999999999998,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2013-10-26T12:15:00.000Z",
+      "_id": "581355c3550dfb3b52c5129d"
+    },
+    {
+      "handle": "BlackMagic",
+      "placement": 6,
+      "screeningScore": 100,
+      "initialScore": 83.52,
+      "finalScore": 87.51,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2013-10-27T02:39:00.000Z",
+      "_id": "581355c3550dfb3b52c5129c"
+    },
+    {
+      "handle": "srikkbhat",
+      "placement": 7,
+      "screeningScore": 100,
+      "initialScore": 79.92,
+      "finalScore": 79.92,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2013-10-27T00:18:00.000Z",
+      "_id": "581355c3550dfb3b52c5129b"
+    }
+  ],
+  "technology": [
+    "Java",
+    "MySQL"
+  ]
+}

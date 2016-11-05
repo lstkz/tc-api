@@ -1,0 +1,376 @@
+{
+  "_id": 30035852,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:42:24.975Z",
+  "appealsEndDate": "2013-10-07T06:37:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Repost! Open Payments - Mobile Application - iOS Email and Data Share Services Module Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><font color=\"#ff0000\" face=\"Arial, Helvetica, Verdana, sans-serif\">Important!</font></h2>\n\n<h2><span style=\"font-size: 13px; line-height: 1.6em;\">This is a repost of the this <a href=\"https://topcoder.com/direct/contest/detail.action?projectId=30033906\">Contest</a>. We modified the Bluethoot Data exchange architecture before reposting it.</span></h2>\n\n<p><span style=\"font-size: 13px; line-height: 1.6em;\">The application must work on</span><span style=\"font-size: 13px; line-height: normal;\"><font color=\"#000000\" face=\"arial, helvetica, sans-serif\">&nbsp;iPhone 4, 4S, 5, 5S, 5C in both iOS6 and iOS7</font></span></p>\n\n<h2><span style=\"color: rgb(255, 0, 0); line-height: 1.2em; font-family: Arial, Helvetica, Verdana, sans-serif;\">Project Overview</span></h2>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; font-size: 12px; line-height: 16px;\"><strong>System Description</strong></h3>\n\n<p style=\"margin-left:.5in;\">The client of this application is CPI (Center for Program Integrity) which is a part of CMS (Centers for Medicare and Medical Services). CPI wants to ensure transparency of gift giving from manufacturers to healthcare providers. This project will help to ensure that the rules for gift giving are followed and that there is a record keeping regarding the gifts that have been given.</p>\n\n<p style=\"margin-left:.5in;\">The purpose of this project is to create an iOS application and a report host web application that will make it easier for users to comply with the new transparency law. The iOS application will be used by gift givers (the manufacturer and its field agents) to record information about their gifts and other transfers of value to gift recipients (physicians, teaching hospitals, and other healthcare providers).</p>\n\n<p style=\"margin-left:.5in;\">The report host application will be used to manage the data about the gifts that the field agents have given. Each manufacturer will have to install its own report host application that will receive information about the gifts that the field agents have given.</p>\n\n<p style=\"margin-left:.5in;\">The iOS application will be used by gift givers and gift recipients to collect data about gifts. The gift giver will collect the data necessary for the gift and the iOS application will make this process happen in an easy, quick, secure and unobtrusive manner. To achieve this goal, some data may be exchanged over Bluetooth. The gift recipient can send his identifying information to the gift giver at the start of the transaction. After the gift data has been recorded in the gift giver&#39;s mobile app, the gift giver can send the data back to the gift recipient over Bluetooth. The recipient can search for past gifts and view the recorded data on the app.</p>\n\n<p style=\"margin-left:.5in;\"><strong>This module will implement the iOS app.</strong></p>\n\n<p style=\"margin-left:.5in;\"><strong>This assembly is responsible for implementing the email service and data exchange service.</strong></p>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Competition Task Overview</span></h2>\n\n<p style=\"margin-left:.5in;\">A complete list of deliverables can be found in the TopCoder Assembly competition Tutorial at:</p>\n\n<p><a href=\"http://apps.topcoder.com/wiki/display/tc/Module+Assembly+Competition+Tutorial\">http://apps.topcoder.com/wiki/display/tc/Module+Assembly+Competition+Tutorial</a></p>\n\n<p><span style=\"color:#FF0000;\"><em>Note: Please read the whole Application Design Specification first. All the details not mentioned in this specification are provided in that document.</em></span></p>\n\n<h3><strong>Scope</strong></h3>\n\n<p style=\"margin-left:.5in;\">This assembly is responsible for the following:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>\n\n<ul>\n\t<li>The following protocols and classes shown on &quot;Services Class Diagram&quot;\n\t<ul>\n\t\t<li>DataShareService</li>\n\t\t<li>DataShareServiceDelegate</li>\n\t\t<li>BaseBluetoothDataShareService</li>\n\t\t<li>RecipientBluetoothDataShareService</li>\n\t\t<li>PayerBluetoothDataShareService</li>\n\t\t<li>EmailService</li>\n\t\t<li>EmailServiceImpl</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p style=\"margin-left:.5in;\">Implementation details are provided at TCUML method documentations.</p>\n\n<h3 style=\"margin-left: 0.5in;\"><strong>Bluetooth design related updates:</strong></h3>\n\n<div style=\"font-family: arial, sans-serif; font-size: 13px; background-color: rgb(255, 255, 255);\">The data exchange between iOS apps is abstracted in DataShareService protocol, and two concrete implementations (<wbr />RecipientBluetoothDataShareSer<wbr />vice and PayerBluetoothDataShareService<wbr />) are provided, which make use GameKit Framework (<wbr />GKPeerPickerConnectionTypeNear<wbr />by connection type).</div>\n\n<div style=\"font-family: arial, sans-serif; font-size: 13px; background-color: rgb(255, 255, 255);\">&nbsp;</div>\n\n<div style=\"font-family: arial, sans-serif; font-size: 13px; background-color: rgb(255, 255, 255);\">RecipientBluetoothDataShareSer<wbr />vice will be implemented as server side and PayerBluetoothDataShareService will be implemented as client side.</div>\n\n<div style=\"font-family: arial, sans-serif; font-size: 13px; background-color: rgb(255, 255, 255);\">&nbsp;</div>\n\n<div style=\"font-family: arial, sans-serif; font-size: 13px; background-color: rgb(255, 255, 255);\">DataShareServiceDelegate is defined as the delegate for DataShareService to respond to certain events occurs during the data sharing.</div>\n\n<div style=\"font-family: arial, sans-serif; font-size: 13px; background-color: rgb(255, 255, 255);\">&nbsp;</div>\n\n<div style=\"font-family: arial, sans-serif; font-size: 13px; background-color: rgb(255, 255, 255);\">The data format is JSON, the same as the JSON file formats defined in 1.1.2. Except that there is an additional field &quot;_dataType&quot; that is used to specify the data type:</div>\n\n<ul>\n\t<li style=\"font-family: arial, sans-serif; font-size: 13px; background-color: rgb(255, 255, 255);\">RecipientProfile</li>\n\t<li style=\"font-family: arial, sans-serif; font-size: 13px; background-color: rgb(255, 255, 255);\">PaymentRecord</li>\n\t<li style=\"font-family: arial, sans-serif; font-size: 13px; background-color: rgb(255, 255, 255);\">Identity</li>\n\t<li style=\"font-family: arial, sans-serif; font-size: 13px; background-color: rgb(255, 255, 255);\">RecipientProfileRequest</li>\n</ul>\n\n<h2 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><font color=\"#ff0000\">Testing</font></h2>\n\n<p>Functional Unit Tests should be provided</p>\n\n<ul style=\"font-size: 13px;\">\n</ul>\n\n<h2><span style=\"color:#FF0000;\"><strong>Deliverables</strong></span></h2>\n\n<ul>\n\t<li style=\"margin-left: 57pt;\">Source code and configuration files.</li>\n\t<li style=\"margin-left: 57pt;\">Deployment guide to configure and verify the application.</li>\n\t<li style=\"margin-left: 57pt;\">The deliverable will be an Xcode project</li>\n</ul>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Technology Overview</span></h2>\n\n<ul>\n\t<li style=\"margin-left: 53.85pt;\">iOS 6</li>\n\t<li style=\"margin-left: 53.85pt;\">Xcode 4</li>\n\t<li style=\"margin-left: 53.85pt;\">Objective-C 2.0</li>\n\t<li style=\"margin-left: 53.85pt;\">Cocoa Touch Framework</li>\n\t<li style=\"margin-left: 53.85pt;\">Core Data</li>\n\t<li style=\"margin-left: 53.85pt;\">Bluetooth</li>\n\t<li style=\"margin-left: 53.85pt;\">GameKit</li>\n\t<li style=\"margin-left: 53.85pt;\"><a href=\"https://github.com/tonymillion/Reachability\">Reachability Utility</a></li>\n\t<li style=\"margin-left: 53.85pt;\"><a href=\"http://restkit.org/\">RestKit 0.20.2</a></li>\n\t<li style=\"margin-left: 53.85pt;\"><a href=\"https://github.com/MailCore/MailCore\">MailCore</a></li>\n\t<li style=\"margin-left: 53.85pt;\"><a href=\"https://github.com/carlbrown/PDKeychainBindingsController\">PDKeychainBindingsController</a></li>\n</ul>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Documentation Provided</span></h2>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; font-size: 12px; line-height: 16px;\">Documentation and Applications that will be provided to registered members:</p>\n\n<ul>\n\t<li style=\"margin-left: 57pt;\">Class Diagrams</li>\n\t<li style=\"margin-left: 57pt;\">Sequence Diagrams</li>\n\t<li style=\"margin-left: 57pt;\"><a href=\"http://apps.topcoder.com/forums/?module=Thread&amp;threadID=800057&amp;start=0&amp;mc=1#1783881\">Application Design Specification</a>&nbsp;(please follow this link for the latest version)</li>\n\t<li style=\"margin-left: 57pt;\">Assembly Specification</li>\n\t<li style=\"margin-left: 57pt;\">UI prototype</li>\n</ul>\n",
+  "digitalRunPoints": 900,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30035852",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2013-10-12T22:44:00.000Z",
+  "finalSubmissionGuidelines": "<h2><strong style=\"line-height: 1.2em;\"><span style=\"color:#FF0000;\"><span style=\"line-height: 1.6em;\">Submission Deliverables</span></span></strong></h2>\n\n<p><span style=\"font-size:12px;\">A complete list of deliverables can be viewed in the TopCoder Assembly competition Tutorial at: <a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorial\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorial&nbsp;</a></span></p>\n\n<h2><span style=\"color:#FF0000;\"><strong>Final Submission</strong></span></h2>\n\n<p><span style=\"font-size:12px;\">For each member, the final submission should be uploaded to the Online Review Tool.</span></p>\n",
+  "forumId": 17981,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=17981",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 17,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-09-28T14:15:00.000Z",
+      "actualStartTime": "2013-09-28T14:15:00.000Z",
+      "scheduledEndTime": "2013-09-28T14:29:00.000Z",
+      "actualendTime": "2013-09-28T14:29:00.000Z",
+      "_id": "581355c0550dfb3b52c51019"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-09-28T14:29:00.000Z",
+      "actualStartTime": "2013-09-28T14:29:00.000Z",
+      "scheduledEndTime": "2013-09-28T16:38:00.000Z",
+      "actualendTime": "2013-09-28T16:38:00.000Z",
+      "_id": "581355c0550dfb3b52c51018"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2013-09-28T16:38:00.000Z",
+      "actualStartTime": "2013-09-28T16:38:00.000Z",
+      "scheduledEndTime": "2013-09-30T16:38:00.000Z",
+      "actualendTime": "2013-09-30T16:38:00.000Z",
+      "_id": "581355c0550dfb3b52c51017"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-09-28T16:43:00.000Z",
+      "actualStartTime": "2013-09-28T16:43:00.000Z",
+      "scheduledEndTime": "2013-10-03T16:43:00.000Z",
+      "actualendTime": "2013-10-03T16:43:00.000Z",
+      "_id": "581355c0550dfb3b52c51016"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-03T16:43:00.000Z",
+      "actualStartTime": "2013-10-03T16:43:00.000Z",
+      "scheduledEndTime": "2013-10-04T02:27:00.000Z",
+      "actualendTime": "2013-10-04T02:27:00.000Z",
+      "_id": "581355c0550dfb3b52c51015"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-04T02:27:00.000Z",
+      "actualStartTime": "2013-10-04T02:27:00.000Z",
+      "scheduledEndTime": "2013-10-05T23:00:00.000Z",
+      "actualendTime": "2013-10-05T23:00:00.000Z",
+      "_id": "581355c0550dfb3b52c51014"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-05T23:00:00.000Z",
+      "actualStartTime": "2013-10-05T23:00:00.000Z",
+      "scheduledEndTime": "2013-10-06T23:00:00.000Z",
+      "actualendTime": "2013-10-06T23:00:00.000Z",
+      "_id": "581355c0550dfb3b52c51013"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-06T23:00:00.000Z",
+      "actualStartTime": "2013-10-06T23:00:00.000Z",
+      "scheduledEndTime": "2013-10-07T06:37:00.000Z",
+      "actualendTime": "2013-10-07T06:37:00.000Z",
+      "_id": "581355c0550dfb3b52c51012"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-07T06:37:00.000Z",
+      "actualStartTime": "2013-10-07T06:37:00.000Z",
+      "scheduledEndTime": "2013-10-07T07:59:00.000Z",
+      "actualendTime": "2013-10-07T07:59:00.000Z",
+      "_id": "581355c0550dfb3b52c51011"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-07T07:59:00.000Z",
+      "actualStartTime": "2013-10-07T07:59:00.000Z",
+      "scheduledEndTime": "2013-10-09T01:31:00.000Z",
+      "actualendTime": "2013-10-09T01:31:00.000Z",
+      "_id": "581355c0550dfb3b52c51010"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-09T01:31:00.000Z",
+      "actualStartTime": "2013-10-09T01:31:00.000Z",
+      "scheduledEndTime": "2013-10-09T12:55:00.000Z",
+      "actualendTime": "2013-10-09T12:55:00.000Z",
+      "_id": "581355c0550dfb3b52c5100f"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-09T12:55:00.000Z",
+      "actualStartTime": "2013-10-09T12:55:00.000Z",
+      "scheduledEndTime": "2013-10-12T19:16:00.000Z",
+      "actualendTime": "2013-10-12T19:16:00.000Z",
+      "_id": "581355c0550dfb3b52c5100e"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-12T19:17:00.000Z",
+      "actualStartTime": "2013-10-12T19:17:00.000Z",
+      "scheduledEndTime": "2013-10-12T22:44:00.000Z",
+      "actualendTime": "2013-10-12T22:44:00.000Z",
+      "_id": "581355c0550dfb3b52c5100d"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-12T22:44:00.000Z",
+      "actualStartTime": "2013-10-12T22:44:00.000Z",
+      "scheduledEndTime": "2013-10-13T01:57:00.000Z",
+      "actualendTime": "2013-10-13T01:57:00.000Z",
+      "_id": "581355c0550dfb3b52c5100c"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-13T01:57:00.000Z",
+      "actualStartTime": "2013-10-13T01:57:00.000Z",
+      "scheduledEndTime": "2013-10-18T01:57:00.000Z",
+      "actualendTime": "2013-10-18T01:57:00.000Z",
+      "_id": "581355c0550dfb3b52c5100b"
+    }
+  ],
+  "platforms": [],
+  "postingDate": "2013-09-28T16:38:00.000Z",
+  "prize": [
+    2000,
+    1000
+  ],
+  "projectId": 6283,
+  "registrants": [
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2013-09-28T17:02:00.000Z",
+      "submissionDate": null,
+      "rating": "710",
+      "colorStyle": "color: #999999",
+      "_id": "581355c0550dfb3b52c5100a"
+    },
+    {
+      "handle": "LieutenantRoger",
+      "reliability": "13%",
+      "registrationDate": "2013-09-28T17:13:00.000Z",
+      "submissionDate": null,
+      "rating": "1186",
+      "colorStyle": "color: #00A900",
+      "_id": "581355c0550dfb3b52c51009"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2013-09-28T17:25:00.000Z",
+      "submissionDate": null,
+      "rating": "829",
+      "colorStyle": "color: #999999",
+      "_id": "581355c0550dfb3b52c51008"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2013-09-28T18:03:00.000Z",
+      "submissionDate": null,
+      "rating": "1423",
+      "colorStyle": "color: #6666FF",
+      "_id": "581355c0550dfb3b52c51007"
+    },
+    {
+      "handle": "pvmagacho",
+      "reliability": "40%",
+      "registrationDate": "2013-09-28T18:25:00.000Z",
+      "submissionDate": null,
+      "rating": "693",
+      "colorStyle": "color: #999999",
+      "_id": "581355c0550dfb3b52c51006"
+    },
+    {
+      "handle": "namanhams",
+      "reliability": "93%",
+      "registrationDate": "2013-09-29T02:05:00.000Z",
+      "submissionDate": "2013-10-03T12:40:00.000Z",
+      "rating": "1084",
+      "colorStyle": "color: #00A900",
+      "_id": "581355c0550dfb3b52c51005"
+    },
+    {
+      "handle": "winterflame",
+      "reliability": "0%",
+      "registrationDate": "2013-09-29T07:04:00.000Z",
+      "submissionDate": null,
+      "rating": "978",
+      "colorStyle": "color: #00A900",
+      "_id": "581355c0550dfb3b52c51004"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-29T08:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c0550dfb3b52c51003"
+    },
+    {
+      "handle": "michael_tang",
+      "reliability": "0%",
+      "registrationDate": "2013-09-29T09:52:00.000Z",
+      "submissionDate": null,
+      "rating": "912",
+      "colorStyle": "color: #00A900",
+      "_id": "581355c0550dfb3b52c51002"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-29T11:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c0550dfb3b52c51001"
+    },
+    {
+      "handle": "brain_cn",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-29T14:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c0550dfb3b52c51000"
+    },
+    {
+      "handle": "shen75",
+      "reliability": "40%",
+      "registrationDate": "2013-09-29T18:39:00.000Z",
+      "submissionDate": "2013-10-03T03:08:00.000Z",
+      "rating": "1681",
+      "colorStyle": "color: #DDCC00",
+      "_id": "581355c0550dfb3b52c50fff"
+    },
+    {
+      "handle": "johnie_sheng",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-30T03:53:00.000Z",
+      "submissionDate": "2013-10-01T09:01:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c0550dfb3b52c50ffe"
+    },
+    {
+      "handle": "vnguyen284",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-30T06:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c0550dfb3b52c50ffd"
+    },
+    {
+      "handle": "bonifatio",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-30T10:51:00.000Z",
+      "submissionDate": null,
+      "rating": "564",
+      "colorStyle": "color: #999999",
+      "_id": "581355c0550dfb3b52c50ffc"
+    },
+    {
+      "handle": "vokie",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-30T12:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c0550dfb3b52c50ffb"
+    },
+    {
+      "handle": "heweyj",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-30T16:15:00.000Z",
+      "submissionDate": null,
+      "rating": "487",
+      "colorStyle": "color: #999999",
+      "_id": "581355c0550dfb3b52c50ffa"
+    }
+  ],
+  "registrationEndDate": "2013-09-30T16:38:00.000Z",
+  "reliabilityBonus": 400,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2013-10-03T16:43:00.000Z",
+  "submissions": [
+    {
+      "handle": "shen75",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 98.92,
+      "finalScore": 99.47,
+      "points": 630,
+      "submissionStatus": "Active",
+      "submissionDate": "2013-10-03T03:08:00.000Z",
+      "_id": "581355c0550dfb3b52c5101c"
+    },
+    {
+      "handle": "namanhams",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 89.6,
+      "finalScore": 93.18,
+      "points": 270,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2013-10-03T12:40:00.000Z",
+      "_id": "581355c0550dfb3b52c5101b"
+    },
+    {
+      "handle": "johnie_sheng",
+      "placement": null,
+      "screeningScore": 0,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Failed Screening",
+      "submissionDate": "2013-10-01T09:01:00.000Z",
+      "_id": "581355c0550dfb3b52c5101a"
+    }
+  ],
+  "technology": [
+    "Objective C",
+    "Xcode",
+    "iOS 6.0"
+  ]
+}

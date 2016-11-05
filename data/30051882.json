@@ -1,0 +1,361 @@
+{
+  "_id": 30051882,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:59:46.331Z",
+  "appealsEndDate": "2015-10-23T17:12:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "SunShot - Hot4Solar CSV Geocoding Extractor F2F",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2015-11-21T09:48:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -29556626,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<div>\n<p dir=\"ltr\">The goal of this challenge to build a command line tool that accepts a csv file, index of address , longitude, and latitude fields, use google Geocoding API to retrieve long/lat of the address, and update the csv long/lat fields content.</p>\n</div>\n\n<p dir=\"ltr\">The output file result from running the command will be a clone of the input file with long/lat columns filled.</p>\n\n<h2 dir=\"ltr\">Challenge Requirements</h2>\n\n<p dir=\"ltr\">Note the following when implementing the requirements :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- <span style=\"color:#FF0000\"><strong>(New Requirements)&nbsp;</strong></span><span style=\"line-height:1.2\">Using this&nbsp;</span><a href=\"https://github.com/caolan/async\" style=\"line-height: 1.2;\">asynch node module</a><span style=\"line-height:1.2\">&nbsp;is a must in this challenge. You must use it to iterate over records one by one using&nbsp;</span><a href=\"https://github.com/caolan/async#seriestasks-callback\">series</a>&nbsp;flow, and for calls to communicate with google api, and write to file it should be using <a href=\"https://github.com/caolan/async#waterfall\">waterfall</a> flow.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span>-&nbsp;</span><span style=\"color:rgb(255, 0, 0)\"><strong>(New Requirements)</strong></span> Make google api key optional configuration and demonstrate how to use it.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- CSV file delimiter should be configurable for input and output files</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Input arguments should be :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- input file</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- output file</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- address field index</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- longitude field index</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- latitude field index</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- limit</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logic :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- read csv input file record by record</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- extract address field (using provided index)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- check longitude/latitude fields for the record, if set, then skip the record and write it as it is to output.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- use Google geocoding api to get long/lat</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- if google does not return anything leave long/lat fields empty in output file</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- if google returns multiple long/lat for same address, log that, and use the first one</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Track calls to geo api if we hit limit input then&nbsp;<span>we stop calling the API and we write remaining records as it is in output file.</span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- write the long/lat to output file using the indexes provided as input.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- output file should not exist, if exist it should throw error.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- header will be part of input file and should be part of output file.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Logging - &nbsp;The application should produce a log file per run (in configurable folder) that contains entries for the following events:</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- errors</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- total # records extracted.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Deliverable</h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Source code that implement the requirement.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Sample input/output files from a successful run.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- README file in markdown format with following information :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Overview</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Prerequisites</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- How to setup dependencies</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- How to setup configuration</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Sample usage</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30051882",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<p>.</p>\n",
+  "forumId": 30991,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=30991",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 12,
+  "numberOfSubmissions": 10,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2015-10-22T09:48:00.000Z",
+      "actualStartTime": "2015-10-22T09:48:00.000Z",
+      "scheduledEndTime": "2015-11-21T09:48:00.000Z",
+      "actualendTime": null,
+      "_id": "58132fa2550dfb3b52b893aa"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-22T14:22:00.000Z",
+      "actualStartTime": "2015-10-22T14:22:00.000Z",
+      "scheduledEndTime": "2015-10-22T15:21:00.000Z",
+      "actualendTime": "2015-10-22T15:21:00.000Z",
+      "_id": "58132fa2550dfb3b52b893a9"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2015-10-22T09:53:00.000Z",
+      "actualStartTime": "2015-10-22T09:53:00.000Z",
+      "scheduledEndTime": "2015-11-21T09:53:00.000Z",
+      "actualendTime": null,
+      "_id": "58132fa2550dfb3b52b893a8"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-22T15:23:00.000Z",
+      "actualStartTime": "2015-10-22T15:23:00.000Z",
+      "scheduledEndTime": "2015-10-22T15:31:00.000Z",
+      "actualendTime": "2015-10-22T15:31:00.000Z",
+      "_id": "58132fa2550dfb3b52b893a7"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-22T15:32:00.000Z",
+      "actualStartTime": "2015-10-22T15:32:00.000Z",
+      "scheduledEndTime": "2015-10-22T16:24:00.000Z",
+      "actualendTime": "2015-10-22T16:24:00.000Z",
+      "_id": "58132fa2550dfb3b52b893a6"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-22T16:25:00.000Z",
+      "actualStartTime": "2015-10-22T16:25:00.000Z",
+      "scheduledEndTime": "2015-10-22T16:36:00.000Z",
+      "actualendTime": "2015-10-22T16:36:00.000Z",
+      "_id": "58132fa2550dfb3b52b893a5"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-22T16:38:00.000Z",
+      "actualStartTime": "2015-10-22T16:38:00.000Z",
+      "scheduledEndTime": "2015-10-22T16:40:00.000Z",
+      "actualendTime": "2015-10-22T16:40:00.000Z",
+      "_id": "58132fa2550dfb3b52b893a4"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-22T16:41:00.000Z",
+      "actualStartTime": "2015-10-22T16:41:00.000Z",
+      "scheduledEndTime": "2015-10-22T16:47:00.000Z",
+      "actualendTime": "2015-10-22T16:47:00.000Z",
+      "_id": "58132fa2550dfb3b52b893a3"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-22T22:00:00.000Z",
+      "actualStartTime": "2015-10-22T22:00:00.000Z",
+      "scheduledEndTime": "2015-10-23T11:33:00.000Z",
+      "actualendTime": "2015-10-23T11:33:00.000Z",
+      "_id": "58132fa2550dfb3b52b893a2"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-23T11:34:00.000Z",
+      "actualStartTime": "2015-10-23T11:34:00.000Z",
+      "scheduledEndTime": "2015-10-23T17:12:00.000Z",
+      "actualendTime": "2015-10-23T17:12:00.000Z",
+      "_id": "58132fa2550dfb3b52b893a1"
+    }
+  ],
+  "platforms": [
+    "NodeJS"
+  ],
+  "postingDate": "2015-10-22T09:48:00.000Z",
+  "prize": [
+    200
+  ],
+  "projectId": 9154,
+  "registrants": [
+    {
+      "handle": "ketzjs09",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-22T09:57:00.000Z",
+      "submissionDate": "2015-10-23T13:00:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893a0"
+    },
+    {
+      "handle": "Inevitable.shal",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-22T12:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b8939f"
+    },
+    {
+      "handle": "daviddou",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-22T12:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b8939e"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-22T12:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b8939d"
+    },
+    {
+      "handle": "isvissu",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-22T12:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b8939c"
+    },
+    {
+      "handle": "Parikh",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-22T12:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b8939b"
+    },
+    {
+      "handle": "sohamkamani",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-22T13:55:00.000Z",
+      "submissionDate": "2015-10-22T15:22:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b8939a"
+    },
+    {
+      "handle": "bcds",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-22T15:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b89399"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-22T21:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b89398"
+    },
+    {
+      "handle": "fragginNinja",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-23T03:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b89397"
+    },
+    {
+      "handle": "dnlp1",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-23T04:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b89396"
+    },
+    {
+      "handle": "mohhasbias",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-23T12:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b89395"
+    }
+  ],
+  "registrationEndDate": "2015-11-21T09:48:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-11-21T09:53:00.000Z",
+  "submissions": [
+    {
+      "handle": "ketzjs09",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-10-22T14:47:00.000Z",
+      "_id": "58132fa2550dfb3b52b893b4"
+    },
+    {
+      "handle": "sohamkamani",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-10-22T15:22:00.000Z",
+      "_id": "58132fa2550dfb3b52b893b3"
+    },
+    {
+      "handle": "ketzjs09",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-10-22T15:43:00.000Z",
+      "_id": "58132fa2550dfb3b52b893b2"
+    },
+    {
+      "handle": "ketzjs09",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-10-22T14:20:00.000Z",
+      "_id": "58132fa2550dfb3b52b893b1"
+    },
+    {
+      "handle": "ketzjs09",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-10-22T16:03:00.000Z",
+      "_id": "58132fa2550dfb3b52b893b0"
+    },
+    {
+      "handle": "ketzjs09",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-10-23T09:13:00.000Z",
+      "_id": "58132fa2550dfb3b52b893af"
+    },
+    {
+      "handle": "ketzjs09",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-10-22T16:12:00.000Z",
+      "_id": "58132fa2550dfb3b52b893ae"
+    },
+    {
+      "handle": "ketzjs09",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-10-22T21:58:00.000Z",
+      "_id": "58132fa2550dfb3b52b893ad"
+    },
+    {
+      "handle": "ketzjs09",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-10-23T09:45:00.000Z",
+      "_id": "58132fa2550dfb3b52b893ac"
+    },
+    {
+      "handle": "ketzjs09",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-10-23T13:00:00.000Z",
+      "_id": "58132fa2550dfb3b52b893ab"
+    }
+  ],
+  "technology": [
+    "API",
+    "Node.js"
+  ]
+}

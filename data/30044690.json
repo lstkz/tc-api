@@ -1,0 +1,381 @@
+{
+  "_id": 30044690,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:06:07.252Z",
+  "appealsEndDate": "2014-08-24T07:40:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Module Assembly - Web Socket Listener - Porting Round Load Related Events",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<h1><span><span><span><span><span><span><span><span><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></span></span></span></span></span></span></span></span></h1>\n\n<p><span><span><span><span><span><span><span><span>Currently, TopCoder Competition Engine used a customized way for communication between the client side (Arena applet) and the backend listeners. We are planning to implement a Web-based Arena based Web Socket protocol.</span></span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span><span>Previously, we have run contests to port all events of main listener to a standalone web socket listener, which provides a good solution by using the combination of <a href=\"http://socket.io/\">socket.io</a> (web client)&nbsp; and <a href=\"http://netty.io/\">netty.io</a> (server side).&nbsp;</span></span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span>We are continuing to support more features needed by the new Web-Based Arena.</span></span></span></span></span></span></p>\n\n<h1><span><span><span><span><span><span><span><span><span style=\"color:#FF0000\">Competition Task Overview</span></span></span></span></span></span></span></span></span></h1>\n\n<p><span><span><span><span><span><span><span><span><span style=\"font-size:12px\">This contest is going to port Round Load Related Events to Web Socket Listener, so we can activiate rounds through web arena in the future. Currently, this functioanlity is available at Admin Tool, and which will contact the main listener to do the real load.</span></span></span></span></span></span></span></span></span></p>\n\n<h3><span><span><span><span><span><span><span><span><span><strong><span style=\"font-size:12px\"><span style=\"color:#0000FF\">General Approach</span></span></strong></span></span></span></span></span></span></span></span></span></h3>\n\n<p><span><span><span><span><span><span><span>We&#39;d like to make the web socket listener as a wrapper over the main listener, the main logic should be implemented inside the main listener, several code changes are<span style=\"color:#FF0000\"> already checked in github repositories (</span></span></span><a href=\"https://github.com/cloudspokes/app/commits/master\">https://github.com/cloudspokes/app</a><span><span><span style=\"color:#FF0000\">).</span></span></span></span></span></span></span></span></p>\n\n<p><span><span><span>You can learn from the changes needed.</span></span></span></p>\n\n<p><span><span><span><span><span><span><span>Please check the </span></span></span></span></span></span></span><a href=\"https://github.com/cloudspokes/app/commit/c08bb4f10f0c3d090d5213402a0d13e6876e99a7#diff-d41d8cd98f00b204e9800998ecf8427e\">https://github.com/cloudspokes/app/commit/c08bb4f10f0c3d090d5213402a0d13e6876e99a7#diff-d41d8cd98f00b204e9800998ecf8427e</a><span><span><span><span><span><span><span> as a base knowledge to connecting the web socket listener and main listener, and follow the same approach to implement,&nbsp; any improvement is welcome.</span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span style=\"color:#FF0000\">Please reuse existing functionality used in main listener as much as possible.</span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span><span><strong><span style=\"font-size:12px\"><span style=\"color:#0000FF\">Round Load Related Events</span></span></strong></span></span></span><br />\n<span><span><span>In order to start a SRM, admin have to do the following steps in Admin Tool, </span></span></span></span></span></span></span></span></p>\n\n<p style=\"margin-left:40px\"><span style=\"font-family:comic sans ms,cursive\">File -&gt; Load Round Access</span></p>\n\n<p style=\"margin-left:40px\"><span style=\"font-family:comic sans ms,cursive\">Click <u>Test SRM Test SRM Round</u> and click <u>select</u></span></p>\n\n<p style=\"margin-left:40px\"><span style=\"font-family:comic sans ms,cursive\">Click <u>OK</u> on Message Popup</span></p>\n\n<p style=\"margin-left:40px\"><span style=\"font-family:comic sans ms,cursive\">Run contest -&gt; Before contest -&gt; Load Round</span></p>\n\n<p style=\"margin-left:40px\"><span style=\"font-family:comic sans ms,cursive\">Click <u>Yes</u> on Confirm popup</span></p>\n\n<p style=\"margin-left:40px\"><span style=\"font-family:comic sans ms,cursive\">Click <u>OK</u> on Message popup</span></p>\n\n<p><span><span><span>You can start from&nbsp;</span></span></span><u>com.topcoder.server.AdminListener.AdminProcessor</u>,</p>\n<span style=\"font-family:courier new,courier,monospace\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Change round requests and refresh access information requests can always be executed.&nbsp; Feed them<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // immediately to the back end.<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (request instanceof RoundAccessRequest) {<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; backEndQueue.put(new BackEndRoundAccessRequest(sender, userId.longValue()));<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else if (request instanceof ChangeRoundRequest) {<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ChangeRoundRequest req = (ChangeRoundRequest)request;<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BackEndChangeRoundRequest bereq = new BackEndChangeRoundRequest(<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sender, userId.longValue(),req.getRoundId());<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; backEndQueue.put(bereq);<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;</span>\n\n<p>and <u><em>com.topcoder.server.processor.Processor</em></u></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">&nbsp;&nbsp;&nbsp; static void loadContestRound(long roundID) {<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Round round = CoreServices.getContestRound((int) roundID);<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (round.isActive()) {<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; unloadContestRound(roundID);<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //We need to broadcast the round before the round is actually loaded.<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //This is because timer tasks will notify phase events as soon as the round is loaded, causing<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //exceptions in the client if it does not have the round.<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; round = CoreServices.getContestRound((int) roundID);<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fillRoundConnectionsForBroadcasting(round);<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; initNotifyRoundLoaded(round);<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CoreServices.loadContestRound((int) roundID);<br />\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; notifyRoundLoaded(round);<br />\n&nbsp;&nbsp;&nbsp; }</span></p>\n\n<p><span><span><span><span><span>Here are the request and response for the existing functionality, but not complete, but it is good for starting point.</span></span></span></span></span></p>\n\n<ul>\n\t<li>com.topcoder.server.AdminListener.request.RoundAccessRequest</li>\n\t<li>com.topcoder.server.AdminListener.request.ChangeRoundRequest</li>\n\t<li>com.topcoder.server.AdminListener.response. RoundAccessResponse</li>\n\t<li>com.topcoder.server.AdminListener.response. ChangeRoundResponse</li>\n\t<li>com.topcoder.server.AdminListener.request.LoadRoundRequest</li>\n\t<li>com.topcoder.server.AdminListener.response. CommandSucceededResponse</li>\n</ul>\n\n<p><span><span><span><span><span><span><strong><span><span style=\"color:#0000FF\">Web Demo</span></span></strong></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span>In order to demonstrate your solution, you are expected to <strong>update </strong>the demo (provided in forum), to demonstrate similar use cases.</span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span>in order to prepare the data, you can use Arena applet to do other work.</span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><strong><span><span style=\"color:#0000FF\">Winner Responsibility</span></span></strong></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span>Winner will be responsible to create pull request in final fix phase, and help with the merge.</span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><strong><span><span style=\"color:#0000FF\">About Code Base</span></span></strong></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span>For the code under /home/apps/dev directory, some are hosted in internal svn repositories, some are hosted in private repositories in github.</span></span></span></span></span></p>\n\n<p><span><span><span><span><span>You can check <a href=\"http://apps.topcoder.com/wiki/display/%7Efireice/Source+Code+Management+For+TopCoder+Competition+Engine\">Source Code Management For TopCoder Competition Engine - TopCoder Wiki</a></span></span></span></span></span></p>\n\n<p><span><span><span><span><span>For SVN Access, please send request to <a href=\"mailto:support@topcoder.com\">support@topcoder.com</a>, For github access, please post your github account in forum to ask PM to grant you access.</span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span><span><span style=\"color:rgb(255, 0, 0)\">Arena VM</span></span></span> </span> </span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span><span>Before asking your own VM, you need to have a public key on your profile before asking for the VM.</span></span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span><span>You can find more details on how to generate a key <span><a href=\"http://apps.topcoder.com/wiki/display/projects/Generate+SSH+Key\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/projects/Generate+SSH+Key</a></span> and how to connect using it <span><a href=\"http://apps.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key</a></span>.</span></span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span><span>To use the Arena VM, please follow <span><a href=\"http://apps.topcoder.com/wiki/display/docs/Competition+Engine+VM+Setup\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/docs/Competition+Engine+VM+Setup</a></span></span></span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span>Currently, we moved several main projects to github, please check <a href=\"http://apps.topcoder.com/wiki/display/%7Efireice/Source+Code+Management+For+TopCoder+Competition+Engine\">http://apps.topcoder.com/wiki/display/~fireice/Source+Code+Management+For+TopCoder+Competition+Engine</a></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span>If you want to have local access to github, please create your own github account, and ask access in forum.</span></span></span></span></span></span></p>\n</div>\n</div>\n</div>\n</div>\n",
+  "digitalRunPoints": 360,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30044690",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2014-08-26T07:53:00.000Z",
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<h2><span><span><span><span><span><span><span><span><span style=\"color:#FF0000\">Submission Deliverables</span></span></span></span></span></span></span></span></span></h2>\n\n<p><span><span><span><span><span><span><span><span><span style=\"font-size:12px\">Below is an overview of the deliverables:</span></span></span></span></span></span></span></span></span></p>\n\n<ul>\n\t<li><span><span><span><span><span><span><span><span><span style=\"font-size:12px\">Code Changes for the solution, please include the svn revision and git commit hash</span></span></span></span></span></span></span></span></span></li>\n\t<li><span><span><span><span><span><span><span><span><span style=\"font-size:12px\">A complete and detailed deployment documented explaining how to deploy the application including configuration information.</span></span></span></span></span></span></span></span></span></li>\n</ul>\n\n<h2><span><span><span><span><span><span><span><span><span style=\"color:#FF0000\">Final Submission</span></span></span></span></span></span></span></span></span></h2>\n\n<p><span><span><span><span><span><span><span><span><span style=\"font-size:12px\">For each member, the final submission should be uploaded to the Online Review Tool.</span></span></span></span></span></span></span></span></span></p>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n",
+  "forumId": 24568,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=24568",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 21,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-15T02:19:00.000Z",
+      "actualStartTime": "2014-08-15T02:19:00.000Z",
+      "scheduledEndTime": "2014-08-15T02:21:00.000Z",
+      "actualendTime": "2014-08-15T02:21:00.000Z",
+      "_id": "5813230f550dfb3b52b3c701"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-15T02:21:00.000Z",
+      "actualStartTime": "2014-08-15T02:21:00.000Z",
+      "scheduledEndTime": "2014-08-15T04:44:00.000Z",
+      "actualendTime": "2014-08-15T04:44:00.000Z",
+      "_id": "5813230f550dfb3b52b3c700"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-15T13:00:00.000Z",
+      "actualStartTime": "2014-08-15T13:00:00.000Z",
+      "scheduledEndTime": "2014-08-17T13:00:00.000Z",
+      "actualendTime": "2014-08-17T13:00:00.000Z",
+      "_id": "5813230f550dfb3b52b3c6ff"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-15T13:06:00.000Z",
+      "actualStartTime": "2014-08-15T13:06:00.000Z",
+      "scheduledEndTime": "2014-08-20T13:01:00.000Z",
+      "actualendTime": "2014-08-20T13:01:00.000Z",
+      "_id": "5813230f550dfb3b52b3c6fe"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-20T13:01:00.000Z",
+      "actualStartTime": "2014-08-20T13:01:00.000Z",
+      "scheduledEndTime": "2014-08-20T13:21:00.000Z",
+      "actualendTime": "2014-08-20T13:21:00.000Z",
+      "_id": "5813230f550dfb3b52b3c6fd"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-20T13:21:00.000Z",
+      "actualStartTime": "2014-08-20T13:21:00.000Z",
+      "scheduledEndTime": "2014-08-22T22:26:00.000Z",
+      "actualendTime": "2014-08-22T22:26:00.000Z",
+      "_id": "5813230f550dfb3b52b3c6fc"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-22T22:26:00.000Z",
+      "actualStartTime": "2014-08-22T22:26:00.000Z",
+      "scheduledEndTime": "2014-08-23T22:26:00.000Z",
+      "actualendTime": "2014-08-23T22:26:00.000Z",
+      "_id": "5813230f550dfb3b52b3c6fb"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-23T22:26:00.000Z",
+      "actualStartTime": "2014-08-23T22:26:00.000Z",
+      "scheduledEndTime": "2014-08-24T07:40:00.000Z",
+      "actualendTime": "2014-08-24T07:40:00.000Z",
+      "_id": "5813230f550dfb3b52b3c6fa"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-24T07:40:00.000Z",
+      "actualStartTime": "2014-08-24T07:40:00.000Z",
+      "scheduledEndTime": "2014-08-24T10:45:00.000Z",
+      "actualendTime": "2014-08-24T10:45:00.000Z",
+      "_id": "5813230f550dfb3b52b3c6f9"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-24T10:45:00.000Z",
+      "actualStartTime": "2014-08-24T10:45:00.000Z",
+      "scheduledEndTime": "2014-08-25T13:27:00.000Z",
+      "actualendTime": "2014-08-25T13:27:00.000Z",
+      "_id": "5813230f550dfb3b52b3c6f8"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-25T13:27:00.000Z",
+      "actualStartTime": "2014-08-25T13:27:00.000Z",
+      "scheduledEndTime": "2014-08-26T00:21:00.000Z",
+      "actualendTime": "2014-08-26T00:21:00.000Z",
+      "_id": "5813230f550dfb3b52b3c6f7"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-26T08:14:00.000Z",
+      "actualStartTime": "2014-08-26T08:14:00.000Z",
+      "scheduledEndTime": "2014-08-28T02:32:00.000Z",
+      "actualendTime": "2014-08-28T02:32:00.000Z",
+      "_id": "5813230f550dfb3b52b3c6f6"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-26T00:21:00.000Z",
+      "actualStartTime": "2014-08-26T00:21:00.000Z",
+      "scheduledEndTime": "2014-08-26T07:53:00.000Z",
+      "actualendTime": "2014-08-26T07:53:00.000Z",
+      "_id": "5813230f550dfb3b52b3c6f5"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-26T07:53:00.000Z",
+      "actualStartTime": "2014-08-26T07:53:00.000Z",
+      "scheduledEndTime": "2014-08-26T08:14:00.000Z",
+      "actualendTime": "2014-08-26T08:14:00.000Z",
+      "_id": "5813230f550dfb3b52b3c6f4"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2014-08-15T13:00:00.000Z",
+  "prize": [
+    800,
+    400
+  ],
+  "projectId": 7377,
+  "registrants": [
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-15T13:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230f550dfb3b52b3c6f3"
+    },
+    {
+      "handle": "flytoj2ee",
+      "reliability": "40%",
+      "registrationDate": "2014-08-15T14:19:00.000Z",
+      "submissionDate": null,
+      "rating": "1480",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813230f550dfb3b52b3c6f2"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-15T14:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230f550dfb3b52b3c6f1"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-08-15T14:55:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "5813230f550dfb3b52b3c6f0"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-15T15:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230f550dfb3b52b3c6ef"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-15T15:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230f550dfb3b52b3c6ee"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "20%",
+      "registrationDate": "2014-08-15T16:20:00.000Z",
+      "submissionDate": null,
+      "rating": "1655",
+      "colorStyle": "color: #DDCC00",
+      "_id": "5813230f550dfb3b52b3c6ed"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "6%",
+      "registrationDate": "2014-08-15T16:25:00.000Z",
+      "submissionDate": null,
+      "rating": "639",
+      "colorStyle": "color: #999999",
+      "_id": "5813230f550dfb3b52b3c6ec"
+    },
+    {
+      "handle": "sunhong",
+      "reliability": "0%",
+      "registrationDate": "2014-08-15T17:28:00.000Z",
+      "submissionDate": null,
+      "rating": "1269",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813230f550dfb3b52b3c6eb"
+    },
+    {
+      "handle": "wizgen",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-15T18:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230f550dfb3b52b3c6ea"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-08-16T01:38:00.000Z",
+      "submissionDate": null,
+      "rating": "1031",
+      "colorStyle": "color: #00A900",
+      "_id": "5813230f550dfb3b52b3c6e9"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "20%",
+      "registrationDate": "2014-08-16T05:54:00.000Z",
+      "submissionDate": null,
+      "rating": "1256",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813230f550dfb3b52b3c6e8"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-16T05:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230f550dfb3b52b3c6e7"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-16T07:22:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "5813230f550dfb3b52b3c6e6"
+    },
+    {
+      "handle": "OlinaRuan",
+      "reliability": "6%",
+      "registrationDate": "2014-08-16T10:34:00.000Z",
+      "submissionDate": null,
+      "rating": "1047",
+      "colorStyle": "color: #00A900",
+      "_id": "5813230f550dfb3b52b3c6e5"
+    },
+    {
+      "handle": "VenLee",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-16T12:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230f550dfb3b52b3c6e4"
+    },
+    {
+      "handle": "ananthhh",
+      "reliability": "90%",
+      "registrationDate": "2014-08-16T20:57:00.000Z",
+      "submissionDate": "2014-08-20T11:31:00.000Z",
+      "rating": "1157",
+      "colorStyle": "color: #00A900",
+      "_id": "5813230f550dfb3b52b3c6e3"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-17T04:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230f550dfb3b52b3c6e2"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-17T06:34:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "5813230f550dfb3b52b3c6e1"
+    },
+    {
+      "handle": "jol",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-17T11:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230f550dfb3b52b3c6e0"
+    },
+    {
+      "handle": "dct",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-17T12:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813230f550dfb3b52b3c6df"
+    }
+  ],
+  "registrationEndDate": "2014-08-17T13:00:00.000Z",
+  "reliabilityBonus": 160,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-08-20T13:01:00.000Z",
+  "submissions": [
+    {
+      "handle": "ananthhh",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 90.49,
+      "finalScore": 93.52,
+      "points": 360,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-08-20T11:31:00.000Z",
+      "_id": "5813230f550dfb3b52b3c702"
+    }
+  ],
+  "technology": [
+    "Java"
+  ]
+}

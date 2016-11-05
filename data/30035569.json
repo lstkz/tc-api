@@ -1,0 +1,391 @@
+{
+  "_id": 30035569,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:42:27.355Z",
+  "appealsEndDate": "2013-11-03T13:54:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "ION-DTN LTP Inbound Authentication Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p style=\"margin-left:36.0pt;\">&nbsp;</p>\n\n<div class=\"previewMask\">\n<p style=\"margin-left:36.0pt;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">The Office of Space Communications and Navigation (SCaN) at NASA Headquarters leads the Delay Tolerant Networking (DTN) investigation with the goal of advancing the maturity and heritage (space flight use) of the DTN communication protocols.</span></p>\n\n<p style=\"margin-left:36.0pt;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Delay tolerant networks make use of store-and-forward techniques within the network in order to compensate for intermittent link connectivity. In the DTN the fundamental concept is an architecture based on Internet-independent middleware where protocols at all layers are used that best suit the operation within each environment, with a new overlay network protocol (bundle protocol) inserted between the applications and the locally optimized communications stacks.</span></p>\n\n<p style=\"margin-left:36.0pt;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">The architecture aims to design the ION-DTN changes that are needed to support LTP Authentication extension.</span></p>\n\n<p style=\"margin-left:36.0pt;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">This assembly is responsible to implement changes of ION-DTN for adding LTP authentication information to inbound LTP segments.</span> This is the 3rd and last assembly of the LTP authentication series.</p>\n\n<p style=\"margin-left:36.0pt;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Note that the architect has put a lot of effort to provide entry points and updated source codes.</span></span></p>\n</div>\n",
+  "digitalRunPoints": 630,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30035569",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2013-11-04T13:30:00.000Z",
+  "finalSubmissionGuidelines": "<p>(there was a problem with direct file upload, so all files are attached to forum)</p>\n\n<p><span class=\"small_info_spec\" id=\"rswGuidelines\">This competition continues a previous implementation. Assemblers must follow ION coding style guide.</span></p>\n\n<p><span class=\"small_info_spec\" id=\"rswGuidelines\"><strong>Main deliverables:</strong></span></p>\n\n<ul>\n\t<li><span class=\"small_info_spec\" id=\"rswGuidelines\">Updated Source Code and Change Log explaining the changes (you do not need to upload the whole source code).</span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswGuidelines\">Deployment guide explaining how to <u>build</u>, <u>configure</u> and <u>verify</u> the application.</span></li>\n\t<li><span style=\"color:#FF0000;\"><strong><span class=\"small_info_spec\">KeyID</span></strong></span>: we found an issue with Key ID in previous assembly. The LTP python code using Key ID to look for the proper key to decipher the segment. This is not according to spec. We will keep the KeyID as is, but the <strong>receiver should not rely on key id</strong>. It should try to decipher the segment using all configured keys.</li>\n\t<li>The overally concept of function verifyAuthentication stays, but it should work with all cipher suites of the segment type (it may have more than one in a single segment). You should not use sec_findLtpRecvAuthRule. Check implemented handleDataSegment to see how to navigate the existing rules.</li>\n</ul>\n\n<p><span class=\"small_info_spec\" id=\"rswGuidelines\"><strong>Test:</strong></span></p>\n\n<ul>\n\t<li><span class=\"small_info_spec\" id=\"rswGuidelines\">You must continue the loopback-ltp-auth configuration at <strong><em>config </em></strong>folder (see ION-DTN source code and attached submission).</span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswGuidelines\">You must continue the 1600.loopback-auth test file at <strong><em>test </em></strong>folder (see ION-DTN source code and attached submission).</span></li>\n\t<li><span class=\"small_info_spec\">Add </span>more tests - naming them 1601, 1602, etc. - to test different cipher suites.</li>\n\t<li>You need to verify what happens to the segment when ciphering fails: if it is retransmitted or discarded. Provide evidence.</li>\n\t<li>You must include at least one test where transmitter uses two cipher suites and receiver has a single one or more than one.</li>\n\t<li><span class=\"small_info_spec\" id=\"rswGuidelines\"><strong>Using LTP Python implementation is not need in this assembly</strong></span></li>\n</ul>\n\n<p><span class=\"small_info_spec\" id=\"rswGuidelines\"><strong>Source Code Comments</strong>:</span></p>\n\n<ul>\n\t<li><span class=\"small_info_spec\" id=\"rswGuidelines\">There will be no strict rule for source code comments for functions. Use mainly inline comments, wisely.</span></li>\n</ul>\n\n<p><span class=\"small_info_spec\" id=\"rswGuidelines\"><strong>Environment:</strong></span></p>\n\n<ul>\n\t<li><span class=\"small_info_spec\" id=\"rswGuidelines\">Linux (Ubuntu 12.04.3 LTS is recommend)</span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswGuidelines\">C</span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswGuidelines\">GCC (latest stable version 4.8.1 is recommended)</span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswGuidelines\">Make (latest stable version 3.82 is recommended)</span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswGuidelines\">Python (latest 2.x stable version 2.7.5 is recommend)</span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswGuidelines\"><a href=\"http://sourceforge.net/projects/ion-dtn/files/ion-3.1.3.tar.gz/download\">ION-DTN 3.1.3</a></span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswGuidelines\"><a href=\"https://polarssl.org/download/polarssl-1.2.8-gpl.tgz\">PolarSSL 1.2.8</a></span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswGuidelines\">Python LTP - <span class=\"nobr\"><a href=\"http://sourceforge.net/p/ltpforccsds/code-0/ci/default/tree/\" rel=\"nofollow\">http://sourceforge.net/p/ltpforccsds/code-0/ci/default/tree/</a></span></span></li>\n</ul>\n\n<p><span class=\"small_info_spec\" id=\"rswGuidelines\"><strong>Deployment Instructions:</strong></span></p>\n\n<p><span class=\"small_info_spec\" id=\"rswGuidelines\">Assemblers can code in a local Ubuntu environment since only loopback connection is needed to validate the configuration. Available in the forum, is a document where you can find instructions on how to setup ION-DTN. It is applicable for VMs, but it should be easily adapted for local environments. You can also follow ION-DTN tutorials from the source code distribution.</span></p>\n\n<p><span class=\"small_info_spec\" id=\"rswGuidelines\"><span style=\"color:#FF0000;\"><strong>Request VM with ION-DTN and Python LTP if needed. Send email to </strong></span><strong>romanotc@copilots.topcoder.com</strong></span></p>\n",
+  "forumId": 18993,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=18993",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 23,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-25T01:30:00.000Z",
+      "actualStartTime": "2013-10-25T01:30:00.000Z",
+      "scheduledEndTime": "2013-10-25T01:31:00.000Z",
+      "actualendTime": "2013-10-25T01:31:00.000Z",
+      "_id": "581355c3550dfb3b52c512ce"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-25T01:31:00.000Z",
+      "actualStartTime": "2013-10-25T01:31:00.000Z",
+      "scheduledEndTime": "2013-10-25T04:09:00.000Z",
+      "actualendTime": "2013-10-25T04:09:00.000Z",
+      "_id": "581355c3550dfb3b52c512cd"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-25T14:02:00.000Z",
+      "actualStartTime": "2013-10-25T14:02:00.000Z",
+      "scheduledEndTime": "2013-10-27T14:03:00.000Z",
+      "actualendTime": "2013-10-27T14:03:00.000Z",
+      "_id": "581355c3550dfb3b52c512cc"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-25T14:09:00.000Z",
+      "actualStartTime": "2013-10-25T14:09:00.000Z",
+      "scheduledEndTime": "2013-10-30T14:09:00.000Z",
+      "actualendTime": "2013-10-30T14:09:00.000Z",
+      "_id": "581355c3550dfb3b52c512cb"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-30T14:09:00.000Z",
+      "actualStartTime": "2013-10-30T14:09:00.000Z",
+      "scheduledEndTime": "2013-10-30T23:53:00.000Z",
+      "actualendTime": "2013-10-30T23:53:00.000Z",
+      "_id": "581355c3550dfb3b52c512ca"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-30T23:53:00.000Z",
+      "actualStartTime": "2013-10-30T23:53:00.000Z",
+      "scheduledEndTime": "2013-11-02T10:14:00.000Z",
+      "actualendTime": "2013-11-02T10:14:00.000Z",
+      "_id": "581355c3550dfb3b52c512c9"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-02T10:14:00.000Z",
+      "actualStartTime": "2013-11-02T10:14:00.000Z",
+      "scheduledEndTime": "2013-11-03T10:14:00.000Z",
+      "actualendTime": "2013-11-03T10:14:00.000Z",
+      "_id": "581355c3550dfb3b52c512c8"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-03T10:14:00.000Z",
+      "actualStartTime": "2013-11-03T10:14:00.000Z",
+      "scheduledEndTime": "2013-11-03T13:54:00.000Z",
+      "actualendTime": "2013-11-03T13:54:00.000Z",
+      "_id": "581355c3550dfb3b52c512c7"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-03T13:54:00.000Z",
+      "actualStartTime": "2013-11-03T13:54:00.000Z",
+      "scheduledEndTime": "2013-11-03T14:12:00.000Z",
+      "actualendTime": "2013-11-03T14:12:00.000Z",
+      "_id": "581355c3550dfb3b52c512c6"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-03T14:12:00.000Z",
+      "actualStartTime": "2013-11-03T14:12:00.000Z",
+      "scheduledEndTime": "2013-11-04T13:30:00.000Z",
+      "actualendTime": "2013-11-04T13:30:00.000Z",
+      "_id": "581355c3550dfb3b52c512c5"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-04T13:30:00.000Z",
+      "actualStartTime": "2013-11-04T13:30:00.000Z",
+      "scheduledEndTime": "2013-11-05T01:06:00.000Z",
+      "actualendTime": "2013-11-05T01:06:00.000Z",
+      "_id": "581355c3550dfb3b52c512c4"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-05T01:06:00.000Z",
+      "actualStartTime": "2013-11-05T01:06:00.000Z",
+      "scheduledEndTime": "2013-11-06T15:53:00.000Z",
+      "actualendTime": "2013-11-06T15:53:00.000Z",
+      "_id": "581355c3550dfb3b52c512c3"
+    }
+  ],
+  "platforms": [],
+  "postingDate": "2013-10-25T14:02:00.000Z",
+  "prize": [
+    1400,
+    700
+  ],
+  "projectId": 6581,
+  "registrants": [
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-25T14:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c512c2"
+    },
+    {
+      "handle": "carbonfish",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-25T14:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c512c1"
+    },
+    {
+      "handle": "glin0728",
+      "reliability": "6%",
+      "registrationDate": "2013-10-25T15:00:00.000Z",
+      "submissionDate": null,
+      "rating": "644",
+      "colorStyle": "color: #999999",
+      "_id": "581355c3550dfb3b52c512c0"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-25T15:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c512bf"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-25T15:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c512be"
+    },
+    {
+      "handle": "caoweiquan322",
+      "reliability": "87%",
+      "registrationDate": "2013-10-25T15:41:00.000Z",
+      "submissionDate": "2013-10-29T14:56:00.000Z",
+      "rating": "1084",
+      "colorStyle": "color: #00A900",
+      "_id": "581355c3550dfb3b52c512bd"
+    },
+    {
+      "handle": "brain_cn",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-26T03:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c512bc"
+    },
+    {
+      "handle": "haipt81",
+      "reliability": "53%",
+      "registrationDate": "2013-10-25T16:16:00.000Z",
+      "submissionDate": "2013-10-30T04:16:00.000Z",
+      "rating": "1306",
+      "colorStyle": "color: #6666FF",
+      "_id": "581355c3550dfb3b52c512bb"
+    },
+    {
+      "handle": "patka",
+      "reliability": "13%",
+      "registrationDate": "2013-10-25T17:09:00.000Z",
+      "submissionDate": null,
+      "rating": "566",
+      "colorStyle": "color: #999999",
+      "_id": "581355c3550dfb3b52c512ba"
+    },
+    {
+      "handle": "pirosl_tc",
+      "reliability": "6%",
+      "registrationDate": "2013-10-25T17:40:00.000Z",
+      "submissionDate": null,
+      "rating": "902",
+      "colorStyle": "color: #00A900",
+      "_id": "581355c3550dfb3b52c512b9"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "0%",
+      "registrationDate": "2013-10-25T18:47:00.000Z",
+      "submissionDate": null,
+      "rating": "997",
+      "colorStyle": "color: #00A900",
+      "_id": "581355c3550dfb3b52c512b8"
+    },
+    {
+      "handle": "mehblahwhatever",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-25T19:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c512b7"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "6%",
+      "registrationDate": "2013-10-25T22:55:00.000Z",
+      "submissionDate": null,
+      "rating": "1694",
+      "colorStyle": "color: #DDCC00",
+      "_id": "581355c3550dfb3b52c512b6"
+    },
+    {
+      "handle": "rajeshk87",
+      "reliability": "0%",
+      "registrationDate": "2013-10-26T00:21:00.000Z",
+      "submissionDate": null,
+      "rating": "600",
+      "colorStyle": "color: #999999",
+      "_id": "581355c3550dfb3b52c512b5"
+    },
+    {
+      "handle": "sunhong",
+      "reliability": "0%",
+      "registrationDate": "2013-10-26T04:23:00.000Z",
+      "submissionDate": null,
+      "rating": "1317",
+      "colorStyle": "color: #6666FF",
+      "_id": "581355c3550dfb3b52c512b4"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-26T04:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c512b3"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2013-10-26T06:48:00.000Z",
+      "submissionDate": null,
+      "rating": "829",
+      "colorStyle": "color: #999999",
+      "_id": "581355c3550dfb3b52c512b2"
+    },
+    {
+      "handle": "BLE",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-26T08:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c512b1"
+    },
+    {
+      "handle": "tongkunvwang",
+      "reliability": "0%",
+      "registrationDate": "2013-10-26T09:19:00.000Z",
+      "submissionDate": null,
+      "rating": "278",
+      "colorStyle": "color: #999999",
+      "_id": "581355c3550dfb3b52c512b0"
+    },
+    {
+      "handle": "rawuza",
+      "reliability": "33%",
+      "registrationDate": "2013-10-26T10:58:00.000Z",
+      "submissionDate": null,
+      "rating": "951",
+      "colorStyle": "color: #00A900",
+      "_id": "581355c3550dfb3b52c512af"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "13%",
+      "registrationDate": "2013-10-26T11:34:00.000Z",
+      "submissionDate": null,
+      "rating": "703",
+      "colorStyle": "color: #999999",
+      "_id": "581355c3550dfb3b52c512ae"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-27T01:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355c3550dfb3b52c512ad"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "20%",
+      "registrationDate": "2013-10-27T12:56:00.000Z",
+      "submissionDate": null,
+      "rating": "999",
+      "colorStyle": "color: #00A900",
+      "_id": "581355c3550dfb3b52c512ac"
+    }
+  ],
+  "registrationEndDate": "2013-10-27T14:03:00.000Z",
+  "reliabilityBonus": 280,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2013-10-30T14:09:00.000Z",
+  "submissions": [
+    {
+      "handle": "haipt81",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 92.66,
+      "finalScore": 92.66,
+      "points": 441,
+      "submissionStatus": "Active",
+      "submissionDate": "2013-10-30T04:16:00.000Z",
+      "_id": "581355c3550dfb3b52c512d0"
+    },
+    {
+      "handle": "caoweiquan322",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 90.41,
+      "finalScore": 91.6,
+      "points": 189,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2013-10-29T14:56:00.000Z",
+      "_id": "581355c3550dfb3b52c512cf"
+    }
+  ],
+  "technology": [
+    "C",
+    "Python"
+  ]
+}

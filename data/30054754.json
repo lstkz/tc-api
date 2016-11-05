@@ -1,0 +1,574 @@
+{
+  "_id": 30054754,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:37:08.074Z",
+  "appealsEndDate": "2016-07-22T23:31:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "TCO - Topcoder Submission - Implement Processors For Develop Submissions",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "For this challenge, we want to update the submission processor to add support for development submissions.<br />\n<br />\nThe submission processor consists in a chain of responsibility that is built by <u>ProcessorFactory</u> depending on the type of submission.<br />\n<br />\nThe Processor is responsible for updating legacy systems with information about the submission, so that, for instance, Online Review, Direct, and v2 api are aware of the submission. We ran an architecture challenge that describes the steps that are currently done by the v2 api to receive and process a development submissions. We need to perform all those steps as part of the development submissions feature of the processor.&nbsp;Please check&nbsp;<u>Topcoder - Existing Development Submission Process.zip</u>&nbsp;in forum for detail reference.<br />\n<br />\nYou need to update the <u>ProcessorFactory</u> to build an appropriate processor for develop submissions.<br />\n<br />\nThe <u>ProcessorFactory</u> creates a composite processor, in which each item is a processor that performs a discrete task. Some of these tasks can be reused for develop submissions, some may have to be modified.<br />\n<br />\nNote, the current submission process for design submissions <strong>SHOULD</strong>&nbsp;<strong>NOT</strong> be impacted by these changes. If changes are made to the shared processors, please make sure to thoroughly test them with design submissions.\n<h2><u>Existing Processors</u></h2>\nFollowings are the description for the exsting processors, suggested changes for develop submissions.<br />\n<br />\n- PreProcessor<br />\nIs a processor that performs some setup work for the processing of the submission. It includes creating a transaction handler the objects that represent the upload and submission records that will later be saved to Informix. This processor may be used for development submissions, but the values pre-populated onto the informix upload and submission objects must be reviewed.<br />\n<br />\n- UserFetchProcessor<br />\nSimply retrieves user information, can be used as is for development submissions.<br />\n<br />\n- DesignZipDownloadProcessor<br />\nThis processor downloads zip files from s3 to a local folder so that they can be processed. Design submissions require changes to the zip files, which is probably not needed for develop submissions (please confirm by looking at the v2 api documentation). The develop submissions need to be copied to nfs, so a variation of this processor will be necessary to download from s3 and put the file in the correct location in the nfs share.<br />\n<br />\n- DesignZipSubmissionValidatorProcessor<br />\nThis processor performs validations in the data and zip files. Since the develop challenge submissions validations are significantly different, probably the best approach would be to have a separate validator processor just for develop submissions, and leave this one just for design submissions. Please review the v2 api documentation to determine which validations are done today, and perform the same validations in the submission metadata. Also please check if the zip file is valid, and not empty.<br />\n<br />\n- DeclarationGeneratorProcessor, FontsProcessor, StockArtProcessor, SubmissionDeclarationFileProcessor, PreviewValidationProcessor, DesignUnifiedZipProcessor, WatermarkProcessor, and S3UploadProcessor<br />\nNot applicable to develop submissions;<br />\n<br />\n- PostgresMetadataProcessor<br />\nSaves metadata about the files uploaded to Postgres. A similar process needs to be done for development submissions, we want the file information associated with the submission in the submission file table. Since this processor is very specific to design submissions it could be reused for develop submissions after some refactoring. Alternatively this could be renamed to PostgresDesignZipMetadataProcessor, and another processor specific to develop zip could be created.<br />\n<br />\n- UploadRecordProcessor<br />\nUpdates values in the Upload record to be inserted into Informix. A similar process is required for development submissions. Please review the v2 api documentation and make the appropriate changes, making sure not to break design zip functionality.<br />\n<br />\n- DesignZipSubmissionRecordProcessor<br />\nUpdates values in the Submission record to be inserted into Informix. A similar process is required for development submissions. Please review the v2 api documentation and make the appropriate changes, making sure not to break design zip functionality.<br />\n<br />\n- ResourceSubmissionRecordProcessor<br />\nUpdates the resource submission record to be inserted into Informix. Please review the v2 api documentation as this table may be specific to design submissions, and potentially this is not needed for develop submisisons.<br />\n<br />\n<br />\n- RankProcessor<br />\nThe RankProcessor is specific to the design submission process, as the way in which multiple submissions are handled is one of the main differences between design and develop submissions. This is important to understand as new functionality needs to be built to handle this correctly for develop.&nbsp;<br />\n<br />\nIn design challenges, members can submit as many entries as they want, they are simply ranked from 1 &hellip; *. Where 1 is the favorite submission in the opinion of the submitter, and n the least favorite.&nbsp;<br />\n<br />\nIn develop challenges, members can also submit as many time as they want, however only one submission remains active. Whenever a new submission is uploaded, the previous submission is marked as inactive in the upload record, and potentially the submission record as well. Please review the v2 api documentation for details on how the statuses existing submissions and upload records need to be updated when new submissions are received.<br />\n<br />\nIn summary, we will need a new processor to handle the status updates of existing submissions, with the specific logic for develop submissions.<br />\n<br />\n- InformixPersistenceProcessor<br />\nThis processor saves all the changes records to Informix. For the most part, it should be reusable as is for develop submissions. Please review the functionality against the v2 api documentation to make sure it doesn&#39;t require any tweaks.<br />\n<br />\n- DesignZipCleanupProcessor<br />\nThis processor is specific to design zips, and since no temporary files are needed for develop submissions, it may not be needed at all, but I am leaving this here as a reminder that any temporary files generated must be deleted.<br />\n<br />\n- PostgresUpdateProcessor<br />\nThis processor updates the status of the submission in Postgres to indicate the processing has ended. It can probably be used as is for develop. Please review the v2 api documentation to make sure.<br />\nThis processor is also responsible for sending the success notification message to users. Please break this up, and move the success notification message to a brand new processor.<br />\n<br />\n- PostProcessor<br />\nResponsible for committing the transaction and closing the db connection. Can be used as is for develop submissions.<br />\n<br />\nThe ProcessorFactory is also responsible for generating an error processor. The error processor is a significantly simpler chain, that performs error handling. The getErrorProcessor method needs to be updated to support the develop zip submission type, and should return just the ErrorProcessor.<br />\n<br />\n- ErrorProcessor<br />\nHandles errors by updating the submission status to ERROR, rolling back the informix transaction, and sending email notifications. It can probably be used as is for develop submissions, please review the v2 api documentation to make sure.\n<h2><u>Testing Environment</u></h2>\nPlease use&nbsp;<a href=\"https://github.com/appirio-tech/tc-common-tutorials/tree/dev-submissions/submission-system\">dev-submissions</a>&nbsp;branch and follow&nbsp;<a href=\"https://github.com/appirio-tech/tc-common-tutorials/blob/dev-submissions/submission-system/README.md\">https://github.com/appirio-tech/tc-common-tutorials/blob/dev-submissions/submission-system/README.md</a>&nbsp;to setup the environment.<br />\n<br />\nthe related source code will be attached in forum.",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30054754",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalFixEndDate": "2016-07-26T07:55:00.000Z",
+  "finalSubmissionGuidelines": "- Code changes for the new develop submissions<br />\n- Deployment Guide and Verification Steps<br />\n&nbsp;",
+  "forumId": 33560,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33560",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 39,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-13T02:38:00.000Z",
+      "actualStartTime": "2016-07-13T02:38:00.000Z",
+      "scheduledEndTime": "2016-07-13T02:39:00.000Z",
+      "actualendTime": "2016-07-13T02:39:00.000Z",
+      "_id": "58135484550dfb3b52c49cd5"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-13T02:39:00.000Z",
+      "actualStartTime": "2016-07-13T02:39:00.000Z",
+      "scheduledEndTime": "2016-07-13T04:58:00.000Z",
+      "actualendTime": "2016-07-13T04:58:00.000Z",
+      "_id": "58135484550dfb3b52c49cd4"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-13T04:58:00.000Z",
+      "actualStartTime": "2016-07-13T04:58:00.000Z",
+      "scheduledEndTime": "2016-07-15T04:58:00.000Z",
+      "actualendTime": "2016-07-15T04:58:00.000Z",
+      "_id": "58135484550dfb3b52c49cd3"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-13T05:03:00.000Z",
+      "actualStartTime": "2016-07-13T05:03:00.000Z",
+      "scheduledEndTime": "2016-07-19T04:58:00.000Z",
+      "actualendTime": "2016-07-19T04:58:00.000Z",
+      "_id": "58135484550dfb3b52c49cd2"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-19T04:58:00.000Z",
+      "actualStartTime": "2016-07-19T04:58:00.000Z",
+      "scheduledEndTime": "2016-07-19T15:40:00.000Z",
+      "actualendTime": "2016-07-19T15:40:00.000Z",
+      "_id": "58135484550dfb3b52c49cd1"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-19T15:40:00.000Z",
+      "actualStartTime": "2016-07-19T15:40:00.000Z",
+      "scheduledEndTime": "2016-07-21T14:36:00.000Z",
+      "actualendTime": "2016-07-21T14:36:00.000Z",
+      "_id": "58135484550dfb3b52c49cd0"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-21T14:36:00.000Z",
+      "actualStartTime": "2016-07-21T14:36:00.000Z",
+      "scheduledEndTime": "2016-07-22T14:36:00.000Z",
+      "actualendTime": "2016-07-22T14:36:00.000Z",
+      "_id": "58135484550dfb3b52c49ccf"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-22T14:36:00.000Z",
+      "actualStartTime": "2016-07-22T14:36:00.000Z",
+      "scheduledEndTime": "2016-07-22T23:31:00.000Z",
+      "actualendTime": "2016-07-22T23:31:00.000Z",
+      "_id": "58135484550dfb3b52c49cce"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-22T23:31:00.000Z",
+      "actualStartTime": "2016-07-22T23:31:00.000Z",
+      "scheduledEndTime": "2016-07-22T23:51:00.000Z",
+      "actualendTime": "2016-07-22T23:51:00.000Z",
+      "_id": "58135484550dfb3b52c49ccd"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-22T23:51:00.000Z",
+      "actualStartTime": "2016-07-22T23:51:00.000Z",
+      "scheduledEndTime": "2016-07-23T22:01:00.000Z",
+      "actualendTime": "2016-07-23T22:01:00.000Z",
+      "_id": "58135484550dfb3b52c49ccc"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-23T22:01:00.000Z",
+      "actualStartTime": "2016-07-23T22:01:00.000Z",
+      "scheduledEndTime": "2016-07-24T08:59:00.000Z",
+      "actualendTime": "2016-07-24T08:59:00.000Z",
+      "_id": "58135484550dfb3b52c49ccb"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-26T08:17:00.000Z",
+      "actualStartTime": "2016-07-26T08:17:00.000Z",
+      "scheduledEndTime": "2016-07-31T08:17:00.000Z",
+      "actualendTime": "2016-07-31T08:17:00.000Z",
+      "_id": "58135484550dfb3b52c49cca"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-24T09:00:00.000Z",
+      "actualStartTime": "2016-07-24T09:00:00.000Z",
+      "scheduledEndTime": "2016-07-26T00:05:00.000Z",
+      "actualendTime": "2016-07-26T00:05:00.000Z",
+      "_id": "58135484550dfb3b52c49cc9"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-26T00:05:00.000Z",
+      "actualStartTime": "2016-07-26T00:05:00.000Z",
+      "scheduledEndTime": "2016-07-26T01:52:00.000Z",
+      "actualendTime": "2016-07-26T01:52:00.000Z",
+      "_id": "58135484550dfb3b52c49cc8"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-26T01:52:00.000Z",
+      "actualStartTime": "2016-07-26T01:52:00.000Z",
+      "scheduledEndTime": "2016-07-26T07:55:00.000Z",
+      "actualendTime": "2016-07-26T07:55:00.000Z",
+      "_id": "58135484550dfb3b52c49cc7"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-26T07:55:00.000Z",
+      "actualStartTime": "2016-07-26T07:55:00.000Z",
+      "scheduledEndTime": "2016-07-26T08:17:00.000Z",
+      "actualendTime": "2016-07-26T08:17:00.000Z",
+      "_id": "58135484550dfb3b52c49cc6"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-07-13T04:58:00.000Z",
+  "prize": [
+    1400,
+    700
+  ],
+  "projectId": 9582,
+  "registrants": [
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-13T12:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cc5"
+    },
+    {
+      "handle": "avbngera",
+      "reliability": "33%",
+      "registrationDate": "2016-07-13T16:12:00.000Z",
+      "submissionDate": null,
+      "rating": "1070",
+      "colorStyle": "color: #00A900",
+      "_id": "58135484550dfb3b52c49cc4"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-13T04:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cc3"
+    },
+    {
+      "handle": "code_now",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-13T05:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cc2"
+    },
+    {
+      "handle": "isv",
+      "reliability": "26%",
+      "registrationDate": "2016-07-13T06:34:00.000Z",
+      "submissionDate": null,
+      "rating": "1051",
+      "colorStyle": "color: #00A900",
+      "_id": "58135484550dfb3b52c49cc1"
+    },
+    {
+      "handle": "narasimha.dvnr",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-13T07:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cc0"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "0%",
+      "registrationDate": "2016-07-13T09:41:00.000Z",
+      "submissionDate": null,
+      "rating": "1028",
+      "colorStyle": "color: #00A900",
+      "_id": "58135484550dfb3b52c49cbf"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "0%",
+      "registrationDate": "2016-07-13T10:37:00.000Z",
+      "submissionDate": null,
+      "rating": "618",
+      "colorStyle": "color: #999999",
+      "_id": "58135484550dfb3b52c49cbe"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "0%",
+      "registrationDate": "2016-07-13T10:46:00.000Z",
+      "submissionDate": null,
+      "rating": "1297",
+      "colorStyle": "color: #6666FF",
+      "_id": "58135484550dfb3b52c49cbd"
+    },
+    {
+      "handle": "jorje.b",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-13T10:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cbc"
+    },
+    {
+      "handle": "roopats",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-13T11:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cbb"
+    },
+    {
+      "handle": "MonicaMuranyi",
+      "reliability": "73%",
+      "registrationDate": "2016-07-13T12:00:00.000Z",
+      "submissionDate": "2016-07-18T22:52:00.000Z",
+      "rating": "1373",
+      "colorStyle": "color: #6666FF",
+      "_id": "58135484550dfb3b52c49cba"
+    },
+    {
+      "handle": "cairi",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-13T12:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cb9"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-13T13:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cb8"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-13T14:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cb7"
+    },
+    {
+      "handle": "binit92",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-13T14:14:00.000Z",
+      "submissionDate": null,
+      "rating": "708",
+      "colorStyle": "color: #999999",
+      "_id": "58135484550dfb3b52c49cb6"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2016-07-13T14:31:00.000Z",
+      "submissionDate": null,
+      "rating": "1048",
+      "colorStyle": "color: #00A900",
+      "_id": "58135484550dfb3b52c49cb5"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "0%",
+      "registrationDate": "2016-07-13T16:04:00.000Z",
+      "submissionDate": null,
+      "rating": "1373",
+      "colorStyle": "color: #6666FF",
+      "_id": "58135484550dfb3b52c49cb4"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-13T16:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cb3"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-13T18:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cb2"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-13T18:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cb1"
+    },
+    {
+      "handle": "duxiaoyang",
+      "reliability": "46%",
+      "registrationDate": "2016-07-13T19:51:00.000Z",
+      "submissionDate": null,
+      "rating": "1130",
+      "colorStyle": "color: #00A900",
+      "_id": "58135484550dfb3b52c49cb0"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2016-07-13T22:44:00.000Z",
+      "submissionDate": null,
+      "rating": "455",
+      "colorStyle": "color: #999999",
+      "_id": "58135484550dfb3b52c49caf"
+    },
+    {
+      "handle": "persistnow",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-13T20:52:00.000Z",
+      "submissionDate": "2016-07-14T21:00:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cae"
+    },
+    {
+      "handle": "samsara0614",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-13T22:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cad"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2016-07-13T23:13:00.000Z",
+      "submissionDate": null,
+      "rating": "1051",
+      "colorStyle": "color: #00A900",
+      "_id": "58135484550dfb3b52c49cac"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "20%",
+      "registrationDate": "2016-07-14T01:48:00.000Z",
+      "submissionDate": null,
+      "rating": "1026",
+      "colorStyle": "color: #00A900",
+      "_id": "58135484550dfb3b52c49cab"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-14T04:27:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58135484550dfb3b52c49caa"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-14T06:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49ca9"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-14T06:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49ca8"
+    },
+    {
+      "handle": "padegal12",
+      "reliability": "0%",
+      "registrationDate": "2016-07-14T07:57:00.000Z",
+      "submissionDate": null,
+      "rating": "693",
+      "colorStyle": "color: #999999",
+      "_id": "58135484550dfb3b52c49ca7"
+    },
+    {
+      "handle": "Acyn",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-14T08:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49ca6"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-14T09:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49ca5"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-14T10:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49ca4"
+    },
+    {
+      "handle": "onsky",
+      "reliability": "81%",
+      "registrationDate": "2016-07-14T12:02:00.000Z",
+      "submissionDate": null,
+      "rating": "1406",
+      "colorStyle": "color: #6666FF",
+      "_id": "58135484550dfb3b52c49ca3"
+    },
+    {
+      "handle": "Devilsxangel",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-14T12:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49ca2"
+    },
+    {
+      "handle": "BrainScorn",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-14T16:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49ca1"
+    },
+    {
+      "handle": "capn-ace",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-14T21:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49ca0"
+    },
+    {
+      "handle": "linalu1",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-15T02:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49c9f"
+    }
+  ],
+  "registrationEndDate": "2016-07-15T04:58:00.000Z",
+  "reliabilityBonus": 280,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2016-07-19T04:58:00.000Z",
+  "submissions": [
+    {
+      "handle": "MonicaMuranyi",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 94.98,
+      "finalScore": 95.06,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-07-18T22:52:00.000Z",
+      "_id": "58135484550dfb3b52c49cd7"
+    },
+    {
+      "handle": "persistnow",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 71.63,
+      "finalScore": 71.63,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-07-14T21:00:00.000Z",
+      "_id": "58135484550dfb3b52c49cd6"
+    }
+  ],
+  "technology": [
+    "Docker",
+    "Java",
+    "SQL"
+  ]
+}

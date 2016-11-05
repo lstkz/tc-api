@@ -1,0 +1,178 @@
+{
+  "_id": 30053921,
+  "_isComplete": true,
+  "__v": 2266,
+  "_lastUpdate": "2016-11-05T11:07:39.763Z",
+  "appealsEndDate": "2016-05-04T13:57:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Topcoder Direct AWS Lambda Function - Add Payment",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Cancelled - Zero Submissions",
+  "detailedRequirements": "<h2>Background&nbsp;</h2>\n\n<p>Topcoder is considering to refactor the TC Direct application by using RESTful APIs instead of calling various EJBs and directly contacting the underline database, which will allow us to begin decoupling TC Direct from its existing backend and provide exposure to some of its core services. As a first step, we want to avoid rewriting some of the complex business logic.</p>\n\n<p>For the initial stage, we&#39;d like to use AWS Lambda Function and AWS API Gateway to wrap around the EJB calls and database calls, and make the TC Direct to call the AWS API gateway instead. &nbsp;This way we isolate the depenencies between TC Direct and EJB services/informix, then we can move ahead quickly.</p>\n\n<h2>Scope</h2>\n\n<p>Previously in we have launched severeal challenges like&nbsp;<strong>Proof Of Concept - AWS Lambda Function to Invoke Direct EJB Service etc,&nbsp;</strong>and sorted out the way to use AWS Lambda Function to wrap arround the EJB calls and &nbsp;Database calls.</p>\n\n<p>For this challenge, we&#39;d like to follow the same approach to create AWS Lambda Function for add payment for member.</p>\n\n<h3><u>Requirements</u></h3>\n\n<p>1.&nbsp;<span style=\"font-family:source sans pro,arial,helvetica,sans-serif\">Currently in legacy applications, there are many places that contains the functionality for paying members. like&nbsp;</span></p>\n\n<ul>\n\t<li>https://coder.topcoder.com/internal/web_module/trunk/src/main/com/topcoder/utilities/pacts/ProcessJiraPayments.java<br />\n\thttps://coder.topcoder.com/tcs/clients/cronos/applications/online_review/trunk/src/java/main/com/cronos/onlinereview/actions/projectpayments/<br />\n\t...</li>\n</ul>\n\n<p>They are all calling the&nbsp;PactsClientServices EJB by delegation, which handles the real creation of payments.</p>\n\n<p>2. For this challenge, we are going to implement pay one member functionality by calling the corresponding EJB, &nbsp;like&nbsp;</p>\n\n<p><u>com.topcoder.web.ejb.pacts.PactsServicesBean#addPayment(BasePayment payment, long operatorUserId) throws SQLException</u></p>\n\n<p>3. There are many implementations of <u>BasePayment</u>, you are expected to properly defined the Input JSON format, and in the Lambda Function it will recreate the corresponding concrete instance, so we can easily handle all different payments.</p>\n\n<p><span style=\"color:#FF0000\">You are not going to create all logic for creating payment object from the JSON format, but you should include the general approach which we can follow to support more payment types.</span></p>\n\n<p>You may be able to use&nbsp;BasePayment#<span style=\"color:rgb(255, 198, 109)\">createPayment</span>(<span style=\"color:rgb(204, 120, 50)\">int </span>paymentTypeId<span style=\"color:rgb(204, 120, 50)\">, long </span>coderId<span style=\"color:rgb(204, 120, 50)\">, double </span>grossAmount<span style=\"color:rgb(204, 120, 50)\">, long </span>referenceId<span style=\"color:rgb(204, 120, 50)\">, int </span>placed)</p>\n\n<p>4. Please create the swagger api doc for the created aws lambda function, please following the example provided in forum, and properly desribe the input JSON for various payment.</p>\n\n<p>5. Please use&nbsp;AWS lambda swagger&nbsp;<a href=\"https://github.com/awslabs/aws-apigateway-importer\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">https://github.com/awslabs/aws-apigateway-importer</a>&nbsp;to create api gateway endpoint using the created swagger api doc, and hook it with the aws lambda function</p>\n\n<p>6. The json response should be simple and clear, and properly handle the error cases with proper messages.</p>\n\n<p>7. You are expected to create a complete new codebase similar as the the one provided in forum.</p>\n\n<p>8. For configuration, please create a token.properties file in the root directory, and define properly gradle task to execute before build.</p>\n\n<h2>Reference</h2>\n\n<p>1. Competitors need to request your own VM for development and testing.</p>\n\n<p>2. To verify the payment is created properly, you can check the payment page in legacy www, like&nbsp;https://tc.cloud.topcoder.com/PactsMemberServlet?module=PaymentHistory&amp;full_list=false or directly checking the database.</p>\n\n<p>3. Please reuse any components instead of creating your own if possible, like shared.jar,&nbsp;PactsServices.jar (don&#39;t use the EJB related class)</p>\n\n<p>4. The previous challenges will be provided in forum for reference.</p>\n\n<h2>VM ENVIRONMENT</h2>\n\n<p>If you need a Topcoder VM to work on this challenge, Please request the VM in the challenge forum.</p>\n\n<p>Information about VM can be found below:</p>\n\n<p>VM specific information is found here:&nbsp;<a href=\"http://www.topcoder.com/wiki/display/docs/VM+Image+2.5\" style=\"text-decoration: none; outline: 0px; cursor: pointer; color: rgb(102, 102, 102); transition: all 0.2s ease-in-out; -webkit-tap-highlight-color: transparent; word-wrap: break-word; padding: 0px; margin: 0px; background: 0px 0px;\">http://www.topcoder.com/wiki/display/docs/VM+Image+2.5</a></p>\n\n<p>Upon registration as a submitter or reviewer you will need to request a VM based on the new TopCoder Cockpit/Direct image. To request your image, please use the forum. Before requesting your VM, you need to ensure that you have an SSH key created and in your member profile. If you don&#39;t have your SSH key set in your profile, please follow&nbsp;<a href=\"https://help.github.com/articles/generating-an-ssh-key/\" style=\"text-decoration: none; outline: 0px; cursor: pointer; color: rgb(102, 102, 102); transition: all 0.2s ease-in-out; -webkit-tap-highlight-color: transparent; word-wrap: break-word; padding: 0px; margin: 0px; background: 0px 0px;\">https://help.github.com/articles/generating-an-ssh-key/</a>, and send the public ssh key to support@topcoder.com, once it is setup, you can request your VM in forum.</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30053921",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "1. Complete source code for aws lambda function<br />\n2. Working VM and aws lambda function for testing<br />\n3. Deployment Guide and Verification Documentation",
+  "forumId": 32733,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=32733",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 9,
+  "numberOfSubmissions": 0,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-28T01:57:00.000Z",
+      "actualStartTime": "2016-04-28T01:57:00.000Z",
+      "scheduledEndTime": "2016-05-01T01:57:00.000Z",
+      "actualendTime": "2016-05-01T01:57:00.000Z",
+      "_id": "581dbd7b550dfb3b52be52d1"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-28T02:02:00.000Z",
+      "actualStartTime": "2016-04-28T02:02:00.000Z",
+      "scheduledEndTime": "2016-05-01T01:57:00.000Z",
+      "actualendTime": "2016-05-01T01:57:00.000Z",
+      "_id": "581dbd7b550dfb3b52be52d0"
+    },
+    {
+      "type": "Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2016-05-01T01:57:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2016-05-03T01:57:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd7b550dfb3b52be52cf"
+    },
+    {
+      "type": "Appeals",
+      "status": "Scheduled",
+      "scheduledStartTime": "2016-05-03T01:57:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2016-05-04T01:57:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd7b550dfb3b52be52ce"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2016-05-04T01:57:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2016-05-04T13:57:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd7b550dfb3b52be52cd"
+    }
+  ],
+  "platforms": [
+    "AWS"
+  ],
+  "postingDate": "2016-04-28T01:57:00.000Z",
+  "prize": [
+    300,
+    150
+  ],
+  "projectId": 9512,
+  "registrants": [
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-28T02:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7b550dfb3b52be52cc"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-28T02:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7b550dfb3b52be52cb"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-28T04:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7b550dfb3b52be52ca"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-28T14:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7b550dfb3b52be52c9"
+    },
+    {
+      "handle": "duxiaoyang",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-28T16:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7b550dfb3b52be52c8"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-29T11:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7b550dfb3b52be52c7"
+    },
+    {
+      "handle": "bandishankar",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-30T00:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7b550dfb3b52be52c6"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-30T04:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7b550dfb3b52be52c5"
+    },
+    {
+      "handle": "slayerjain",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-30T17:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7b550dfb3b52be52c4"
+    }
+  ],
+  "registrationEndDate": "2016-05-01T01:57:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-05-01T01:57:00.000Z",
+  "submissions": [],
+  "technology": [
+    "Java"
+  ]
+}

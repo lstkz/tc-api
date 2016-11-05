@@ -1,0 +1,578 @@
+{
+  "_id": 30050082,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:42:10.985Z",
+  "appealsEndDate": "2015-05-22T05:12:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Passcode Library iOS Application",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": "2015-05-16T15:37:00.000Z",
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2 style=\"font-style:normal; text-align:start\"><strong><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></strong></h2>\n\n<p>In the mobile devices, authentication checking is necessary for high security sensitive apps, however, it is quite boring and inconvenient to enter a long and complex password repeatedly in a short time. One solution is to setup a passcode that is stored locally. When authentication checking is required, the user just inputs the simple passcode to pass local authentication, then the app will extract the real authentication information and send to remote services. The flow works like this:</p>\n\n<ol>\n\t<li>User logs in to mobile app, downloaded from a corporate catalog.</li>\n\t<li>User is prompted to enter a PIN or Application Passcode.</li>\n\t<li>User is allowed to access app data / content.</li>\n\t<li>At a specified time-out period, the user is prompted to re-enter their passcode. Until the user enters that passcode, they are locked out of the application.</li>\n\t<li>If the user cannot specify the passcode (after a set number of tries), the application should call a function to clear the application&#39;s data.</li>\n</ol>\n\n<p>Please refer to the attached wireframe mockups. For iOS devices that support Touch ID, we could also use biometric unlocking.</p>\n\n<h2 style=\"font-style:normal; text-align:start\"><strong><span style=\"color:rgb(255, 0, 0)\">Competition Task Overview</span></strong></h2>\n\n<p style=\"text-align:start\">For this challenge, we need to build an app to store and verify passcode, and the code will later be integrated to other applications (keep code in separate files different from controllers as much as possible).&nbsp;<span>The passcode information should be securely stored.</span></p>\n\n<p><strong><span style=\"color:#FF0000\">Configuration File</span></strong></p>\n\n<p>The app that loads a configuration file stubbed out like this</p>\n\n<p>&quot;AppPassword&quot;:{&quot;Type&quot;:<strong>&quot;Numberic|Alphabetic||Alphanumeric|Complex&quot;</strong>, &quot;MinLength&quot;:<strong>nn</strong>, &quot;Autolock&quot;:<strong>nn</strong>, &quot;Expiration&quot;:<strong>nn</strong>, &quot;History&quot;:<strong>nn</strong>, &quot;WipeFailures&quot;:<strong>nn</strong>, &quot;AllowSequences&quot;:<strong>true|false</strong>, &quot;AllowTouchID&quot;:<strong>true|false</strong>}</p>\n\n<ul style=\"margin-left:0px\">\n\t<li>Password Type (required)\n\t<ul>\n\t\t<li>Numeric - password only contains numeric characters</li>\n\t\t<li>Alphabetic - password only contains alphabetic characters</li>\n\t\t<li>Alphanumeric - password contains alphabetic and numeric characters</li>\n\t\t<li>Complex - password contains alphabetic, numeric characters, and special characters</li>\n\t</ul>\n\t</li>\n\t<li>Minimum password length (optional)<br />\n\tThe minimum length requirement for the password. The default for Numeric is 4, otherwise 8</li>\n\t<li>AutoLock period (minutes) (optional)<br />\n\tThe amount of idle time the app will require the user to re-enter the password. Default is no 0 (no autolock).</li>\n\t<li>Password expiration (days) (optional)<br />\n\tThe amount of time the password can be used before the user is required to change it. Default is 0 (password will not expire).</li>\n\t<li>Password history count (optional)<br />\n\tThe number of past passwords that can&#39;t be reused. The default is 0 (no history maintained). Note: The password history will be stored encrypted in the app&#39;s iOS keychain.</li>\n\t<li>Wipe after n wrong passwords (optional)<br />\n\tThe number of times the user can enter an incorrect password before all data for the app is removed from the device. The default is 0 (no wipe).</li>\n\t<li>Allow ascending, descending, repeating &nbsp;sequences (optional)<br />\n\tIndicates if the password can contain ascending, descending, or repeating characters. If set to false, the password cannot contain any repeating characters or 3 or more ascending/descending characters. The default is true.</li>\n\t<li>Allow Touch ID - (optional)<br />\n\tAllow the user to use touch id instead of entering the password. If the value is true but the device doesn&#39;t support Touch ID, ignore it. The default is false.</li>\n</ul>\n\n<p>The app must have the ability to enforce each of these items. There will be a screen in the POC to allow user to setup these parameters before running it (Option 2 in the wireframe).</p>\n\n<p><span style=\"color:#FF0000\"><strong>Localization</strong></span></p>\n\n<p>All text within the app should be loaded from the configuration file. This is so that the library can easily be localized for other countries. There are potentially more text than what&#39;s listed below.</p>\n\n<ul>\n\t<li>Create Passcode Screen:\n\t<ul>\n\t\t<li>&quot;Create a passcode to use to log in to this application.&quot;</li>\n\t</ul>\n\t</li>\n\t<li>Enter Passcode Screen:\n\t<ul>\n\t\t<li>&nbsp;&quot;Enter the passcode you created for this application.&quot;</li>\n\t</ul>\n\t</li>\n\t<li>Field label:\n\t<ul>\n\t\t<li>&nbsp;&quot;Passcode:&quot;</li>\n\t\t<li>&nbsp;&quot;Confirm passcode:&quot;</li>\n\t</ul>\n\t</li>\n\t<li>Error Messages:\n\t<ul>\n\t\t<li>&nbsp;&quot;Passcode must contain at least six non-sequential letters and numbers.&quot;</li>\n\t\t<li>&quot;The two passcodes you entered do not match.&quot;</li>\n\t\t<li>&quot;Passcode must not contain sequential or repeating numbers.&quot;</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p><strong><span style=\"color:#FF0000\">Design Constraints</span></strong></p>\n\n<ul>\n\t<li>Treat as modal dialog / window.</li>\n\t<li>Need to blur out the app background while the modal dialog is active.</li>\n\t<li>User can not navigate to app content until the passcode has been entered.</li>\n\t<li>UI must appropriately scale downwards for mobile, and upwards for tablet.</li>\n\t<li>Password/PIN needs to be typed twice during setup.</li>\n\t<li>Need to alert for both wrong passcode entered and after some number (1/2 the configured max attempts) you should see an alert that includes how many times you have failed. Once the count is failed, the app will need to reset the password.</li>\n\t<li>If the user cannot specify a passcode (after a set number of tries), the application should call a function to clear the application&#39;s data. For the PoC this can print a message to the screen indicating that the function has been called.</li>\n</ul>\n",
+  "digitalRunPoints": 1125,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30050082",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2015-05-25T08:58:00.000Z",
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<div class=\"previewMask\">\n<h3><span><span><strong><span style=\"color:rgb(255, 0, 0)\">Final Submission Guidelines</span></strong></span></span></h3>\n\n<div class=\"ng-binding\" style=\"margin: 0px; padding: 0px; border: 0px; font-size: 15px; vertical-align: baseline; outline: 0px; -webkit-backface-visibility: hidden; font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif; line-height: 18px; background-color: rgb(255, 255, 254);\">\n<h2><span><span><strong><span style=\"color:rgb(255, 0, 0)\">Submission Deliverables</span></strong></span></span></h2>\n\n<p><span><span><span style=\"font-size:12px\">A complete list of deliverables can be viewed in the TopCoder Assembly competition Tutorial at:<a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\" style=\"color: rgb(255, 138, 0); margin: 0px; padding: 0px; border: 0px; vertical-align: baseline; text-decoration: none; transition: 0.3s; -webkit-transition: 0.3s; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); outline: 0px; cursor: pointer; word-wrap: break-word; background: 0px 0px;\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials&nbsp;</a></span></span></span></p>\n\n<p><span><span><span style=\"font-size:12px\">Below is an overview of the deliverables:</span></span></span></p>\n\n<ul>\n\t<li><span><span><span style=\"font-size:12px\">Working iOS 7+ app (including source code) that covers all requirements.</span></span></span></li>\n\t<li><span><span><span style=\"font-size:12px\">A complete and detailed deployment documented explaining how to deploy and verify the application including configuration information.</span></span></span></li>\n</ul>\n\n<h2><span><span><span><span><span style=\"color:rgb(255, 0, 0)\"><strong>Check point Submission</strong></span></span></span></span></span></h2>\n\n<p><span><span style=\"font-size:12px\">1. Setup PIN (passwordType: numeric, Minimum password length, AutoLock period)<br />\n2. Verify PIN</span></span></p>\n\n<h2><span><span><span style=\"color:rgb(255, 0, 0)\"><strong>Final Submission</strong></span></span></span></h2>\n\n<p><span><span><span style=\"font-size:12px\">For each member, the final submission should be uploaded via the challenge detail page on&nbsp;<a href=\"http://www.topcoder.com/\" style=\"color: rgb(255, 138, 0); margin: 0px; padding: 0px; border: 0px; vertical-align: baseline; text-decoration: none; transition: 0.3s; -webkit-transition: 0.3s; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); outline: 0px; cursor: pointer; word-wrap: break-word; background: 0px 0px;\">topcoder.com</a></span></span></span></p>\n</div>\n</div>\n</div>\n",
+  "forumId": 29315,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=29315",
+  "numberOfCheckpointSubmissions": 5,
+  "numberOfCheckpointsPrizes": 5,
+  "numberOfRegistrants": 34,
+  "numberOfSubmissions": 4,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-13T14:05:00.000Z",
+      "actualStartTime": "2015-05-13T14:05:00.000Z",
+      "scheduledEndTime": "2015-05-13T14:08:00.000Z",
+      "actualendTime": "2015-05-13T14:08:00.000Z",
+      "_id": "581355b2550dfb3b52c4fd24"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-13T14:08:00.000Z",
+      "actualStartTime": "2015-05-13T14:08:00.000Z",
+      "scheduledEndTime": "2015-05-13T15:32:00.000Z",
+      "actualendTime": "2015-05-13T15:32:00.000Z",
+      "_id": "581355b2550dfb3b52c4fd23"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-13T15:37:00.000Z",
+      "actualStartTime": "2015-05-13T15:37:00.000Z",
+      "scheduledEndTime": "2015-05-15T15:38:00.000Z",
+      "actualendTime": "2015-05-15T15:38:00.000Z",
+      "_id": "581355b2550dfb3b52c4fd22"
+    },
+    {
+      "type": "Checkpoint Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-13T15:43:00.000Z",
+      "actualStartTime": "2015-05-13T15:43:00.000Z",
+      "scheduledEndTime": "2015-05-16T15:37:00.000Z",
+      "actualendTime": "2015-05-16T15:37:00.000Z",
+      "_id": "581355b2550dfb3b52c4fd21"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-13T15:43:00.000Z",
+      "actualStartTime": "2015-05-13T15:43:00.000Z",
+      "scheduledEndTime": "2015-05-19T15:38:00.000Z",
+      "actualendTime": "2015-05-19T15:38:00.000Z",
+      "_id": "581355b2550dfb3b52c4fd20"
+    },
+    {
+      "type": "Checkpoint Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-16T15:38:00.000Z",
+      "actualStartTime": "2015-05-16T15:38:00.000Z",
+      "scheduledEndTime": "2015-05-18T12:27:00.000Z",
+      "actualendTime": "2015-05-18T12:27:00.000Z",
+      "_id": "581355b2550dfb3b52c4fd1f"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-19T15:38:00.000Z",
+      "actualStartTime": "2015-05-19T15:38:00.000Z",
+      "scheduledEndTime": "2015-05-19T17:21:00.000Z",
+      "actualendTime": "2015-05-19T17:21:00.000Z",
+      "_id": "581355b2550dfb3b52c4fd1e"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-19T17:21:00.000Z",
+      "actualStartTime": "2015-05-19T17:21:00.000Z",
+      "scheduledEndTime": "2015-05-21T12:50:00.000Z",
+      "actualendTime": "2015-05-21T12:50:00.000Z",
+      "_id": "581355b2550dfb3b52c4fd1d"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-21T12:50:00.000Z",
+      "actualStartTime": "2015-05-21T12:50:00.000Z",
+      "scheduledEndTime": "2015-05-22T01:21:00.000Z",
+      "actualendTime": "2015-05-22T01:21:00.000Z",
+      "_id": "581355b2550dfb3b52c4fd1c"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-22T01:21:00.000Z",
+      "actualStartTime": "2015-05-22T01:21:00.000Z",
+      "scheduledEndTime": "2015-05-22T05:12:00.000Z",
+      "actualendTime": "2015-05-22T05:12:00.000Z",
+      "_id": "581355b2550dfb3b52c4fd1b"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-22T05:12:00.000Z",
+      "actualStartTime": "2015-05-22T05:12:00.000Z",
+      "scheduledEndTime": "2015-05-22T10:32:00.000Z",
+      "actualendTime": "2015-05-22T10:32:00.000Z",
+      "_id": "581355b2550dfb3b52c4fd1a"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-22T10:32:00.000Z",
+      "actualStartTime": "2015-05-22T10:32:00.000Z",
+      "scheduledEndTime": "2015-05-23T21:12:00.000Z",
+      "actualendTime": "2015-05-23T21:12:00.000Z",
+      "_id": "581355b2550dfb3b52c4fd19"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-23T21:12:00.000Z",
+      "actualStartTime": "2015-05-23T21:12:00.000Z",
+      "scheduledEndTime": "2015-05-24T07:58:00.000Z",
+      "actualendTime": "2015-05-24T07:58:00.000Z",
+      "_id": "581355b2550dfb3b52c4fd18"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-24T12:58:00.000Z",
+      "actualStartTime": "2015-05-24T12:58:00.000Z",
+      "scheduledEndTime": "2015-05-25T07:10:00.000Z",
+      "actualendTime": "2015-05-25T07:10:00.000Z",
+      "_id": "581355b2550dfb3b52c4fd17"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-24T07:58:00.000Z",
+      "actualStartTime": "2015-05-24T07:58:00.000Z",
+      "scheduledEndTime": "2015-05-24T09:52:00.000Z",
+      "actualendTime": "2015-05-24T09:52:00.000Z",
+      "_id": "581355b2550dfb3b52c4fd16"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-24T09:52:00.000Z",
+      "actualStartTime": "2015-05-24T09:52:00.000Z",
+      "scheduledEndTime": "2015-05-24T12:58:00.000Z",
+      "actualendTime": "2015-05-24T12:58:00.000Z",
+      "_id": "581355b2550dfb3b52c4fd15"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-25T07:12:00.000Z",
+      "actualStartTime": "2015-05-25T07:12:00.000Z",
+      "scheduledEndTime": "2015-05-25T08:58:00.000Z",
+      "actualendTime": "2015-05-25T08:58:00.000Z",
+      "_id": "581355b2550dfb3b52c4fd14"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-25T08:58:00.000Z",
+      "actualStartTime": "2015-05-25T08:58:00.000Z",
+      "scheduledEndTime": "2015-05-25T10:33:00.000Z",
+      "actualendTime": "2015-05-25T10:33:00.000Z",
+      "_id": "581355b2550dfb3b52c4fd13"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-05-25T10:36:00.000Z",
+      "actualStartTime": "2015-05-25T10:36:00.000Z",
+      "scheduledEndTime": "2015-05-30T10:37:00.000Z",
+      "actualendTime": "2015-05-30T10:37:00.000Z",
+      "_id": "581355b2550dfb3b52c4fd12"
+    }
+  ],
+  "platforms": [
+    "iOS"
+  ],
+  "postingDate": "2015-05-13T15:37:00.000Z",
+  "prize": [
+    2500,
+    1250
+  ],
+  "projectId": 8868,
+  "registrants": [
+    {
+      "handle": "patka",
+      "reliability": "6%",
+      "registrationDate": "2015-05-13T16:33:00.000Z",
+      "submissionDate": null,
+      "rating": "610",
+      "colorStyle": "color: #999999",
+      "_id": "581355b2550dfb3b52c4fd11"
+    },
+    {
+      "handle": "gonia_119",
+      "reliability": "6%",
+      "registrationDate": "2015-05-13T15:44:00.000Z",
+      "submissionDate": null,
+      "rating": "1115",
+      "colorStyle": "color: #00A900",
+      "_id": "581355b2550dfb3b52c4fd10"
+    },
+    {
+      "handle": "seriyvolk83",
+      "reliability": "81%",
+      "registrationDate": "2015-05-13T15:46:00.000Z",
+      "submissionDate": "2015-05-19T15:32:00.000Z",
+      "rating": "1320",
+      "colorStyle": "color: #6666FF",
+      "_id": "581355b2550dfb3b52c4fd0f"
+    },
+    {
+      "handle": "N1k1tung",
+      "reliability": "93%",
+      "registrationDate": "2015-05-13T15:48:00.000Z",
+      "submissionDate": "2015-05-19T15:31:00.000Z",
+      "rating": "1271",
+      "colorStyle": "color: #6666FF",
+      "_id": "581355b2550dfb3b52c4fd0e"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "20%",
+      "registrationDate": "2015-05-13T15:57:00.000Z",
+      "submissionDate": null,
+      "rating": "1208",
+      "colorStyle": "color: #6666FF",
+      "_id": "581355b2550dfb3b52c4fd0d"
+    },
+    {
+      "handle": "clocy",
+      "reliability": "0%",
+      "registrationDate": "2015-05-13T16:04:00.000Z",
+      "submissionDate": null,
+      "rating": "1307",
+      "colorStyle": "color: #6666FF",
+      "_id": "581355b2550dfb3b52c4fd0c"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2015-05-13T16:53:00.000Z",
+      "submissionDate": null,
+      "rating": "571",
+      "colorStyle": "color: #999999",
+      "_id": "581355b2550dfb3b52c4fd0b"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-13T17:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b2550dfb3b52c4fd0a"
+    },
+    {
+      "handle": "mohamede1945",
+      "reliability": "100%",
+      "registrationDate": "2015-05-13T17:31:00.000Z",
+      "submissionDate": "2015-05-19T15:22:00.000Z",
+      "rating": "1571",
+      "colorStyle": "color: #DDCC00",
+      "_id": "581355b2550dfb3b52c4fd09"
+    },
+    {
+      "handle": "maniek",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-13T17:59:00.000Z",
+      "submissionDate": null,
+      "rating": "451",
+      "colorStyle": "color: #999999",
+      "_id": "581355b2550dfb3b52c4fd08"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-13T18:26:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "581355b2550dfb3b52c4fd07"
+    },
+    {
+      "handle": "JinkProject",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-13T18:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b2550dfb3b52c4fd06"
+    },
+    {
+      "handle": "pvmagacho",
+      "reliability": "20%",
+      "registrationDate": "2015-05-13T20:18:00.000Z",
+      "submissionDate": null,
+      "rating": "777",
+      "colorStyle": "color: #999999",
+      "_id": "581355b2550dfb3b52c4fd05"
+    },
+    {
+      "handle": "janderson1139",
+      "reliability": "33%",
+      "registrationDate": "2015-05-13T21:33:00.000Z",
+      "submissionDate": null,
+      "rating": "812",
+      "colorStyle": "color: #999999",
+      "_id": "581355b2550dfb3b52c4fd04"
+    },
+    {
+      "handle": "hash3r",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-13T22:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b2550dfb3b52c4fd03"
+    },
+    {
+      "handle": "mike.chow",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-14T00:45:00.000Z",
+      "submissionDate": "2015-05-19T14:12:00.000Z",
+      "rating": "795",
+      "colorStyle": "color: #999999",
+      "_id": "581355b2550dfb3b52c4fd02"
+    },
+    {
+      "handle": "elielzamora",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-14T00:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b2550dfb3b52c4fd01"
+    },
+    {
+      "handle": "karmakaze",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-14T00:31:00.000Z",
+      "submissionDate": null,
+      "rating": "756",
+      "colorStyle": "color: #999999",
+      "_id": "581355b2550dfb3b52c4fd00"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2015-05-14T13:02:00.000Z",
+      "submissionDate": null,
+      "rating": "1053",
+      "colorStyle": "color: #00A900",
+      "_id": "581355b2550dfb3b52c4fcff"
+    },
+    {
+      "handle": "phonechen",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-14T02:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b2550dfb3b52c4fcfe"
+    },
+    {
+      "handle": "michael_tang",
+      "reliability": "0%",
+      "registrationDate": "2015-05-14T02:41:00.000Z",
+      "submissionDate": null,
+      "rating": "497",
+      "colorStyle": "color: #999999",
+      "_id": "581355b2550dfb3b52c4fcfd"
+    },
+    {
+      "handle": "chrislee8",
+      "reliability": "0%",
+      "registrationDate": "2015-05-14T04:52:00.000Z",
+      "submissionDate": null,
+      "rating": "1010",
+      "colorStyle": "color: #00A900",
+      "_id": "581355b2550dfb3b52c4fcfc"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "13%",
+      "registrationDate": "2015-05-14T05:20:00.000Z",
+      "submissionDate": null,
+      "rating": "975",
+      "colorStyle": "color: #00A900",
+      "_id": "581355b2550dfb3b52c4fcfb"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-14T05:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b2550dfb3b52c4fcfa"
+    },
+    {
+      "handle": "winterflame",
+      "reliability": "0%",
+      "registrationDate": "2015-05-14T07:03:00.000Z",
+      "submissionDate": null,
+      "rating": "978",
+      "colorStyle": "color: #00A900",
+      "_id": "581355b2550dfb3b52c4fcf9"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "0%",
+      "registrationDate": "2015-05-14T09:23:00.000Z",
+      "submissionDate": null,
+      "rating": "1221",
+      "colorStyle": "color: #6666FF",
+      "_id": "581355b2550dfb3b52c4fcf8"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-14T12:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b2550dfb3b52c4fcf7"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2015-05-15T05:28:00.000Z",
+      "submissionDate": null,
+      "rating": "1104",
+      "colorStyle": "color: #00A900",
+      "_id": "581355b2550dfb3b52c4fcf6"
+    },
+    {
+      "handle": "ybkr007",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-15T10:08:00.000Z",
+      "submissionDate": null,
+      "rating": "893",
+      "colorStyle": "color: #999999",
+      "_id": "581355b2550dfb3b52c4fcf5"
+    },
+    {
+      "handle": "vokie",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-15T12:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b2550dfb3b52c4fcf4"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-15T13:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b2550dfb3b52c4fcf3"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "0%",
+      "registrationDate": "2015-05-15T13:59:00.000Z",
+      "submissionDate": null,
+      "rating": "963",
+      "colorStyle": "color: #00A900",
+      "_id": "581355b2550dfb3b52c4fcf2"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "0%",
+      "registrationDate": "2015-05-15T14:01:00.000Z",
+      "submissionDate": "2015-05-16T15:35:00.000Z",
+      "rating": "618",
+      "colorStyle": "color: #999999",
+      "_id": "581355b2550dfb3b52c4fcf1"
+    },
+    {
+      "handle": "chok68",
+      "reliability": "n/a",
+      "registrationDate": "2015-05-15T14:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b2550dfb3b52c4fcf0"
+    }
+  ],
+  "registrationEndDate": "2015-05-15T15:38:00.000Z",
+  "reliabilityBonus": 500,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-05-19T15:38:00.000Z",
+  "submissions": [
+    {
+      "handle": "mohamede1945",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 94.93,
+      "finalScore": 97.97,
+      "points": 675,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-05-19T15:22:00.000Z",
+      "_id": "581355b3550dfb3b52c4fd28"
+    },
+    {
+      "handle": "N1k1tung",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 91.33,
+      "finalScore": 95.08,
+      "points": 247.5,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-05-19T15:31:00.000Z",
+      "_id": "581355b3550dfb3b52c4fd27"
+    },
+    {
+      "handle": "seriyvolk83",
+      "placement": 3,
+      "screeningScore": 100,
+      "initialScore": 85.7,
+      "finalScore": 85.7,
+      "points": 112.5,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-05-19T15:32:00.000Z",
+      "_id": "581355b3550dfb3b52c4fd26"
+    },
+    {
+      "handle": "mike.chow",
+      "placement": 4,
+      "screeningScore": 100,
+      "initialScore": 85.47,
+      "finalScore": 85.47,
+      "points": 90,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-05-19T14:12:00.000Z",
+      "_id": "581355b3550dfb3b52c4fd25"
+    }
+  ],
+  "technology": [
+    "Swift",
+    "Xcode",
+    "iOS"
+  ]
+}

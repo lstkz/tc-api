@@ -1,0 +1,347 @@
+{
+  "_id": 30054358,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:12:50.407Z",
+  "appealsEndDate": "2016-06-01T01:01:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Topcoder Direct - New Way to Build and Run DIrect Locally",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "Previously, we have created a way to run TC Direct locally, that approach works properly for Linux and Mac OS X environments, but we met problems with docker compose in windows, as it can not mount the volume properly, which can not be easily resolved.<br />\n<br />\nRethinking of the general approach we&#39; like to change the way to build and run.<br />\n<br />\n1.&nbsp;Separate out local setup related stuff into&nbsp;<a href=\"https://github.com/appirio-tech/tc-common-tutorials\" style=\"line-height: 20.8px;\">tc-common-tutorials</a>, we&#39;d like to host these under docker/direct-app directory.<br />\nfor current stuff they are<br />\n1.1 direct-app/docker-compose.yaml<br />\n1.2 direct-app/LOCAL_SETUP.md<br />\n1.3 drect-app/token.properties.docker-local<br />\n1.3 direct-app/topcoder_global.properties.docker-local<br />\n1.4 direct-app/docker/local-setup<br />\n<span style=\"color:#FF0000\">For testing, these should be removed from the direct-app source directory first, or you can just use&nbsp;</span>bd5b1c1fc470c95f0875f95048750a980777ec84&nbsp;commit.<br />\n2. Please use the direct-app-docker.zip as your start kit.<br />\n1. Update&nbsp;<a href=\"https://github.com/appirio-tech/direct-app/tree/dev/docker/local-setup/direct-app-base\" style=\"line-height: 20.8px;\">direct-app-base</a>&nbsp;docker image setup and rename into docker/direct-app/base directory<br />\nmove the jboss related setup to build, this will built the base image for build and run. like<br />\n<br />\n<a href=\"https://github.com/appirio-tech/direct-app/blob/dev/docker/local-setup/direct-app-base/Dockerfile#L24-L26\">https://github.com/appirio-tech/direct-app/blob/dev/docker/local-setup/direct-app-base/Dockerfile#L24-L26</a><br />\n<a href=\"https://github.com/appirio-tech/direct-app/blob/dev/docker/local-setup/direct-app-base/Dockerfile#L42-L46\">https://github.com/appirio-tech/direct-app/blob/dev/docker/local-setup/direct-app-base/Dockerfile#L42-L46</a><br />\n<br />\nthese should be moved to build docker image build.<br />\n<br />\n<a href=\"https://github.com/appirio-tech/direct-app/blob/dev/docker/local-setup/direct-app-base/Dockerfile#L55-L57\">https://github.com/appirio-tech/direct-app/blob/dev/docker/local-setup/direct-app-base/Dockerfile#L55-L57</a><br />\n<br />\nthese should be moved to run docker image build.<br />\n<br />\n2. Create a docker/direct-app/build docker image setup<br />\n2.1 it will mount two volumes, one is for direct-app source code, one is for built stuff - you should be clean up for each build<br />\n2.2 it will copy token.properties.docker-local and topcoder-global.properties.docker-local<br />\n2.2 it will execute the `ant first_deploy`, outputs deployment pieces to the deployment volume, so once finished, we will have a directory locally with all deployment pieces.<br />\n2.3 it will do cleanup properly.<br />\n3. Create a direct-app/run docker image setup, which will copy the deployment pieces previously built into the image and it will have entrypoint to start the jboss. &nbsp;Ideally, we&#39;d like to have jboss-4.2.3-GA copied to /root/, if that is impossible, please use /data/ instead.<br />\n4. Update the docker/direct-app/docker-compose.yaml file to use the direct-app image directly.<br />\n5. Update the README.md file to reflect the new build and run process.<br />\nSo the expected approach will be like<br />\n1. cd docker/direct-app/base<br />\n2. docker build -t appiriodevops/direct-app:base &nbsp;.<br />\n3. cd docker/direct-app/build<br />\n4. docker builld -t appiriodevops/direct-app:build .<br />\n5. docker run -v &lt;&lt;path-to-direct-app&gt;&gt;:/root/direct -v &lt;&lt;path-to-deployment&gt;&gt;:/data/ &nbsp;-t appiriodevops/direct-app:build<br />\n7. cd docker/direct-app/run<br />\n8 &nbsp;docker build -t appiriodevops/direct-app .&nbsp;&nbsp;<br />\n9. cd docker/direct-app<br />\n10. docker-compose up tc-direct - which will run the direct-app locally<br />\n<br />\nIf we push these base image and run image to docker hub, then we can directly run TC Direct locally without any sourcecode.<br />\n<br />\n<u>About Testing</u><br />\nPlease make sure the above approach working properly in Windows, Linux and Mac OS X. Linux and Mac OS X are similar so you can choose one for testing.<br />\n&nbsp;",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30054358",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "1. Updated direct-app-docker.zip&nbsp;<br />\n2. Winner will be responsible to create PR for merging related stuff into&nbsp;<a href=\"https://github.com/appirio-tech/tc-common-tutorials\">https://github.com/appirio-tech/tc-common-tutorials</a><br />\n3. Verification Steps<br />\n4. Winner Will be responsible for making final adjustments, not for new features.",
+  "forumId": 33192,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33192",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 24,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-24T14:48:00.000Z",
+      "actualStartTime": "2016-05-24T14:48:00.000Z",
+      "scheduledEndTime": "2016-05-28T14:49:00.000Z",
+      "actualendTime": "2016-05-28T14:49:00.000Z",
+      "_id": "581340c2550dfb3b52be6e65"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-24T14:53:00.000Z",
+      "actualStartTime": "2016-05-24T14:53:00.000Z",
+      "scheduledEndTime": "2016-05-28T14:49:00.000Z",
+      "actualendTime": "2016-05-28T14:49:00.000Z",
+      "_id": "581340c2550dfb3b52be6e64"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-28T14:49:00.000Z",
+      "actualStartTime": "2016-05-28T14:49:00.000Z",
+      "scheduledEndTime": "2016-05-30T13:00:00.000Z",
+      "actualendTime": "2016-05-30T13:00:00.000Z",
+      "_id": "581340c2550dfb3b52be6e63"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-30T13:00:00.000Z",
+      "actualStartTime": "2016-05-30T13:00:00.000Z",
+      "scheduledEndTime": "2016-05-31T13:01:00.000Z",
+      "actualendTime": "2016-05-31T13:01:00.000Z",
+      "_id": "581340c2550dfb3b52be6e62"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-31T13:01:00.000Z",
+      "actualStartTime": "2016-05-31T13:01:00.000Z",
+      "scheduledEndTime": "2016-06-01T01:01:00.000Z",
+      "actualendTime": "2016-06-01T01:01:00.000Z",
+      "_id": "581340c2550dfb3b52be6e61"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-05-24T14:48:00.000Z",
+  "prize": [
+    500,
+    250
+  ],
+  "projectId": 9601,
+  "registrants": [
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-25T08:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e60"
+    },
+    {
+      "handle": "code_now",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-25T00:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e5f"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-24T14:50:00.000Z",
+      "submissionDate": "2016-05-26T06:00:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e5e"
+    },
+    {
+      "handle": "thkang91",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-24T15:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e5d"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-24T17:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e5c"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-24T17:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e5b"
+    },
+    {
+      "handle": "karthsharma",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-24T18:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e5a"
+    },
+    {
+      "handle": "phaniram",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-24T19:38:00.000Z",
+      "submissionDate": "2016-05-27T10:30:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e59"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-24T22:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e58"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-25T01:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e57"
+    },
+    {
+      "handle": "duxiaoyang",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-25T01:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e56"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-25T02:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e55"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-25T02:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e54"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-25T02:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e53"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-25T12:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e52"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-25T16:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e51"
+    },
+    {
+      "handle": "rixiac",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-26T07:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e50"
+    },
+    {
+      "handle": "twds",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-26T07:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e4f"
+    },
+    {
+      "handle": "NightWolf",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-26T11:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e4e"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-26T15:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e4d"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T01:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e4c"
+    },
+    {
+      "handle": "subsunacop2011",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T03:05:00.000Z",
+      "submissionDate": "2016-05-28T06:59:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e4b"
+    },
+    {
+      "handle": "ecavalier313",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T03:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e4a"
+    },
+    {
+      "handle": "jayanand4u",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T16:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c2550dfb3b52be6e49"
+    }
+  ],
+  "registrationEndDate": "2016-05-28T14:49:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-05-28T14:49:00.000Z",
+  "submissions": [
+    {
+      "handle": "Standlove",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 97.5,
+      "finalScore": 98.75,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-05-26T06:00:00.000Z",
+      "_id": "581340c2550dfb3b52be6e68"
+    },
+    {
+      "handle": "phaniram",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 86.25,
+      "finalScore": 87.5,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-27T10:30:00.000Z",
+      "_id": "581340c2550dfb3b52be6e67"
+    },
+    {
+      "handle": "subsunacop2011",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 23.75,
+      "finalScore": 23.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-28T06:59:00.000Z",
+      "_id": "581340c2550dfb3b52be6e66"
+    }
+  ],
+  "technology": [
+    "Docker"
+  ]
+}

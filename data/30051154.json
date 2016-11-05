@@ -1,0 +1,397 @@
+{
+  "_id": 30051154,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:36:55.729Z",
+  "appealsEndDate": "2015-09-07T00:35:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "[CODEBLITZ] LightSpeed MVP Backend Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></h2>\n\n<p><span>LightSpeed is an Excel based VBA application and in this project we are converting this application to a web based app to make it much easier to use.&nbsp;</span><span>The web app will be an HTML5 app with offlice capabilities.</span></p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Competition Task Overview</span></h2>\n\n<p><span>For this challenge, we are building the backend to support the front end pages, please also check the <a href=\"https://www.topcoder.com/challenge-details/30051144/?type=develop\">prototype requirements</a> to see what the backend needs to support.</span></p>\n\n<p><span style=\"background-color:#FFFF00\">Note we do not have an architecture for this challenge so asking questions early in the forum is important!</span></p>\n\n<p><span style=\"background-color:#FFFF00\">Also make sure you check the VBA code in the provided application to understand how it works now.</span></p>\n\n<h3>Functional Requirements</h3>\n\n<ul>\n\t<li><span style=\"font-size:12px\">Login:</span>\n\n\t<ul>\n\t\t<li><span style=\"font-size:12px\">This will be identical to SRT (we will provide code for this in the forum)</span></li>\n\t\t<li><span style=\"font-size:12px\">We&#39;ll need to support two different roles for now: PM and PDM (in the future we&#39;ll support more roles and more actions like edit / comment, so make sure this is extensible)</span>\n\t\t<ul>\n\t\t\t<li><span style=\"font-size:12px\">���</span>PM - ability to view projects that are assigned to them or colleagues in a practice/division</li>\n\t\t\t<li>PDM -&nbsp;ability to view all projects within a division or practice by selecting multiple users data</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li><span style=\"font-size:12px\">Settings: settings need to saved for users, and this basically involves selecting district / division / PM / PDM / etc... you will need to go through the documents in the forum to understand this</span></li>\n\t<li><span style=\"font-size:12px\">We&#39;ll need to support Project View and WBS View for this project, services must be defined and implemented to retrieve data for the views, search methods must also be available to allow searching of records. Again you&#39;ll need to go through the documents we provide in the forum to understand how to work with this.</span></li>\n\t<li><span style=\"font-size:12px\">Logging must be done with details</span></li>\n</ul>\n\n<h3>Technologies</h3>\n\n<p><span style=\"font-size:12px\">Basically we are using the same technology stack as SRT for this project, except that we don&#39;t need to support Oracle as alternative backend database.</span></p>\n\n<h3>Project Structure / Architecture</h3>\n\n<p><span style=\"font-size:12px\">This project must follow same project structure as SRT:</span></p>\n\n<ul>\n\t<li><span style=\"font-size:12px\">pom.xml in root folder to build the whole project (in scope of this challenge)</span></li>\n\t<li>model module that contains definition of all models&nbsp;<span style=\"font-size:12px\">(in scope of this challenge)</span>\n\t<ul>\n\t\t<li><span style=\"font-size:12px\">���This should contain all entities needed by this application</span></li>\n\t</ul>\n\t</li>\n\t<li>core-services module that contains all backend service interfaces and implementations&nbsp;<span style=\"font-size:12px\">(in scope of this challenge)</span>\n\t<ul>\n\t\t<li>Plain java interfaces and implementations to support login / authorization / data retrieval / etc... (basically everything needed to cover all functional requirements)</li>\n\t\t<li>SQL scripts to create / drop tables and delete data</li>\n\t\t<li>ORM mapping file</li>\n\t\t<li>Necessary config files (database, spring, log4j, etc... these will similar to SRT)</li>\n\t\t<li>Specifically we need the following to be carefully designed and implemented:\n\t\t<ul>\n\t\t\t<li>an interface to pull data from external data source</li>\n\t\t\t<li>an implementation of the interface to pull data from Excel files (sample files provided) and insert into the application database (in the future we may also have another implementation to pull data from a different database)</li>\n\t\t\t<li>a job that will use the interface to pull data at a configurable interval</li>\n\t\t\t<li>there should also be a service or method that will be available to the web app that can be called to trigger data pull</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li>frontend module that contains all Spring controllers / interceptors&nbsp;<span style=\"font-size:12px\">(in scope of this challenge)</span>\n\t<ul>\n\t\t<li><span style=\"font-size:12px\">���Check SRT code to see how login / authentication / authorization is handled</span></li>\n\t\t<li><span style=\"font-size:12px\">We&#39;ll need controllers to serve all requests from the frontend, frontend code will only work with controllers through RESTful style calls (again similar to SRT)</span></li>\n\t</ul>\n\t</li>\n\t<li>webapp module that contains the web project (not in scope of this challenge)</li>\n</ul>\n\n<h3><span style=\"color:rgb(255, 0, 0)\">Testing</span></h3>\n\n<p><span style=\"font-size:12px\">Unit tests are required for the backend classes / services. Unit tests should run with in-memory H2 database so that no extra configuration is needed to run the unit tests (i.e. developer can simply checkout the code and run mvn test or some other target to execute unit tests, no need to setup db or insert test data, etc...)</span></p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Technology Overview</span></h2>\n\n<ul>\n\t<li><span style=\"font-size:12px\">Java</span></li>\n\t<li><span style=\"font-size:12px\">Postgres</span></li>\n\t<li><span style=\"font-size:12px\">Hibernate</span></li>\n\t<li><span style=\"font-size:12px\">Tomcat</span></li>\n\t<li><span style=\"font-size:12px\">HTML5</span></li>\n\t<li><span style=\"font-size:12px\">Spring MVC</span></li>\n\t<li><span style=\"font-size:12px\">AngularJS</span></li>\n</ul>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Documentation Provided</span></h2>\n\n<p>Register to download documents from challenge forum.</p>\n",
+  "digitalRunPoints": 810,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30051154",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalFixEndDate": "2015-09-08T04:04:00.000Z",
+  "finalSubmissionGuidelines": "<h2><strong><span style=\"color:rgb(255, 0, 0)\">Submission Deliverables</span></strong></h2>\n\n<p><span style=\"font-size:12px\">A complete list of deliverables can be viewed in the TopCoder Assembly competition Tutorial at: <a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials&nbsp;</a></span></p>\n\n<p><span style=\"font-size:12px\">Below is an overview of the deliverables:</span></p>\n\n<ul>\n\t<li><span style=\"font-size:12px\">Ful code that covers all requirements</span></li>\n\t<li><span style=\"font-size:12px\">A complete and detailed deployment documented explaining how to deploy the application including configuration information.</span></li>\n\t<li><span style=\"font-size:12px\">JUNIT Tests to verify your application successfully meets the requirements of the application.</span></li>\n\t<li><span style=\"font-size:12px\">The maven build script to compile code and run unit tests.</span></li>\n</ul>\n\n<h2><span style=\"color:#FF0000\"><strong>Final Submission</strong></span></h2>\n\n<p><span style=\"font-size:12px\">For each member, the final submission should be uploaded via the challenge detail page on <a href=\"http://www.topcoder.com\">topcoder.com</a>.</span></p>\n",
+  "forumId": 30280,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=30280",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 23,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-08-28T16:29:00.000Z",
+      "actualStartTime": "2015-08-28T16:29:00.000Z",
+      "scheduledEndTime": "2015-08-28T16:30:00.000Z",
+      "actualendTime": "2015-08-28T16:30:00.000Z",
+      "_id": "58135477550dfb3b52c48f8f"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-08-28T16:30:00.000Z",
+      "actualStartTime": "2015-08-28T16:30:00.000Z",
+      "scheduledEndTime": "2015-08-28T19:26:00.000Z",
+      "actualendTime": "2015-08-28T19:26:00.000Z",
+      "_id": "58135477550dfb3b52c48f8e"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-08-29T01:01:00.000Z",
+      "actualStartTime": "2015-08-29T01:01:00.000Z",
+      "scheduledEndTime": "2015-08-31T01:01:00.000Z",
+      "actualendTime": "2015-08-31T01:01:00.000Z",
+      "_id": "58135477550dfb3b52c48f8d"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-08-29T01:06:00.000Z",
+      "actualStartTime": "2015-08-29T01:06:00.000Z",
+      "scheduledEndTime": "2015-09-03T01:02:00.000Z",
+      "actualendTime": "2015-09-03T01:02:00.000Z",
+      "_id": "58135477550dfb3b52c48f8c"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2015-09-03T01:02:00.000Z",
+      "actualStartTime": "2015-09-03T01:02:00.000Z",
+      "scheduledEndTime": "2015-09-03T14:47:00.000Z",
+      "actualendTime": "2015-09-03T14:47:00.000Z",
+      "_id": "58135477550dfb3b52c48f8b"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-09-03T14:47:00.000Z",
+      "actualStartTime": "2015-09-03T14:47:00.000Z",
+      "scheduledEndTime": "2015-09-05T14:05:00.000Z",
+      "actualendTime": "2015-09-05T14:05:00.000Z",
+      "_id": "58135477550dfb3b52c48f8a"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-09-05T14:05:00.000Z",
+      "actualStartTime": "2015-09-05T14:05:00.000Z",
+      "scheduledEndTime": "2015-09-06T14:06:00.000Z",
+      "actualendTime": "2015-09-06T14:06:00.000Z",
+      "_id": "58135477550dfb3b52c48f89"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-09-06T14:06:00.000Z",
+      "actualStartTime": "2015-09-06T14:06:00.000Z",
+      "scheduledEndTime": "2015-09-07T00:35:00.000Z",
+      "actualendTime": "2015-09-07T00:35:00.000Z",
+      "_id": "58135477550dfb3b52c48f88"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2015-09-07T00:35:00.000Z",
+      "actualStartTime": "2015-09-07T00:35:00.000Z",
+      "scheduledEndTime": "2015-09-07T06:45:00.000Z",
+      "actualendTime": "2015-09-07T06:45:00.000Z",
+      "_id": "58135477550dfb3b52c48f87"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-09-07T06:45:00.000Z",
+      "actualStartTime": "2015-09-07T06:45:00.000Z",
+      "scheduledEndTime": "2015-09-08T04:04:00.000Z",
+      "actualendTime": "2015-09-08T04:04:00.000Z",
+      "_id": "58135477550dfb3b52c48f86"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-09-08T04:04:00.000Z",
+      "actualStartTime": "2015-09-08T04:04:00.000Z",
+      "scheduledEndTime": "2015-09-08T06:09:00.000Z",
+      "actualendTime": "2015-09-08T06:09:00.000Z",
+      "_id": "58135477550dfb3b52c48f85"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-09-08T06:09:00.000Z",
+      "actualStartTime": "2015-09-08T06:09:00.000Z",
+      "scheduledEndTime": "2015-09-11T03:02:00.000Z",
+      "actualendTime": "2015-09-11T03:02:00.000Z",
+      "_id": "58135477550dfb3b52c48f84"
+    }
+  ],
+  "platforms": [
+    "HTML"
+  ],
+  "postingDate": "2015-08-29T01:01:00.000Z",
+  "prize": [
+    1800,
+    900
+  ],
+  "projectId": 9069,
+  "registrants": [
+    {
+      "handle": "cjalmeida",
+      "reliability": "6%",
+      "registrationDate": "2015-08-29T02:55:00.000Z",
+      "submissionDate": null,
+      "rating": "1130",
+      "colorStyle": "color: #00A900",
+      "_id": "58135477550dfb3b52c48f83"
+    },
+    {
+      "handle": "chuxy111",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-29T03:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135477550dfb3b52c48f82"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-29T08:43:00.000Z",
+      "submissionDate": null,
+      "rating": "717",
+      "colorStyle": "color: #999999",
+      "_id": "58135477550dfb3b52c48f81"
+    },
+    {
+      "handle": "spanhawk",
+      "reliability": "20%",
+      "registrationDate": "2015-08-29T11:14:00.000Z",
+      "submissionDate": null,
+      "rating": "763",
+      "colorStyle": "color: #999999",
+      "_id": "58135477550dfb3b52c48f80"
+    },
+    {
+      "handle": "liuliquan",
+      "reliability": "93%",
+      "registrationDate": "2015-08-29T11:59:00.000Z",
+      "submissionDate": "2015-09-02T09:05:00.000Z",
+      "rating": "1646",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58135477550dfb3b52c48f7f"
+    },
+    {
+      "handle": "ranitdas",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-29T12:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135477550dfb3b52c48f7e"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "0%",
+      "registrationDate": "2015-08-29T13:28:00.000Z",
+      "submissionDate": null,
+      "rating": "1374",
+      "colorStyle": "color: #6666FF",
+      "_id": "58135477550dfb3b52c48f7d"
+    },
+    {
+      "handle": "diogenesjcs",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-29T15:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135477550dfb3b52c48f7c"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-29T15:40:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58135477550dfb3b52c48f7b"
+    },
+    {
+      "handle": "RO86",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-29T15:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135477550dfb3b52c48f7a"
+    },
+    {
+      "handle": "xanx",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-29T16:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135477550dfb3b52c48f79"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2015-08-29T17:44:00.000Z",
+      "submissionDate": null,
+      "rating": "972",
+      "colorStyle": "color: #00A900",
+      "_id": "58135477550dfb3b52c48f78"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "26%",
+      "registrationDate": "2015-08-29T18:06:00.000Z",
+      "submissionDate": "2015-09-03T00:59:00.000Z",
+      "rating": "979",
+      "colorStyle": "color: #00A900",
+      "_id": "58135477550dfb3b52c48f77"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-29T22:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135477550dfb3b52c48f76"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2015-08-29T22:49:00.000Z",
+      "submissionDate": null,
+      "rating": "1631",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58135477550dfb3b52c48f75"
+    },
+    {
+      "handle": "vimrc",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-30T04:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135477550dfb3b52c48f74"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-30T07:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135477550dfb3b52c48f73"
+    },
+    {
+      "handle": "isv",
+      "reliability": "33%",
+      "registrationDate": "2015-08-30T07:32:00.000Z",
+      "submissionDate": null,
+      "rating": "980",
+      "colorStyle": "color: #00A900",
+      "_id": "58135477550dfb3b52c48f72"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-30T09:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135477550dfb3b52c48f71"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-30T11:15:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58135477550dfb3b52c48f70"
+    },
+    {
+      "handle": "rajeshk87",
+      "reliability": "0%",
+      "registrationDate": "2015-08-30T14:35:00.000Z",
+      "submissionDate": null,
+      "rating": "860",
+      "colorStyle": "color: #999999",
+      "_id": "58135477550dfb3b52c48f6f"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-30T15:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135477550dfb3b52c48f6e"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "6%",
+      "registrationDate": "2015-08-30T15:09:00.000Z",
+      "submissionDate": null,
+      "rating": "929",
+      "colorStyle": "color: #00A900",
+      "_id": "58135477550dfb3b52c48f6d"
+    }
+  ],
+  "registrationEndDate": "2015-08-31T01:01:00.000Z",
+  "reliabilityBonus": 360,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-09-03T01:02:00.000Z",
+  "submissions": [
+    {
+      "handle": "liuliquan",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 89.68,
+      "finalScore": 91.44,
+      "points": 810,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-09-02T09:05:00.000Z",
+      "_id": "58135477550dfb3b52c48f91"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "placement": null,
+      "screeningScore": 0,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Failed Screening",
+      "submissionDate": "2015-09-03T00:59:00.000Z",
+      "_id": "58135477550dfb3b52c48f90"
+    }
+  ],
+  "technology": [
+    "Angular.js",
+    "CSS",
+    "HTML5",
+    "Hibernate",
+    "Java",
+    "PostgreSQL"
+  ]
+}

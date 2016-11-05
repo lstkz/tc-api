@@ -1,0 +1,419 @@
+{
+  "_id": 30035658,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T23:13:35.304Z",
+  "appealsEndDate": "2013-10-04T15:52:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Module Assembly - Soybean Visualizer Variety Search and Experiments",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<div>&nbsp;</div>\n\n<div>\n<h2 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span style=\"color: rgb(255, 0, 0);\">Project Overview</span></h2>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">Client is designing an application to help the client visualize soybean progeny/parents information from research results in a database that they have built from many years of breeding experimenting. This application will visualize variety data from the local persistence or input MS Excel file. Finally, the application will output the report to web browser print, PDF file or MS Excel file.&nbsp;</p>\n\n<h2 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span style=\"color: rgb(255, 0, 0);\">Competition Task Overview</span></h2>\n\n<p style=\"font-size: 13px;\"><span style=\"color: rgb(255, 0, 0);\">Sample SQL Queries is attached to the knowledge base. This project needs to process very large data so the performance is very important. You must follow best sql practices. e.g. use explicit join, avoid &quot;select *&quot;.</span></p>\n\n<p style=\"font-size: 13px;\">This contest should follow the latest database and updated UI Prototype (get from svn)&nbsp;to complete following tasks:</p>\n\n<ol style=\"font-size: 13px;\">\n\t<li>Switch to New DB Schema\n\t<ul>\n\t\t<li>We have refactored the DB schema a lot and the DB query in old code doesn&#39;t work at all. This assembly needs to update the query to load the data from new database correctly.</li>\n\t</ul>\n\t</li>\n\t<li>Search Varieties Page\n\t<ul>\n\t\t<li>Line Code (text box), High Name (text box), Variety Name (text box), Stage 3 Year (dropdown multi-select), RM (range, 2 text box), % checks (range, 2 text box), Elite (radio, Any/Yes/No), Yield Stability (dropdown multi-select), Herbicide (dropdown multi-select), C Gene (dropdown multi-select), Parents (text box), Use Code (text box). &nbsp;Do these in 3 columns.</li>\n\t\t<li>Only search for master materials. &nbsp;The link will go to variety details with the master material ID, which then can be used as MaterialID to look up the material.\n\t\t<ul>\n\t\t\t<li>Line Code - Material#LINCD (max 50, support wildcard %)</li>\n\t\t\t<li>High Name - Material#HGHNM (max 100, support wildcard %)</li>\n\t\t\t<li>Variety Name - not supported yet</li>\n\t\t\t<li>Stage 3 Year - Material#TC_YEAR, load options from TcDropdown, sort</li>\n\t\t\t<li>RM - if Assigned RM is present, match Assigned RM, otherwise match Computed RM (see #5 for database definition), max 5, float, range is inclusive, can be only one side of the range, lower boundary must be smaller than upper when both entered</li>\n\t\t\t<li>% Checks - Material#TC_PCHECK, max 5, non negative float, range is inclusive, can be only one side of the range, lower boundary must be smaller than upper when both entered</li>\n\t\t\t<li>Elite - Material#TC_ELITE, default to Any</li>\n\t\t\t<li>Yield Stability - Material#TC_YSTAB, load options from TcDropdown, sort</li>\n\t\t\t<li>Herbicide - Material#HERB, load options from TcDropdown, sort</li>\n\t\t\t<li>C Gene - Material#CGENE, load options from TcDropdown, sort</li>\n\t\t\t<li>Parents - (max 200, comma separated listing of parents, matching TcPedigree#ParentLINCD with OR logic, support wildcard %)</li>\n\t\t\t<li>Use Code - Material#USE_C, max 50, support wildcard %</li>\n\t\t\t<li>Notice all these columns are nullable in database.</li>\n\t\t\t<li>Options can be cached in JVM for performance. &nbsp;Each dropdown should dynamically fit the number of options so that no scroll bar is needed.</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li>Search Results Page\n\t<ul>\n\t\t<li>Match Browse Page (filters, result table)</li>\n\t\t<li>Line Code - Material#LINCD</li>\n\t\t<li>High Name - Material#HGHNM</li>\n\t\t<li>Variety Name - empty</li>\n\t\t<li>Stage 3 Year - Material#TC_YEAR</li>\n\t\t<li>Assigned RM - when TC_RMO = 1 then SPIRIT_RM otherwise empty, round to 1 decimal place</li>\n\t\t<li>Computed RM - TC_RM, round to 1 decimal place</li>\n\t\t<li>% Checks - Material#TC_PCHECK, round to 2 decimal places, add &quot;%&quot;</li>\n\t\t<li>Elite - Material#TC_ELITE, Yes or No</li>\n\t\t<li>Yield Stability - Material#TC_YSTAB</li>\n\t\t<li>Herbicide - Material#HERB</li>\n\t\t<li>C Gene - Material#CGENE</li>\n\t\t<li>Notice all these columns are nullable in database, use empty cell for null. &nbsp;All columns should be sortable. &nbsp;Default sort by Line Code.</li>\n\t</ul>\n\t</li>\n\t<li>Variety Details/Experiments Tab\n\t<ul>\n\t\t<li>Experiment ID (link), Year, Stage, Herbicide, Experiment Rank, Average Trial Rank.</li>\n\t\t<li>All the Experiments for the material - link by EntryList#TC_MaterialID only list unique experiments.\n\t\t<ul>\n\t\t\t<li>Experiment ID - Experiment#EXTID</li>\n\t\t\t<li>Year - Experiment#TC_YEAR</li>\n\t\t\t<li>Stage - Experiment#EXT_STGCD</li>\n\t\t\t<li>Herbicide - Experiment#HERB</li>\n\t\t\t<li>Experiment Rank - EntryList#TC_YRANK (join by TC_MaterialID and ExperimentID)</li>\n\t\t\t<li>Average Trial Rank - EntryList#TC_ARANK (join by TC_MaterialID and ExperimentID, round to 1 decimal place)</li>\n\t\t\t<li>Use empty for null. &nbsp;All columns should be sortable. &nbsp;Default sort by Experiment ID.</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li>Click into experiment view, header &quot;Experiment - 00SUBRYG102&quot; (experiment id).\n\t<ul>\n\t\t<li><span style=\"font-size: 13px;\">Remove tabs, location dropdown, information block and notes section, retain only the table (without paging) and export button.</span></li>\n\t\t<li><span style=\"font-size: 13px;\">Columns are Trial ID (link to trial view), Place Code, Location Code, Location Name, Trial Yield, Trial CV, Trial RM, Place Trial Count, Place Yield, Place CV, Place RM. &nbsp;All sortable</span></li>\n\t\t<li>Experiment ID comes from Experiment#EXTID. &nbsp;The link will use EXTID as identifier.</li>\n\t\t<li>The Data table can have multiple rows for each trial but we need to group to show only one row per trial.\n\t\t<ul>\n\t\t\t<li>Trial ID - Data#TRLID</li>\n\t\t\t<li>Place Code - leave empty for now</li>\n\t\t\t<li>Location Code - Data#LOCCD, will be same per TRLID</li>\n\t\t\t<li>Location Name - TcLoc#LOCNM, join using Experiment#TC_YEAR and Data#LOCCD</li>\n\t\t\t<li>Trial Yield - leave empty for now</li>\n\t\t\t<li>Trial CV - leave empty for now</li>\n\t\t\t<li>Trial RM - leave empty for now</li>\n\t\t\t<li>Place Trial Count - leave empty for now</li>\n\t\t\t<li>Place Yield - leave empty for now</li>\n\t\t\t<li>Place CV - leave empty for now</li>\n\t\t\t<li>Place RM - leave empty for now</li>\n\t\t\t<li>Use empty for null. &nbsp;All columns should be sortable. &nbsp;Default sort by Trial ID.</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li>Click into trial view, similar to experiment view, header &quot;Trial - 06SUCDYG4203370&quot; (trial id).&nbsp;\n\t<ul>\n\t\t<li>Data table without paging, with export button. &nbsp;Columns are Line Code (link back to variety details), Average Yield, Trial Rank (integer rank #), Assigned RM, Computed RM, Rep Count. &nbsp;All sortable.</li>\n\t\t<li>Trial ID comes from Data#TRLID. &nbsp;The link will use TRLID as identifier.</li>\n\t\t<li>The Data table can have multiple rows for each line code but we need to group to show only one row per material.\n\t\t<ul>\n\t\t\t<li>Line Code - Material#LINCD</li>\n\t\t\t<li>Average Yield - Average of positive Data#YGSMN being grouped</li>\n\t\t\t<li>Trial Rank - Data#TC_YRANK, will be the same for the same material/trial</li>\n\t\t\t<li>Assigned RM - when TC_RMO = 1 then SPIRIT_RM otherwise empty, round to 1 decimal place</li>\n\t\t\t<li>Computed RM - TC_RM, round to 1 decimal place</li>\n\t\t\t<li>Rep Count - # of records being grouped</li>\n\t\t\t<li>Use empty for null. &nbsp;All columns should be sortable. &nbsp;Default sort by Line Code.</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li>Filter Validation Error on Variety Browser Page\n\t<ul>\n\t\t<li>When validation error occurs, it should ignore the wrong filters and continue with other filters.</li>\n\t</ul>\n\t</li>\n</ol>\n\n<p style=\"font-size: 13px;\">Knowledge Base:&nbsp;<a href=\"http://apps.topcoder.com/wiki/display/docs/Soybean+Visualizer+Knowledge+Base\">http://apps.topcoder.com/wiki/display/docs/Soybean+Visualizer+Knowledge+Base</a></p>\n\n<h3 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span style=\"color: rgb(255, 0, 0);\">Testing</span></h3>\n\n<p><span style=\"line-height: 19.1875px;\">Verification Steps should be provided in Deployment Guide.</span></p>\n\n<h2 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span style=\"color: rgb(255, 0, 0);\">Environment Set Up</span></h2>\n\n<ol style=\"font-size: 13px;\">\n\t<li>Check Out Existing Code:&nbsp;<span style=\"line-height: 1.6em;\">https://coder.topcoder.com/tcs/clients/omicron/applications/soybean/trunk (</span>Please send your request to subversion@topcoder.com if you don&#39;t have the access.)<span style=\"line-height: 1.6em;\">&nbsp;<span style=\"line-height: 1.6em;\">Revision: 234880+</span></span></li>\n\t<li><span style=\"line-height: 1.6em;\"><span style=\"line-height: 1.6em;\"><span style=\"line-height: 1.6em;\">Remote LDAP and SQL Server are configured in build.properties. You just need to change the tomcat home.</span></span></span></li>\n\t<li><span style=\"line-height: 1.6em;\"><span style=\"line-height: 1.6em;\"><span style=\"line-height: 1.6em;\">Run ant deploy-web</span></span></span></li>\n\t<li><span style=\"line-height: 1.6em;\"><span style=\"line-height: 1.6em;\"><span style=\"line-height: 1.6em;\">Start Tomcat</span></span></span></li>\n\t<li><span style=\"line-height: 1.6em;\"><span style=\"line-height: 1.6em;\"><span style=\"line-height: 1.6em;\">Log in as admin/T0pc0der</span></span></span><span style=\"line-height: 1.6em;\"><span style=\"line-height: 1.6em;\"><span style=\"line-height: 1.6em;\">?</span></span></span></li>\n</ol>\n\n<h2 style=\"font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px;\"><span style=\"color: rgb(255, 0, 0);\">Technology Overview</span></h2>\n\n<p style=\"font-size: 13px;\"><span style=\"font-size: 12px;\">The working environment requirement details for this application are outlined in the Application Requirements Specification. An overview of the environment requirements are listed below:</span></p>\n\n<ul style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">\n\t<li>Java</li>\n\t<li>SQL Server</li>\n\t<li>Tomcat</li>\n\t<li>JavaScript</li>\n\t<li>JSP</li>\n\t<li>JDBC</li>\n</ul>\n</div>\n",
+  "digitalRunPoints": 540,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30035658",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2013-10-05T10:34:00.000Z",
+  "finalSubmissionGuidelines": "<p><span style=\"font-size: 13px;\">N/A</span></p>\n",
+  "forumId": 19046,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=19046",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 25,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-09-26T07:53:00.000Z",
+      "actualStartTime": "2013-09-26T07:53:00.000Z",
+      "scheduledEndTime": "2013-09-26T07:54:00.000Z",
+      "actualendTime": "2013-09-26T07:54:00.000Z",
+      "_id": "5813db9f550dfb3b52ea515b"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-09-26T07:54:00.000Z",
+      "actualStartTime": "2013-09-26T07:54:00.000Z",
+      "scheduledEndTime": "2013-09-26T10:05:00.000Z",
+      "actualendTime": "2013-09-26T10:05:00.000Z",
+      "_id": "5813db9f550dfb3b52ea515a"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2013-09-26T10:05:00.000Z",
+      "actualStartTime": "2013-09-26T10:05:00.000Z",
+      "scheduledEndTime": "2013-09-28T10:05:00.000Z",
+      "actualendTime": "2013-09-28T10:05:00.000Z",
+      "_id": "5813db9f550dfb3b52ea5159"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-09-26T10:10:00.000Z",
+      "actualStartTime": "2013-09-26T10:10:00.000Z",
+      "scheduledEndTime": "2013-10-01T10:10:00.000Z",
+      "actualendTime": "2013-10-01T10:10:00.000Z",
+      "_id": "5813db9f550dfb3b52ea5158"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-01T10:10:00.000Z",
+      "actualStartTime": "2013-10-01T10:10:00.000Z",
+      "scheduledEndTime": "2013-10-01T13:48:00.000Z",
+      "actualendTime": "2013-10-01T13:48:00.000Z",
+      "_id": "5813db9f550dfb3b52ea5157"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-01T13:48:00.000Z",
+      "actualStartTime": "2013-10-01T13:48:00.000Z",
+      "scheduledEndTime": "2013-10-03T12:50:00.000Z",
+      "actualendTime": "2013-10-03T12:50:00.000Z",
+      "_id": "5813db9f550dfb3b52ea5156"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-03T12:50:00.000Z",
+      "actualStartTime": "2013-10-03T12:50:00.000Z",
+      "scheduledEndTime": "2013-10-04T12:50:00.000Z",
+      "actualendTime": "2013-10-04T12:50:00.000Z",
+      "_id": "5813db9f550dfb3b52ea5155"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-04T12:50:00.000Z",
+      "actualStartTime": "2013-10-04T12:50:00.000Z",
+      "scheduledEndTime": "2013-10-04T15:52:00.000Z",
+      "actualendTime": "2013-10-04T15:52:00.000Z",
+      "_id": "5813db9f550dfb3b52ea5154"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-04T15:52:00.000Z",
+      "actualStartTime": "2013-10-04T15:52:00.000Z",
+      "scheduledEndTime": "2013-10-04T16:10:00.000Z",
+      "actualendTime": "2013-10-04T16:10:00.000Z",
+      "_id": "5813db9f550dfb3b52ea5153"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-04T16:10:00.000Z",
+      "actualStartTime": "2013-10-04T16:10:00.000Z",
+      "scheduledEndTime": "2013-10-05T10:34:00.000Z",
+      "actualendTime": "2013-10-05T10:34:00.000Z",
+      "_id": "5813db9f550dfb3b52ea5152"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-05T10:34:00.000Z",
+      "actualStartTime": "2013-10-05T10:34:00.000Z",
+      "scheduledEndTime": "2013-10-05T14:01:00.000Z",
+      "actualendTime": "2013-10-05T14:01:00.000Z",
+      "_id": "5813db9f550dfb3b52ea5151"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-05T14:01:00.000Z",
+      "actualStartTime": "2013-10-05T14:01:00.000Z",
+      "scheduledEndTime": "2013-10-10T14:01:00.000Z",
+      "actualendTime": "2013-10-10T14:01:00.000Z",
+      "_id": "5813db9f550dfb3b52ea5150"
+    }
+  ],
+  "platforms": [],
+  "postingDate": "2013-09-26T10:05:00.000Z",
+  "prize": [
+    1200,
+    600
+  ],
+  "projectId": 6704,
+  "registrants": [
+    {
+      "handle": "KennyAlive",
+      "reliability": "93%",
+      "registrationDate": "2013-09-26T10:09:00.000Z",
+      "submissionDate": "2013-10-01T09:27:00.000Z",
+      "rating": "1579",
+      "colorStyle": "color: #DDCC00",
+      "_id": "5813db9f550dfb3b52ea514f"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-26T10:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9f550dfb3b52ea514e"
+    },
+    {
+      "handle": "LazyChild",
+      "reliability": "100%",
+      "registrationDate": "2013-09-26T10:29:00.000Z",
+      "submissionDate": "2013-10-01T09:05:00.000Z",
+      "rating": "1611",
+      "colorStyle": "color: #DDCC00",
+      "_id": "5813db9f550dfb3b52ea514d"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2013-09-26T10:31:00.000Z",
+      "submissionDate": null,
+      "rating": "889",
+      "colorStyle": "color: #999999",
+      "_id": "5813db9f550dfb3b52ea514c"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-26T10:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9f550dfb3b52ea514b"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "6%",
+      "registrationDate": "2013-09-26T11:04:00.000Z",
+      "submissionDate": null,
+      "rating": "753",
+      "colorStyle": "color: #999999",
+      "_id": "5813db9f550dfb3b52ea514a"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2013-09-26T11:09:00.000Z",
+      "submissionDate": null,
+      "rating": "1062",
+      "colorStyle": "color: #00A900",
+      "_id": "5813db9f550dfb3b52ea5149"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-26T11:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9f550dfb3b52ea5148"
+    },
+    {
+      "handle": "DanLazar",
+      "reliability": "0%",
+      "registrationDate": "2013-09-26T11:29:00.000Z",
+      "submissionDate": null,
+      "rating": "863",
+      "colorStyle": "color: #999999",
+      "_id": "5813db9f550dfb3b52ea5147"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "0%",
+      "registrationDate": "2013-09-26T11:35:00.000Z",
+      "submissionDate": null,
+      "rating": "689",
+      "colorStyle": "color: #999999",
+      "_id": "5813db9f550dfb3b52ea5146"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "0%",
+      "registrationDate": "2013-09-26T12:41:00.000Z",
+      "submissionDate": null,
+      "rating": "997",
+      "colorStyle": "color: #00A900",
+      "_id": "5813db9f550dfb3b52ea5145"
+    },
+    {
+      "handle": "BlackMagic",
+      "reliability": "100%",
+      "registrationDate": "2013-09-26T12:28:00.000Z",
+      "submissionDate": "2013-10-01T06:05:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9f550dfb3b52ea5144"
+    },
+    {
+      "handle": "pinoydream",
+      "reliability": "0%",
+      "registrationDate": "2013-09-26T14:09:00.000Z",
+      "submissionDate": null,
+      "rating": "1188",
+      "colorStyle": "color: #00A900",
+      "_id": "5813db9f550dfb3b52ea5143"
+    },
+    {
+      "handle": "brain_cn",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-26T14:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9f550dfb3b52ea5142"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2013-09-26T14:24:00.000Z",
+      "submissionDate": null,
+      "rating": "1423",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813db9f550dfb3b52ea5141"
+    },
+    {
+      "handle": "padegal12",
+      "reliability": "0%",
+      "registrationDate": "2013-09-26T16:27:00.000Z",
+      "submissionDate": null,
+      "rating": "693",
+      "colorStyle": "color: #999999",
+      "_id": "5813db9f550dfb3b52ea5140"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-26T16:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9f550dfb3b52ea513f"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2013-09-27T00:31:00.000Z",
+      "submissionDate": null,
+      "rating": "829",
+      "colorStyle": "color: #999999",
+      "_id": "5813db9f550dfb3b52ea513e"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-27T01:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9f550dfb3b52ea513d"
+    },
+    {
+      "handle": "sunhong",
+      "reliability": "0%",
+      "registrationDate": "2013-09-27T03:27:00.000Z",
+      "submissionDate": null,
+      "rating": "1306",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813db9f550dfb3b52ea513c"
+    },
+    {
+      "handle": "shalika",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-27T04:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9f550dfb3b52ea513b"
+    },
+    {
+      "handle": "Urmass",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-27T11:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9f550dfb3b52ea513a"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-28T07:56:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "5813db9f550dfb3b52ea5139"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-26T13:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9f550dfb3b52ea5138"
+    },
+    {
+      "handle": "vokie",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-27T06:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9f550dfb3b52ea5137"
+    }
+  ],
+  "registrationEndDate": "2013-09-28T10:05:00.000Z",
+  "reliabilityBonus": 240,
+  "reviewScorecardId": 30001490,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2013-10-01T10:10:00.000Z",
+  "submissions": [
+    {
+      "handle": "LazyChild",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 94.14,
+      "finalScore": 97.24,
+      "points": 351,
+      "submissionStatus": "Active",
+      "submissionDate": "2013-10-01T09:05:00.000Z",
+      "_id": "5813db9f550dfb3b52ea515e"
+    },
+    {
+      "handle": "BlackMagic",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 81.65,
+      "finalScore": 85.53,
+      "points": 135,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2013-10-01T06:05:00.000Z",
+      "_id": "5813db9f550dfb3b52ea515d"
+    },
+    {
+      "handle": "KennyAlive",
+      "placement": 3,
+      "screeningScore": 100,
+      "initialScore": 85.14,
+      "finalScore": 85.14,
+      "points": 54,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2013-10-01T09:27:00.000Z",
+      "_id": "5813db9f550dfb3b52ea515c"
+    }
+  ],
+  "technology": [
+    "Java"
+  ]
+}

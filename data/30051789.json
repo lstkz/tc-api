@@ -1,0 +1,359 @@
+{
+  "_id": 30051789,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:42:16.144Z",
+  "appealsEndDate": "2015-11-24T01:14:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "WS3 Quota - Enhancement to Heroku REST API [Swiftoberfest] Baton Rouge IV",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><span><strong><em>Baton Rouge IV</em></strong> is the one of several challenges to build out public facing mobile REST services for Sugar Cane growers app. In this challenge we&#39;d like to enhance existing REST API and build new data services. </span></p>\n\n<p><span>For API detailed definitions and JSON format you can reference this <a href=\"http://docs.almagrowerapi.apiary.io/#\">apiary documentation</a></span></p>\n\n<p>Cane Quality API</p>\n\n<p>Need to add a new set of data aggregated sample data for full season. Need to collect average vaules for a given grower for the year to date records found in labtransactions table and return as CropYearToDate section including all fields from this table. Averges need to be collected for each field for given grower, all across all growers and provide a diference column between those two averages (As shown on provided screen image)</p>\n\n<p>Update returned data fields based on <a href=\"http://docs.almagrowerapi.apiary.io/#reference/cane-quality/cane-quality/list-quality-samples\">Apiary sample API</a></p>\n\n<p>Fielads listed for Cane Quality reports have calculated values, see attached document for field formulas table.</p>\n\n<ul>\n\t<li><span><span><span>Version endpoint &lt;heroku app base url&gt;/aps/1.0/sampledata</span></span></span></li>\n\t<li><span><span><span>Existing Endpoint</span></span></span></li>\n\t<li><span><span><span>method: GET</span></span></span></li>\n\t<li><span><span><span>HTTP Header parameters: APSKEY - authorization API key value</span></span></span></li>\n\t<li><span><span><span>Query parameters: growerid, date</span></span></span></li>\n</ul>\n\n<p>NOTE: Some of the fields mapping/formulas not availble those fields need to be included into response for API cosistency but can be left empty or set 0.</p>\n\n<p>Example of Average fields mapping</p>\n\n<p>&quot;corelabtrs&quot; - NOT AVAILABLE<br />\n&quot;estmillcrs&quot; - NOT AVAILABLE<br />\n&quot;juicebrix&quot; - DB column brixcorrected<br />\n&quot;juicepol&quot; - DB column pol<br />\n&quot;juicepurity&quot; - NOT AVAILABLE<br />\n&quot;fibraque&quot; - NOT AVAILABLE</p>\n\n<p>Cane Survey API</p>\n\n<p>User will enter several values in the app for survey questions and submit the survey. This API will simply insert all these values into <em>canesurvey</em> table and respond with success or failed attempt in case of error.</p>\n\n<ul>\n\t<li><span><span>Version endpoint &lt;heroku app base url&gt;/aps/1.0/survey</span></span></li>\n\t<li><span style=\"color:#FF0000\">NEW Endpoint</span></li>\n\t<li><span><span>method: POST</span></span></li>\n\t<li><span><span>HTTP Header parameters: APSKEY - authorization API key value</span></span></li>\n\t<li><span><span>Insert values: (based in apiary example)</span></span></li>\n</ul>\n\n<p>Need also provide a survey listing for a given grower id return all sent surveys for season/year to date</p>\n\n<ul>\n\t<li><span><span>Version endpoint &lt;heroku app base url&gt;/aps/1.0/survey</span></span></li>\n\t<li><span style=\"color:#FF0000\">New Endpoint</span></li>\n\t<li><span><span>method: GET</span></span></li>\n\t<li><span><span>HTTP Header parameters: APSKEY - authorization API key value</span></span></li>\n\t<li><span><span>Parameter: growerid</span></span></li>\n</ul>\n\n<p>Quota List API</p>\n\n<p>Return list of recent quotas for a diven grower. Add new field to header result set - Almaestimate is record header data field on Account table set for each grower.</p>\n\n<p>Query 3 recent days of quotas for a given grower and order records with earliest date 1st (today)</p>\n\n<ul>\n\t<li><span><span>Version endpoint &lt;heroku app base url&gt;/aps/1.0/quota</span></span></li>\n\t<li><span><span>Existing endpoint</span></span></li>\n\t<li><span><span>method: GET</span></span></li>\n\t<li><span><span>HTTP Header parameters: APSKEY - authorization API key value</span></span></li>\n\t<li><span><span>Query values: growerid, date</span></span></li>\n</ul>\n\n<p>Quota Response API</p>\n\n<p>API needs to update <em>quota</em> record sent via notifcation setting data fields: response = Accepted/Changed, reason - grower enter reason for change, this is required if quota needs change. quota_adjusted - number entered by user to change quota loads</p>\n\n<p>Quota Response service</p>\n\n<ul>\n\t<li><span><span>Version endpoint &lt;heroku app base url&gt;/aps/1.0/quota</span></span></li>\n\t<li><span><span>existing endpoint</span></span></li>\n\t<li><span><span>method: POST</span></span></li>\n\t<li><span><span>HTTP Header parameters: APSKEY - authorization API key value</span></span></li>\n\t<li><span><span>Update values: quotaid response</span></span>, quota_adjusted, reason_notes, action</li>\n</ul>\n\n<p>User Settings API</p>\n\n<p>API to set user settings, whne user opt out from notifications is an example of setting. For this app we have this single setting to update on Grower Account table.</p>\n\n<ul>\n\t<li><span><span>Version endpoint &lt;heroku app base url&gt;/aps/1.0/</span></span>settings</li>\n\t<li><span style=\"color:#FF0000\">New Endpoint</span></li>\n\t<li><span><span>method: POST</span></span></li>\n\t<li><span><span>HTTP Header parameters: APSKEY - authorization API key value</span></span></li>\n\t<li><span><span>Update values: </span></span>sampleoptin, growerid</li>\n</ul>\n\n<p><span>Grower is identified by alphanumeric ID, this will also be the app user.</span></p>\n\n<p><span>*SQL file provided to create your own copy of Postgres DB tables. Server API app needs to work with shared Heroku DB instance however due to limited connection (120) resources it is possible that it be consumed/busy. We recomend to use your own copy of DB for development and migrate sample data from existing Postgres tables. We also provided sample data files archive to load sample data for development.</span></p>\n\n<p><span>Here are additional backup databases with sample data populated:</span></p>\n\n<p><span>DEV1: <span style=\"background-color:rgb(255, 255, 255); color:rgb(63, 63, 68); font-family:benton-sans,helvetica neue,helvetica,arial,sans-serif; font-size:14px\">postgres://hohlgkfywwltfd:8kuUUQipTENV5PP3ui1F_6oeim@ec2-54-204-15-48.compute-1.amazonaws.com:5432/d1h7ljjs54tvlb</span></span></p>\n\n<p><span><span style=\"background-color:rgb(255, 255, 255); color:rgb(63, 63, 68); font-family:benton-sans,helvetica neue,helvetica,arial,sans-serif; font-size:14px\">QA:&nbsp; postgres://cmlkbtsotpwfmy:GU5M8DK9ZjR433SKT3O90sdWtl@ec2-107-21-221-59.compute-1.amazonaws.com:5432/da6fq9fir41v9f</span></span></p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30051789",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<p><span><span><strong>Guidelines</strong>:</span></span></p>\n\n<ul>\n\t<li><span><span>REST API to use Node.js and <a href=\"http://expressjs.com/\">Express </a>framework</span></span></li>\n\t<li><span><span>Authentication use Node.js <a href=\"http://passportjs.org/\">Passport</a> framework</span></span></li>\n\t<li><span><span>Deployment on <a href=\"https://www.heroku.com/home\">Heroku platform</a></span></span></li>\n\t<li><span><span>Postgres DB - Heroku addon</span></span></li>\n</ul>\n\n<h4><span><span><strong>Setup</strong>:</span></span></h4>\n\n<ul>\n\t<li><span><span>Send an email to <a href=\"mailto:igor@appirio.com?subject=Project%20Almasato&amp;body=Hi%21%20%0APlease%20add%20me%20to%20Project%20Almasato.%20My%20GitLab%20handle%20is%3A%20\">takumi3t9</a> and request to be added to the GitLabs Project Almasato Team</span></span></li>\n\t<li><span><span>Once added to the team for the Almasato repository, fork the repository, after the submission phase completes, make a merge request with your submission to&nbsp;<a href=\"https://gitlab.com/Almasato/BatonRouge/tree/BatonRouge4\">this branch</a></span></span></li>\n\t<li><span><span>Upload documentation for how to run your submission</span></span></li>\n\t<li><span><span>Upload all your source code as a zip</span></span></li>\n\t<li><span><span><span><span style=\"font-family:arial,helvetica,sans-serif\"><span>Provide a video overview of your submission<a href=\"http://docs.almagrowerapi.apiary.io/#reference/cane-quality/cane-quality/list-quality-samples\">http://docs.almagrowerapi.apiary.io/#reference/cane-quality/cane-quality/list-quality-samples</a></span></span></span></span></span></li>\n</ul>\n</div>\n",
+  "forumId": 30897,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=30897",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 25,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-11T22:00:00.000Z",
+      "actualStartTime": "2015-11-11T22:00:00.000Z",
+      "scheduledEndTime": "2015-11-18T13:46:00.000Z",
+      "actualendTime": "2015-11-18T13:46:00.000Z",
+      "_id": "581355b8550dfb3b52c503f4"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-11T22:05:00.000Z",
+      "actualStartTime": "2015-11-11T22:05:00.000Z",
+      "scheduledEndTime": "2015-11-18T13:46:00.000Z",
+      "actualendTime": "2015-11-18T13:46:00.000Z",
+      "_id": "581355b8550dfb3b52c503f3"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-18T13:46:00.000Z",
+      "actualStartTime": "2015-11-18T13:46:00.000Z",
+      "scheduledEndTime": "2015-11-22T13:30:00.000Z",
+      "actualendTime": "2015-11-22T13:30:00.000Z",
+      "_id": "581355b8550dfb3b52c503f2"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-22T13:30:00.000Z",
+      "actualStartTime": "2015-11-22T13:30:00.000Z",
+      "scheduledEndTime": "2015-11-23T13:31:00.000Z",
+      "actualendTime": "2015-11-23T13:31:00.000Z",
+      "_id": "581355b8550dfb3b52c503f1"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-23T13:31:00.000Z",
+      "actualStartTime": "2015-11-23T13:31:00.000Z",
+      "scheduledEndTime": "2015-11-24T01:14:00.000Z",
+      "actualendTime": "2015-11-24T01:14:00.000Z",
+      "_id": "581355b8550dfb3b52c503f0"
+    }
+  ],
+  "platforms": [
+    "Heroku",
+    "NodeJS"
+  ],
+  "postingDate": "2015-11-11T22:00:00.000Z",
+  "prize": [
+    1000,
+    500
+  ],
+  "projectId": 9223,
+  "registrants": [
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-11T22:52:00.000Z",
+      "submissionDate": "2015-11-18T13:03:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503ef"
+    },
+    {
+      "handle": "phonechen",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-12T02:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503ee"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-12T02:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503ed"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-12T04:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503ec"
+    },
+    {
+      "handle": "DHEERAJSONI",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-12T09:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503eb"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-12T09:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503ea"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-12T12:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503e9"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-12T14:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503e8"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-12T16:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503e7"
+    },
+    {
+      "handle": "MJGarcia",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-12T19:02:00.000Z",
+      "submissionDate": "2015-11-17T12:58:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503e6"
+    },
+    {
+      "handle": "zsudraco",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-12T21:01:00.000Z",
+      "submissionDate": "2015-11-18T08:38:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503e5"
+    },
+    {
+      "handle": "jaindsonvs",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-13T00:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503e4"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-13T01:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503e3"
+    },
+    {
+      "handle": "fish00",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-13T06:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503e2"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-13T11:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503e1"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-13T12:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503e0"
+    },
+    {
+      "handle": "phendych",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-14T13:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503df"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-14T16:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503de"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-15T07:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503dd"
+    },
+    {
+      "handle": "vimrc",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-16T14:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503dc"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-16T23:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503db"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-16T23:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503da"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-17T06:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503d9"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-18T01:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503d8"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-18T06:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b8550dfb3b52c503d7"
+    }
+  ],
+  "registrationEndDate": "2015-11-18T13:46:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-11-18T13:46:00.000Z",
+  "submissions": [
+    {
+      "handle": "zsudraco",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 91.88,
+      "finalScore": 95.63,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-11-18T08:38:00.000Z",
+      "_id": "581355b8550dfb3b52c503f7"
+    },
+    {
+      "handle": "Schpotsky",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 91.88,
+      "finalScore": 91.88,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-18T13:03:00.000Z",
+      "_id": "581355b8550dfb3b52c503f6"
+    },
+    {
+      "handle": "MJGarcia",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 86.88,
+      "finalScore": 86.88,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-17T12:58:00.000Z",
+      "_id": "581355b8550dfb3b52c503f5"
+    }
+  ],
+  "technology": [
+    "Node.js",
+    "PostgreSQL",
+    "REST"
+  ]
+}

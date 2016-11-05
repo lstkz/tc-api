@@ -1,0 +1,761 @@
+{
+  "_id": 30055498,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:05:54.049Z",
+  "appealsEndDate": "2016-10-27T13:30:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "SAS Data Preparation Tool - Shell File and Validations",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<strong>Background</strong><br />\n<br />\nThe Bill &amp; Melinda Gates Foundation&rsquo;s (BMGF) Healthy Birth, Growth, and Development (HBGD) program addresses the dual problem of growth faltering/stunting and poor neurocognitive development, including contributing factors such as fetal growth restriction and preterm birth. The HBGD program is creating a unified strategy for integrated interventions to solve complex questions about (1) life cycle, (2) pathophysiology, (3) interventions, and (4) scaling intervention delivery. The Healthy Birth, Growth, and Development knowledge integration (HBGDki) Open Innovation platform was developed to mobilize the global &ldquo;unusual suspects&rdquo; data science community to better understand how to improve neurocognitive and physical health for children worldwide. The data science contests are aimed at developing predictive models and tools that quantify geographic, regional, cultural, socioeconomic, and nutritional trends that contribute to poor neurocognitive and physical growth outcomes in children. The tools and scripts developed by this challenge will support the data analysis efforts of the HBGDki Open Innovation initiative.<br />\n<br />\n<strong>Description</strong><br />\n<br />\nThe Gates Foundation is hoping to develop capabilities to allow their SAS programmers to become more productive. In this challenge stream, we&rsquo;re going to develop an application which can dynamically read source data from SAS binary files and external data files, and generate SAS scripts to read and transform those files. However before we can process the input files and generate SAS scripts we need to prepare some documents and validate that the metadata files and binary files are in sync with each other and that the metadata files accurately describe the state of the input data. This challenge will produce a command-line java tool which has the following requirements:<br />\n<br />\n<strong>1. Shell File Creation</strong><br />\n<br />\n<em>Background</em>: SAS analyst focused on medical research often have to generate &ldquo;code&rdquo; files from relational records. For example, let&rsquo;s say we have subject record with id 101, and family income of $1000, who lives in home with a dirt floor. This can be represented in a single row with columns of SubjectId, Family Income, and Floor Type. However, this could also be represented in key value format in the following way with 2 rows instead of one:\n<div><span style=\"font-family:courier new,courier,monospace\">+---------+------------------+----------+---------+-----------+--------+<br />\n| Subject | Variable &nbsp; &nbsp; &nbsp; &nbsp; | Variable | Numeric | Character | Units &nbsp;|</span><br />\n<span style=\"font-family:courier new,courier,monospace\">| ID&nbsp;&nbsp; &nbsp; &nbsp;| Category &nbsp; &nbsp; &nbsp; &nbsp; | Code &nbsp; &nbsp; | Value &nbsp; | Value &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp;|</span><br />\n<span style=\"font-family:courier new,courier,monospace\">+---------+------------------+----------+---------+-----------+--------+<br />\n| &nbsp; &nbsp; 101 | Financial &nbsp; &nbsp; &nbsp; &nbsp;| INCOME &nbsp; | &nbsp; &nbsp;1000 | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | $/year |<br />\n+---------+------------------+----------+---------+-----------+--------+</span><br />\n<span style=\"font-family:courier new,courier,monospace\">| &nbsp; &nbsp; 101 | Home Environment | FLOOR &nbsp; &nbsp;| &nbsp; &nbsp; &nbsp; &nbsp; | Dirt &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp; &nbsp; &nbsp;|<br />\n+---------+------------------+----------+---------+-----------+--------+</span></div>\n<br />\nIn our metadata file (ex01_DDF.csv), there are two flags in Columns J and K:\n<div style=\"margin-left:40px\">IS_TARGET_FIELD_CODE_NAME<br />\nIS_TARGET_FIELD_CODE_VALUE</div>\nA &lsquo;Y&rsquo; value in either of these columns indicates that the field is going to be used in key/value (or code/value) form. The first step in doing the conversion from one type of document to another is establishing the codes that are going to used as the code names. Attached is the output file that our application should create when the createCodeShellFile function is executed (SS_CodeShellFile.csv). This should be one of the command line options for the app. The purpose of this process is to create a document that an analyst can easily populate with the appropriate codes. Here are the requirements for the file:\n\n<div style=\"margin-left:40px\">1. The naming convention for these files should be output filename (e.g. &lsquo;SS&rsquo;) followed by the string &ldquo;_CodeShellFile.csv&rdquo;.<br />\n2. Copy columns A through E from the DDF document for the values flagged as &lsquo;Y&rsquo; in the IS_TARGET_FIELD_CODE_NAME<br />\n3. Add a column (starting with Column F) for each Code Value field designated in the DDF file. The column header will be the string &ldquo;CODE_&rdquo; followed by the name of the output field.</div>\n<br />\n<strong>2. Validation Reporting</strong><br />\n<br />\n<em>Background</em>: We&rsquo;ve recently run a <a href=\"https://www.topcoder.com/challenge-details/30055388/?type=develop&amp;noncache=true\">F2F challenge</a> which revealed an Open Source library (<a href=\"https://github.com/epam/parso/\">Parso</a>) which can interrogate the SAS binary format. It is doing some basic reporting in log4j type format on the Column Names and Types.<br />\n<br />\nHowever, in this challenge, we&rsquo;re going to produce a true validation report which is a bit more user friendly for non-java programmers. The validate functionality should be one of the command-line options. (The three command line functions in final application will be 1. Create Shell File, 2. Validate, 3. Generate SAS Script -- we&rsquo;re only tackling #1 and #2 in this challenge.) The validation report should include the following information:\n<div style=\"margin-left:40px\">1.&nbsp;The name and full path of each binary input file found.<br />\n2. The number in records in each binary file.<br />\n3. The name and full path of the metadata file.<br />\n4. A report of column names that are found in the metadata file but not found in the source binary file<br />\n5. A report of column types which don&rsquo;t match between the metadata file and the source binary file.<br />\n6. The name and full path of each mapping file identified in the MAPPING_FILE column of the metadata file.<br />\n7. The number of records present in each mapping file.<br />\n8. A report for each mapping file validating the csv format of the file. Please provide line number and the first invalid record found in each file.<br />\n9. Please ensure that there are no open quotes in the in the Code Snippet column. For example, <em>&ldquo;Example 1</em> rather than <em>&ldquo;Example 1&rdquo;</em>.<br />\n10. The validation process should look for the shell files described in Section 1 above. If there are &lsquo;Y&rsquo; values in the IS_TARGET_FIELD_CODE_NAME column of the DDF file there should a corresponding shell file for the target file which contains the appropriate code values.<br />\n11. The validation solution should also verify that the names of code fields in shell files match up with the target field names in the metadata document. The code fields in the shell document have a prefix of &ldquo;CODE_&rdquo; + the actual field name.</div>\n<br />\n<strong>Additional Requirements:</strong>\n\n<div style=\"margin-left:40px\">1. For the output to the console screen, it would be helpful to have a status update between each of the steps especially for the validation. For example, &ldquo;Locating Input Files&hellip;&rdquo; then listing the files found. &ldquo;Counting number of records in the input files&hellip;&rdquo; then listing the counts. This will be helpful especially when the files are large and it may take some time to complete processing.<br />\n2. Please use the existing code as a starting point.<br />\n3. Please create a maven build script for the app.</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30055498",
+  "event": {
+    "id": 3447,
+    "description": "2017 TopCoder(R) Open",
+    "shortDescription": "tco17"
+  },
+  "finalSubmissionGuidelines": "- A Java application which works upon the data provided and generates the required output.<br />\n- A Deployment Guide.<br />\n- The previous application code, the data and metafiles files can be found in the Code Document forums attached to this challenge.<br />\n- SAS has a functional&nbsp;<a href=\"http://www.sas.com/en_us/software/university-edition.html\">University Edition</a>&nbsp;which may be helpful for learning about SAS scripting.",
+  "forumId": 34286,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=34286",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 65,
+  "numberOfSubmissions": 7,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-10-17T13:00:00.000Z",
+      "actualStartTime": "2016-10-17T13:00:00.000Z",
+      "scheduledEndTime": "2016-10-22T13:00:00.000Z",
+      "actualendTime": "2016-10-22T13:00:00.000Z",
+      "_id": "58132302550dfb3b52b3af41"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-10-17T13:05:00.000Z",
+      "actualStartTime": "2016-10-17T13:05:00.000Z",
+      "scheduledEndTime": "2016-10-23T13:01:00.000Z",
+      "actualendTime": "2016-10-23T13:01:00.000Z",
+      "_id": "58132302550dfb3b52b3af40"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-10-23T13:01:00.000Z",
+      "actualStartTime": "2016-10-23T13:01:00.000Z",
+      "scheduledEndTime": "2016-10-26T01:29:00.000Z",
+      "actualendTime": "2016-10-26T01:29:00.000Z",
+      "_id": "58132302550dfb3b52b3af3f"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-10-26T01:29:00.000Z",
+      "actualStartTime": "2016-10-26T01:29:00.000Z",
+      "scheduledEndTime": "2016-10-27T01:30:00.000Z",
+      "actualendTime": "2016-10-27T01:30:00.000Z",
+      "_id": "58132302550dfb3b52b3af3e"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-10-27T01:30:00.000Z",
+      "actualStartTime": "2016-10-27T01:30:00.000Z",
+      "scheduledEndTime": "2016-10-27T13:30:00.000Z",
+      "actualendTime": "2016-10-27T13:30:00.000Z",
+      "_id": "58132302550dfb3b52b3af3d"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-10-17T13:00:00.000Z",
+  "prize": [
+    1000,
+    500
+  ],
+  "projectId": 10868,
+  "registrants": [
+    {
+      "handle": "kevintowe123",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T15:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af3c"
+    },
+    {
+      "handle": "rtty",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T10:40:00.000Z",
+      "submissionDate": "2016-10-23T12:59:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af3b"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T00:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af3a"
+    },
+    {
+      "handle": "jayeshk26",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-17T16:50:00.000Z",
+      "submissionDate": "2016-10-22T12:29:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af39"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-17T13:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af38"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-17T13:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af37"
+    },
+    {
+      "handle": "ananthhh",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-17T13:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af36"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-17T13:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af35"
+    },
+    {
+      "handle": "josephbagnes",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-17T14:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af34"
+    },
+    {
+      "handle": "yuwenHan",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-17T14:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af33"
+    },
+    {
+      "handle": "akinwale",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-17T14:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af32"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-17T15:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af31"
+    },
+    {
+      "handle": "net_buster",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-17T15:25:00.000Z",
+      "submissionDate": "2016-10-23T09:37:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af30"
+    },
+    {
+      "handle": "gets0ul",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-17T15:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af2f"
+    },
+    {
+      "handle": "sfaxiano",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-17T17:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af2e"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-17T17:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af2d"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-17T19:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af2c"
+    },
+    {
+      "handle": "duxiaoyang",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-17T19:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af2b"
+    },
+    {
+      "handle": "Code_Evil",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-17T21:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af2a"
+    },
+    {
+      "handle": "demo.b",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-17T22:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af29"
+    },
+    {
+      "handle": "MKuk",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-17T22:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af28"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T02:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af27"
+    },
+    {
+      "handle": "TopG",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T03:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af26"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T04:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af25"
+    },
+    {
+      "handle": "KShiv",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T05:08:00.000Z",
+      "submissionDate": "2016-10-23T12:25:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af24"
+    },
+    {
+      "handle": "gopalrmd90",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T06:13:00.000Z",
+      "submissionDate": "2016-10-23T07:18:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af23"
+    },
+    {
+      "handle": "moshu",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T06:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af22"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T06:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af21"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T07:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af20"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T07:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af1f"
+    },
+    {
+      "handle": "srikanth1920",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T08:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af1e"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T08:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af1d"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T09:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af1c"
+    },
+    {
+      "handle": "muktadir",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T09:35:00.000Z",
+      "submissionDate": "2016-10-22T19:05:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af1b"
+    },
+    {
+      "handle": "JGeeks",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T14:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af1a"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T14:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af19"
+    },
+    {
+      "handle": "parapluplu",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T16:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af18"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T17:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af17"
+    },
+    {
+      "handle": "Encoreptl",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T20:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af16"
+    },
+    {
+      "handle": "mehblahwhatever",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-18T21:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af15"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-19T01:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af14"
+    },
+    {
+      "handle": "[asget12]",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-19T01:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af13"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-19T02:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af12"
+    },
+    {
+      "handle": "AlexeyProkopnev",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-19T10:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af11"
+    },
+    {
+      "handle": "jpp79",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-19T07:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af10"
+    },
+    {
+      "handle": "chenjesu",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-20T03:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af0f"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-19T10:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af0e"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-19T12:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af0d"
+    },
+    {
+      "handle": "Ben910128",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-19T16:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af0c"
+    },
+    {
+      "handle": "pporcher",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-19T23:12:00.000Z",
+      "submissionDate": "2016-10-22T17:48:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af0b"
+    },
+    {
+      "handle": "tongkunvwang",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-19T23:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af0a"
+    },
+    {
+      "handle": "gpaoliveira",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-20T00:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af09"
+    },
+    {
+      "handle": "sriramsv16",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-20T01:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af08"
+    },
+    {
+      "handle": "bandishankar",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-20T04:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af07"
+    },
+    {
+      "handle": "ajch",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-20T06:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af06"
+    },
+    {
+      "handle": "lukasbindreiter",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-20T07:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af05"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-20T11:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af04"
+    },
+    {
+      "handle": "gondzo",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-20T11:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af03"
+    },
+    {
+      "handle": "tri_code",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-20T15:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af02"
+    },
+    {
+      "handle": "zaixiang",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-21T00:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af01"
+    },
+    {
+      "handle": "grvergara",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-21T05:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3af00"
+    },
+    {
+      "handle": "yanjunzh",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-21T14:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3aeff"
+    },
+    {
+      "handle": "yashodev.yv",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-21T16:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3aefe"
+    },
+    {
+      "handle": "krnaveen14",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-22T09:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3aefd"
+    },
+    {
+      "handle": "nyavro",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-22T10:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132302550dfb3b52b3aefc"
+    }
+  ],
+  "registrationEndDate": "2016-10-22T13:00:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-10-23T13:01:00.000Z",
+  "submissions": [
+    {
+      "handle": "pporcher",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 96.25,
+      "finalScore": 96.25,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-10-22T17:48:00.000Z",
+      "_id": "58132302550dfb3b52b3af48"
+    },
+    {
+      "handle": "net_buster",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 87.5,
+      "finalScore": 88.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-10-23T09:37:00.000Z",
+      "_id": "58132302550dfb3b52b3af47"
+    },
+    {
+      "handle": "KShiv",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 83.75,
+      "finalScore": 83.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-10-23T12:25:00.000Z",
+      "_id": "58132302550dfb3b52b3af46"
+    },
+    {
+      "handle": "muktadir",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 81.25,
+      "finalScore": 81.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-10-22T19:05:00.000Z",
+      "_id": "58132302550dfb3b52b3af45"
+    },
+    {
+      "handle": "rtty",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 76.25,
+      "finalScore": 76.25,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-10-23T12:59:00.000Z",
+      "_id": "58132302550dfb3b52b3af44"
+    },
+    {
+      "handle": "jayeshk26",
+      "placement": 6,
+      "screeningScore": null,
+      "initialScore": 71.25,
+      "finalScore": 71.25,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-10-22T12:29:00.000Z",
+      "_id": "58132302550dfb3b52b3af43"
+    },
+    {
+      "handle": "gopalrmd90",
+      "placement": 7,
+      "screeningScore": null,
+      "initialScore": 68.75,
+      "finalScore": 68.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-10-23T07:18:00.000Z",
+      "_id": "58132302550dfb3b52b3af42"
+    }
+  ],
+  "technology": [
+    "Data Science",
+    "Java"
+  ]
+}

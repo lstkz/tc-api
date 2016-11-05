@@ -1,0 +1,282 @@
+{
+  "_id": 30054409,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:07:41.929Z",
+  "appealsEndDate": "2016-05-29T23:47:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Topcoder Direct - Add User Permission Check For Competition Costs Report With Redshift",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2016-06-27T05:10:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -10652181,
+  "currentStatus": "Completed",
+  "detailedRequirements": "Previously, we have implemented the logic for getting the competition costs data from redshift, the code changes can be found at&nbsp;<a href=\"https://github.com/appirio-tech/direct-app/tree/update_competition_costs_report_to_use_aggregation_table_in_redshift\">update_competition_costs_report_to_use_aggregation_table_in_redshift</a> branch.<br />\n<br />\nBut we didn&#39;t apply user permission check as in informix queries like&nbsp;<br />\n<br />\nand (<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;exists (<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;select resource_id from user_permission_grant upg<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;where upg.user_id=DECODE(@uid@,0,upg.user_id,@uid@) and upg.permission_type_id IN (0,1,2,3) and upg.resource_id = tdp.project_id<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; OR<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;exists (<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;SELECT<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; tdpt.project_id as tc_direct_project_id<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;FROM tc_direct_project tdpt<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;INNER JOIN group_associated_direct_projects gadp ON tdpt.project_id = gadp.tc_direct_project_id<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;INNER JOIN customer_group sg ON sg.group_id = gadp.group_id<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;INNER JOIN group_member gm ON gm.group_id = sg.group_id<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;WHERE gm.user_id = DECODE(@uid@, 0, gm.user_id, @uid@)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;AND &nbsp; gm.active = 1<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;AND &nbsp; sg.archived = 0<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;AND &nbsp; tdpt.project_id = tdp.project_id<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; OR<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; exists (<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; SELECT<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;tdpt.project_id as tc_direct_project_id<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; FROM tc_direct_project tdpt<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; INNER JOIN corporate_oltp:direct_project_account dpa ON tdpt.project_id = dpa.project_id<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; INNER JOIN group_associated_billing_accounts gaba ON gaba.billing_account_id = dpa.billing_account_id<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; INNER JOIN customer_group sg ON sg.group_id = gaba.group_id<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; INNER JOIN group_member gm ON gm.group_id = sg.group_id<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; WHERE gm.user_id = DECODE(@uid@, 0, gm.user_id, @uid@)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; AND &nbsp; gm.active = 1<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; AND &nbsp; sg.archived = 0<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; AND tdpt.project_id = tdp.project_id<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; )<br />\n&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; OR<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;exists (<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;SELECT sg.group_id<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;FROM customer_group sg<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;INNER JOIN group_member gm ON gm.group_id = sg.group_id<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;WHERE gm.user_id = DECODE(@uid@, 0, gm.user_id, @uid@)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;AND &nbsp; gm.active = 1<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;AND &nbsp; sg.archived = 0<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;AND &nbsp; sg.auto_grant = 1<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;AND &nbsp; sg.client_id = ttc.client_id<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; )<br />\n<br />\nFor this challenge, we&#39;d like to revise the above query as two queries, one for getting a list of project_ids, another for getting a list of client_ids.<br />\n<br />\nand in <a href=\"https://github.com/appirio-tech/direct-app/blob/update_competition_costs_report_to_use_aggregation_table_in_redshift/src/java/main/com/topcoder/direct/services/view/util/DataProvider.java#L5612-5612\">getDashboardBillingCostReportFromRedshift</a>&nbsp;method, when the project id is 0 (which mean all projects) or client id is 0 (which mean all clients), we will call the queries and pass to the allowed list of project ids and client ids for querying the aggregation table.<br />\n<br />\nSo for this challenge, you are expected to&nbsp;<br />\n<br />\n1. In scripts svn, create the commands and queries for getting user accessed project ids and getting user accessiable client ids, the queries will have only one input - @uid@<br />\n2. In&nbsp;<a href=\"https://github.com/appirio-tech/direct-app/blob/update_competition_costs_report_to_use_aggregation_table_in_redshift/src/java/main/com/topcoder/direct/services/view/util/DataProvider.java#L5612-5612\" style=\"line-height: 20.8px;\">getDashboardBillingCostReportFromRedshift</a>&nbsp;method, when the project id is 0 (which mean all projects) or client id is 0 (which mean all clients), we will call the queries against informix database and pass to the allowed list of project ids and client ids for querying the aggregation table.<br />\n3. For testing, because of lacking data, you can prepare the test data and revise the queries specifically to return a dummy list for testing purpose. we will execute your converted queries in our environment and asking for help to update if needed. &nbsp;Please make sure the queries have no grammar problem.<br />\n<br />\n<u>About Direct App Setup</u><br />\n<br />\n1. Please check&nbsp;https://github.com/appirio-tech/direct-app/blob/update_competition_costs_report_to_use_aggregation_table_in_redshift/LOCAL_SETUP.md to setup the local environment.<br />\nBesure to use&nbsp;update_competition_costs_report_to_use_aggregation_table_in_redshift branch.<br />\n2. the scripts repo is old in infornmix docker, you need to update to latest.<br />\n<br />\n&nbsp;",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30054409",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "1. Code changes for direct-app the new functionality.<br />\n2. Commands and Queries for informix scripts SVN<br />\n2. Test data for aggregation table.<br />\n3. Winner will be responsible to fix problems found in real testing in our internal system.",
+  "forumId": 33240,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33240",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 10,
+  "numberOfSubmissions": 6,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2016-05-28T05:10:00.000Z",
+      "actualStartTime": "2016-05-28T05:10:00.000Z",
+      "scheduledEndTime": "2016-06-27T05:10:00.000Z",
+      "actualendTime": null,
+      "_id": "58133f8d550dfb3b52bdf2a3"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-28T15:13:00.000Z",
+      "actualStartTime": "2016-05-28T15:13:00.000Z",
+      "scheduledEndTime": "2016-05-28T23:11:00.000Z",
+      "actualendTime": "2016-05-28T23:11:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf2a2"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2016-05-28T05:16:00.000Z",
+      "actualStartTime": "2016-05-28T05:16:00.000Z",
+      "scheduledEndTime": "2016-06-27T05:16:00.000Z",
+      "actualendTime": null,
+      "_id": "58133f8d550dfb3b52bdf2a1"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-28T23:12:00.000Z",
+      "actualStartTime": "2016-05-28T23:12:00.000Z",
+      "scheduledEndTime": "2016-05-29T06:40:00.000Z",
+      "actualendTime": "2016-05-29T06:40:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf2a0"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-29T06:41:00.000Z",
+      "actualStartTime": "2016-05-29T06:41:00.000Z",
+      "scheduledEndTime": "2016-05-29T09:50:00.000Z",
+      "actualendTime": "2016-05-29T09:50:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf29f"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-29T09:52:00.000Z",
+      "actualStartTime": "2016-05-29T09:52:00.000Z",
+      "scheduledEndTime": "2016-05-29T09:53:00.000Z",
+      "actualendTime": "2016-05-29T09:53:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf29e"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-29T10:59:00.000Z",
+      "actualStartTime": "2016-05-29T10:59:00.000Z",
+      "scheduledEndTime": "2016-05-29T13:48:00.000Z",
+      "actualendTime": "2016-05-29T13:48:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf29d"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-29T22:40:00.000Z",
+      "actualStartTime": "2016-05-29T22:40:00.000Z",
+      "scheduledEndTime": "2016-05-29T23:47:00.000Z",
+      "actualendTime": "2016-05-29T23:47:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf29c"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-05-28T05:10:00.000Z",
+  "prize": [
+    100
+  ],
+  "projectId": 9479,
+  "registrants": [
+    {
+      "handle": "Blackhole08",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T05:41:00.000Z",
+      "submissionDate": "2016-05-29T10:59:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf29b"
+    },
+    {
+      "handle": "indiaece",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T06:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf29a"
+    },
+    {
+      "handle": "subsunacop2011",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T07:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf299"
+    },
+    {
+      "handle": "gondzo",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T07:16:00.000Z",
+      "submissionDate": "2016-05-29T22:40:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf298"
+    },
+    {
+      "handle": "sathish45g",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T10:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf297"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T10:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf296"
+    },
+    {
+      "handle": "kalc",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T12:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf295"
+    },
+    {
+      "handle": "{Siraj}",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T14:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf294"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T16:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf293"
+    },
+    {
+      "handle": "anvexr",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-29T02:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8d550dfb3b52bdf292"
+    }
+  ],
+  "registrationEndDate": "2016-06-27T05:10:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-06-27T05:16:00.000Z",
+  "submissions": [
+    {
+      "handle": "gondzo",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-28T16:13:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf2a9"
+    },
+    {
+      "handle": "Blackhole08",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-28T15:13:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf2a8"
+    },
+    {
+      "handle": "Blackhole08",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-28T19:58:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf2a7"
+    },
+    {
+      "handle": "gondzo",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-05-29T22:40:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf2a6"
+    },
+    {
+      "handle": "Blackhole08",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-29T02:52:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf2a5"
+    },
+    {
+      "handle": "Blackhole08",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-29T10:59:00.000Z",
+      "_id": "58133f8d550dfb3b52bdf2a4"
+    }
+  ],
+  "technology": [
+    "Docker",
+    "Java",
+    "SQL"
+  ]
+}

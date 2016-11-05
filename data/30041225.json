@@ -1,0 +1,435 @@
+{
+  "_id": 30041225,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T23:14:05.225Z",
+  "appealsEndDate": "2014-03-27T18:56:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Module Assembly - PGCI Formula and Diagram Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h1>PGCI Assembly Specification</h1>\n\n<h1>1.&nbsp;&nbsp;&nbsp;&nbsp; Project Overview</h1>\n\n<h2>1.1&nbsp;&nbsp;&nbsp;&nbsp; System Description</h2>\n\n<p style=\"margin-left:36.0pt;\">The client is building a data visualization dashboard on top of a set of large excel-based datasets. The data being passed into the system will most likely be made available as raw CSV/XSLX data that needs to be uploaded - it doesn&#39;t appear to be possible to automate this - although if a solution can be found this is the best path to take. The raw data will need to undergo a set of discrete transforms before display in order to make the representation useful. There are also a number of pre-determined graphs that need to be created from the data.</p>\n\n<p style=\"margin-left:36.0pt;\">The basic workflow is:</p>\n\n<ul>\n\t<li style=\"margin-left: 36pt;\"><span style=\"line-height: 1.6em;\">User uploads the experiment data to this app.</span></li>\n\t<li style=\"margin-left: 36pt;\"><span style=\"line-height: 1.6em;\">Process the data and create the experiment diagram based on provided formulas.</span></li>\n\t<li style=\"margin-left: 36pt;\"><span style=\"line-height: 1.6em;\">Show the result to user.</span></li>\n</ul>\n\n<p style=\"margin-left:36.0pt;\">It should also support the creating / editing of the experiments.</p>\n\n<p style=\"margin-left:36.0pt;\">This assembly implements all parts of the PGCI application, given the working interpreter source code.</p>\n\n<h2>1.2&nbsp;&nbsp;&nbsp;&nbsp; Competition Task Overview</h2>\n\n<p style=\"margin-left:36.0pt;\">A complete list of deliverables can be found in the TopCoder Assembly competition Tutorial at:</p>\n\n<p style=\"margin-left:36pt;\"><a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a></p>\n\n<p style=\"margin-left:36pt;\"><em>Note: Please read the whole Application Design Specification first. All the details not mentioned in this specification are provided in that document.</em></p>\n\n<h3>1.2.1&nbsp;&nbsp;&nbsp;&nbsp; Scope</h3>\n\n<p style=\"margin-left:36.0pt;\">This contest should support to parse the formula, process the data and show the diagram for Chart 1 and Summary 1.</p>\n\n<h3>1.2.2&nbsp;&nbsp;&nbsp;&nbsp; Formula Syntax Definition</h3>\n\n<p style=\"margin-left:36.0pt;\">The formula syntax definition is provided as the &ldquo;formula.json&rdquo; file. It is consumed by the <a href=\"http://zaach.github.io/jison/\">Jison</a> to generate the syntax parser.</p>\n\n<h3>1.2.3&nbsp;&nbsp;&nbsp;&nbsp; Interpreter</h3>\n\n<p style=\"margin-left:36.0pt;\">The working interpreter code is already given.</p>\n\n<p style=\"margin-left:36.0pt;\">Assembly is required to polish it with the TC standard, like adding the author, copyright information.</p>\n\n<p style=\"margin-left:36.0pt;\">PoC is provided to demonstrate the use of the interpreter to construct the charts.</p>\n\n<h3>1.2.4&nbsp;&nbsp;&nbsp;&nbsp; Manager Part</h3>\n\n<p style=\"margin-left:36.0pt;\">The manager part is simply used to represent the model used in the application.</p>\n\n<ul>\n\t<li style=\"margin-left: 36pt;\"><span style=\"line-height: 1.6em;\">GlobalCalibrationConstants</span></li>\n</ul>\n\n<p style=\"margin-left:72.0pt;\">It holds the global calibration constant value.</p>\n\n<p style=\"margin-left:72.0pt;\">The constants is a multiple-dimension associated array for BG# -&gt; Constant Name -&gt; Value.</p>\n\n<p style=\"margin-left:72.0pt;\">For each experiment, depending on its bgType, the corresponding global constants values are always added to its interpreter for evaluation.</p>\n\n<ul>\n\t<li style=\"margin-left: 40px;\"><span style=\"line-height: 1.6em;\">ExperimentInfo</span></li>\n</ul>\n\n<p style=\"margin-left:72.0pt;\">A simple Data-Value class that used to hold the experiment preferences, graph definitions for the experiment, alerts definitions for the experiment, and the user comments of the experiment.</p>\n\n<ul>\n\t<li style=\"margin-left: 40px;\">ExperimentData</li>\n</ul>\n\n<p style=\"margin-left:72.0pt;\">It holds the raw data (in CSV) of the experiment.</p>\n\n<p style=\"margin-left:72.0pt;\">In addition, the experiment always associates an &ldquo;Interpreter&rdquo; object, which contains the structured data of the experiment (like date -&gt; time -&gt; values, and heading index), parsed functions, the constants, and the cached function evaluation results.</p>\n\n<ul>\n\t<li style=\"margin-left: 40px;\">Alerts, Graph Definition, Comment</li>\n</ul>\n\n<p style=\"margin-left:72.0pt;\">They are simple Value objects.</p>\n\n<p style=\"margin-left:72.0pt;\"><em>The above ones are simply JSON objects {}. There&#39;s no need to define classes for them.</em></p>\n\n<p style=\"margin-left:72.0pt;\"><em>Here I only use them to show the properties that the objects are supposed to have.</em></p>\n\n<h3>1.2.5&nbsp;&nbsp;&nbsp;&nbsp; UI Implementation Guide</h3>\n\n<p style=\"margin-left:36.0pt;\"><u>Experiment List</u></p>\n\n<p style=\"margin-left:36.0pt;\">In the page, the UI should call the ExperimentManager.getAllExperiments() to get all the ExperimentInfo objects, to display the list of experiment.</p>\n\n<p style=\"margin-left:36.0pt;\">The ExperimentInfo contains the title, alerts (active), and comments to be displayed in the list.</p>\n\n<p style=\"margin-left:36.0pt;\"><u>Experiment Details</u></p>\n\n<p style=\"margin-left:36.0pt;\">Wen the Experiment Summary is displayed:</p>\n\n<ul>\n\t<li style=\"margin-left: 36pt;\"><span style=\"line-height: 1.6em;\">For each summary data, the corresponding configured functions are used to evaluate the corresponding date (selected) and show the value.</span></li>\n\t<li style=\"margin-left: 36pt;\"><span style=\"line-height: 1.6em;\">For each configured charts, the corresponding configured functions (for X, and multiple Ys) are evaluated for the minutes of the given date (selected).</span></li>\n\t<li style=\"margin-left: 36pt;\"><span style=\"line-height: 1.6em;\">The date picker is built based on the ExperimentInfo.dates.</span></li>\n</ul>\n\n<p style=\"margin-left:36.0pt;\"><u>Experiment Preference</u></p>\n\n<p style=\"margin-left:36.0pt;\">The experiment details are stored in the ExperimenetInfo.details.</p>\n\n<p style=\"margin-left:36.0pt;\">The alerts are stored in the ExperimentInfo.alerts.</p>\n\n<p style=\"margin-left:36.0pt;\">The configured formulas should be stored in the userFunctions. The formula configuration should be a single text area containing all the user-defined functions.</p>\n\n<p style=\"margin-left:36.0pt;\">There should also be the user-defined constants.</p>\n\n<p style=\"margin-left:36.0pt;\">For each &ldquo;Alert&rdquo;:</p>\n\n<ul>\n\t<li style=\"margin-left: 36pt;\"><span style=\"line-height: 1.6em;\">If an &ldquo;Alert&rdquo; is defined or updated, the function corresponding to the Alert should be evaluated for the entire Experiment data set:</span>\n\n\t<ul>\n\t\t<li style=\"margin-left: 36pt;\"><span style=\"line-height: 1.6em;\">If it is summary function, it should be evaluated for every date in the experiment data.</span></li>\n\t\t<li style=\"margin-left: 36pt;\"><span style=\"line-height: 1.6em;\">If it is non-summary function, it is evaluated for every minute in the experiment data.</span></li>\n\t</ul>\n\t</li>\n\t<li style=\"margin-left: 36pt;\"><span style=\"line-height: 1.6em;\">If any evaluation result is greater than set-point + upper-deviation or set-point &ndash; lower-deviation, the corresponding Alert is set as &ldquo;active=true&rdquo;3</span></li>\n</ul>\n\n<h2>1.3&nbsp; &nbsp; &nbsp;Deployment</h2>\n\n<p style=\"margin-left:36.0pt;\">The app runs inside the Chrome browser as a chrome extension.</p>\n\n<p style=\"margin-left:36.0pt;\">The app may communicate to the remote host for data synchronization.</p>\n\n<h3>1.3.1&nbsp;&nbsp;&nbsp;&nbsp; Technology overview</h3>\n\n<ul>\n\t<li style=\"margin-left: 40px;\">Chrome Extension</li>\n\t<li style=\"margin-left: 40px;\"><span style=\"line-height: 1.6em;\">JavaScript</span></li>\n\t<li style=\"margin-left: 40px;\"><span style=\"line-height: 1.6em;\">Hightchart 3.0.9 </span><a href=\"http://www.highcharts.com/\" style=\"line-height: 1.6em;\">http://www.highcharts.com/</a></li>\n\t<li style=\"margin-left: 40px;\"><span style=\"line-height: 1.6em;\">JS-XLSX </span><a href=\"https://github.com/SheetJS/js-xlsx\" style=\"line-height: 1.6em;\">https://github.com/SheetJS/js-xlsx</a></li>\n\t<li style=\"margin-left: 40px;\"><span style=\"line-height: 1.6em;\">Jison &nbsp;</span><a href=\"http://zaach.github.io/jison/\" style=\"line-height: 1.6em;\">http://zaach.github.io/jison/</a></li>\n</ul>\n",
+  "digitalRunPoints": 450,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30041225",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2014-04-04T01:58:00.000Z",
+  "finalSubmissionGuidelines": "<ul>\n\t<li>Source Code</li>\n\t<li>Test Data</li>\n\t<li>Deployment Guide</li>\n</ul>\n",
+  "forumId": 21795,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=21795",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 27,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-03-17T13:43:00.000Z",
+      "actualStartTime": "2014-03-17T13:43:00.000Z",
+      "scheduledEndTime": "2014-03-17T13:43:00.000Z",
+      "actualendTime": "2014-03-17T13:43:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6d63"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-03-17T13:43:00.000Z",
+      "actualStartTime": "2014-03-17T13:43:00.000Z",
+      "scheduledEndTime": "2014-03-18T05:38:00.000Z",
+      "actualendTime": "2014-03-18T05:38:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6d62"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-03-18T05:38:00.000Z",
+      "actualStartTime": "2014-03-18T05:38:00.000Z",
+      "scheduledEndTime": "2014-03-20T05:38:00.000Z",
+      "actualendTime": "2014-03-20T05:38:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6d61"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-03-18T05:43:00.000Z",
+      "actualStartTime": "2014-03-18T05:43:00.000Z",
+      "scheduledEndTime": "2014-03-24T05:37:00.000Z",
+      "actualendTime": "2014-03-24T05:37:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6d60"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-03-24T05:37:00.000Z",
+      "actualStartTime": "2014-03-24T05:37:00.000Z",
+      "scheduledEndTime": "2014-03-24T17:41:00.000Z",
+      "actualendTime": "2014-03-24T17:41:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6d5f"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-03-24T17:41:00.000Z",
+      "actualStartTime": "2014-03-24T17:41:00.000Z",
+      "scheduledEndTime": "2014-03-26T18:56:00.000Z",
+      "actualendTime": "2014-03-26T18:56:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6d5e"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-03-26T18:56:00.000Z",
+      "actualStartTime": "2014-03-26T18:56:00.000Z",
+      "scheduledEndTime": "2014-03-27T18:56:00.000Z",
+      "actualendTime": "2014-03-27T18:56:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6d5d"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-03-27T18:56:00.000Z",
+      "actualStartTime": "2014-03-27T18:56:00.000Z",
+      "scheduledEndTime": "2014-03-27T18:56:00.000Z",
+      "actualendTime": "2014-03-27T18:56:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6d5c"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-03-27T18:56:00.000Z",
+      "actualStartTime": "2014-03-27T18:56:00.000Z",
+      "scheduledEndTime": "2014-03-28T09:00:00.000Z",
+      "actualendTime": "2014-03-28T09:00:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6d5b"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-03-28T09:00:00.000Z",
+      "actualStartTime": "2014-03-28T09:00:00.000Z",
+      "scheduledEndTime": "2014-04-02T09:29:00.000Z",
+      "actualendTime": "2014-04-02T09:29:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6d5a"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-04-02T09:29:00.000Z",
+      "actualStartTime": "2014-04-02T09:29:00.000Z",
+      "scheduledEndTime": "2014-04-02T17:16:00.000Z",
+      "actualendTime": "2014-04-02T17:16:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6d59"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-04-04T12:50:00.000Z",
+      "actualStartTime": "2014-04-04T12:50:00.000Z",
+      "scheduledEndTime": "2014-04-09T12:50:00.000Z",
+      "actualendTime": "2014-04-09T12:50:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6d58"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-04-02T17:16:00.000Z",
+      "actualStartTime": "2014-04-02T17:16:00.000Z",
+      "scheduledEndTime": "2014-04-04T01:58:00.000Z",
+      "actualendTime": "2014-04-04T01:58:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6d57"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-04-04T01:58:00.000Z",
+      "actualStartTime": "2014-04-04T01:58:00.000Z",
+      "scheduledEndTime": "2014-04-04T12:50:00.000Z",
+      "actualendTime": "2014-04-04T12:50:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6d56"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2014-03-18T05:38:00.000Z",
+  "prize": [
+    1000,
+    500
+  ],
+  "projectId": 6746,
+  "registrants": [
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-03-18T07:12:00.000Z",
+      "submissionDate": null,
+      "rating": "803",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6d55"
+    },
+    {
+      "handle": "sjtu_pigoneand",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-18T05:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6d54"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-18T05:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6d53"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-18T05:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6d52"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "33%",
+      "registrationDate": "2014-03-18T06:09:00.000Z",
+      "submissionDate": null,
+      "rating": "820",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6d51"
+    },
+    {
+      "handle": "LazyChild",
+      "reliability": "100%",
+      "registrationDate": "2014-03-18T06:24:00.000Z",
+      "submissionDate": "2014-03-24T04:15:00.000Z",
+      "rating": "1464",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813dbbd550dfb3b52ea6d50"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "0%",
+      "registrationDate": "2014-03-18T06:25:00.000Z",
+      "submissionDate": null,
+      "rating": "495",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6d4f"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-18T06:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6d4e"
+    },
+    {
+      "handle": "dezl",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-18T07:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6d4d"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-18T07:18:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6d4c"
+    },
+    {
+      "handle": "LOY",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-18T08:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6d4b"
+    },
+    {
+      "handle": "chok68",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-18T09:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6d4a"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "20%",
+      "registrationDate": "2014-03-18T09:24:00.000Z",
+      "submissionDate": null,
+      "rating": "1484",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813dbbd550dfb3b52ea6d49"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-18T10:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6d48"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2014-03-18T10:56:00.000Z",
+      "submissionDate": null,
+      "rating": "961",
+      "colorStyle": "color: #00A900",
+      "_id": "5813dbbd550dfb3b52ea6d47"
+    },
+    {
+      "handle": "iCare",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-18T12:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6d46"
+    },
+    {
+      "handle": "raj88iitr",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-18T13:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6d45"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "6%",
+      "registrationDate": "2014-03-18T13:39:00.000Z",
+      "submissionDate": null,
+      "rating": "902",
+      "colorStyle": "color: #00A900",
+      "_id": "5813dbbd550dfb3b52ea6d44"
+    },
+    {
+      "handle": "wsobolewski",
+      "reliability": "0%",
+      "registrationDate": "2014-03-18T13:58:00.000Z",
+      "submissionDate": null,
+      "rating": "975",
+      "colorStyle": "color: #00A900",
+      "_id": "5813dbbd550dfb3b52ea6d43"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2014-03-18T14:58:00.000Z",
+      "submissionDate": null,
+      "rating": "1373",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813dbbd550dfb3b52ea6d42"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "0%",
+      "registrationDate": "2014-03-18T17:49:00.000Z",
+      "submissionDate": null,
+      "rating": "507",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6d41"
+    },
+    {
+      "handle": "agus.mw",
+      "reliability": "6%",
+      "registrationDate": "2014-03-19T01:49:00.000Z",
+      "submissionDate": null,
+      "rating": "930",
+      "colorStyle": "color: #00A900",
+      "_id": "5813dbbd550dfb3b52ea6d40"
+    },
+    {
+      "handle": "padegal12",
+      "reliability": "0%",
+      "registrationDate": "2014-03-19T02:38:00.000Z",
+      "submissionDate": null,
+      "rating": "693",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6d3f"
+    },
+    {
+      "handle": "rrr_guru",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-19T05:31:00.000Z",
+      "submissionDate": null,
+      "rating": "613",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6d3e"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-03-19T06:49:00.000Z",
+      "submissionDate": null,
+      "rating": "1135",
+      "colorStyle": "color: #00A900",
+      "_id": "5813dbbd550dfb3b52ea6d3d"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-19T07:31:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6d3c"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2014-03-20T00:37:00.000Z",
+      "submissionDate": null,
+      "rating": "882",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6d3b"
+    }
+  ],
+  "registrationEndDate": "2014-03-20T05:38:00.000Z",
+  "reliabilityBonus": 200,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-03-24T05:37:00.000Z",
+  "submissions": [
+    {
+      "handle": "LazyChild",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 85.64,
+      "finalScore": 85.64,
+      "points": 450,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-03-24T04:15:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6d64"
+    }
+  ],
+  "technology": [
+    "JavaScript"
+  ]
+}

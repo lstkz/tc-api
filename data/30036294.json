@@ -1,7 +1,7 @@
 {
   "_id": 30036294,
   "_isComplete": true,
-  "__v": 1,
+  "__v": 0,
   "_lastUpdate": "2016-10-27T17:45:33.874Z",
   "appealsEndDate": "2013-12-02T07:00:00.000Z",
   "challengeCommunity": "develop",
@@ -15,11 +15,6 @@
   "detailedRequirements": "<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Project Overview</span></h2>\n\n<p>TopCoder and the TopCoder community have worked hard to get the platform to its currently level of maturity, but we&#39;re far from done. It&#39;s time to take the platform to the next level. TopCoder is going to start taking some steps to open up the platform API to the outside and community developers so they could incorporate it in their websites, applications or build their own applications (web, mobile or desktop).</p>\n\n<p>The ultimate goal is to open up and build an &quot;API&quot; that is targeting all different type of audiences - Software and Studio Competitors, SRM/MM competitors, Copilots, Admins and TopCoder partners - each audience will have different interests and usages of the API, so it will be a huge project and we need to make sure that we are in the right direction from the beginning.</p>\n\n<p>In this contest, we are going to create the Stub APIs which is defined in the <a href=\"https://github.com/cloudspokes/tc-api/blob/master/apiary.apib\">blueprint doc </a>and add general caching support for API calls.</p>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Competition Task Overview</span></h2>\n\n<p><span style=\"color:#FF0000;\"><span style=\"font-size: 12px;\"><img align=\"absmiddle\" alt=\"\" border=\"0\" height=\"16\" src=\"http://apps.topcoder.com/wiki/images/icons/emoticons/warning.gif\" width=\"16\" /> <strong>Please raise questions as quick as you can, I am familiar with related database and code base, I can provide as much support as I can.</strong></span></span></p>\n\n<p><span style=\"color:#FF0000;\"><span style=\"font-size: 12px;\"><img align=\"absmiddle\" alt=\"\" border=\"0\" height=\"16\" src=\"http://apps.topcoder.com/wiki/images/icons/emoticons/warning.gif\" width=\"16\" /></span><strong>The updated code must still deploy and work on heroku - any submission which can&#39;t be deployed on heroku successfully will be failed in screening phase - primary reviewer must check this.</strong></span></p>\n\n<p>The implementation will base on the node.js version of TC platform API - <span class=\"nobr\"><a href=\"https://github.com/cloudspokes/tc-api\" rel=\"nofollow\">https://github.com/cloudspokes/tc-api</a>.</span> <strong>Please follow the existing actionhero pattern for your development.</strong></p>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Create Stub APIs</span></h3>\n\n<p>This is going to create the Stub APIs which is already defined in&nbsp; <a href=\"https://github.com/cloudspokes/tc-api/blob/master/apiary.apib\">blueprint doc</a> .&nbsp; The real implementation will come after.</p>\n\n<p>You should follow the same implementation patterns that is currently code base.&nbsp;</p>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">API Cache Support</span></h3>\n\n<p>We&#39;d like to add caching support for API calls to reduce the traffic to backend database.</p>\n\n<p>This should be a general solution for all APIs, basically it&#39;s just add a config value for default cache expiration, and then for every call look at the request url as the cache key, and retrieve the result in teh cache. if it&#39;s not there, run the query and save it to the cache.</p>\n\n<p>We&#39;d better use the preprocessor and postprocessor middleware logic to implement the API calls, same API calls with different parameters will be considered as different cache key, so you&#39;d better formalize the data.</p>\n\n<p>We also need a specific configuration that controls each API to use cache or not, and controls the cache expiration for each API call. like some API, like member registration API, we don&#39;t what it be cached, it should always hit the backend system.</p>\n\n<p>for caching, actionhero has redis already built in, it exposes <u>api.cache.save</u>, <u>api.cache.load</u>, and <u>api.cache.destroy</u>. Please reference actionhero documentation for details.</p>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Configurations</span></h3>\n\n<p>In the previous changes for API framework, we are removing configuration files. and use environment variables&nbsp;as described here: <a href=\"http://12factor.net/config\">http://12factor.net/config</a></p>\n\n<ul>\n\t<li>Please update initial support/documentation for dev (local), staging (heroku), and production environments.</li>\n\t<li>Please update two bash scripts to set the dev / heroku configuration values to environment variables (see <u>deploy</u> directory)</li>\n</ul>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">API Docs</span></h3>\n\n<p>Blueprint is a simple way of documenting APIs using Markdown. See:</p>\n\n<p><a href=\"http://apiblueprint.org/\">http://apiblueprint.org/</a><br />\n<a href=\"https://github.com/apiaryio/api-blueprint\">https://github.com/apiaryio/api-blueprint</a><br />\n<a href=\"https://github.com/apiaryio/api-blueprint/blob/master/Tutorial.md\">https://github.com/apiaryio/api-blueprint/blob/master/Tutorial.md</a></p>\n\n<p>We want to start using it for the TC API:</p>\n\n<p><a href=\"http://docs.tcapi.apiary.io/\">http://docs.tcapi.apiary.io/</a><br />\n<a href=\"https://github.com/cloudspokes/tc-api/blob/master/apiary.apib\">https://github.com/cloudspokes/tc-api/blob/master/apiary.apib</a></p>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Testing</span></h3>\n\n<p><span style=\"font-size:12px;\">Please provide testing to make sure the Caching logic is working as expected.</span></p>\n\n<p><span style=\"font-size:12px;\">The API Framework supports tests. </span>Use <a href=\"https://github.com/visionmedia/supertest\">supertest</a> with <a href=\"http://visionmedia.github.io/mocha/\">mocha</a>. Don&#39;t install mocha globally.</p>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Code Format</span></h3>\n\n<p>All code must pass <a href=\"http://www.jslint.com/\">jslint</a>. You may use &quot;nomen: true&quot;.</p>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Winner Only</span></h3>\n\n<p>Winner will create pull request against the main github repo in final fix phase and merge the code.</p>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color:#FF0000;\">Virutal Machines (VMs)</span></h3>\n\n<p>VM specific information is found here: <span class=\"nobr\"><a href=\"http://www.topcoder.com/wiki/display/docs/VM+Image+2.5\" rel=\"nofollow\">http://www.topcoder.com/wiki/display/docs/VM+Image+2.5</a></span></p>\n\n<p>Upon registration as a submitter or reviewer you will need to request a VM based on the TopCoder systems image. The VM will be active through aggregation review, after which it will be terminated except for the winner&#39;s and the reviewers&#39;. To request your image, please post in contest forum.</p>\n\n<p>Before requesting your VM, you need to ensure that you have an SSH key created and in your member profile. Instructions to do so are here: <span class=\"nobr\"><a href=\"http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key\" rel=\"nofollow\">http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key</a></span>, and instructions to connect afterwards are here: <span class=\"nobr\"><a href=\"http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key\" rel=\"nofollow\">http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key</a></span>.</p>\n\n<p>Please realize that VMs are currently issued manually. We make every attempt to issue the VM as soon as it is requested, however, there may be delays of up to 12 hours depending on time of day when you request. We encourage everyone to request a VM as soon as possible to minimize any such delays.</p>\n\n<h2 style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><strong><span style=\"color: rgb(255, 0, 0);\">Review Board Requirements</span></strong></h2>\n\n<p style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Reviewers need to write Supertest tests for the APIs.</p>\n\n<p style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">There are three roles:</p>\n\n<ul>\n\t<li style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Accuracy - Tests the implementation on the accuracy of the results when using the component.</li>\n\t<li style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Failure - Tests the implementation&#39;s ability to handle bad data and incorrect usage.</li>\n\t<li style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Security - Tests the oauth, sql inject and other security related requirements.</li>\n</ul>\n\n<p style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Reviewer could send preferred role by Contact Manager&nbsp;after system selected the reviwer.</p>\n\n<p style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Copilot will assign the role to reviewers if reviewer didn&#39;t send the preferred role information.</p>\n\n<p style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Reviewer must create pull request from GitHub for the tests.</p>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Technology Overview</span></h2>\n\n<ul style=\"font-family: Arial, Helvetica, Verdana, sans-serif; font-size: 12px; line-height: 16px;\">\n\t<li>JavaScript</li>\n\t<li><span class=\"nobr\"><a href=\"http://nodejs.org/\" rel=\"nofollow\">Node.js 0.10.x</a></span></li>\n\t<li><a href=\"https://github.com/evantahler/actionHero\">actionhero.js framework</a></li>\n</ul>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Documentation Provided</span></h2>\n\n<p>Please check the deployment guide in codebase for reference.</p>\n",
   "digitalRunPoints": 360,
   "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30036294",
-  "event": {
-    "id": 3437,
-    "description": "2014 TopCoder(R) Open",
-    "shortDescription": "tco14"
-  },
   "finalFixEndDate": "2013-12-03T11:00:00.000Z",
   "finalSubmissionGuidelines": "<p><strong><span style=\"color:#FF0000;\"><span style=\"line-height: 1.6em;\">Submission Deliverables</span></span></strong></p>\n\n<p><span style=\"font-size:12px;\">A complete list of deliverables can be viewed in the TopCoder Assembly competition Tutorial at: </span><a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a></p>\n\n<p><span style=\"font-size:12px;\">Below is an overview of the deliverables:</span></p>\n\n<ul>\n\t<li>Source Code.</li>\n\t<li>Deployment guide to configure and verify the application.</li>\n</ul>\n\n<p><strong><span style=\"color:#FF0000;\"><span style=\"line-height: 1.6em;\">Final Submission </span></span></strong></p>\n\n<p><span style=\"font-size:12px;\">For each member, the final submission should be uploaded to the Online Review Tool.</span></p>\n",
   "forumId": 19501,
@@ -28,6 +23,38 @@
   "numberOfCheckpointsPrizes": 0,
   "numberOfRegistrants": 17,
   "numberOfSubmissions": 2,
+  "postingDate": "2013-11-23T04:26:00.000Z",
+  "projectId": 6757,
+  "registrationEndDate": "2013-11-25T04:26:00.000Z",
+  "reliabilityBonus": 160,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2013-11-27T04:31:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 94.76,
+      "finalScore": 99.78,
+      "points": 251.99999999999997,
+      "submissionStatus": "Active",
+      "submissionDate": "2013-11-26T19:33:00.000Z",
+      "_id": "58123d3d6fc1ab2d927190e2"
+    },
+    {
+      "handle": "Easyhard",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 93.64,
+      "finalScore": 98.14,
+      "points": 108,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2013-11-26T10:45:00.000Z",
+      "_id": "58123d3d6fc1ab2d927190e1"
+    }
+  ],
   "phases": [
     {
       "type": "Specification Submission",
@@ -156,13 +183,6 @@
       "_id": "58123d3d6fc1ab2d927190d3"
     }
   ],
-  "platforms": [],
-  "postingDate": "2013-11-23T04:26:00.000Z",
-  "prize": [
-    800,
-    400
-  ],
-  "projectId": 6757,
   "registrants": [
     {
       "handle": "abcivashritt",
@@ -318,38 +338,18 @@
       "_id": "58123d3d6fc1ab2d927190c2"
     }
   ],
-  "registrationEndDate": "2013-11-25T04:26:00.000Z",
-  "reliabilityBonus": 160,
-  "reviewScorecardId": 30001470,
-  "reviewType": null,
-  "screeningScorecardId": 30000412,
-  "submissionEndDate": "2013-11-27T04:31:00.000Z",
-  "submissions": [
-    {
-      "handle": "Sky_",
-      "placement": 1,
-      "screeningScore": 100,
-      "initialScore": 94.76,
-      "finalScore": 99.78,
-      "points": 251.99999999999997,
-      "submissionStatus": "Active",
-      "submissionDate": "2013-11-26T19:33:00.000Z",
-      "_id": "58123d3d6fc1ab2d927190e2"
-    },
-    {
-      "handle": "Easyhard",
-      "placement": 2,
-      "screeningScore": 100,
-      "initialScore": 93.64,
-      "finalScore": 98.14,
-      "points": 108,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2013-11-26T10:45:00.000Z",
-      "_id": "58123d3d6fc1ab2d927190e1"
-    }
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "prize": [
+    800,
+    400
   ],
   "technology": [
     "JavaScript",
     "Node.js"
-  ]
+  ],
+  "platforms": []
 }

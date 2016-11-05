@@ -1,0 +1,394 @@
+{
+  "_id": 30049680,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:14:34.258Z",
+  "appealsEndDate": "2015-04-19T08:30:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Google Domain Configuration Dashboard Enhancements",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2 dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(255, 0, 0); font-size:23px\">Project Overview</span></span></h2>\n\n<p dir=\"ltr\"><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Currently a user can find a great deal of information about their Google Apps Domain through the Admin Console when logged in as an Admin to their Google Apps Domain. &nbsp;Our customer is looking for a tool to query the Google Apps Domains through Google APIs and provide a dashboard view. This will put all of the settings in a read-only view all in one place. &nbsp;This will also allow individuals who would not normally have access to this information the ability to at least have read access to the Google Apps Domain that their company maintains.</span></span></span></p>\n\n<h2 dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(255, 0, 0); font-size:23px\">Competition Task Overview</span></span></h2>\n\n<p dir=\"ltr\"><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">This challenge should implement following changes and fixes:</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Codebase: </span><a href=\"https://gitlab.com/jmartensappirio/google-domain-dashboard\" style=\"text-decoration:none;\"><u>https://gitlab.com/jmartensappirio/google-domain-dashboard</u></a></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Please use contact manager to request access. Your gitlab username must be included in the request.</span></span></span></p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Remove Print and Export buttons</span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>Error handling on quota errors</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0)\"> - Implement a single backend error handling process for all errors. Suggest a 5 count exponential back off process. Here is Google&rsquo;s documentation on when to retry and how: </span><a href=\"https://developers.google.com/admin-sdk/directory/v1/limits\" style=\"text-decoration:none;\"><u>https://developers.google.com/admin-sdk/directory/v1/limits</u></a></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>Split groups loading process</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0)\"> (get all groups and get group members) - As the code gets the groups, instead of getting the group members inline, create a task to get the group members. 1 task per group.</span></span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Update the loading screen to include the 3 loading operation. Example:</span></span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ol>\n\n<p dir=\"ltr\" style=\"margin-left:102pt\"><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:rgb(34, 34, 34)\">XX users loaded</span></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:102pt\"><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:rgb(34, 34, 34)\">XX groups loaded</span></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:102pt\"><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:rgb(34, 34, 34)\">XX groups members loaded</span></span></span></p>\n\n<ol start=\"4\">\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>Data storage update</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0)\"> - store all data in the datastore then populate the memcache for better performance. If memcache is cleared get the data from the datastore. The datastore refresh is on a timed update every hour, configurable from the application.properties file. Plus the UI will have a Refresh Data button to force a data refresh which will utilize the current UI when data is loaded. This data load will also occur if the datastore is empty.</span></span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Use App Engine Cron Service for the hourly data load to the Datastore - </span><a href=\"https://cloud.google.com/appengine/docs/java/config/cron\" style=\"text-decoration:none;\"><u>https://cloud.google.com/appengine/docs/java/config/cron</u></a></span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>Checkmarx security fixes</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0)\"> - please fix the following issues identified in the attached PDF.</span></span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Unchecked Input For Loop Condition</span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Client Potential Code Injection </span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Client Potential XSS</span></span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ol>\n\n<p dir=\"ltr\"><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#FF0000\"><strong>Testing</strong></span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">The winner is required to provide the deployed google app engine project endpoint.</span></span></span></p>\n\n<h2 dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(255, 0, 0); font-size:23px\">Technology Overview</span></span></h2>\n\n<p>&nbsp;</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Java 6</span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Google App Engine</span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><a href=\"http://projects.spring.io/spring-framework/\" style=\"text-decoration:none;\"><u>Spring 3.2.8</u></a></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><a href=\"http://poi.apache.org/\" style=\"text-decoration:none;\"><u>Apache POI 3.1.0</u></a></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><a href=\"https://developers.google.com/api-client-library/java/apis/\" style=\"text-decoration:none;\"><u>Google Client API 1.0</u></a></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><a href=\"http://logging.apache.org/log4j/1.2/\" style=\"text-decoration:none;\"><u>Log4j 1.2.17</u></a></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><a href=\"https://developers.google.com/api-client-library/java/apis/admin/directory_v1\" style=\"text-decoration:none;\"><u>Google Admin Directory API 1.19.0</u></a></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><a href=\"https://developers.google.com/api-client-library/java/apis/admin/reports_v1\" style=\"text-decoration:none;\"><u>Google Reports API 1.0</u></a></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><a href=\"https://developers.google.com/apps-marketplace/\" style=\"text-decoration:none;\"><u>Google Apps Marketplace 2.0</u></a></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p><span style=\"font-size:12px\"><span style=\"font-family:arial,helvetica,sans-serif\"><u><a href=\"https://developers.google.com/api-client-library/java/apis/oauth2/v2\" style=\"text-decoration:none;\">Google OAuth2 API 2.0</a></u></span></span></p>\n\t</li>\n</ul>\n",
+  "digitalRunPoints": 630,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30049680",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2015-04-20T09:30:00.000Z",
+  "finalSubmissionGuidelines": "<ul>\n\t<li><span>Deployment Guide</span></li>\n\t<li><span>Source Code</span></li>\n\t<li><span>Deployed App Engine Project</span></li>\n</ul>\n",
+  "forumId": 28913,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=28913",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 23,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-10T03:39:00.000Z",
+      "actualStartTime": "2015-04-10T03:39:00.000Z",
+      "scheduledEndTime": "2015-04-10T03:42:00.000Z",
+      "actualendTime": "2015-04-10T03:42:00.000Z",
+      "_id": "58134f3a550dfb3b52c2d231"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-10T03:42:00.000Z",
+      "actualStartTime": "2015-04-10T03:42:00.000Z",
+      "scheduledEndTime": "2015-04-10T05:59:00.000Z",
+      "actualendTime": "2015-04-10T05:59:00.000Z",
+      "_id": "58134f3a550dfb3b52c2d230"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-10T05:59:00.000Z",
+      "actualStartTime": "2015-04-10T05:59:00.000Z",
+      "scheduledEndTime": "2015-04-12T06:00:00.000Z",
+      "actualendTime": "2015-04-12T06:00:00.000Z",
+      "_id": "58134f3a550dfb3b52c2d22f"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-10T06:04:00.000Z",
+      "actualStartTime": "2015-04-10T06:04:00.000Z",
+      "scheduledEndTime": "2015-04-16T05:58:00.000Z",
+      "actualendTime": "2015-04-16T05:58:00.000Z",
+      "_id": "58134f3a550dfb3b52c2d22e"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-16T05:58:00.000Z",
+      "actualStartTime": "2015-04-16T05:58:00.000Z",
+      "scheduledEndTime": "2015-04-16T16:42:00.000Z",
+      "actualendTime": "2015-04-16T16:42:00.000Z",
+      "_id": "58134f3a550dfb3b52c2d22d"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-16T16:42:00.000Z",
+      "actualStartTime": "2015-04-16T16:42:00.000Z",
+      "scheduledEndTime": "2015-04-18T12:19:00.000Z",
+      "actualendTime": "2015-04-18T12:19:00.000Z",
+      "_id": "58134f3a550dfb3b52c2d22c"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-18T12:19:00.000Z",
+      "actualStartTime": "2015-04-18T12:19:00.000Z",
+      "scheduledEndTime": "2015-04-18T23:02:00.000Z",
+      "actualendTime": "2015-04-18T23:02:00.000Z",
+      "_id": "58134f3a550dfb3b52c2d22b"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-18T23:02:00.000Z",
+      "actualStartTime": "2015-04-18T23:02:00.000Z",
+      "scheduledEndTime": "2015-04-19T08:30:00.000Z",
+      "actualendTime": "2015-04-19T08:30:00.000Z",
+      "_id": "58134f3a550dfb3b52c2d22a"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-19T08:31:00.000Z",
+      "actualStartTime": "2015-04-19T08:31:00.000Z",
+      "scheduledEndTime": "2015-04-19T11:47:00.000Z",
+      "actualendTime": "2015-04-19T11:47:00.000Z",
+      "_id": "58134f3a550dfb3b52c2d229"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-19T11:47:00.000Z",
+      "actualStartTime": "2015-04-19T11:47:00.000Z",
+      "scheduledEndTime": "2015-04-20T09:30:00.000Z",
+      "actualendTime": "2015-04-20T09:30:00.000Z",
+      "_id": "58134f3a550dfb3b52c2d228"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-20T09:30:00.000Z",
+      "actualStartTime": "2015-04-20T09:30:00.000Z",
+      "scheduledEndTime": "2015-04-20T11:54:00.000Z",
+      "actualendTime": "2015-04-20T11:54:00.000Z",
+      "_id": "58134f3a550dfb3b52c2d227"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-20T11:54:00.000Z",
+      "actualStartTime": "2015-04-20T11:54:00.000Z",
+      "scheduledEndTime": "2015-04-25T11:54:00.000Z",
+      "actualendTime": "2015-04-25T11:54:00.000Z",
+      "_id": "58134f3a550dfb3b52c2d226"
+    }
+  ],
+  "platforms": [
+    "Google"
+  ],
+  "postingDate": "2015-04-10T05:59:00.000Z",
+  "prize": [
+    1400,
+    700
+  ],
+  "projectId": 8006,
+  "registrants": [
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T07:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3a550dfb3b52c2d225"
+    },
+    {
+      "handle": "pnomarev",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T07:15:00.000Z",
+      "submissionDate": null,
+      "rating": "473",
+      "colorStyle": "color: #999999",
+      "_id": "58134f3a550dfb3b52c2d224"
+    },
+    {
+      "handle": "patka",
+      "reliability": "0%",
+      "registrationDate": "2015-04-10T09:32:00.000Z",
+      "submissionDate": null,
+      "rating": "566",
+      "colorStyle": "color: #999999",
+      "_id": "58134f3a550dfb3b52c2d223"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T07:36:00.000Z",
+      "submissionDate": null,
+      "rating": "717",
+      "colorStyle": "color: #999999",
+      "_id": "58134f3a550dfb3b52c2d222"
+    },
+    {
+      "handle": "jzh08",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T09:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3a550dfb3b52c2d221"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T10:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3a550dfb3b52c2d220"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "6%",
+      "registrationDate": "2015-04-10T10:24:00.000Z",
+      "submissionDate": null,
+      "rating": "1060",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f3a550dfb3b52c2d21f"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T12:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3a550dfb3b52c2d21e"
+    },
+    {
+      "handle": "gets0ul",
+      "reliability": "83%",
+      "registrationDate": "2015-04-10T13:10:00.000Z",
+      "submissionDate": null,
+      "rating": "1630",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58134f3a550dfb3b52c2d21d"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T13:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3a550dfb3b52c2d21c"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T13:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3a550dfb3b52c2d21b"
+    },
+    {
+      "handle": "okuni",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T14:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3a550dfb3b52c2d21a"
+    },
+    {
+      "handle": "shilov",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T16:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3a550dfb3b52c2d219"
+    },
+    {
+      "handle": "gauravs23",
+      "reliability": "13%",
+      "registrationDate": "2015-04-10T19:16:00.000Z",
+      "submissionDate": "2015-04-16T01:43:00.000Z",
+      "rating": "755",
+      "colorStyle": "color: #999999",
+      "_id": "58134f3a550dfb3b52c2d218"
+    },
+    {
+      "handle": "ashel",
+      "reliability": "88%",
+      "registrationDate": "2015-04-11T00:01:00.000Z",
+      "submissionDate": "2015-04-14T20:38:00.000Z",
+      "rating": "1108",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f3a550dfb3b52c2d217"
+    },
+    {
+      "handle": "jol",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-11T04:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3a550dfb3b52c2d216"
+    },
+    {
+      "handle": "borysfan",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-11T06:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3a550dfb3b52c2d215"
+    },
+    {
+      "handle": "ohyan07",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-11T07:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3a550dfb3b52c2d214"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-11T10:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3a550dfb3b52c2d213"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-11T14:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3a550dfb3b52c2d212"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2015-04-11T16:49:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58134f3a550dfb3b52c2d211"
+    },
+    {
+      "handle": "Ninja91",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-12T03:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3a550dfb3b52c2d210"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-12T04:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3a550dfb3b52c2d20f"
+    }
+  ],
+  "registrationEndDate": "2015-04-12T06:00:00.000Z",
+  "reliabilityBonus": 280,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-04-16T05:58:00.000Z",
+  "submissions": [
+    {
+      "handle": "ashel",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 91.61,
+      "finalScore": 91.83,
+      "points": 441,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-04-14T20:38:00.000Z",
+      "_id": "58134f3a550dfb3b52c2d233"
+    },
+    {
+      "handle": "gauravs23",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 90.56,
+      "finalScore": 90.78,
+      "points": 189,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-04-16T01:43:00.000Z",
+      "_id": "58134f3a550dfb3b52c2d232"
+    }
+  ],
+  "technology": [
+    "Google API",
+    "Google App Engine",
+    "Java"
+  ]
+}

@@ -1,0 +1,450 @@
+{
+  "_id": 30043699,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T23:13:33.488Z",
+  "appealsEndDate": "2014-07-10T13:14:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Release Assembly - topcoder  Synchronize OLTP Coder Table with User Table",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\" style=\"text-align:center\"><span><strong>Synchronize OLTP Coder Table with User Table</strong></span></p>\n\n<p>&nbsp;</p>\n\n<h3 dir=\"ltr\"><span><strong>1.0 </strong><strong>&nbsp;&nbsp;</strong></span><strong>Project Overview</strong></h3>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">The topcoder database (oltp) contains a user table (common_oltp) and a coder&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">table (informixoltp) . The coder table is currently a subset of the user table in&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">terms of the # of users it includes. &nbsp;</span><span style=\"font-size:13px\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">The data warehouse coder table gets synchronized with the oltp coder&nbsp;</span></span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">table via cron jobs that run at specified intervals of time. &nbsp;As the coder table in oltp&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">database currently does not contain all the users, the data warehouse is also&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">missing the full list of users. This is resulting into incorrect reporting.</span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">To solve this issue, we need to load the missing records into the&nbsp;</span></span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">informixoltp.coder table by :</span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:11px\">Identify the users that are present in common_oltp.user table but not <span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">present in informixoltp.coder table </span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:11px\">Insert these missing users in informixoltp.coder table with values as mentioned in the Specs.&nbsp;</span></span></p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:11px\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">In this assembly, we can achieve this by implementing a Java program that loads the missing users and adds them into the coder table with the default values as specified in the specs.</span></span></span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">See the following section for details.</span></span></p>\n\n<div>&nbsp;</div>\n\n<div>&nbsp;</div>\n\n<div>\n<h3 dir=\"ltr\"><span><strong>1.1 </strong><strong>&nbsp;&nbsp; &nbsp;</strong><strong>Competition Task Overview</strong></span></h3>\n\n<p dir=\"ltr\"><span><strong>1.1.1</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\"> SVN used for this assembly</span></span></p>\n\n<p dir=\"ltr\"><span><strong>TopCoder Web:</strong><span style=\"background-color:rgb(216, 228, 241); color:rgb(0, 0, 0); font-family:verdana; font-size:11px\"> </span><a href=\"https://coder.topcoder.com/internal/web_module/trunk\" style=\"text-decoration:none;\"><u>https://coder.topcoder.com/internal/web_module/trunk</u><u><img src=\"https://lh5.googleusercontent.com/18nuMBMMFF11tZX5-WTni8d3lHIxLtDAlajNXecmeg9H54shVdoyGzExwdk_pOXci_eyZEwIsnQWwSPD490JF_5qfr4pgsepyTpjOKJbtxJf-l1kSV6agr8TmA8ss4qfeA\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:9px; transform:rotate(0.00rad); width:9px\" /></u></a></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">Please use latest revision as the base revision for this assembly.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">To get the READ-ONLY access to the above SVN, please send an email to support@topcoder.com with your handle, contest name and the SVN address to request a READ-ONLY permission.</span></span></p>\n&nbsp;\n\n<p dir=\"ltr\"><span><strong>1.1.2 </strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">Create required test data to test the program ( user table)</span></span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">The VM database contains some test users so those can be used for testing. You can also add more users for testing purposes.</span></p>\n&nbsp;\n\n<p dir=\"ltr\"><span><strong>1.1.3 &nbsp;</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">Write a Java Program/Loader with name &nbsp;&ldquo;CodersDataLoader&rdquo; &nbsp;that inserts the missing user records in the informixoltp.coder table. </span></span></p>\n&nbsp;\n\n<p dir=\"ltr\"><span><strong>&ldquo;CoderDataLoader&rdquo; Java Program Details</strong></span></p>\n\n<p dir=\"ltr\"><span><strong>=========================================</strong></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">Please write a Java class with name &ldquo;CoderDataLoader&rdquo; that would load the missing users in the Coder table.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">The class should reside in the package com.topcoder.utilities.datapatch (please create a sub package inside utilities with name datapatch ). P</span></span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">rovide required documentation in the class.</span></p>\n&nbsp;\n\n<p dir=\"ltr\"><span><strong>Tables required :</strong></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">- common_oltp.User </span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">- informixoltp.Coder </span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">- common_oltp.address </span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">- common_oltp.user_address_xref</span></span></p>\n\n<p dir=\"ltr\">&nbsp;</p>\n\n<p dir=\"ltr\"><span><strong>Logic:</strong></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">1.Find all the users that are present in User table but not present in coder table.All users irrespective of their status needs to be retrieved.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">2. For each user found in step 1, insert a record in coder table with following column values:</span></span></p>\n&nbsp;\n\n<div dir=\"ltr\" style=\"margin-left:0pt;\">\n<table style=\"border-collapse:collapse; border:none\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"background-color:#e5e5e5; vertical-align:middle\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><strong>Column</strong></span></p>\n\t\t\t</td>\n\t\t\t<td style=\"vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><strong>Value</strong></span></p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color:#f5f5f5; vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">coder_id</span></span></p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color:#f5f5f5; vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"background-color:rgb(255, 255, 255); color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">user_id</span></span></p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color:#f5f5f5; vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">member_since</span></span></p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color:#f5f5f5; vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"background-color:rgb(255, 255, 255); color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">user.create_date</span></span></p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color:#f5f5f5; vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">quote</span></span></p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color:#f5f5f5; vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"background-color:rgb(255, 255, 255); color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">-</span></span></p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color:#f5f5f5; vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">modify_date</span></span></p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color:#f5f5f5; vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"background-color:rgb(255, 255, 255); color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">user.modify_date</span></span></p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color:#f5f5f5; vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">language_id</span></span></p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color:#f5f5f5; vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"background-color:rgb(255, 255, 255); color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">1 </span></span></p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color:#f5f5f5; vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">coder_type_id</span></span></p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color:#f5f5f5; vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"background-color:rgb(255, 255, 255); color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">2</span></span></p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color:#f5f5f5; vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">date_of_birth</span></span></p>\n\t\t\t</td>\n\t\t\t<td style=\"vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">-</span></span></p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color:#f5f5f5; vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">home_country_code</span></span></p>\n\t\t\t</td>\n\t\t\t<td style=\"vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">840</span></span></p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color:#f5f5f5; vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">comp_country_code</span></span></p>\n\t\t\t</td>\n\t\t\t<td style=\"vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">840</span></span></p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color:#f5f5f5; vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"background-color:rgb(255, 255, 255); color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">contact_date</span><span style=\"background-color:rgb(255, 255, 255); color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">&nbsp;&nbsp; &nbsp;</span></span></p>\n\t\t\t</td>\n\t\t\t<td style=\"vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">- </span></span></p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color:#f5f5f5; vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"background-color:rgb(255, 255, 255); color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">display_quote</span></span></p>\n\t\t\t</td>\n\t\t\t<td style=\"vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">1</span></span></p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color:#f5f5f5; vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">quote_location</span></span></p>\n\t\t\t</td>\n\t\t\t<td style=\"vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">md</span></span></p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color:#f5f5f5; vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">quote_color</span></span></p>\n\t\t\t</td>\n\t\t\t<td style=\"vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">#000000 </span></span></p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color:#f5f5f5; vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">display_banner</span></span></p>\n\t\t\t</td>\n\t\t\t<td style=\"vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">0</span></span></p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color:#f5f5f5; vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">banner_style</span></span></p>\n\t\t\t</td>\n\t\t\t<td style=\"vertical-align:top\">\n\t\t\t<p dir=\"ltr\" style=\"text-align:center\"><span><span style=\"color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">bannerStyle1</span></span></p>\n\t\t\t</td>\n\t\t</tr>\n\t</tbody>\n</table>\n</div>\n&nbsp;\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">Country code - First check if the user has corresponding address info. If yes take the country code from the address Else, set both home country code and comp country code value to 840. </span></span></p>\n&nbsp;\n\n<h4 dir=\"ltr\"><span><strong>1.1.4 </strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:verdana; font-size:11px\">Verify that all the missing records have been inserted in coder table with correct data as laid down in specs.</span></span></h4>\n</div>\n\n<h3 dir=\"ltr\">&nbsp;</h3>\n",
+  "digitalRunPoints": 157.5,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30043699",
+  "finalFixEndDate": "2014-07-11T08:48:00.000Z",
+  "finalSubmissionGuidelines": "<h3 dir=\"ltr\"><span><strong>1.2 </strong><strong>&nbsp;&nbsp; &nbsp;</strong><strong>Submission Deliverables</strong></span></h3>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial; font-size:12px\">All updated and new files which are necessary to meet the requirements in 1.1. This includes java source file(s) with documentation, sql scripts, ant scripts.</span><span style=\"background-color:rgb(240, 240, 240); font-family:arial; font-size:12px\"> </span></span></p>\n\n<p><br />\n&nbsp;</p>\n\n<h3 dir=\"ltr\"><span><strong>1.3 </strong><strong>&nbsp;&nbsp; &nbsp;</strong><strong>Technology Overview</strong></span></h3>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><strong>1.3.1 </strong>Java<strong>&nbsp;</strong></span></p>\n\n<p dir=\"ltr\"><strong>1.3.2&nbsp;</strong><span><span style=\"background-color:rgb(240, 240, 240); font-family:arial; font-size:12px\">Informix</span></span></p>\n\n<p dir=\"ltr\"><span><strong>1.3.3&nbsp;</strong><span style=\"background-color:rgb(240, 240, 240); font-family:arial; font-size:12px\">SQL</span></span></p>\n\n<p dir=\"ltr\">&nbsp;</p>\n\n<h4 dir=\"ltr\"><span><strong>1.4 &nbsp;Virtual Machine</strong></span></h4>\n\n<p dir=\"ltr\"><span><span style=\"font-family:verdana; font-size:11px\">VM specific information is found here:</span><a href=\"http://www.topcoder.com/wiki/display/docs/VM+Image+2.5\" style=\"text-decoration:none;\"><u>http://www.topcoder.com/wiki/display/docs/VM+Image+2.5</u><u><img src=\"https://lh5.googleusercontent.com/OGn1LL7jNf5lvFoKBwM2FEZoeFymumlOVkdz5wBZDs9gFuawWZtJ26RwGQLi8Bpdd3Hkq4vMsXaI57ysk4b_ON5RyaZNm6U8BvbB8JvDYWhptUWrV4fIKnC7NmAk7fLOfQ\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:9px; transform:rotate(0.00rad); width:9px\" /></u></a><span style=\"font-family:verdana; font-size:11px\">.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:verdana; font-size:11px\">Upon registration as a submitter or reviewer you will need to request a VM based on the new TopCoder image. To request your image, please use the forum.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:verdana; font-size:11px\">Before requesting your VM, you need to ensure that you have an SSH key created and in your member profile. Instructions to do so are here:</span><a href=\"http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key\" style=\"text-decoration:none;\"><u>http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key</u><u><img src=\"https://lh5.googleusercontent.com/eE89BBY_pZjWYkdpXkAke_w7gULGjG0gajqI-8aWu1_ZFpkfuIw70OVKpOo98zbETcMgmPbZjHtVCLDkfeSfkKQg9GPWepG69a0DuRrUMJet3ZDaNOSpKGrRPb3kvWyQzQ\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:9px; transform:rotate(0.00rad); width:9px\" /></u></a><span style=\"font-family:verdana; font-size:11px\">, and instructions to connect afterwards are here: </span><a href=\"http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key\" style=\"text-decoration:none;\"><u>http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key</u><u><img src=\"https://lh4.googleusercontent.com/r7bH-hReWU-l2MJ3C4Lybt3QlgvMyCxWq5HM7n9TOdhDuQc5tLYcu3uA1FQTRsvC-vD-D60-r9-I-fwYoQNjGIbW4RD6xzv2TrXizXhYENW7oNslc1UKrJ_WXPrSM3e-Lg\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:9px; transform:rotate(0.00rad); width:9px\" /></u></a><span style=\"font-family:verdana; font-size:11px\">.</span></span></p>\n\n<p>&nbsp;</p>\n\n<h3 dir=\"ltr\"><span><strong>1.5 </strong><strong>&nbsp;&nbsp; &nbsp;</strong><strong>Timeline</strong></span></h3>\n\n<p dir=\"ltr\"><span><strong>Submission Phase Length (days): </strong><strong>3 days</strong></span></p>\n\n<p dir=\"ltr\"><span><strong>Registration Phase Length (days): 2 days </strong></span></p>\n\n<p>&nbsp;</p>\n\n<h3 dir=\"ltr\"><span><strong>1.6 </strong><strong>&nbsp;&nbsp; &nbsp;</strong><strong>Payment</strong></span></h3>\n\n<p dir=\"ltr\"><span><span style=\"font-family:verdana; font-size:11px\">TopCoder will compensate members with first and second place submissions. Initial payment for the winning member will be distributed in two installments. The first payment will be made when the winning solution is submitted and review board Final Fixes are integrated. The second payment will be made at the completion of the Deployment phase of the project.</span></span></p>\n\n<p dir=\"ltr\"><span><strong>Winning Submission Prize: $200</strong></span></p>\n\n<p dir=\"ltr\"><span><strong>Second Place Prize: $100</strong></span></p>\n\n<p>&nbsp;</p>\n\n<h4 dir=\"ltr\"><span><strong>1.6.2 </strong><strong>&nbsp;&nbsp; &nbsp;</strong><strong>Support</strong></span></h4>\n\n<p dir=\"ltr\"><span><span style=\"font-family:verdana; font-size:11px\">Standard 30 days support</span></span></p>\n\n<p dir=\"ltr\">&nbsp;</p>\n\n<p dir=\"ltr\">&nbsp;</p>\n\n<h2 dir=\"ltr\"><span><strong>1.7 </strong><strong>&nbsp;&nbsp; &nbsp;</strong><strong>Final Submission</strong></span></h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span>For each registrant, the final submission should be uploaded to the Online Review Tool.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\"><span><span>Submissions must include all deliverables as specified in 1.2 Submission Deliverable</span></span></li>\n</ul>\n",
+  "forumId": 23765,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=23765",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 25,
+  "numberOfSubmissions": 6,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-02T05:18:00.000Z",
+      "actualStartTime": "2014-07-02T05:18:00.000Z",
+      "scheduledEndTime": "2014-07-02T05:18:00.000Z",
+      "actualendTime": "2014-07-02T05:18:00.000Z",
+      "_id": "5813db9d550dfb3b52ea4db6"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-02T05:18:00.000Z",
+      "actualStartTime": "2014-07-02T05:18:00.000Z",
+      "scheduledEndTime": "2014-07-02T06:45:00.000Z",
+      "actualendTime": "2014-07-02T06:45:00.000Z",
+      "_id": "5813db9d550dfb3b52ea4db5"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-02T13:00:00.000Z",
+      "actualStartTime": "2014-07-02T13:00:00.000Z",
+      "scheduledEndTime": "2014-07-05T13:00:00.000Z",
+      "actualendTime": "2014-07-05T13:00:00.000Z",
+      "_id": "5813db9d550dfb3b52ea4db4"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-02T13:05:00.000Z",
+      "actualStartTime": "2014-07-02T13:05:00.000Z",
+      "scheduledEndTime": "2014-07-06T12:59:00.000Z",
+      "actualendTime": "2014-07-06T12:59:00.000Z",
+      "_id": "5813db9d550dfb3b52ea4db3"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-06T12:59:00.000Z",
+      "actualStartTime": "2014-07-06T12:59:00.000Z",
+      "scheduledEndTime": "2014-07-06T14:28:00.000Z",
+      "actualendTime": "2014-07-06T14:28:00.000Z",
+      "_id": "5813db9d550dfb3b52ea4db2"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-06T14:28:00.000Z",
+      "actualStartTime": "2014-07-06T14:28:00.000Z",
+      "scheduledEndTime": "2014-07-08T12:45:00.000Z",
+      "actualendTime": "2014-07-08T12:45:00.000Z",
+      "_id": "5813db9d550dfb3b52ea4db1"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-08T12:45:00.000Z",
+      "actualStartTime": "2014-07-08T12:45:00.000Z",
+      "scheduledEndTime": "2014-07-09T12:45:00.000Z",
+      "actualendTime": "2014-07-09T12:45:00.000Z",
+      "_id": "5813db9d550dfb3b52ea4db0"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-09T12:45:00.000Z",
+      "actualStartTime": "2014-07-09T12:45:00.000Z",
+      "scheduledEndTime": "2014-07-10T13:14:00.000Z",
+      "actualendTime": "2014-07-10T13:14:00.000Z",
+      "_id": "5813db9d550dfb3b52ea4daf"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-10T13:14:00.000Z",
+      "actualStartTime": "2014-07-10T13:14:00.000Z",
+      "scheduledEndTime": "2014-07-10T14:51:00.000Z",
+      "actualendTime": "2014-07-10T14:51:00.000Z",
+      "_id": "5813db9d550dfb3b52ea4dae"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-10T14:51:00.000Z",
+      "actualStartTime": "2014-07-10T14:51:00.000Z",
+      "scheduledEndTime": "2014-07-11T08:48:00.000Z",
+      "actualendTime": "2014-07-11T08:48:00.000Z",
+      "_id": "5813db9d550dfb3b52ea4dad"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-11T08:48:00.000Z",
+      "actualStartTime": "2014-07-11T08:48:00.000Z",
+      "scheduledEndTime": "2014-07-11T13:24:00.000Z",
+      "actualendTime": "2014-07-11T13:24:00.000Z",
+      "_id": "5813db9d550dfb3b52ea4dac"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-11T13:25:00.000Z",
+      "actualStartTime": "2014-07-11T13:25:00.000Z",
+      "scheduledEndTime": "2014-07-16T11:09:00.000Z",
+      "actualendTime": "2014-07-16T11:09:00.000Z",
+      "_id": "5813db9d550dfb3b52ea4dab"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2014-07-02T13:00:00.000Z",
+  "prize": [
+    350,
+    175
+  ],
+  "projectId": 7830,
+  "registrants": [
+    {
+      "handle": "abdelhas",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-02T15:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9d550dfb3b52ea4daa"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-07-02T16:04:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "5813db9d550dfb3b52ea4da9"
+    },
+    {
+      "handle": "black_adder",
+      "reliability": "0%",
+      "registrationDate": "2014-07-02T19:44:00.000Z",
+      "submissionDate": null,
+      "rating": "783",
+      "colorStyle": "color: #999999",
+      "_id": "5813db9d550dfb3b52ea4da8"
+    },
+    {
+      "handle": "sunhong",
+      "reliability": "0%",
+      "registrationDate": "2014-07-02T21:33:00.000Z",
+      "submissionDate": null,
+      "rating": "1269",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813db9d550dfb3b52ea4da7"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-03T01:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9d550dfb3b52ea4da6"
+    },
+    {
+      "handle": "herodolphin",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-03T01:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9d550dfb3b52ea4da5"
+    },
+    {
+      "handle": "reader",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-03T01:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9d550dfb3b52ea4da4"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-03T03:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9d550dfb3b52ea4da3"
+    },
+    {
+      "handle": "padegal12",
+      "reliability": "0%",
+      "registrationDate": "2014-07-03T04:21:00.000Z",
+      "submissionDate": null,
+      "rating": "693",
+      "colorStyle": "color: #999999",
+      "_id": "5813db9d550dfb3b52ea4da2"
+    },
+    {
+      "handle": "LifeIsCode",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-03T07:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9d550dfb3b52ea4da1"
+    },
+    {
+      "handle": "yashubhat.gv",
+      "reliability": "100%",
+      "registrationDate": "2014-07-03T08:12:00.000Z",
+      "submissionDate": "2014-07-06T03:50:00.000Z",
+      "rating": "1269",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813db9d550dfb3b52ea4da0"
+    },
+    {
+      "handle": "jol",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-03T09:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9d550dfb3b52ea4d9f"
+    },
+    {
+      "handle": "hesibo",
+      "reliability": "40%",
+      "registrationDate": "2014-07-03T12:54:00.000Z",
+      "submissionDate": "2014-07-06T08:17:00.000Z",
+      "rating": "1866",
+      "colorStyle": "color: #DDCC00",
+      "_id": "5813db9d550dfb3b52ea4d9e"
+    },
+    {
+      "handle": "Blues",
+      "reliability": "13%",
+      "registrationDate": "2014-07-03T14:30:00.000Z",
+      "submissionDate": "2014-07-06T12:28:00.000Z",
+      "rating": "1548",
+      "colorStyle": "color: #DDCC00",
+      "_id": "5813db9d550dfb3b52ea4d9d"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "0%",
+      "registrationDate": "2014-07-03T16:16:00.000Z",
+      "submissionDate": null,
+      "rating": "58",
+      "colorStyle": "color: #999999",
+      "_id": "5813db9d550dfb3b52ea4d9c"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "13%",
+      "registrationDate": "2014-07-03T18:42:00.000Z",
+      "submissionDate": null,
+      "rating": "753",
+      "colorStyle": "color: #999999",
+      "_id": "5813db9d550dfb3b52ea4d9b"
+    },
+    {
+      "handle": "schmoel",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-03T20:00:00.000Z",
+      "submissionDate": "2014-07-04T08:21:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9d550dfb3b52ea4d9a"
+    },
+    {
+      "handle": "kurama123",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-03T23:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9d550dfb3b52ea4d99"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-03T23:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9d550dfb3b52ea4d98"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "0%",
+      "registrationDate": "2014-07-04T05:49:00.000Z",
+      "submissionDate": "2014-07-06T12:34:00.000Z",
+      "rating": "490",
+      "colorStyle": "color: #999999",
+      "_id": "5813db9d550dfb3b52ea4d97"
+    },
+    {
+      "handle": "GreatKevin",
+      "reliability": "100%",
+      "registrationDate": "2014-07-04T06:21:00.000Z",
+      "submissionDate": "2014-07-06T12:04:00.000Z",
+      "rating": "1435",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813db9d550dfb3b52ea4d96"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-07-04T07:43:00.000Z",
+      "submissionDate": null,
+      "rating": "1093",
+      "colorStyle": "color: #00A900",
+      "_id": "5813db9d550dfb3b52ea4d95"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "0%",
+      "registrationDate": "2014-07-04T10:16:00.000Z",
+      "submissionDate": null,
+      "rating": "507",
+      "colorStyle": "color: #999999",
+      "_id": "5813db9d550dfb3b52ea4d94"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "0%",
+      "registrationDate": "2014-07-05T00:40:00.000Z",
+      "submissionDate": null,
+      "rating": "639",
+      "colorStyle": "color: #999999",
+      "_id": "5813db9d550dfb3b52ea4d93"
+    },
+    {
+      "handle": "DenenderRathore",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-05T05:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813db9d550dfb3b52ea4d92"
+    }
+  ],
+  "registrationEndDate": "2014-07-05T13:00:00.000Z",
+  "reliabilityBonus": 70,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-07-06T12:59:00.000Z",
+  "submissions": [
+    {
+      "handle": "GreatKevin",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 99.62,
+      "finalScore": 99.62,
+      "points": 88.2,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-07-06T12:04:00.000Z",
+      "_id": "5813db9d550dfb3b52ea4dbc"
+    },
+    {
+      "handle": "hesibo",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 98.98,
+      "finalScore": 98.98,
+      "points": 31.5,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-07-06T08:17:00.000Z",
+      "_id": "5813db9d550dfb3b52ea4dbb"
+    },
+    {
+      "handle": "Blues",
+      "placement": 3,
+      "screeningScore": 100,
+      "initialScore": 98.76,
+      "finalScore": 98.76,
+      "points": 15.75,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-07-06T12:28:00.000Z",
+      "_id": "5813db9d550dfb3b52ea4dba"
+    },
+    {
+      "handle": "schmoel",
+      "placement": 4,
+      "screeningScore": 100,
+      "initialScore": 88.28,
+      "finalScore": 88.28,
+      "points": 12.6,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-07-04T08:21:00.000Z",
+      "_id": "5813db9d550dfb3b52ea4db9"
+    },
+    {
+      "handle": "yashubhat.gv",
+      "placement": 5,
+      "screeningScore": 100,
+      "initialScore": 80.98,
+      "finalScore": 80.98,
+      "points": 9.45,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-07-06T03:50:00.000Z",
+      "_id": "5813db9d550dfb3b52ea4db8"
+    },
+    {
+      "handle": "fivestarwy",
+      "placement": 6,
+      "screeningScore": 100,
+      "initialScore": 79.94,
+      "finalScore": 79.94,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-07-06T12:34:00.000Z",
+      "_id": "5813db9d550dfb3b52ea4db7"
+    }
+  ],
+  "technology": [
+    "Java",
+    "SQL"
+  ]
+}

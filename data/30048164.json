@@ -1,0 +1,299 @@
+{
+  "_id": 30048164,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T23:13:36.575Z",
+  "appealsEndDate": "2015-01-02T20:53:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Visualforce Ad Hoc Testing Tool - Resolve JS Remoting Exception",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2015-01-22T18:30:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -55748535,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p>[topcoder] has a client that is developing a Visualforce Performance and Testing Tool. &nbsp;The basic idea of the tool is fairly simple. &nbsp;It will take a Visualforce URL and a Record ID as input, and produce a Gantt chart showing the timing required to render and execute various code elements. &nbsp;We have completed the basic functionality for the application including capabilities of recording form values for submission. &nbsp; There are a few issues, however. &nbsp;For this challenge we&#39;d like to tackle resolution of a Visualforce Remoting Exception:</p>\n\n<p>Exception #1:</p>\n\n<p>Visualforce Remoting Exception: Cannot find ApexLog record.&nbsp;<br />\naction: &quot;PerfLogController&quot;<br />\ndata: Array[1]<br />\nmessage: &quot;Cannot find ApexLog record.&quot;<br />\nmethod: &quot;requestLogInfo&quot;<br />\nref: false<br />\nresult: null<br />\nstatusCode: 400<br />\ntid: 12<br />\ntype: &quot;exception&quot;<br />\nvfDbg: true<br />\nvfTx: true<br />\nwhere: &quot;&quot;</p>\n\n<p><span style=\"font-size:13px\">I believe this issue is being caused as a result of the expiration of the Trace request from the ToolingAPI. &nbsp;The folllowing query in the PerfLogController which pulls log files from SFDC is expecting there to be a TraceRequest for a particular user. &nbsp;If the trace request isn&#39;t enabled then, I think, we&#39;re getting the error shown above.</span></p>\n\n<p><code><span style=\"background-color:rgb(248, 248, 248); color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">@TestVisible</span><br />\n<span style=\"background-color:rgb(248, 248, 248); color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;static&nbsp;Id&nbsp;getApexLogId(String&nbsp;opName,&nbsp;Datetime&nbsp;fromTime,&nbsp;Id&nbsp;userId)&nbsp;{</span><br />\n<span style=\"background-color:rgb(248, 248, 248); color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{</span><br />\n<span style=\"background-color:rgb(248, 248, 248); color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;likeQueryStr&nbsp;=&nbsp;&#39;\\&#39;%&#39;&nbsp;+&nbsp;opName&nbsp;+&nbsp;&#39;%\\&#39;&#39;;</span><br />\n<span style=\"background-color:rgb(248, 248, 248); color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Datetime&nbsp;startTime&nbsp;=&nbsp;fromTime;</span><br />\n<span style=\"background-color:rgb(248, 248, 248); color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Id&nbsp;usrId&nbsp;=&nbsp;userId;</span><br />\n<span style=\"background-color:rgb(248, 248, 248); color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;system.debug(&#39;opName:&nbsp;&#39;&nbsp;+&nbsp;opName);</span><br />\n<span style=\"background-color:rgb(248, 248, 248); color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;system.debug(&#39;Start&nbsp;Time:&nbsp;&#39;&nbsp;+&nbsp;startTime);</span><br />\n<span style=\"background-color:rgb(248, 248, 248); color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ApexLog&nbsp;log&nbsp;=&nbsp;(ApexLog)(Database.query(&#39;Select&nbsp;Id&nbsp;From&nbsp;ApexLog&nbsp;Where&nbsp;Operation&nbsp;=\\&#39;&#39;&nbsp;+&nbsp;opName&nbsp;+&nbsp;&#39;\\&#39;&nbsp;AND&nbsp;StartTime&nbsp;&gt;=&nbsp;:startTime&nbsp;AND&nbsp;LogUserId&nbsp;=&nbsp;:usrId&#39;)[0]);</span><br />\n<span style=\"background-color:rgb(248, 248, 248); color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;log.Id;</span><br />\n<span style=\"background-color:rgb(248, 248, 248); color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(Exception&nbsp;e)&nbsp;{</span><br />\n<span style=\"background-color:rgb(248, 248, 248); color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;null;</span><br />\n<span style=\"background-color:rgb(248, 248, 248); color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></code></p>\n\n<p><span style=\"font-size:13px\">As a result our query for the Apex Logs fails and our Gannt chart doesn&#39;t render. &nbsp; You can duplicate the error by executing the following steps in the developer org:</span></p>\n\n<p>Username: &nbsp;perftest@topcoder.com<br />\nPassword: &nbsp;@ppirio123<br />\n&nbsp;</p>\n\n<p>Steps to duplicate:<br />\n1. &nbsp;Enable Javascript Console in the browser. &nbsp;Tool works best with Safari and Mozilla.<br />\n2. &nbsp;Login to Saleforce.com: &nbsp;login.salesforce.com using the credentials provided above.<br />\n3. &nbsp;Select the Visualforce Performance Testing app from the Application dropdown.<br />\n4. &nbsp;Click on the Performance Testing tab.<br />\n5. &nbsp;Check the Debug Logs. &nbsp;The application automatically creates tracing request but it isn&#39;t doing a very good job at it. &nbsp;It is when the tracing request expires that we see the errors occur.<br />\n5. &nbsp;Select Catalog_Products from the Choose Visualforce page. &nbsp;<br />\n6. &nbsp;Click the Start Testing Link. &nbsp;<span style=\"font-size:12.7272720336914px\">You may have to test several different Visualforce pages. &nbsp;This issue is intermittent only occuring when there isn&#39;t a current trace request.</span><br />\n7. &nbsp;You see the following VF Remoting Exception in the Javascript Console: &nbsp;</p>\n\n<p>Visualforce Remoting Exception: Cannot find ApexLog record.&nbsp;<br />\nObject<br />\naction: &quot;PerfLogController&quot;<br />\ndata: Array[1]<br />\nmessage: &quot;Cannot find ApexLog record.&quot;<br />\nmethod: &quot;requestLogInfo&quot;<br />\nref: false<br />\nresult: null<br />\nstatusCode: 400<br />\ntid: 12<br />\ntype: &quot;exception&quot;<br />\nvfDbg: true<br />\nvfTx: true<br />\nwhere: &quot;&quot;<br />\n__proto__: Object<br />\n<br />\n8. &nbsp;Gannt Chart and Logging info doesn&#39;t render.&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30048164",
+  "finalSubmissionGuidelines": "<p>1. You should use Visualforce and Apex.</p>\n\n<p>2. You may use Bootstrap and/or JQuery javascript libraries.&nbsp;</p>\n\n<p>3. Set up your own developer org and whitelist it so that the reviewers can access your solution in place. &nbsp;The instructions to whitelist your org can be found <a href=\"http://raydehler.com/cloud/clod/enable-all-trusted-ip-ranges-for-a-salesforce-org.html\">here</a>. &nbsp;You&#39;ll need to provide admin credentials with your submission.</p>\n\n<p>4. Install the Force.com Product Catalog v1.3&nbsp;-- the free app exchange product into you developer org. &nbsp;This can be found <a href=\"https://appexchange.salesforce.com/listingDetail?listingId=a0N3000000B5Y04EAF\">here</a>.</p>\n\n<p>5. Please provide your submission as an unmanaged package along with detailed notes about what updates where made to the code.</p>\n\n<p>6. &nbsp;The deployment guide to the code developed in the previous challenge is attached.</p>\n",
+  "forumId": 27520,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=27520",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 21,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2014-12-23T18:30:00.000Z",
+      "actualStartTime": "2014-12-23T18:30:00.000Z",
+      "scheduledEndTime": "2015-01-22T18:30:00.000Z",
+      "actualendTime": null,
+      "_id": "5813dba0550dfb3b52ea539c"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-28T03:59:00.000Z",
+      "actualStartTime": "2014-12-28T03:59:00.000Z",
+      "scheduledEndTime": "2014-12-29T20:53:00.000Z",
+      "actualendTime": "2014-12-29T20:53:00.000Z",
+      "_id": "5813dba0550dfb3b52ea539b"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2014-12-23T18:35:00.000Z",
+      "actualStartTime": "2014-12-23T18:35:00.000Z",
+      "scheduledEndTime": "2015-01-22T18:35:00.000Z",
+      "actualendTime": null,
+      "_id": "5813dba0550dfb3b52ea539a"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-31T04:27:00.000Z",
+      "actualStartTime": "2014-12-31T04:27:00.000Z",
+      "scheduledEndTime": "2015-01-02T20:53:00.000Z",
+      "actualendTime": "2015-01-02T20:53:00.000Z",
+      "_id": "5813dba0550dfb3b52ea5399"
+    }
+  ],
+  "platforms": [
+    "Salesforce.com"
+  ],
+  "postingDate": "2014-12-23T18:30:00.000Z",
+  "prize": [
+    350
+  ],
+  "projectId": 7248,
+  "registrants": [
+    {
+      "handle": "mohitrocks",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-23T19:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba0550dfb3b52ea5398"
+    },
+    {
+      "handle": "yazeedbassam",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-23T20:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba0550dfb3b52ea5397"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-23T20:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba0550dfb3b52ea5396"
+    },
+    {
+      "handle": "logontokartik",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-23T22:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba0550dfb3b52ea5395"
+    },
+    {
+      "handle": "mpriyadarshana",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-24T04:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba0550dfb3b52ea5394"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-24T04:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba0550dfb3b52ea5393"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-24T08:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba0550dfb3b52ea5392"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-24T16:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba0550dfb3b52ea5391"
+    },
+    {
+      "handle": "parleg",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-24T21:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba0550dfb3b52ea5390"
+    },
+    {
+      "handle": "arpit2438735",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-25T03:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba0550dfb3b52ea538f"
+    },
+    {
+      "handle": "balakrish",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-25T03:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba0550dfb3b52ea538e"
+    },
+    {
+      "handle": "topcoder09",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-25T03:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba0550dfb3b52ea538d"
+    },
+    {
+      "handle": "vivek_gupta34",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-26T14:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba0550dfb3b52ea538c"
+    },
+    {
+      "handle": "m.wilson",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-27T03:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba0550dfb3b52ea538b"
+    },
+    {
+      "handle": "saurabbhgupta",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-27T10:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba0550dfb3b52ea538a"
+    },
+    {
+      "handle": "forcedevp",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-27T12:57:00.000Z",
+      "submissionDate": "2014-12-31T04:27:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba0550dfb3b52ea5389"
+    },
+    {
+      "handle": "eduardomelendez",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-28T22:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba0550dfb3b52ea5388"
+    },
+    {
+      "handle": "reshma_jewrani",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-29T04:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba0550dfb3b52ea5387"
+    },
+    {
+      "handle": "okamog",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-30T00:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba0550dfb3b52ea5386"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-29T11:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba0550dfb3b52ea5385"
+    },
+    {
+      "handle": "Sandip.Kumar",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-31T16:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba0550dfb3b52ea5384"
+    }
+  ],
+  "registrationEndDate": "2015-01-22T18:30:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-01-22T18:35:00.000Z",
+  "submissions": [
+    {
+      "handle": "forcedevp",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-12-28T03:59:00.000Z",
+      "_id": "5813dba0550dfb3b52ea539e"
+    },
+    {
+      "handle": "forcedevp",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-12-31T04:27:00.000Z",
+      "_id": "5813dba0550dfb3b52ea539d"
+    }
+  ],
+  "technology": [
+    "API",
+    "Angular.js",
+    "Apex",
+    "JavaScript",
+    "Salesforce",
+    "Visualforce"
+  ]
+}

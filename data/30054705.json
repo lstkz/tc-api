@@ -1,0 +1,484 @@
+{
+  "_id": 30054705,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:59:56.818Z",
+  "appealsEndDate": "2016-07-11T05:41:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Living Progress - OER Commons - API Integration",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">This challenge is part of the</span><a href=\"http://blitz.topcoder.com/hpe-lpc_design/\" style=\"text-decoration:none;\"><u> HPE Live Blitz Challenge Series</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">. Make sure to check it out!</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">The goal of this challenge is to integrate the ionic app with client API, the output of this challenge will be a working app on both Android and iOS devices.</span></p>\n\n<p><strong><u>Challenge Requirements</u></strong></p>\n\n<p><u>API Info</u></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">Please refer here for the API documentation, we are using a single endpoint which is /search endpoint that will be used in the listing dashboard and to view details screen.</span></p>\n\n<p><u style=\"text-decoration:none\"><a href=\"http://docs.oercommons.org/api/\" style=\"text-decoration:none;\">http://docs.oercommons.org/api/</a></u></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">Please check forums for access key to use for the api.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">API Constraints:</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">- Right now it&rsquo;s set to a limit of 200 calls for beta testing. When this is consumed, please post in forums to see if we can reset it with the client team help.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">- The API is not currently designed to handle large amounts of requests at one time. Client recommends distributing calls to 2 req/sec.</span></p>\n\n<p><strong><u>Integration Screens</u></strong></p>\n\n<p><u>Dashboard Screen</u></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">This screen is similar to this page from client website &nbsp;</span><u style=\"text-decoration:none\"><a href=\"https://www.oercommons.org/browse?f.provider=23andme\" style=\"text-decoration:none;\">https://www.oercommons.org/browse?f.provider=23andme</a></u></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">Basically the API will return list without the need to to specify any query string in the call, so you need to allow passing pagination parameters to limit number of items to be returned. The batch size should be configurable.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">The mapping between the API#Result entity and the Dashboard Item is similar to the items rendered in the client website mentioned above, to summarize it :</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">- The API does not have an entry for the dashboard item image, so we will keep using the image as in the mobile app.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">- Title is Result#title</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">- Subtitle is using the abstract but will subtract if the string is longer than a line width as in the app.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">- The stars is set using result#rating, if not set then there is no rating, and it is empty 5 stars.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">- Subject is result#f.general_subject, you need to read value attribute, split it by comma, and render the array properly.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">- Type is result#f.material_types and you need to do same as item (5)</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">- Author is the provider</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">The page will support pagination via auto scrolling, so when reaching button of the list it will load more items.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">Tapping on item will take user to content details.</span></p>\n\n<p><u>Content Details Screen</u></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">This screen will simply render the selected item from dashboard, we don&rsquo;t have separate api for it. We are only implementing the first tab where it list details of the content.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">This screen corresponds to this screen in client website </span><u style=\"text-decoration:none\"><a href=\"https://www.oercommons.org/courses/human-prehistory-101-part-3-of-3-agriculture-rocks-our-world\" style=\"text-decoration:none;\">https://www.oercommons.org/courses/human-prehistory-101-part-3-of-3-agriculture-rocks-our-world</a></u></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">The mapping should be straightforward by comparing both screens, if you need any clarifications please ask in forums.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">Share and Download options are not in scope.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">View option will open the content in web view, the content is the result#url.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">Any xml item with comma separated values should be parsed and rendered properly.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">Tapping on the tag at bottom will open search filtered using that tag. Basically make API calls by passing the tag value, it corresponds to f.keyword query string.</span></p>\n\n<p><u>Search/Filter Option</u></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">We have two search in the dashboard :</span></p>\n\n<p><em>Simple Search :</em><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\"> </span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">This basically uses f.search in the API call.</span></p>\n\n<p><em>Advanced Search : </em></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">- When tapping on the filter icon it will take user to the advanced search/filter screen.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">- The list should be updated to fill the one mentioned in the documentation </span><a href=\"http://docs.oercommons.org/api/\" style=\"text-decoration:none;\"><u>http://docs.oercommons.org/api/</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\"> which is similar to the client website screen </span><a href=\"https://www.oercommons.org/advanced-search\" style=\"text-decoration:none;\"><u>https://www.oercommons.org/advanced-search</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\"> , the prototype is supposed to have these populated properly but you need to copy the values properly and make sure all options work in the call.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">- User will be able to select multiple filter values, and when tapping Search will make the api call and render result.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">- If reset is clicked it should reset the filter option.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">- In search result screen, user can delete a tag which will re-do another call to the API with that tag dropped with other parameters kept in the call.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">- User can update ordering of the result.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">- Clicking cancel will cancel search and take user back to the dashboard screen.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">- User can tap on the filter icon to the left of the tags in search result to go back to filter and edit existing search filter options.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">- Tapping on item will take user to content details.<br />\n<br />\n<u><strong>Notes</strong></u><br />\n- Your solution must work properly on both Android and iOS.<br />\n- If there is any CSS issue you are required to fix it here.</span><br />\n<br />\n<strong style=\"line-height:1.6\">UI Prototype</strong></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">Provided in challenge forums.</span></p>\n&nbsp;\n\n<p><span style=\"line-height:1.6\">���</span></p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30054705",
+  "finalSubmissionGuidelines": "<p><strong>Deliverable</strong></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">- Updated UI Prototype integrated with the API Login.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">- Updated README file with instructions.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:16px\">- Verification Document.</span></p>\n<br />\n<br />\n<br />\n<br />\n&nbsp;",
+  "forumId": 33517,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33517",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 39,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-02T23:02:00.000Z",
+      "actualStartTime": "2016-07-02T23:02:00.000Z",
+      "scheduledEndTime": "2016-07-07T23:02:00.000Z",
+      "actualendTime": "2016-07-07T23:02:00.000Z",
+      "_id": "58132fac550dfb3b52b8a249"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-02T23:07:00.000Z",
+      "actualStartTime": "2016-07-02T23:07:00.000Z",
+      "scheduledEndTime": "2016-07-07T23:02:00.000Z",
+      "actualendTime": "2016-07-07T23:02:00.000Z",
+      "_id": "58132fac550dfb3b52b8a248"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-07T23:02:00.000Z",
+      "actualStartTime": "2016-07-07T23:02:00.000Z",
+      "scheduledEndTime": "2016-07-09T20:18:00.000Z",
+      "actualendTime": "2016-07-09T20:18:00.000Z",
+      "_id": "58132fac550dfb3b52b8a247"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-09T20:18:00.000Z",
+      "actualStartTime": "2016-07-09T20:18:00.000Z",
+      "scheduledEndTime": "2016-07-10T20:18:00.000Z",
+      "actualendTime": "2016-07-10T20:18:00.000Z",
+      "_id": "58132fac550dfb3b52b8a246"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-10T20:18:00.000Z",
+      "actualStartTime": "2016-07-10T20:18:00.000Z",
+      "scheduledEndTime": "2016-07-11T05:41:00.000Z",
+      "actualendTime": "2016-07-11T05:41:00.000Z",
+      "_id": "58132fac550dfb3b52b8a245"
+    }
+  ],
+  "platforms": [
+    "HTML"
+  ],
+  "postingDate": "2016-07-02T23:02:00.000Z",
+  "prize": [
+    500,
+    250
+  ],
+  "projectId": 9588,
+  "registrants": [
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-02T23:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a244"
+    },
+    {
+      "handle": "vicmen33",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-03T00:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a243"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-03T00:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a242"
+    },
+    {
+      "handle": "veshu",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-03T01:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a241"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-03T02:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a240"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-03T03:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a23f"
+    },
+    {
+      "handle": "ohyan07",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-03T03:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a23e"
+    },
+    {
+      "handle": "rajrkrish",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-03T04:10:00.000Z",
+      "submissionDate": "2016-07-07T22:59:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a23d"
+    },
+    {
+      "handle": "webs1king",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-03T05:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a23c"
+    },
+    {
+      "handle": "bannie2492",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-03T07:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a23b"
+    },
+    {
+      "handle": "vishal8725",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-03T09:33:00.000Z",
+      "submissionDate": "2016-07-07T19:14:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a23a"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-03T09:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a239"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-03T09:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a238"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-03T09:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a237"
+    },
+    {
+      "handle": "notOnline",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-03T10:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a236"
+    },
+    {
+      "handle": "AadityaDev",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-03T11:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a235"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-03T11:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a234"
+    },
+    {
+      "handle": "kiril.kartunov",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-03T12:48:00.000Z",
+      "submissionDate": "2016-07-07T08:55:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a233"
+    },
+    {
+      "handle": "ShindouHikaru",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-03T15:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a232"
+    },
+    {
+      "handle": "ecavalier313",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-03T18:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a231"
+    },
+    {
+      "handle": "cairi",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-04T00:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a230"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-04T01:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a22f"
+    },
+    {
+      "handle": "Jarnanchen",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-04T01:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a22e"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-04T01:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a22d"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-04T04:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a22c"
+    },
+    {
+      "handle": "btgd88",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-04T05:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a22b"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-04T09:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a22a"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-04T09:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a229"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-04T23:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a228"
+    },
+    {
+      "handle": "esmaelz",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-05T03:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a227"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-05T07:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a226"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-05T10:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a225"
+    },
+    {
+      "handle": "kuchiki14",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-05T12:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a224"
+    },
+    {
+      "handle": "graphit",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-05T15:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a223"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-05T16:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a222"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-06T04:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a221"
+    },
+    {
+      "handle": "albet.januar",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-06T11:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a220"
+    },
+    {
+      "handle": "AlokDsingh",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-06T18:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a21f"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-07T12:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fac550dfb3b52b8a21e"
+    }
+  ],
+  "registrationEndDate": "2016-07-07T23:02:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-07-07T23:02:00.000Z",
+  "submissions": [
+    {
+      "handle": "kiril.kartunov",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 92.5,
+      "finalScore": 92.5,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-07-07T08:55:00.000Z",
+      "_id": "58132fac550dfb3b52b8a24c"
+    },
+    {
+      "handle": "rajrkrish",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 91.25,
+      "finalScore": 91.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-07-07T22:59:00.000Z",
+      "_id": "58132fac550dfb3b52b8a24b"
+    },
+    {
+      "handle": "vishal8725",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 46.25,
+      "finalScore": 46.25,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-07-07T19:14:00.000Z",
+      "_id": "58132fac550dfb3b52b8a24a"
+    }
+  ],
+  "technology": [
+    "AJAX",
+    "API",
+    "Android",
+    "Angular.js",
+    "CSS",
+    "HTML",
+    "JavaScript",
+    "iOS"
+  ]
+}

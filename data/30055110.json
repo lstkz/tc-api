@@ -1,0 +1,487 @@
+{
+  "_id": 30055110,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:13:34.102Z",
+  "appealsEndDate": "2016-09-09T13:51:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "TCO - Topcoder - Refactor TCS Loader To New Architecture",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "Previously, we have created a separate loader repository for loading data from TC to DW or Redshift. You can check&nbsp;<a href=\"https://github.com/appirio-tech/tcs-loader\">https://github.com/appirio-tech/tcs-loader</a>&nbsp;(Use&nbsp;<u>load_tcs_to_redshift</u> branch).<br />\n<br />\nThis is following the old loader logic, like&nbsp;<br />\n<br />\n1. a Loader Utitlity class (<span style=\"font-family:consolas,liberation mono,menlo,courier,monospace; font-size:12px\">com.topcoder.shared.util.dwload.TCLoadUtility</span>) which will read XML configuration to start the specific loader.<br />\n2. an XML configuration file which will specify the DB related information and the real class doing the loader.<br />\n3. the real class that extends from&nbsp;<span style=\"font-family:consolas,liberation mono,menlo,courier,monospace; font-size:12px\">com.topcoder.shared.util.dwload.TCLoad</span><br />\n<br />\nBut we saw some limitation about this approach,&nbsp;<br />\n<br />\n1. if you check&nbsp;<span style=\"font-family:consolas,liberation mono,menlo,courier,monospace; font-size:12px\">com.topcoder.utilities.dwload.</span><span style=\"color:rgb(121, 93, 163); font-family:consolas,liberation mono,menlo,courier,monospace; font-size:12px\">TCLoadTCSRedshift</span> and&nbsp;<span style=\"font-family:consolas,liberation mono,menlo,courier,monospace; font-size:12px\">com.topcoder.utilities.dwload.</span><span style=\"color:rgb(121, 93, 163); font-family:consolas,liberation mono,menlo,courier,monospace; font-size:12px\">TCLoadTCS, </span>you can see they are big classes which actually doing separate data loading in each doXXXXXX methods.<br />\n2. a failure inside any doXXXX methods may throw exception, and will stop the loader, but it seems fine to keep on going to load data for other tables.<br />\n3. If we want to disable loading for one table, we need to update the class.<br />\n4. If we want to support new tables, we need to update the existing class.<br />\n<br />\n<br />\nSo we&#39;d like to revise the architecture, following are the general guide, but you are expecting to improve as you think it is better.<br />\n<br />\n- A abstract class or interface which defines the way that every specific loader should be following.<br />\n- Each separated loading should be inside separated classes implementation.<br />\n- An xml configuration file will defines the class or classes to be loaded, an error in one loader class should not break the whole process.<br />\n- An general loader uitlity will read the xml confiuration file and start the loader classes.<br />\n<br />\nWith the above approach,&nbsp;we can easily add and test new loaders, we can easily disable existing loaders by simply changing the XML configuration file.<br />\n<br />\n<br />\nboth&nbsp;<span style=\"font-family:consolas,liberation mono,menlo,courier,monospace; font-size:12px\">com.topcoder.utilities.dwload.</span><span style=\"color:rgb(121, 93, 163); font-family:consolas,liberation mono,menlo,courier,monospace; font-size:12px\">TCLoadTCSRedshift</span>&nbsp;and&nbsp;<span style=\"font-family:consolas,liberation mono,menlo,courier,monospace; font-size:12px\">com.topcoder.utilities.dwload.</span><span style=\"color:rgb(121, 93, 163); font-family:consolas,liberation mono,menlo,courier,monospace; font-size:12px\">TCLoadTCS </span>need to be refactored and splitted by following the new architecture.<br />\n<br />\n<u>About Testing</u><br />\n<br />\n- For Informix, you can use docker to setup local env, see&nbsp;<a href=\"https://github.com/appirio-tech/tcs-loader/blob/master/README.md\">https://github.com/appirio-tech/tcs-loader/blob/master/README.md</a><br />\n- For Redshift, you need to create your own in AWS, there are free tier for new users.",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30055110",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "- Code Changes for the new apprach<br />\n<br />\n<u>Winner Responsiblity&nbsp;</u><br />\nWinner will be responsible to create PR in github for merge.",
+  "forumId": 33904,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33904",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 37,
+  "numberOfSubmissions": 5,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-31T02:00:00.000Z",
+      "actualStartTime": "2016-08-31T02:00:00.000Z",
+      "scheduledEndTime": "2016-09-05T02:00:00.000Z",
+      "actualendTime": "2016-09-05T02:00:00.000Z",
+      "_id": "581340ee550dfb3b52be71dc"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-31T02:05:00.000Z",
+      "actualStartTime": "2016-08-31T02:05:00.000Z",
+      "scheduledEndTime": "2016-09-05T02:00:00.000Z",
+      "actualendTime": "2016-09-05T02:00:00.000Z",
+      "_id": "581340ee550dfb3b52be71db"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-05T02:00:00.000Z",
+      "actualStartTime": "2016-09-05T02:00:00.000Z",
+      "scheduledEndTime": "2016-09-08T01:51:00.000Z",
+      "actualendTime": "2016-09-08T01:51:00.000Z",
+      "_id": "581340ee550dfb3b52be71da"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-08T01:51:00.000Z",
+      "actualStartTime": "2016-09-08T01:51:00.000Z",
+      "scheduledEndTime": "2016-09-09T01:51:00.000Z",
+      "actualendTime": "2016-09-09T01:51:00.000Z",
+      "_id": "581340ee550dfb3b52be71d9"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-09T01:51:00.000Z",
+      "actualStartTime": "2016-09-09T01:51:00.000Z",
+      "scheduledEndTime": "2016-09-09T13:51:00.000Z",
+      "actualendTime": "2016-09-09T13:51:00.000Z",
+      "_id": "581340ee550dfb3b52be71d8"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-08-31T02:00:00.000Z",
+  "prize": [
+    600,
+    300
+  ],
+  "projectId": 9479,
+  "registrants": [
+    {
+      "handle": "klavorar",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T06:49:00.000Z",
+      "submissionDate": "2016-09-04T20:45:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71d7"
+    },
+    {
+      "handle": "bannie2492",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T02:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71d6"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T02:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71d5"
+    },
+    {
+      "handle": "mehblahwhatever",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T03:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71d4"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T03:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71d3"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T03:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71d2"
+    },
+    {
+      "handle": "jackchongs",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T04:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71d1"
+    },
+    {
+      "handle": "shoebkhan09ai",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T05:59:00.000Z",
+      "submissionDate": "2016-09-05T00:09:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71d0"
+    },
+    {
+      "handle": "narasimha.dvnr",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T05:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71cf"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T05:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71ce"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T06:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71cd"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T06:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71cc"
+    },
+    {
+      "handle": "isv",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T07:00:00.000Z",
+      "submissionDate": "2016-09-04T14:27:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71cb"
+    },
+    {
+      "handle": "padegal12",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T07:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71ca"
+    },
+    {
+      "handle": "gvir",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T07:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71c9"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T07:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71c8"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T08:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71c7"
+    },
+    {
+      "handle": "blitzmaster",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T10:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71c6"
+    },
+    {
+      "handle": "gopalrmd90",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T12:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71c5"
+    },
+    {
+      "handle": "gururajanikant",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T12:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71c4"
+    },
+    {
+      "handle": "amanforindia",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T13:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71c3"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T15:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71c2"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T18:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71c1"
+    },
+    {
+      "handle": "felsites4p",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-31T20:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71c0"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T06:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71bf"
+    },
+    {
+      "handle": "deas",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T08:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71be"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T13:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71bd"
+    },
+    {
+      "handle": "srikkbhat",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T14:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71bc"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T06:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71bb"
+    },
+    {
+      "handle": "Sayan.Hazra",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T18:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71ba"
+    },
+    {
+      "handle": "bandishankar",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T14:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71b9"
+    },
+    {
+      "handle": "hp87",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T17:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71b8"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T19:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71b7"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T20:19:00.000Z",
+      "submissionDate": "2016-09-04T15:55:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71b6"
+    },
+    {
+      "handle": "cairi",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-03T02:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71b5"
+    },
+    {
+      "handle": "vvvpig",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-03T23:08:00.000Z",
+      "submissionDate": "2016-09-04T13:15:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71b4"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-04T09:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71b3"
+    }
+  ],
+  "registrationEndDate": "2016-09-05T02:00:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-09-05T02:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "mhykol",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 95.63,
+      "finalScore": 96.88,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-09-04T15:55:00.000Z",
+      "_id": "581340ee550dfb3b52be71e1"
+    },
+    {
+      "handle": "vvvpig",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 93.13,
+      "finalScore": 95.63,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-09-04T13:15:00.000Z",
+      "_id": "581340ee550dfb3b52be71e0"
+    },
+    {
+      "handle": "klavorar",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 95.63,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-09-04T20:45:00.000Z",
+      "_id": "581340ee550dfb3b52be71df"
+    },
+    {
+      "handle": "isv",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 93.75,
+      "finalScore": 94.38,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-09-04T14:27:00.000Z",
+      "_id": "581340ee550dfb3b52be71de"
+    },
+    {
+      "handle": "shoebkhan09ai",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 71.25,
+      "finalScore": 71.25,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-09-05T00:09:00.000Z",
+      "_id": "581340ee550dfb3b52be71dd"
+    }
+  ],
+  "technology": [
+    "Docker",
+    "Java"
+  ]
+}

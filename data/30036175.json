@@ -1,0 +1,394 @@
+{
+  "_id": 30036175,
+  "_isComplete": true,
+  "__v": 2337,
+  "_lastUpdate": "2016-11-05T11:03:49.025Z",
+  "appealsEndDate": "2013-11-16T04:11:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Module Assembly - NodeJS Informix Driver Enhancement",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2013-11-13T04:11:00.000Z",
+  "currentPhaseName": "Post-Mortem",
+  "currentPhaseRemainingTime": -94031485,
+  "currentStatus": "Cancelled - Zero Submissions",
+  "detailedRequirements": "<h2 style=\"padding: 0px; margin: 0px; line-height: normal; font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">Project Overview</span></h2>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">This project will build NodeJS REST APIs for TopCoder Platform.</p>\n\n<h2 style=\"padding: 0px; margin: 0px; line-height: normal; font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">Competition Task Overview</span></h2>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">The current topcoder nodejs api contests use&nbsp;nodejs-db-informix (<a href=\"https://github.com/amitkr/nodejs-db-informix\">https://github.com/amitkr/nodejs-db-informix</a>) to access the informix database. This library is in alpha stages of development and needs some enhancements to make it production-ready.</p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">This contest must fix four high priority issues:</p>\n\n<ol>\n\t<li style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Support async (non-blocking) calls - &nbsp;the current implementation has a flag for async:true, but it does not work. See <a href=\"https://github.com/amitkr/nodejs-db-informix/issues/11\">this issue</a> for more details.</li>\n\t<li style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Support multiple open connections at same time - this may be related to the first issue, but two queries running concurrently result in segment faults. Multiple queries need to work both in&nbsp;<em>both</em> async modes.</li>\n\t<li style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Return empty result set instead of throwing exception - the current implementation throws errors the query <em>legitimately</em> returns no results.</li>\n\t<li style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">The current nodejs-db-informix can&#39;t be rebuilt on Heroku. This contest must make it be able to rebuild n Heroku.</li>\n</ol>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"font-size: 13px; line-height: 1.5em;\">This current library provides shortcut methods to build queries dynamically</span><span style=\"font-size: 13px; line-height: 1.5em;\">&nbsp;- </span><span style=\"font-size: 13px; line-height: 1.5em;\">e.g. select(), orderby(), sort(). We don&#39;t need these features because we are maintaining the queries separate from the code</span><span style=\"font-size: 13px; line-height: 1.5em;\">. Therefore it is not required to maintain these features (although it will be considered an enhancement). The library must support parametarized queries for select, update and insert.</span></p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"font-size: 13px; line-height: 1.5em;\">Tips: You can get informix csdk from tc-api repository and follow same approach:&nbsp;</span><a href=\"https://github.com/cloudspokes/tc-api/tree/master/thirdparty/ibm/informix\">https://github.com/cloudspokes/tc-api/tree/master/thirdparty/ibm/informix</a></p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><strong style=\"font-size: 13px; line-height: 1.5em;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">Testing</span></strong></p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"padding: 0px; margin: 0px;\">You are required to provide unit tests to prove the four bugs are fixed.&nbsp;</span></p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"padding: 0px; margin: 0px;\">You are required to provide a detailed guide demonstrating how to manually test and validate your fixes.</span></p>\n\n<h2 style=\"padding: 0px; margin: 0px; line-height: normal; font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">Heroku Deployment</span></h2>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\"><strong style=\"padding: 0px; margin: 0px;\">The submission must be deployed on Heroku,&nbsp;<strong style=\"padding: 0px; margin: 0px; line-height: 18px;\">any submission which can&#39;t be deployed on heroku successfully will be failed in screening phase - primary reviewer must check this</strong></strong></span></p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"line-height: 1.5em;\">You can request a VM with informix installed.</span></p>\n\n<h2 style=\"padding: 0px; margin: 0px; font-family: Arial, Helvetica, sans-serif; line-height: normal; font-weight: bold; font-size: 18px;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">Virtual Machine (VM)</span></h2>\n\n<h2 style=\"padding: 0px; margin: 0px; font-family: Arial, Helvetica, sans-serif; line-height: normal; font-weight: bold; font-size: 18px;\"><span style=\"padding: 0px; margin: 0px; line-height: 1.2em; font-size: 13px;\">VM specific information is found here:&nbsp;<a href=\"http://www.topcoder.com/wiki/display/docs/VM+Image+2.5\" style=\"padding: 0px; margin: 0px; color: rgb(51, 51, 51); text-decoration: none;\">http://www.topcoder.com/wiki/display/docs/VM+Image+2.5</a></span></h2>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; word-wrap: break-word;\">Upon registration as a submitter or reviewer you will need to request a VM based on the TopCoder systems image. The VM will be active through aggregation review, after which it will be terminated except for the winner&#39;s and the reviewers&#39;. To request your image, please post in contest forum.</p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; word-wrap: break-word;\">Before requesting your VM, you need to ensure that you have an SSH key created and in your member profile. Instructions to do so are here: http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key, and instructions to connect afterwards are here:&nbsp;<a href=\"http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key\" style=\"padding: 0px; margin: 0px; color: rgb(51, 51, 51);\">http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key</a>.</p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; word-wrap: break-word;\">Please realize that VMs are currently issued manually. We make every attempt to issue the VM as soon as it is requested, however, there may be delays of up to 12 hours depending on time of day when you request. We encourage everyone to request a VM as soon as possible to minimize any such delays.</p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; word-wrap: break-word;\">VMs will be granted only during registration phase!</p>\n\n<h2 style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><strong style=\"padding: 0px; margin: 0px;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">Review Board Requirement:</span></strong></h2>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; word-wrap: break-word;\">Reviewers need to write mocha&nbsp;tests to verify the updated code for the 4 issues.</p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; word-wrap: break-word;\">There are three roles:</p>\n\n<ul style=\"margin: 0px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; padding-top: 6px !important; padding-right: 0px !important; padding-bottom: 6px !important;\">\n\t<li style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; word-wrap: break-word;\">Accuracy - Tests the implementation on the accuracy of the results when using the component.</li>\n\t<li style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; word-wrap: break-word;\">Failure - Tests the implementation&#39;s ability to handle bad data and incorrect usage.</li>\n\t<li style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; word-wrap: break-word;\">Security - Tests the oauth, sql inject and other security related requirements.</li>\n</ul>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; word-wrap: break-word;\">Reviewer could send preferred role by Contact Manager&nbsp;after system selected the reviwer.</p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; word-wrap: break-word;\">Copilot will assign the role to reviewers if reviewer didn&#39;t send the preferred role information.</p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; word-wrap: break-word;\">Reviewer must create pull request from GitHub for the tests.</p>\n\n<h2 style=\"padding: 0px; margin: 0px; line-height: normal; font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">Technology Overview</span></h2>\n\n<ul style=\"margin: 0px; font-size: 13px; line-height: 16px; font-family: Arial, Helvetica, Verdana, sans-serif; padding-top: 6px !important; padding-right: 0px !important; padding-bottom: 6px !important;\">\n\t<li style=\"padding: 0px; margin: 0px;\">Node.js</li>\n</ul>\n",
+  "digitalRunPoints": 720,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30036175",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2013-11-17T16:11:00.000Z",
+  "finalSubmissionGuidelines": "<p class=\"det_font\" style=\"padding: 0px; margin: 0px; font-size: 14px; font-family: Arial, Helvetica, sans-serif; color: rgb(59, 59, 59); line-height: normal;\"><span class=\"name\" style=\"padding: 0px; margin: 0px; line-height: 28px;\"><strong style=\"padding: 0px; margin: 0px;\">Software Guidelines</strong></span>&nbsp;<br style=\"padding: 0px; margin: 0px;\" />\n<span class=\"gray_name\" style=\"padding: 0px 20px 0px 0px; margin: 0px; color: rgb(102, 102, 102); font-size: 12px;\">&nbsp;</span><br style=\"padding: 0px; margin: 0px;\" />\n&nbsp;</p>\n\n<div class=\"previewMask\" style=\"padding: 0px; margin: 0px; font-family: Arial, Helvetica, sans-serif; line-height: normal;\">\n<ul style=\"margin: 0px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; padding-top: 6px !important; padding-right: 0px !important; padding-bottom: 6px !important;\">\n\t<li style=\"padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswGuidelines\" style=\"padding: 0px; margin: 0px;\">Source File</span></li>\n\t<li style=\"padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswGuidelines\" style=\"padding: 0px; margin: 0px;\">Deployment Guide</span></li>\n\t<li style=\"padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswGuidelines\" style=\"padding: 0px; margin: 0px;\">Test File</span></li>\n\t<li style=\"padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswGuidelines\" style=\"padding: 0px; margin: 0px;\">Unit Tests</span></li>\n\t<li style=\"padding: 0px; margin: 0px;\"><span class=\"small_info_spec\" id=\"rswGuidelines\" style=\"padding: 0px; margin: 0px;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\"><strong style=\"padding: 0px; margin: 0px;\">Winner must create pull request against the main github repo in final fix phase, or help us fork (TBD).</strong></span></span></li>\n</ul>\n</div>\n",
+  "forumId": 19421,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=19421",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 25,
+  "numberOfSubmissions": 0,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-06T13:21:00.000Z",
+      "actualStartTime": "2013-11-06T13:21:00.000Z",
+      "scheduledEndTime": "2013-11-06T13:22:00.000Z",
+      "actualendTime": "2013-11-06T13:22:00.000Z",
+      "_id": "581dbc95550dfb3b52be1385"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-06T13:22:00.000Z",
+      "actualStartTime": "2013-11-06T13:22:00.000Z",
+      "scheduledEndTime": "2013-11-06T16:18:00.000Z",
+      "actualendTime": "2013-11-06T16:18:00.000Z",
+      "_id": "581dbc95550dfb3b52be1384"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-07T04:06:00.000Z",
+      "actualStartTime": "2013-11-07T04:06:00.000Z",
+      "scheduledEndTime": "2013-11-09T04:06:00.000Z",
+      "actualendTime": "2013-11-09T04:06:00.000Z",
+      "_id": "581dbc95550dfb3b52be1383"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-07T04:11:00.000Z",
+      "actualStartTime": "2013-11-07T04:11:00.000Z",
+      "scheduledEndTime": "2013-11-12T04:11:00.000Z",
+      "actualendTime": "2013-11-12T04:11:00.000Z",
+      "_id": "581dbc95550dfb3b52be1382"
+    },
+    {
+      "type": "Screening",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-11-12T04:11:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-11-12T16:11:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbc95550dfb3b52be1381"
+    },
+    {
+      "type": "Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-11-12T16:11:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-11-14T16:11:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbc95550dfb3b52be1380"
+    },
+    {
+      "type": "Appeals",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-11-14T16:11:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-11-15T16:11:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbc95550dfb3b52be137f"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-11-15T16:11:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-11-16T04:11:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbc95550dfb3b52be137e"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-11-16T04:11:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-11-16T16:11:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbc95550dfb3b52be137d"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-11-16T16:11:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-11-17T16:11:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbc95550dfb3b52be137c"
+    },
+    {
+      "type": "Final Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-11-17T16:11:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-11-18T04:11:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbc95550dfb3b52be137b"
+    },
+    {
+      "type": "Approval",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-11-18T04:11:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-11-23T04:11:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbc95550dfb3b52be137a"
+    },
+    {
+      "type": "Post-Mortem",
+      "status": "Open",
+      "scheduledStartTime": "2013-11-12T04:11:00.000Z",
+      "actualStartTime": "2013-11-12T04:11:00.000Z",
+      "scheduledEndTime": "2013-11-13T04:11:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbc95550dfb3b52be1379"
+    }
+  ],
+  "platforms": [],
+  "postingDate": "2013-11-07T04:06:00.000Z",
+  "prize": [
+    1600,
+    800
+  ],
+  "projectId": 6757,
+  "registrants": [
+    {
+      "handle": "amoxibos",
+      "reliability": "0%",
+      "registrationDate": "2013-11-07T23:39:00.000Z",
+      "submissionDate": null,
+      "rating": "997",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbc95550dfb3b52be1378"
+    },
+    {
+      "handle": "codercat",
+      "reliability": "0%",
+      "registrationDate": "2013-11-07T04:46:00.000Z",
+      "submissionDate": null,
+      "rating": "838",
+      "colorStyle": "color: #999999",
+      "_id": "581dbc95550dfb3b52be1377"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "6%",
+      "registrationDate": "2013-11-07T04:57:00.000Z",
+      "submissionDate": null,
+      "rating": "698",
+      "colorStyle": "color: #999999",
+      "_id": "581dbc95550dfb3b52be1376"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-07T06:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc95550dfb3b52be1375"
+    },
+    {
+      "handle": "freegod",
+      "reliability": "26%",
+      "registrationDate": "2013-11-07T06:08:00.000Z",
+      "submissionDate": null,
+      "rating": "587",
+      "colorStyle": "color: #999999",
+      "_id": "581dbc95550dfb3b52be1374"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "20%",
+      "registrationDate": "2013-11-07T07:09:00.000Z",
+      "submissionDate": null,
+      "rating": "998",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbc95550dfb3b52be1373"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-07T08:01:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "581dbc95550dfb3b52be1372"
+    },
+    {
+      "handle": "crackme",
+      "reliability": "0%",
+      "registrationDate": "2013-11-07T08:31:00.000Z",
+      "submissionDate": null,
+      "rating": "800",
+      "colorStyle": "color: #999999",
+      "_id": "581dbc95550dfb3b52be1371"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-07T08:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc95550dfb3b52be1370"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-07T09:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc95550dfb3b52be136f"
+    },
+    {
+      "handle": "vangavroche",
+      "reliability": "100%",
+      "registrationDate": "2013-11-07T10:05:00.000Z",
+      "submissionDate": null,
+      "rating": "1360",
+      "colorStyle": "color: #6666FF",
+      "_id": "581dbc95550dfb3b52be136e"
+    },
+    {
+      "handle": "saarixx",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-07T10:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc95550dfb3b52be136d"
+    },
+    {
+      "handle": "Kuhan",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-07T12:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc95550dfb3b52be136c"
+    },
+    {
+      "handle": "brain_cn",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-07T12:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc95550dfb3b52be136b"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2013-11-07T13:19:00.000Z",
+      "submissionDate": null,
+      "rating": "829",
+      "colorStyle": "color: #999999",
+      "_id": "581dbc95550dfb3b52be136a"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-07T14:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc95550dfb3b52be1369"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2013-11-07T18:54:00.000Z",
+      "submissionDate": null,
+      "rating": "1689",
+      "colorStyle": "color: #DDCC00",
+      "_id": "581dbc95550dfb3b52be1368"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "0%",
+      "registrationDate": "2013-11-07T21:30:00.000Z",
+      "submissionDate": null,
+      "rating": "58",
+      "colorStyle": "color: #999999",
+      "_id": "581dbc95550dfb3b52be1367"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-07T15:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc95550dfb3b52be1366"
+    },
+    {
+      "handle": "rajeshk87",
+      "reliability": "0%",
+      "registrationDate": "2013-11-07T17:08:00.000Z",
+      "submissionDate": null,
+      "rating": "600",
+      "colorStyle": "color: #999999",
+      "_id": "581dbc95550dfb3b52be1365"
+    },
+    {
+      "handle": "selvaa89",
+      "reliability": "0%",
+      "registrationDate": "2013-11-07T18:15:00.000Z",
+      "submissionDate": null,
+      "rating": "1123",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbc95550dfb3b52be1364"
+    },
+    {
+      "handle": "mehblahwhatever",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-08T22:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc95550dfb3b52be1363"
+    },
+    {
+      "handle": "sunhong",
+      "reliability": "6%",
+      "registrationDate": "2013-11-09T02:21:00.000Z",
+      "submissionDate": null,
+      "rating": "1317",
+      "colorStyle": "color: #6666FF",
+      "_id": "581dbc95550dfb3b52be1362"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "0%",
+      "registrationDate": "2013-11-07T12:21:00.000Z",
+      "submissionDate": null,
+      "rating": "906",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbc95550dfb3b52be1361"
+    },
+    {
+      "handle": "evilkyro1965",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-08T08:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc95550dfb3b52be1360"
+    }
+  ],
+  "registrationEndDate": "2013-11-09T04:06:00.000Z",
+  "reliabilityBonus": 320,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2013-11-12T04:11:00.000Z",
+  "submissions": [],
+  "technology": [
+    "Node.js"
+  ]
+}

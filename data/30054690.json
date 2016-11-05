@@ -1,0 +1,295 @@
+{
+  "_id": 30054690,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:37:08.520Z",
+  "appealsEndDate": "2016-07-01T07:39:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Topcoder - Implement Remove Billing Account For Project API",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2016-07-29T07:00:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -7886148,
+  "currentStatus": "Completed",
+  "detailedRequirements": "Previously, we have implemented the API to associate billing account for the given project. This challenge is going to implement another API challenge for remove billing account for the given project.<br />\n<br />\n1. the endpoint should be <u>DELETE&nbsp;<span style=\"color:rgb(99, 163, 92); font-family:consolas,liberation mono,menlo,courier,monospace; font-size:12px\">/projects/{projectId}/billingaccount</span></u><br />\n2. Similar as associating billing account for the given project, the real logic is always implemented by the libraries. &nbsp;Basically, you should do&nbsp;<br />\n2.1 Add a path in&nbsp;<span style=\"font-family:consolas,liberation mono,menlo,courier,monospace; font-size:12px\">com.topcoder.service.project.resources.ProjectResource</span><br />\n2.2 Add a method in&nbsp;<span style=\"font-family:consolas,liberation mono,menlo,courier,monospace; font-size:12px\">com.topcoder.service.project.manager.ProjectManager, it will do similar as&nbsp;</span>\n\n<pre>\n<span style=\"color:#cc7832\">public </span>String <span style=\"color:#ffc66d\">removeProjectBillingAccount</span>() {\n    <span style=\"color:#cc7832\">try </span>{\n        <span style=\"color:#808080\">// check permission\n</span><span style=\"color:#808080\">        </span>String billingAccountName = canAccessBillingAccount(getFormData().getProjectBillingAccountId())<span style=\"color:#cc7832\">;\n</span><span style=\"color:#cc7832\">        if</span>(billingAccountName == <span style=\"color:#cc7832\">null</span>) {\n            <span style=\"color:#cc7832\">throw new </span>IllegalArgumentException(<span style=\"color:#6a8759\">&quot;You don&#39;t have permission access to this billing account&quot;</span>)<span style=\"color:#cc7832\">;\n</span><span style=\"color:#cc7832\">        </span>}\n        Map&lt;String<span style=\"color:#cc7832\">, </span>String&gt; result = <span style=\"color:#cc7832\">new </span>HashMap&lt;String<span style=\"color:#cc7832\">, </span>String&gt;()<span style=\"color:#cc7832\">;\n</span>\n<span style=\"color:#cc7832\">        </span>getProjectServiceFacade().removeBillingAccountFromProject(getFormData().getProjectId()<span style=\"color:#cc7832\">,\n</span><span style=\"color:#cc7832\">                </span>getFormData().getProjectBillingAccountId())<span style=\"color:#cc7832\">;\n</span><span style=\"color:#cc7832\">        </span>DirectUtils.<em>updateDirectProjectBugContestFee</em>(DirectUtils.<em>getTCSubjectFromSession</em>()<span style=\"color:#cc7832\">,\n</span><span style=\"color:#cc7832\">                </span>getFormData().getProjectId()<span style=\"color:#cc7832\">,\n</span><span style=\"color:#cc7832\">                </span>getProjectServiceFacade()<span style=\"color:#cc7832\">, </span>getProjectContestFeeService()<span style=\"color:#cc7832\">, </span>getProjectContestFeePercentageService())<span style=\"color:#cc7832\">;\n</span>\n<span style=\"color:#cc7832\">        </span>result.put(<span style=\"color:#6a8759\">&quot;projectId&quot;</span><span style=\"color:#cc7832\">, </span>String.valueOf(getFormData().getProjectId()))<span style=\"color:#cc7832\">;\n</span><span style=\"color:#cc7832\">        </span>result.put(<span style=\"color:#6a8759\">&quot;billingId&quot;</span><span style=\"color:#cc7832\">, </span>String.<em>valueOf</em>(getFormData().getProjectBillingAccountId()))<span style=\"color:#cc7832\">;\n</span><span style=\"color:#cc7832\">        </span>result.put(<span style=\"color:#6a8759\">&quot;billingName&quot;</span><span style=\"color:#cc7832\">, </span>billingAccountName)<span style=\"color:#cc7832\">;\n</span><span style=\"color:#cc7832\">        </span>result.put(<span style=\"color:#6a8759\">&quot;operation&quot;</span><span style=\"color:#cc7832\">, </span><span style=\"color:#6a8759\">&quot;remove&quot;</span>)<span style=\"color:#cc7832\">;\n</span>\n<span style=\"color:#cc7832\">        </span>setResult(result)<span style=\"color:#cc7832\">;\n</span>\n<span style=\"color:#cc7832\">    </span>} <span style=\"color:#cc7832\">catch </span>(Throwable e) {\n        <span style=\"color:#cc7832\">if </span>(getModel() != <span style=\"color:#cc7832\">null</span>) {\n            setResult(e)<span style=\"color:#cc7832\">;\n</span><span style=\"color:#cc7832\">        </span>}\n    }\n\n    <span style=\"color:#cc7832\">return </span>SUCCESS<span style=\"color:#cc7832\">;\n</span>}\n</pre>\n3. Update the swagger.yaml to describe the new API.<br />\n4. Update the docs/tc-project-service.json.postman_collection to include the calls for the new API<br />\n5. Update the README.md to describe the steps to have local environment for testing, see below<br />\n<br />\n<u>About Testing</u><br />\n<br />\nThis requires informix and direct jboss for testing.<br />\n<br />\nWe can use docker and docker compose to setup the environment locally. &nbsp;Please check&nbsp;https://github.com/appirio-tech/tc-common-tutorials/tree/master/docker/direct-app<a href=\"https://github.com/appirio-tech/tc-common-tutorials/tree/master/docker/direct-app\">https://github.com/appirio-tech/tc-common-tutorials/tree/master/docker/direct-app</a> to setup the informix and direct jboss locally.<br />\n<br />\n&nbsp;",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30054690",
+  "finalSubmissionGuidelines": "1. Code changes for the new requirements.<br />\n2. Updated README.md file<br />\n3. Verification Steps and&nbsp;Screencast for the testing",
+  "forumId": 33502,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33502",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 21,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2016-06-29T07:00:00.000Z",
+      "actualStartTime": "2016-06-29T07:00:00.000Z",
+      "scheduledEndTime": "2016-07-29T07:00:00.000Z",
+      "actualendTime": null,
+      "_id": "58135484550dfb3b52c49d30"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-30T14:21:00.000Z",
+      "actualStartTime": "2016-06-30T14:21:00.000Z",
+      "scheduledEndTime": "2016-07-01T03:26:00.000Z",
+      "actualendTime": "2016-07-01T03:26:00.000Z",
+      "_id": "58135484550dfb3b52c49d2f"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2016-06-29T07:05:00.000Z",
+      "actualStartTime": "2016-06-29T07:05:00.000Z",
+      "scheduledEndTime": "2016-07-29T07:05:00.000Z",
+      "actualendTime": null,
+      "_id": "58135484550dfb3b52c49d2e"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-01T03:27:00.000Z",
+      "actualStartTime": "2016-07-01T03:27:00.000Z",
+      "scheduledEndTime": "2016-07-01T07:39:00.000Z",
+      "actualendTime": "2016-07-01T07:39:00.000Z",
+      "_id": "58135484550dfb3b52c49d2d"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-06-29T07:00:00.000Z",
+  "prize": [
+    100
+  ],
+  "projectId": 9512,
+  "registrants": [
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-29T07:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d2c"
+    },
+    {
+      "handle": "Zyan",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-29T07:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d2b"
+    },
+    {
+      "handle": "code_now",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-29T07:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d2a"
+    },
+    {
+      "handle": "persistnow",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-29T08:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d29"
+    },
+    {
+      "handle": "BebetterSun",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-29T08:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d28"
+    },
+    {
+      "handle": "Abhi_2110",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-29T09:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d27"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-29T09:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d26"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-29T10:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d25"
+    },
+    {
+      "handle": "GFalcon",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-29T10:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d24"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-29T11:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d23"
+    },
+    {
+      "handle": "brandoncornel",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-29T12:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d22"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-29T13:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d21"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-29T17:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d20"
+    },
+    {
+      "handle": "roopats",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-30T00:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d1f"
+    },
+    {
+      "handle": "narasimha.dvnr",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-30T04:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d1e"
+    },
+    {
+      "handle": "suisl",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-30T06:08:00.000Z",
+      "submissionDate": "2016-06-30T19:56:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d1d"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-30T06:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d1c"
+    },
+    {
+      "handle": "marshallmutiso",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-30T07:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d1b"
+    },
+    {
+      "handle": "Setako",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-30T09:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d1a"
+    },
+    {
+      "handle": "Yashjani00",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-30T19:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d19"
+    },
+    {
+      "handle": "prajaktac",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-01T02:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d18"
+    }
+  ],
+  "registrationEndDate": "2016-07-29T07:00:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-07-29T07:05:00.000Z",
+  "submissions": [
+    {
+      "handle": "suisl",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-06-30T14:21:00.000Z",
+      "_id": "58135484550dfb3b52c49d32"
+    },
+    {
+      "handle": "suisl",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-06-30T19:56:00.000Z",
+      "_id": "58135484550dfb3b52c49d31"
+    }
+  ],
+  "technology": [
+    "Docker",
+    "Java"
+  ]
+}

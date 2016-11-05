@@ -1,7 +1,7 @@
 {
   "_id": 30049527,
   "_isComplete": true,
-  "__v": 1,
+  "__v": 0,
   "_lastUpdate": "2016-10-27T17:50:43.345Z",
   "appealsEndDate": "2015-04-08T02:13:00.000Z",
   "challengeCommunity": "develop",
@@ -15,11 +15,6 @@
   "detailedRequirements": "<h1><a name=\"_Toc456598593\">1.&nbsp;&nbsp;&nbsp;&nbsp; Project Overview</a></h1>\n\n<h2>1.1&nbsp;&nbsp;&nbsp;&nbsp; System Description</h2>\n\n<p>The client for this project has decided to build a platform that will support the sale, exchange, and redemption of gift cards between businesses and individuals.&nbsp; The goal of this platform is to help small businesses expand, using both web and mobile layouts, by giving them a simple way to raise capital and acquire new customers using gift cards.</p>\n\n<p>The client needs to create a high quality platform that is easy-to-use even for business owners that don&rsquo;t have a lot of technical expertise.&nbsp; Many business owners are not technologically sophisticated, so creating a platform that is simple to understand and navigate is also a top priority.</p>\n\n<p>The main function of the platform will be to allow business to post virtual gift cards for sale on the platform.&nbsp; Individual users will be able to browse and buy these gift cards, as well as resell or trade gift cards they own.&nbsp; Using the mobile layout, users will be able to redeem their gift cards at the business, and the business will be able to process gift card redemption at their point of sale.</p>\n\n<p>This assembly is responsible for implementing founder mobile pages and report abuse related functionalities of the front end, related angularJS service and integrate the REST APIs, including HTML5 pages, AngularJS Service and AngularJS controllers.</p>\n\n<h2>1.2&nbsp;&nbsp;&nbsp;&nbsp; Competition Task Overview</h2>\n\n<p>A complete list of deliverables can be found in the TopCoder Assembly competition Tutorial at:</p>\n\n<p><a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a></p>\n\n<p><em>Note: Please read the whole Application Design Specification first. All the details not mentioned in this specification are provided in that document.</em></p>\n\n<p><span style=\"font-family:lucida grande,helvetica,arial,sans-serif\">Note: Please read the whole Application Design Specification first. All the details not mentioned in this specification are provided in that document.</span></p>\n\n<h3>1.2.1&nbsp;&nbsp;&nbsp;&nbsp; Scope</h3>\n\n<h3><span style=\"font-size:13px\">This&nbsp;</span><span style=\"font-size:13px\">challenge&nbsp;</span><span style=\"font-size:13px\">is responsible for the following parts in the Front End Mobile Class Diagram:</span></h3>\n\n<ul style=\"list-style-type:circle\">\n\t<li>\n\t<h3><span style=\"font-size:13px\">app.js</span></h3>\n\t</li>\n\t<li>\n\t<h3><span style=\"font-size:13px\">FounderHomeCtrl</span></h3>\n\t</li>\n\t<li>ReportAbuseCtrl</li>\n</ul>\n\n<p>Implementation details are provided at TCUML class documentations.</p>\n\n<p>Related pages are also in scope.</p>\n\n<p>This challenge is responsible for integrating all services in the Front End AngularJS Class Diagram and implement necessary methods for the scope of this challenge.</p>\n\n<h3>1.2.2&nbsp;&nbsp; &nbsp;General AngularJS Implementation Guide</h3>\n\n<p>The services are AngularJS services, they use $http service to communicate with the back end REST services.<br />\nDuring this assembly, a simple basic app.js may be implemented to run and test the services.</p>\n\n<p>Some services require authorization, they expect a session token set in sessionStorage.sessionToken field, if not, they will call callback with error message.</p>\n\n<p>Below we take the UserService.updateMyUserProfile as example, other services are implemented similarly.</p>\n\n<p>angular.module(&#39;services&#39;).factory(&#39;userService&#39;,<br />\n&nbsp; &nbsp; [&#39;$http&#39;, &#39;$log&#39;,<br />\n&nbsp; &nbsp; function ($http, $log) {<br />\n&nbsp; &nbsp; &nbsp; &nbsp; var service = {};<br />\n&nbsp; &nbsp; &nbsp; &nbsp; service.updateMyUserProfile = function(user, callback) {<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $http({<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // it may be &#39;GET&#39;, &#39;DELETE&#39; etc for other REST services<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; method:&#39;PUT&#39;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // replace this url for other REST services<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; url: config.REST_SERVICE_BASE_URL + &#39;/users/me&#39;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // request body may be different for other REST services<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; data: JSON.stringify(user),<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // authorization header depends on REST service,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // some needn&#39;t it,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // some needs other authorization header, e.g. the Login<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; headers: {<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#39;Authorization&#39;: &#39;Bearer&#39; + sessionStorage.sessionToken<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }).success(function(data){<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; callback(null, data);<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }).error(function(data, status, headers, config) {<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; callback(data);<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; });<br />\n&nbsp; &nbsp; &nbsp; &nbsp; }</p>\n\n<p>&nbsp; &nbsp; &nbsp; &nbsp; ... // other functions</p>\n\n<p>&nbsp; &nbsp; &nbsp; &nbsp; return service;<br />\n}]);</p>\n\n<h3>1.2.3 &nbsp; &nbsp;Services Mapping</h3>\n\n<p>When implementing an AngularJS service method, see its TCUML method documentation, it provides the corresponding REST service.<br />\nThen open the REST_API_Specification.docx, locate the referred REST service. In the &quot;Request Syntax&quot; section, there is HTTP method and URL for the REST service. The &quot;Request Headers&quot; item contains authorization header details. And the Response section contains response details.<br />\nFor the red methods in TCUML, these indicate new REST services, the details are just in the TCUML method documentation.<br />\nAssemblers should follow these REST contract, and follow above sample code to make the REST calls.</p>\n\n<h3>1.2.4 &nbsp; &nbsp; Founder Home Mobile</h3>\n\n<p>(In Mobile UI Prototype, login as buz/123456).</p>\n\n<p>Controller: FounderHomeCtrl</p>\n\n<p>Support Android and iOS Devices.</p>\n\n<p><span>This page shows founder home.</span></p>\n\n<p><span>It shows instructions. When user clicks &quot;Redeem Founder$hare&quot;, it will allow user to enter the redeem amount, then continues to use camera to scan the QR image from the champion side mobile phone. If a QR code is detected, then it ask user to confirm, and if confirmed, it will call the redeem function with the detected QR code.</span></p>\n\n<p><span>We will use jsqrcode (</span><a href=\"https://github.com/LazarSoft/jsqrcode\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); line-height: 1.6;\">https://github.com/LazarSoft/jsqrcode</a><span>) to detect QR code from image. Its README contains usage instructions, its src/test.html contains an example.</span></p>\n\n<p><span>For Android, we will follow its src/test.html to use webcam;</span></p>\n\n<p><span>But for iPhone, because it doesn&rsquo;t support getUserMedia (WebRTC) capability, we need to use other approach. We will directly use the camera, see&nbsp;</span><a href=\"http://www.wufoo.com/html5/attributes/20-accept.html\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); line-height: 1.6;\">http://www.wufoo.com/html5/attributes/20-accept.html</a><span>, we can use</span></p>\n\n<p>&lt;input type=&quot;file&quot; accept=&quot;image/*;capture=camera&quot;&gt;</p>\n\n<p>To access the camera.</p>\n\n<p>For both Android and IPhone, the code to extract QR code is similar:</p>\n\n<p>var imageFile = assume this is image file;</p>\n\n<p>qrcode.callback = function(qrCode) {</p>\n\n<p>&nbsp;&nbsp;&nbsp; // QR code is obtained here</p>\n\n<p>}</p>\n\n<p>var reader = new FileReader();</p>\n\n<p>reader.onload = function(e) {</p>\n\n<p>&nbsp;&nbsp;&nbsp; qrcode.decode(e.target.result);</p>\n\n<p>}</p>\n\n<p>reader.readAsDataURL(imageFile);</p>\n\n<p><span>This QR code extraction process continues until a QR code is successfully extracted, or user cancels it.</span></p>\n\n<h3>1.2.4 &nbsp; &nbsp; Mobile Report Abuse</h3>\n\n<p>Controller: ReportAbuseCtrl</p>\n\n<p>This page sends abuse report to admin. The &quot;Send&quot; button will trigger the send function of the controller.</p>\n\n<h3>1.2.5 &nbsp; &nbsp; Testing</h3>\n\n<p>Please provide manual verification steps in the deployment guide and the submission should include test data for the verification steps.</p>\n\n<h2>1.3 &nbsp; &nbsp; Technology overview</h2>\n\n<ul>\n\t<li>HTML5</li>\n\t<li>JavaScript</li>\n\t<li>jQuery 1.11.0&nbsp;<a href=\"http://jquery.com/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">http://jquery.com/</a></li>\n\t<li>AngularJS 1.2.28&nbsp;<a href=\"https://angularjs.org/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">https://angularjs.org/</a></li>\n\t<li>jsqrcode&nbsp;<a href=\"https://github.com/LazarSoft/jsqrcode\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">https://github.com/LazarSoft/jsqrcode</a></li>\n\t<li>ShareThis&nbsp;<a href=\"http://www.sharethis.com/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">http://www.sharethis.com/</a></li>\n\t<li>NVD3&nbsp;<a href=\"http://nvd3.org/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">http://nvd3.org/</a></li>\n\t<li>Wordpress 4.1&nbsp;<a href=\"https://wordpress.org/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">https://wordpress.org/</a></li>\n\t<li>Google Maps JavaScript API v3&nbsp;<a href=\"https://developers.google.com/maps/documentation/javascript\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">https://developers.google.com/maps/documentation/javascript</a></li>\n</ul>\n\n<h2>1.4 &nbsp; &nbsp; Existing Documents</h2>\n\n<ul>\n\t<li>Class Diagrams</li>\n\t<li>Sequence Diagrams</li>\n\t<li>Application Design Specification</li>\n\t<li>Assembly Specification</li>\n</ul>\n",
   "digitalRunPoints": 720,
   "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30049527",
-  "event": {
-    "id": 3442,
-    "description": "2015 topcoder Open",
-    "shortDescription": "tco15"
-  },
   "finalFixEndDate": "2015-04-09T18:11:00.000Z",
   "finalSubmissionGuidelines": "<ul>\n\t<li>Source code and configuration files.</li>\n\t<li>Deployment guide to configure and verify the application</li>\n</ul>\n",
   "forumId": 28762,
@@ -28,6 +23,60 @@
   "numberOfCheckpointsPrizes": 0,
   "numberOfRegistrants": 27,
   "numberOfSubmissions": 4,
+  "postingDate": "2015-03-31T05:08:00.000Z",
+  "projectId": 8087,
+  "registrationEndDate": "2015-04-02T05:10:00.000Z",
+  "reliabilityBonus": 320,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-04-05T05:10:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 94.9,
+      "finalScore": 95.45,
+      "points": 432,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-04-04T13:06:00.000Z",
+      "_id": "58123e73e0be5f30ae562e9a"
+    },
+    {
+      "handle": "veshu",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 94.6,
+      "finalScore": 94.6,
+      "points": 158.4,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-04-04T23:48:00.000Z",
+      "_id": "58123e73e0be5f30ae562e99"
+    },
+    {
+      "handle": "candymin",
+      "placement": 3,
+      "screeningScore": 100,
+      "initialScore": 90.13,
+      "finalScore": 90.29,
+      "points": 72,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-04-05T03:42:00.000Z",
+      "_id": "58123e73e0be5f30ae562e98"
+    },
+    {
+      "handle": "stevenfrog",
+      "placement": 4,
+      "screeningScore": 100,
+      "initialScore": 88.3,
+      "finalScore": 88.3,
+      "points": 57.6,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-04-04T15:42:00.000Z",
+      "_id": "58123e73e0be5f30ae562e97"
+    }
+  ],
   "phases": [
     {
       "type": "Specification Submission",
@@ -138,15 +187,6 @@
       "_id": "58123e73e0be5f30ae562e8b"
     }
   ],
-  "platforms": [
-    "Other"
-  ],
-  "postingDate": "2015-03-31T05:08:00.000Z",
-  "prize": [
-    1600,
-    800
-  ],
-  "projectId": 8087,
   "registrants": [
     {
       "handle": "veshu",
@@ -392,61 +432,21 @@
       "_id": "58123e73e0be5f30ae562e70"
     }
   ],
-  "registrationEndDate": "2015-04-02T05:10:00.000Z",
-  "reliabilityBonus": 320,
-  "reviewScorecardId": 30001470,
-  "reviewType": "COMMUNITY",
-  "screeningScorecardId": 30000412,
-  "submissionEndDate": "2015-04-05T05:10:00.000Z",
-  "submissions": [
-    {
-      "handle": "Sky_",
-      "placement": 1,
-      "screeningScore": 100,
-      "initialScore": 94.9,
-      "finalScore": 95.45,
-      "points": 432,
-      "submissionStatus": "Active",
-      "submissionDate": "2015-04-04T13:06:00.000Z",
-      "_id": "58123e73e0be5f30ae562e9a"
-    },
-    {
-      "handle": "veshu",
-      "placement": 2,
-      "screeningScore": 100,
-      "initialScore": 94.6,
-      "finalScore": 94.6,
-      "points": 158.4,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2015-04-04T23:48:00.000Z",
-      "_id": "58123e73e0be5f30ae562e99"
-    },
-    {
-      "handle": "candymin",
-      "placement": 3,
-      "screeningScore": 100,
-      "initialScore": 90.13,
-      "finalScore": 90.29,
-      "points": 72,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2015-04-05T03:42:00.000Z",
-      "_id": "58123e73e0be5f30ae562e98"
-    },
-    {
-      "handle": "stevenfrog",
-      "placement": 4,
-      "screeningScore": 100,
-      "initialScore": 88.3,
-      "finalScore": 88.3,
-      "points": 57.6,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2015-04-04T15:42:00.000Z",
-      "_id": "58123e73e0be5f30ae562e97"
-    }
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "prize": [
+    1600,
+    800
   ],
   "technology": [
     "Angular.js",
     "HTML5",
     "Node.js"
+  ],
+  "platforms": [
+    "Other"
   ]
 }

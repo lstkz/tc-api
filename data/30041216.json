@@ -1,0 +1,435 @@
+{
+  "_id": 30041216,
+  "_isComplete": true,
+  "__v": 2140,
+  "_lastUpdate": "2016-11-05T11:05:02.273Z",
+  "appealsEndDate": "2014-06-17T14:27:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Module Assembly - Migration Mapper Functions",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Cancelled - Failed Review",
+  "detailedRequirements": "<h2><a name=\"_Toc10301853\"></a><a name=\"_Toc389636703\">1.1&nbsp;&nbsp;&nbsp; Overview</a></h2>\n\n<p style=\"margin-left:36.0pt\">There is an existing migration mapping application that is expected to be converted to be able to run on Windows and OS X.</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">This project performs migration of the application to Java. This project will be a standalone application that will assist users in mapping source/target fields across different types of data sources (CSV, SQL Server, Salesforce.com).</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">This assembly provides models, exceptions, services of the application with GUI integration and provides fully working application.</p>\n\n<h2><a name=\"_Toc389636704\">1.2&nbsp;&nbsp;&nbsp; Submission Deliverables</a></h2>\n\n<p style=\"margin-left:36.0pt\">A complete list of deliverables can be found in the TopCoder Assembly competition tutorials at:</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p><a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a></p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The assembly:</p>\n\n<p style=\"margin-left:90pt\">o&nbsp;&nbsp;&nbsp; Provides models</p>\n\n<p style=\"margin-left:90pt\">o&nbsp;&nbsp;&nbsp; Provides exceptions</p>\n\n<p style=\"margin-left:90pt\">o&nbsp;&nbsp;&nbsp; Provides services and all implementations (all class diagrams in scope)</p>\n\n<p style=\"margin-left:90pt\">o&nbsp;&nbsp;&nbsp; Integrates all services into GUI and provide complete working application</p>\n\n<p style=\"margin-left:36.0pt\">The implementation notes are provided in &ldquo;Documentation&rdquo; tab of TCUML. Refer to ADS 1.2 for various application management<a name=\"_Toc10301854\"></a><a name=\"_Toc10301867\"> details. Provided below are additional considerations for GUI integration. For all lengthy operations (like connecting to Salesforce, SQL Server, reading CSV file) progress dialog should be shown.</a></p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">Model/exception/service implementation is elaborated in &lsquo;Documentation&rsquo; tab of TCUML. Provided below are GUI guidelines.</p>\n\n<h3><a name=\"_Toc389636705\">1.2.1&nbsp;&nbsp;&nbsp; General updates</a></h3>\n\n<p style=\"margin-left:36.0pt\">The MainShell should add namesake fields and expose getters for all service implementations defined in the project. In constructor, all fields should be initialized using parameterless constructor. The class should also expose getter for current working project. When stated below &lsquo;refresh shell&rsquo; it is meant to update all views (source/target trees and mappings) for the current application project.</p>\n\n<h3><a name=\"_Toc389636706\">1.2.2&nbsp;&nbsp;&nbsp; File menu</a></h3>\n\n<h4>1.2.2.1&nbsp;&nbsp;&nbsp; File -&gt; New</h4>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Top menu &ldquo;File&rdquo;, submenu &ldquo;New&rdquo;</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: MainShell.java, lines 278-289</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: Should create new project. This is already handled in prototype code. Nothing is required to be updated</p>\n\n<h4>1.2.2.2&nbsp;&nbsp;&nbsp; File -&gt; Open</h4>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Top menu &ldquo;File&rdquo;, submenu &ldquo;Open&rdquo;</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: MainShell.java, lines 291-303</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: Should create open existing project. After name and validated in line 313, current project should be read with ProjectService:</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">proj = projectService.open(name);</p>\n\n<h4>1.2.2.3&nbsp;&nbsp;&nbsp; File -&gt; Save</h4>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Top menu &ldquo;File&rdquo;, submenu &ldquo;Save&rdquo;</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: MainShell.java, lines 305-317</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: Should save current project. Additional field currentProjectLocation:String should be added to MainShell.java. If the field is null, file chooser should be opened. After file name is selected and validated in line 314, current project should be saved with ProjectService and currentProjectLocation should be updated:</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">projectService.save(proj, name);</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">If currentProjectLocation is not null, save the project to it.</p>\n\n<h4>1.2.2.4&nbsp;&nbsp;&nbsp; File -&gt; Save As</h4>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Top menu &ldquo;File&rdquo;, submenu &ldquo;Save as&rdquo;</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: MainShell.java, lines 319-331</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: Should save current project to given location. After name is selected and validated in line 328, current project should be saved with ProjectService and currentProjectLocation should be updated (see above)</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<h4>1.2.2.5&nbsp;&nbsp;&nbsp; File -&gt; Import and Merge</h4>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Top menu &ldquo;File&rdquo;, submenu &ldquo;Import and Merge&rdquo;</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: MainShell.java, lines 333-345</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: Should create open existing project and merge with currently opened project. After name and validated in line 342, current project should be read with ProjectService:</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">Project mergeProject = projectService.open(name);</p>\n\n<p style=\"margin-left:36.0pt\">proj.setMappings(proj.getMappings().addAll(mergeProject.getMappings());</p>\n\n<p style=\"margin-left:36.0pt\">proj.setSourceFields(</p>\n\n<p style=\"margin-left:36.0pt\">proj.getSourceFields().addAll(mergeProject.getSourceFields());</p>\n\n<p style=\"margin-left:36.0pt\">proj.setTargetFields(</p>\n\n<p style=\"margin-left:36.0pt\">proj.getTargetFields().addAll(mergeProject.getTargetFields());</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<h4>1.2.2.6&nbsp;&nbsp;&nbsp; File -&gt; Exit</h4>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Top menu &ldquo;File&rdquo;, submenu &ldquo;Exit&rdquo;</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: MainShell.java, lines 349-356</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: Should exit from the application. If there is an unsaved project or project with pending changes it should be prompted to save. MainShell.java should be updated to include a flag whether current project is modified. It is by default set to false, if any action occurs with model it is set to true, if project is saved (see 1.2.2.3 and 1.2.2.4) it is to false. After line 352 in MainShell.java if the flag is set to true, a call to save project as in 1.2.2.4 should be done.</p>\n\n<h3><a name=\"_Toc389636707\">1.2.3&nbsp;&nbsp;&nbsp; Output menu</a></h3>\n\n<h4>1.2.3.1&nbsp;&nbsp;&nbsp; Output -&gt; To Clipboard</h4>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Top menu &ldquo;Output&rdquo;, submenu &ldquo;To Clipboard&hellip;&rdquo;</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: ExporterDialog.java</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: Should export contents to clipboard. When button processing starts in line 437 set all fields to configuration mapping for the service and call following code:</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">Map&lt;String, Object&gt; options = new HashMap&lt;String, Object&gt;();</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">// put all fields data to options, e.g.</p>\n\n<p style=\"margin-left:36.0pt\">options.put(&ldquo;exportMappings&rdquo;, btnMappings.getSelection());</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">String clipboardText = getParent().getExportService()</p>\n\n<p style=\"margin-left:36.0pt\">.export(getParent().getProject(), options);</p>\n\n<p style=\"margin-left:35.45pt\">&nbsp;</p>\n\n<p style=\"margin-left:35.45pt\">StringSelection selection = new StringSelection(text);</p>\n\n<p style=\"margin-left:35.45pt\">Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();</p>\n\n<p style=\"margin-left:35.45pt\">Clipboard.setContents(selection, null);</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">If the preview option is set in line 442, then set the text in textDialog:</p>\n\n<p style=\"margin-left:36.0pt\">if (btnCheckPreviewOutput.getSelection()) {</p>\n\n<p style=\"margin-left:36.0pt\">BigTextDialog textDialog = new BigTextDialog(shlExportSettings);</p>\n\n<p style=\"margin-left:36.0pt\">textDialog.setText(clipboardText);</p>\n\n<p style=\"margin-left:36.0pt\">textDialog.open();</p>\n\n<p style=\"margin-left:36.0pt\">}</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<h3><a name=\"_Toc389636708\">1.2.4&nbsp;&nbsp;&nbsp; Actions menu</a></h3>\n\n<h4>1.2.4.1&nbsp;&nbsp;&nbsp; Actions -&gt; Auto-Map Fields</h4>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Top menu &ldquo;Actions&rdquo;, submenu &ldquo;Auto-Map Fields&hellip;&rdquo;</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: AutoMapFieldConfig.java</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: Should add auto-mapping of fields for project. When button processing starts in line 296 set all fields to configuration mapping for the service and call following code:</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">Map&lt;String, Object&gt; options = new HashMap&lt;String, Object&gt;();</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">// put all fields data to options, e.g.</p>\n\n<p style=\"margin-left:36.0pt\">options.put(&ldquo;processAllFields&rdquo;, btnProcessAllFields.getSelection());</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">getParent().getAutoMappingService()</p>\n\n<p style=\"margin-left:36.0pt\">.createAutoMapping(getParent().getProject(), options);</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">Refresh view of parent shell.</p>\n\n<h4>1.2.4.2&nbsp;&nbsp;&nbsp; Actions -&gt; Delete All Mappings</h4>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Top menu &ldquo;Actions&rdquo;, submenu &ldquo;Delete All Mappings&rdquo;</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: MainShell.java, lines 390-401</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: Should delete all mappings for project. When button processing starts in line 393 call following code:</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">proj.getMappings().clear();</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">Refresh view of shell.</p>\n\n<h4>1.2.4.3&nbsp;&nbsp;&nbsp; Actions -&gt; Refresh Display</h4>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Top menu &ldquo;Actions&rdquo;, submenu &ldquo;Refresh Display&rdquo;</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: MainShell.java, lines 403-404</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: Refresh data view of shell.</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<h4>1.2.4.4&nbsp;&nbsp;&nbsp; Actions -&gt; Populate with Sample Data</h4>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Top menu &ldquo;Actions&rdquo;, submenu &ldquo;Populate with Sample Data&rdquo;</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: MainShell.java, lines 408-421</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: Should populate project with sample data. This is already handled in prototype code. Nothing is required to be updated</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<h3><a name=\"_Toc389636709\">1.2.5&nbsp;&nbsp;&nbsp; Preferences menu</a></h3>\n\n<h4>1.2.5.1&nbsp;&nbsp;&nbsp; Preferences -&gt; Edit Preferences</h4>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Top menu &ldquo;Preferences&rdquo;, submenu &ldquo;Edit Preferences &hellip;&rdquo;</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: PrefsDialog.java</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: Should edit preferences of project. The following &ldquo;OK&rdquo; button handling should be added after line 174:</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">btnOK.addSelectionListener(new SelectionAdapter() {</p>\n\n<p style=\"margin-left:36.0pt\">@Override</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; public void widgetSelected(SelectionEvent e) {</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;&nbsp;&nbsp;&nbsp; Preferences preferences = new Preferences();</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;&nbsp;&nbsp;&nbsp; preferences.setSourcePreferences(</p>\n\n<p style=\"margin-left:144.0pt\">(btnShowFieldNamesSource.getSelection() ?</p>\n\n<p style=\"margin-left:144.0pt\">PrefencesViewType.SHOW_FIELD_NAMES :</p>\n\n<p style=\"margin-left:144.0pt\">(btnShowFieldLabelsSource.getSelection() ?</p>\n\n<p style=\"margin-left:144.0pt\">PrefencesViewType.SHOW_FIELD_NAMES :</p>\n\n<p style=\"margin-left:144.0pt\">PrefencesViewType.SHOW_BOTH)));</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;&nbsp;&nbsp;&nbsp; preferences.setTargetPreferences(</p>\n\n<p style=\"margin-left:144.0pt\">(btnShowFieldNamesTarget.getSelection() ?</p>\n\n<p style=\"margin-left:144.0pt\">PrefencesViewType.SHOW_FIELD_NAMES :</p>\n\n<p style=\"margin-left:144.0pt\">(btnShowFieldLabelsTarget.getSelection() ?</p>\n\n<p style=\"margin-left:144.0pt\">PrefencesViewType.SHOW_FIELD_NAMES :</p>\n\n<p style=\"margin-left:144.0pt\">PrefencesViewType.SHOW_BOTH)));</p>\n\n<p style=\"margin-left:144.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:106.35pt\">getParent().getProject().setPreferences(preferences);</p>\n\n<p style=\"margin-left:106.35pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; shlPreferences.dispose();</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>\n\n<p style=\"margin-left:36.0pt\">});</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">Refresh view of parent shell.</p>\n\n<h4>1.2.5.2&nbsp;&nbsp;&nbsp; Preferences -&gt; About MigrationMapper</h4>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Top menu &ldquo;Preferences&rdquo;, submenu &ldquo;About MigrationMapper&hellip;&rdquo;</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: AboutDialog.java</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: Shows application information. This is already handled in prototype code. Nothing is required to be updated</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<h3><a name=\"_Toc389636710\">1.2.6&nbsp;&nbsp;&nbsp; Main mapping area fields management</a></h3>\n\n<p style=\"margin-left:36.0pt\">The managing of source/target fields is explained below. The source fields can be obtained as proj.getSourceFields() and proj.getTargetFields() in MainShell.java. We will reference as fields:Vector&lt;Field&gt; any of the source/target fields vector below. The code will call implementation of DataStorageService method getFields(). After calling this method, append all fields to project source/target fields.</p>\n\n<h4>1.2.6.1&nbsp;&nbsp;&nbsp; Adding fields -&gt; Manual entry</h4>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Source/Target &ldquo;Add&rdquo; link, top &ldquo;Add Fields&rdquo; tab, &ldquo;Manual entry&rdquo; subtab</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: FieldAddDialog.java, lines 501-564</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: Should manually add field data to project. The following &ldquo;OK&rdquo; button handling should be added after line 558:</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">btnManualEntryImport.addSelectionListener(new SelectionAdapter() {</p>\n\n<p style=\"margin-left:36.0pt\">@Override</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; public void widgetSelected(SelectionEvent e) {</p>\n\n<p style=\"margin-left:108.0pt\">Map&lt;String, Object&gt; configuration = new HashMap&lt;String,Object&gt;();</p>\n\n<p style=\"margin-left:108.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:108.0pt\">// put all fields data to configuration, e.g.</p>\n\n<p style=\"margin-left:108.0pt\">configuration.put(&ldquo;tableName&rdquo;,</p>\n\n<p style=\"margin-left:108.0pt\">textManualEntryTableName.getText());</p>\n\n<p style=\"margin-left:108.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:108.0pt\">Vector&lt;Field&gt; fields = getParent().getManualDataStorageService()</p>\n\n<p style=\"margin-left:108.0pt\">.getFields(configuration);</p>\n\n<p style=\"margin-left:108.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:106.35pt\">// Add fields vector to source/target vector of fields in project</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>\n\n<p style=\"margin-left:36.0pt\">});</p>\n\n<h4>1.2.6.2&nbsp;&nbsp;&nbsp; Adding fields -&gt; Salesforce</h4>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Source/Target &ldquo;Add&rdquo; link, top &ldquo;Add Fields&rdquo; tab, &ldquo;Salesforce&rdquo; subtab</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: FieldAddDialog.java, lines 556-669</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: Should login to Salesforce to retrieve object data and add selected field data to project. The following &ldquo;Login&rdquo; button handling should be updated after line 618:</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">Map&lt;String, Object&gt; configuration = new HashMap&lt;String,Object&gt;();</p>\n\n<p style=\"margin-left:108.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">// put all fields data to configuration, e.g.</p>\n\n<p style=\"margin-left:36.0pt\">configuration.put(&ldquo;username&rdquo;, textSalesforceUsername.getText());</p>\n\n<p style=\"margin-left:108.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">Vector&lt;Field&gt; fields = getParent().getSalesforceDataStorageService()</p>\n\n<p style=\"margin-left:108.0pt\">.getFields(configuration);</p>\n\n<p style=\"margin-left:108.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">After all the fields are retrieved, object dropdown should be populated with distinct values of field.getTableName(). Each individual field should be put in the table after clicking &ldquo;List Fields&rdquo; with checkbox being the first column specifying whether field is selected or not (refer to original application)</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">The &ldquo;Import&rdquo; button should add fields to source/target fields based on the checkbox selection.</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<h4>1.2.6.3&nbsp;&nbsp;&nbsp; Adding fields -&gt; SQL Server</h4>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Source/Target &ldquo;Add&rdquo; link, top &ldquo;Add Fields&rdquo; tab, &ldquo;SQL Server&rdquo; subtab</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: FieldAddDialog.java, lines 671-765</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: Should login to SQL Server to retrieve table metadata data and add selected field data to project. The following &ldquo;Connect&rdquo; button handling should be updated after line 737:</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">Map&lt;String, Object&gt; configuration = new HashMap&lt;String,Object&gt;();</p>\n\n<p style=\"margin-left:108.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">// put all fields data to configuration, e.g.</p>\n\n<p style=\"margin-left:36.0pt\">configuration.put(&ldquo;username&rdquo;, textSqlServerUsername.getText());</p>\n\n<p style=\"margin-left:108.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">Vector&lt;Field&gt; fields = getParent().getSqlServerDataStorageService()</p>\n\n<p style=\"margin-left:108.0pt\">.getFields(configuration);</p>\n\n<p style=\"margin-left:108.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">After all the fields are retrieved, table dropdown should be populated with distinct values of field.getTableName(). Each individual field should be put in the table after selecting the table with checkbox being the first column specifying whether field is selected or not (refer to original application)</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">The &ldquo;Import&rdquo; button should add fields to source/target fields based on the checkbox selection.</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<h4>1.2.6.4&nbsp;&nbsp;&nbsp; Adding fields -&gt; CSV Data File</h4>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Source/Target &ldquo;Add&rdquo; link, top &ldquo;Add Fields&rdquo; tab, &ldquo;CSV Data File&rdquo; subtab</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: FieldAddDialog.java, lines 833-864</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: When file is selected and &ldquo;Preview File&rdquo; is clicked, contents of file should be loaded into the text area. When &ldquo;Import&rdquo; button is selected the CsvDataStorageService processing should be performed after line 864 when handling the button:</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">Map&lt;String, Object&gt; configuration = new HashMap&lt;String,Object&gt;();</p>\n\n<p style=\"margin-left:108.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">// put all fields data to configuration, e.g.</p>\n\n<p style=\"margin-left:36.0pt\">configuration.put(&ldquo;tableName&rdquo;, textCsvDataFileDefaultTable.getText());</p>\n\n<p style=\"margin-left:108.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">Vector&lt;Field&gt; fields = getParent().getCsvDataStorageService()</p>\n\n<p style=\"margin-left:108.0pt\">.getFields(configuration);</p>\n\n<p style=\"margin-left:108.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">The fields should be added to the parent shell project fields.</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<h4>1.2.6.5&nbsp;&nbsp;&nbsp; Adding fields -&gt; Paste-in</h4>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Source/Target &ldquo;Add&rdquo; link, top &ldquo;Add Fields&rdquo; tab, &ldquo;Paste-In&rdquo; subtab</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: FieldAddDialog.java, lines 866-917</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: When &ldquo;Import&rdquo; button is selected the PasteInDataStorageService processing should be performed after line 917 when handling the button:</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">Map&lt;String, Object&gt; configuration = new HashMap&lt;String,Object&gt;();</p>\n\n<p style=\"margin-left:108.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">// put all fields data to configuration, e.g.</p>\n\n<p style=\"margin-left:36.0pt\">configuration.put(&ldquo;tableName&rdquo;, textTablenamePaste.getText());</p>\n\n<p style=\"margin-left:108.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">Vector&lt;Field&gt; fields = getParent().getPasteInStorageService()</p>\n\n<p style=\"margin-left:108.0pt\">.getFields(configuration);</p>\n\n<p style=\"margin-left:108.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">The fields should be added to the parent shell project fields.</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<h4>1.2.6.6&nbsp;&nbsp;&nbsp; Adding fields -&gt; MigMapper File</h4>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Source/Target &ldquo;Add&rdquo; link, top &ldquo;Add Fields&rdquo; tab, &ldquo;MigMapper File&rdquo; subtab</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: FieldAddDialog.java, lines 919-998</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: When &ldquo;Open Mapproj file&rdquo; is selected the fields should be reloaded using ProjectService after line 953. It should also allow opening .xml files. The buttons btnShowTheSource, btnShowTheTarget should show project.getSourceFields() and project.getTargetFields() of the loaded project. &ldquo;Select All&rdquo; should select/unselect all loaded fields in main area, &ldquo;Sort Alphabetically&rdquo; should reorder all fields and sort them based on field.getName(). When &ldquo;Import&rdquo; button is selected the PasteInDataStorageService processing should be performed after line 998 when handling the button and all selected source/target fields should be added to the project.</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<h4>1.2.6.7&nbsp;&nbsp;&nbsp; Manage Fields -&gt; MigMapper File</h4>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Source/Target &ldquo;Manage&rdquo; link, top &ldquo;Manage Fields&rdquo; tab</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: FieldEditDialog.java</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: The implementation should update all loaded source/target fields of parent shell project. The update should be done after clicking &ldquo;OK &ndash; Keep Changes&rdquo;</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">All &ldquo;Move Rows&rdquo; buttons are already handled in prototype code. Nothing is required to be updated.</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">&ldquo;Delete Selected&rdquo; should remove selected rows specifying the fields and remove them from project fields.</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">&ldquo;Change Tablename of Selected&rdquo; should call field.setTableName() for all selected fields in the grid.</p>\n\n<p style=\"margin-left:36.0pt\">&ldquo;Remove duplicates&rdquo; should remove all non-first entries having the same field.getTableName() and field.getName() for all fields in the grid.</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">&ldquo;Sort alphabetical&rdquo; should sort all fields based on field.getName() (note, similar logic is already handled by clicking on &ldquo;Field name&rdquo; as sort column)</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">&ldquo;Clear All Flags&rdquo; should call field.clearFlags() for all fields.</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">&ldquo;Clear All Questions&rdquo; should call field.setQuestion(&ldquo;&rdquo;) for all fields.</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">After double clicking on the row, if user changes any data of field in should be updated after clicking &ldquo;OK&rdquo; button</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<h3><a name=\"_Toc389636711\">1.2.7&nbsp;&nbsp;&nbsp; Main working area</a></h3>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Two main field trees on left/right for source/target fields, controls for adding mapping</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: MainShell.java</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: The implementation should load left tree for proj.getSourceFields() and right tree for proj.getTargetFields(). The leaf value to write should check the proj.getPreferences().getSourcePreferences() and proj.getPreferences().getTargetPreferences() values of current proj. If SHOW_FIELD_NAMES is set, use field.getName() to display, for SHOW_FIELD_LABELS is use field.getLabel() and for SHOW_BOTH use field.getName() + &ldquo; &ndash; &ldquo; field.getLabel()</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<p style=\"margin-left:36.0pt\">When clicking on &ldquo;Add mapping&rdquo; new Mapping model should be created, sourceFields set to selected source fields, target fields set to selected target fields and transformation/comment text set to the values in respective text boxes. For all fields that were either in sourceFields or originalFields flag mapped should be set to true. The mapping should appear in bottom grid of mappings.</p>\n\n<p style=\"margin-left:36.0pt\">&nbsp;</p>\n\n<h3><a name=\"_Toc389636712\">1.2.8&nbsp;&nbsp;&nbsp; Bottom working area</a></h3>\n\n<p style=\"margin-left:36.0pt\">GUI reference: Bottom grid of mappings</p>\n\n<p style=\"margin-left:36.0pt\">Code reference: MainShell.java</p>\n\n<p style=\"margin-left:36.0pt\">Implementation: The grid should contain all mappings from the project. [System Use] column should be removed. The implementation should manage mappings for the project. &ldquo;Redraw Grid&rdquo; should refresh grid, all &ldquo;Move Up&rdquo;, &ldquo;Down&rdquo;, &ldquo;Top&rdquo;, &ldquo;Bottom&rdquo; buttons are already handled in prototype code. Nothing is required to be updated. &ldquo;Recall Selected for Edit / Delete&rdquo; should remove the mapping from project and all mapping data (source/target fields, transformation, comment) to the working area above (see section 1.2.7). For all fields in mappings, if field is not used in any other project mapping the flag mapped should be set to false.</p>\n\n<h2><a name=\"_Toc389636713\">1.3&nbsp;&nbsp;&nbsp; Technology overview</a></h2>\n\n<p style=\"margin-left:54pt\">&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Java 6</p>\n\n<p style=\"margin-left:54pt\">&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OpenCSV 2.3</p>\n\n<p style=\"margin-left:54pt\">&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SWT</p>\n\n<h2><a name=\"_Toc389636714\">1.4&nbsp;&nbsp;&nbsp; Existing Documents</a></h2>\n\n<p style=\"margin-left:54pt\">&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Assembly Diagram</p>\n\n<p style=\"margin-left:54pt\">&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Class Diagrams</p>\n\n<p style=\"margin-left:54pt\">&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sequence Diagrams</p>\n\n<p style=\"margin-left:54pt\">&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Application Design Specification</p>\n\n<p style=\"margin-left:54pt\">&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Assembly Specifications</p>\n",
+  "digitalRunPoints": 810,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30041216",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2014-06-19T02:27:00.000Z",
+  "finalSubmissionGuidelines": "<ul>\n\t<li>Source Code</li>\n\t<li>Test Data</li>\n\t<li>Deployment Guide</li>\n</ul>\n",
+  "forumId": 21789,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=21789",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 26,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-06T15:14:00.000Z",
+      "actualStartTime": "2014-06-06T15:14:00.000Z",
+      "scheduledEndTime": "2014-06-06T15:15:00.000Z",
+      "actualendTime": "2014-06-06T15:15:00.000Z",
+      "_id": "581dbcde550dfb3b52be275d"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-06T15:15:00.000Z",
+      "actualStartTime": "2014-06-06T15:15:00.000Z",
+      "scheduledEndTime": "2014-06-07T13:34:00.000Z",
+      "actualendTime": "2014-06-07T13:34:00.000Z",
+      "_id": "581dbcde550dfb3b52be275c"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-09T16:33:00.000Z",
+      "actualStartTime": "2014-06-09T16:33:00.000Z",
+      "scheduledEndTime": "2014-06-11T16:33:00.000Z",
+      "actualendTime": "2014-06-11T16:33:00.000Z",
+      "_id": "581dbcde550dfb3b52be275b"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-09T16:38:00.000Z",
+      "actualStartTime": "2014-06-09T16:38:00.000Z",
+      "scheduledEndTime": "2014-06-14T16:33:00.000Z",
+      "actualendTime": "2014-06-14T16:33:00.000Z",
+      "_id": "581dbcde550dfb3b52be275a"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-14T16:33:00.000Z",
+      "actualStartTime": "2014-06-14T16:33:00.000Z",
+      "scheduledEndTime": "2014-06-14T17:58:00.000Z",
+      "actualendTime": "2014-06-14T17:58:00.000Z",
+      "_id": "581dbcde550dfb3b52be2759"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-14T17:58:00.000Z",
+      "actualStartTime": "2014-06-14T17:58:00.000Z",
+      "scheduledEndTime": "2014-06-16T14:27:00.000Z",
+      "actualendTime": "2014-06-16T14:27:00.000Z",
+      "_id": "581dbcde550dfb3b52be2758"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-16T14:27:00.000Z",
+      "actualStartTime": "2014-06-16T14:27:00.000Z",
+      "scheduledEndTime": "2014-06-17T14:27:00.000Z",
+      "actualendTime": "2014-06-17T14:27:00.000Z",
+      "_id": "581dbcde550dfb3b52be2757"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-17T14:27:00.000Z",
+      "actualStartTime": "2014-06-17T14:27:00.000Z",
+      "scheduledEndTime": "2014-06-17T14:27:00.000Z",
+      "actualendTime": "2014-06-17T14:27:00.000Z",
+      "_id": "581dbcde550dfb3b52be2756"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-06-17T14:27:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-06-18T02:27:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbcde550dfb3b52be2755"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-06-18T02:27:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-06-19T02:27:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbcde550dfb3b52be2754"
+    },
+    {
+      "type": "Final Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-06-19T02:27:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-06-19T14:27:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbcde550dfb3b52be2753"
+    },
+    {
+      "type": "Approval",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-06-19T14:27:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-06-24T14:27:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbcde550dfb3b52be2752"
+    },
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-07T13:34:00.000Z",
+      "actualStartTime": "2014-06-07T13:34:00.000Z",
+      "scheduledEndTime": "2014-06-09T09:34:00.000Z",
+      "actualendTime": "2014-06-09T09:34:00.000Z",
+      "_id": "581dbcde550dfb3b52be2751"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-09T09:34:00.000Z",
+      "actualStartTime": "2014-06-09T09:34:00.000Z",
+      "scheduledEndTime": "2014-06-09T09:57:00.000Z",
+      "actualendTime": "2014-06-09T09:57:00.000Z",
+      "_id": "581dbcde550dfb3b52be2750"
+    },
+    {
+      "type": "Post-Mortem",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-17T14:27:00.000Z",
+      "actualStartTime": "2014-06-17T14:27:00.000Z",
+      "scheduledEndTime": "2014-06-18T14:27:00.000Z",
+      "actualendTime": "2014-06-18T14:27:00.000Z",
+      "_id": "581dbcde550dfb3b52be274f"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2014-06-09T16:33:00.000Z",
+  "prize": [
+    1800,
+    900
+  ],
+  "projectId": 7400,
+  "registrants": [
+    {
+      "handle": "suno1234",
+      "reliability": "40%",
+      "registrationDate": "2014-06-09T16:36:00.000Z",
+      "submissionDate": "2014-06-13T16:02:00.000Z",
+      "rating": "869",
+      "colorStyle": "color: #999999",
+      "_id": "581dbcde550dfb3b52be274e"
+    },
+    {
+      "handle": "kanakarajank",
+      "reliability": "60%",
+      "registrationDate": "2014-06-09T16:41:00.000Z",
+      "submissionDate": null,
+      "rating": "967",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbcde550dfb3b52be274d"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "6%",
+      "registrationDate": "2014-06-09T16:51:00.000Z",
+      "submissionDate": null,
+      "rating": "714",
+      "colorStyle": "color: #999999",
+      "_id": "581dbcde550dfb3b52be274c"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-09T16:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcde550dfb3b52be274b"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-09T17:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcde550dfb3b52be274a"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-09T18:23:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "581dbcde550dfb3b52be2749"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-06-09T18:27:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "581dbcde550dfb3b52be2748"
+    },
+    {
+      "handle": "raj88iitr",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-09T19:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcde550dfb3b52be2747"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-09T21:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcde550dfb3b52be2746"
+    },
+    {
+      "handle": "billthu",
+      "reliability": "0%",
+      "registrationDate": "2014-06-09T23:46:00.000Z",
+      "submissionDate": null,
+      "rating": "762",
+      "colorStyle": "color: #999999",
+      "_id": "581dbcde550dfb3b52be2745"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-10T00:41:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "581dbcde550dfb3b52be2744"
+    },
+    {
+      "handle": "devmodugu",
+      "reliability": "0%",
+      "registrationDate": "2014-06-10T01:09:00.000Z",
+      "submissionDate": null,
+      "rating": "855",
+      "colorStyle": "color: #999999",
+      "_id": "581dbcde550dfb3b52be2743"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-10T02:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcde550dfb3b52be2742"
+    },
+    {
+      "handle": "frozenfx",
+      "reliability": "0%",
+      "registrationDate": "2014-06-10T03:04:00.000Z",
+      "submissionDate": null,
+      "rating": "1721",
+      "colorStyle": "color: #DDCC00",
+      "_id": "581dbcde550dfb3b52be2741"
+    },
+    {
+      "handle": "dezl",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-10T05:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcde550dfb3b52be2740"
+    },
+    {
+      "handle": "net_buster",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-10T06:12:00.000Z",
+      "submissionDate": null,
+      "rating": "659",
+      "colorStyle": "color: #999999",
+      "_id": "581dbcde550dfb3b52be273f"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-10T08:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcde550dfb3b52be273e"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "0%",
+      "registrationDate": "2014-06-10T09:42:00.000Z",
+      "submissionDate": null,
+      "rating": "639",
+      "colorStyle": "color: #999999",
+      "_id": "581dbcde550dfb3b52be273d"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "20%",
+      "registrationDate": "2014-06-10T13:40:00.000Z",
+      "submissionDate": null,
+      "rating": "1040",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbcde550dfb3b52be273c"
+    },
+    {
+      "handle": "torghul",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-10T13:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcde550dfb3b52be273b"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-10T15:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcde550dfb3b52be273a"
+    },
+    {
+      "handle": "abelli",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-10T16:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcde550dfb3b52be2739"
+    },
+    {
+      "handle": "gondzo",
+      "reliability": "13%",
+      "registrationDate": "2014-06-10T17:48:00.000Z",
+      "submissionDate": null,
+      "rating": "581",
+      "colorStyle": "color: #999999",
+      "_id": "581dbcde550dfb3b52be2738"
+    },
+    {
+      "handle": "sweetu",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-11T03:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcde550dfb3b52be2737"
+    },
+    {
+      "handle": "partychen",
+      "reliability": "0%",
+      "registrationDate": "2014-06-11T09:15:00.000Z",
+      "submissionDate": null,
+      "rating": "934",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbcde550dfb3b52be2736"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-06-11T10:56:00.000Z",
+      "submissionDate": null,
+      "rating": "1135",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbcde550dfb3b52be2735"
+    }
+  ],
+  "registrationEndDate": "2014-06-11T16:33:00.000Z",
+  "reliabilityBonus": 360,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-06-14T16:33:00.000Z",
+  "submissions": [
+    {
+      "handle": "suno1234",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 79.07,
+      "finalScore": 79.07,
+      "points": 810,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-06-13T16:02:00.000Z",
+      "_id": "581dbcde550dfb3b52be275e"
+    }
+  ],
+  "technology": [
+    "Java"
+  ]
+}

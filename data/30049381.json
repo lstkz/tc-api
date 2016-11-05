@@ -1,0 +1,602 @@
+{
+  "_id": 30049381,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T09:54:12.273Z",
+  "appealsEndDate": "2015-04-01T00:59:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Omega Microservices / API Challenge - Part 1",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\">Welcome to the Omega microservices challenge.&nbsp;<span>This challenge is first in a series of challenges where we will build Application for a world leading point-of-sale manufacturer.</span></p>\n\n<p dir=\"ltr\">&nbsp;</p>\n\n<p dir=\"ltr\"><strong>Project Overview</strong></p>\n\n<p dir=\"ltr\">The goal of this app is to allow customers of the POS equipment to manage and provision their fleet of hardware. We will begin this series by building out our apps API - A series of microservices built in Golang connecting to Cassandra database. We will be providing Dockerfiles so you can start with a turn-key Cassandra 3 node cluster. We will be creating 13 microservices in total and already have two completed so you will have some good examples.</p>\n\n<p dir=\"ltr\">&nbsp;</p>\n\n<p dir=\"ltr\">&nbsp;</p>\n\n<p><strong>Challenge Overview</strong></p>\n\n<p>Simply put, this challenge requires you to create an API in Golang with Cassandra as the database. The API contains 13 &quot;microservices&quot;, two of which we have already implemented to give you an example.&nbsp;</p>\n\n<ul>\n\t<li>Since our services require a minimum of three Cassandra nodes we have provided a Dockerfile to build the image and a docker-compose to run the containers and link them. You are however free to use your own Cassandra database.</li>\n\t<li>Of the 13 microservices, we have already implemeted two. For these two resources, we have created a utility that will create the schema in Cassandra and load a set of sample data. The tool is called &quot;dgestool&quot; and as part of these challenges you will create a cql file and a csv that corresponds to your new service.</li>\n\t<li>Enhance the dgestool - Part of the challenge will require adding support to dgestool for detecting and populating the new microservice&rsquo;s cassandra keyspace table(s).</li>\n\t<li>Create the microservice - using the two provided microservices as an example you will create another microservice based on the supplied dataguard.yaml swagger file.</li>\n\t<li>Swagger file - We have provided a swagger yaml file that defines all the services. You may use swagger UI or the online swagger tool to inspect the yaml file if you like but everything you need should be included in the yaml file.</li>\n\t<li>Sample data file and schema - While you are creating the services you should periodically create the cql file and a sample csv file and use the dgestool to import it.</li>\n\t<li>Improvements to the process - Unlike a classic code challenge this series requires more setup details (Cassandra) so we feel that docker is a good approach to simplify these steps but we are always looking for ways to improve this so we welcome your feedback.</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p><strong>Challenge Application Setup Details</strong></p>\n\n<p>We wanted to make it easier for you to focus on building the microservice. Hence, we have provided (as part of the source code) a <a href=\"https://www.docker.com/\">Docker</a>&nbsp;image which contains Cassandra - our database for this application. Thus, you don&#39;t have to install it, configure it and go through all the time consuming actions - we have already done that for you through a Docker Image. This is optional. If you wish to use your own Cassandra database that you wish to set up on your own / have already set up, feel free to use it.</p>\n\n<p>&nbsp;</p>\n\n<p>Follow the instruction below to set the application up.</p>\n\n<p><u>Cassandra Docker Cluster</u>: Start by downloading the source code which will be in the forum as a zip file or (optionally) upon request we will add you to the private gitlab repo. Next you will need to install Docker and docker-compose (formerly known as fig). If you are not working natively on Linux you may need to increase the <a href=\"http://boot2docker.io/\">boot2docker</a> ram to 4G in order to run the containers. Once you have docker and docker-compose installed you should be able to run &quot;$ docker-compose up&quot; from the cassandra-docker directory. If everything is working you should see three containers running with &quot;$ docker ps&quot; in another terminal.</p>\n\n<p><u>Load data</u>: Next you need to build the dgestool and sample services for importing the schema and data and testing connectivity. To do this set your GOPATH to services/src/dges. You will need to have mercurial installed so you can get the following dependencies.</p>\n\n<ul>\n\t<li>RUN go get code.google.com/p/snappy-go/snappy</li>\n\t<li>RUN go get speter.net/go/exp/math/dec/inf</li>\n\t<li>RUN go get github.com/gocql/gocql</li>\n\t<li>Build dgestool and the reference services.</li>\n</ul>\n\n<p><u>Create the microservice</u>: Using the existing two microservices (customers and enterprisegroups) and the dataguard.yaml file you should be able to create a new microservice from the details in the yaml file. You may choose <u>any one</u> defined in the datagaurd.yaml file, however Locations and Users are the logical next step. If you choose to do more than 1 service a discretionary bonus of up to $1000 may be award.</p>\n\n<p>A tl;dr version of the resources that will be built is as follows:</p>\n\n<ul>\n\t<li>Customers (already completed)\n\t<ul>\n\t\t<li>Enterprise Groups (already completed)\n\t\t<ul>\n\t\t\t<li>Locations\n\t\t\t<ul>\n\t\t\t\t<li>Endpoint Services&nbsp;</li>\n\t\t\t\t<li>Terminals&nbsp;\n\t\t\t\t<ul>\n\t\t\t\t\t<li>Peripherals\n\t\t\t\t\t<ul>\n\t\t\t\t\t\t<li>Endpoints\n\t\t\t\t\t\t<ul>\n\t\t\t\t\t\t\t<li>Manifests</li>\n\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t</ul>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Statistics</li>\n\t\t<li>Users / Groups / Roles (consider one service or propose multiple if it makes sense - please explain your decision here)</li>\n\t</ul>\n\t</li>\n\t<li>Coming soon\n\t<ul>\n\t\t<li>Events</li>\n\t\t<li>Alerts</li>\n\t\t<li>Manifest Templates</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p><span>Note: The indentation implies a resource dependency on the previous service. For example, enterprise groups belong to a specific customer and locations are part of an enterprise group.</span></p>\n\n<p><span style=\"line-height:1.6\"><u>Sample data file and schema</u>: While you are developing the microservice you should also create the scema and supporting cql file and sample csv file which should contain at least 100 records. You should use the dgestool to import it and be able to test against it. Respect hierarchy and tie with ids from existing sample data. For example, reuse the customers service sample data id as well as existing enterprise groups ids. Keyspaces and table(s) design must maximize scalability at the expense of normalization every time.</span></p>\n\n<p>&nbsp;</p>\n\n<p><strong>Challenge Details</strong></p>\n\n<p>To give you a push in the right direction, we have already implemented two resources for the microservice - customer and enterprisegroups. The entire list of resources has been described in detail in the dataguard.yaml file provided along with the source code.</p>\n\n<p>As part of this challenge, you need to&nbsp;</p>\n\n<ol>\n\t<li>Choose 1 of the several available microservices from the list defined in the dataguard.yaml file and implement it following the patterns from existing customers and enterprisegroups.</li>\n\t<li>Update the dgestool to support detection, mapping &amp; import of the new service&rsquo;s sample data csv.</li>\n\t<li>Provide a cql file and csv file (containing 100 records) to be used with the provided dgestool to import the schema and load the data.</li>\n\t<li>Provide unit tests that exercise your solution. Use the Go test framework for all unit tests and provide coverage report.</li>\n\t<li>Provide suggestion to simplify the environment setup or improve the code structure&nbsp;<span>(Optional - discretionary bonus)</span></li>\n\t<li><span>E2E tests for testing routes by hitting the REST API and validating the results.&nbsp;(Optional - discretionary bonus)&nbsp;</span></li>\n</ol>\n\n<p>&nbsp;</p>\n\n<p><strong>Additional Notes:</strong></p>\n\n<p>I have provided a Dockerfile for a go-utility-client which you may use to see the sample services running. Look at the Dockerfile (Note this is a different Dockerfile from the cassandra image) in /services. The instructions are in the comments of the readme. In addition this, the Dockerfile has all the dependencies to run the microservices, but they should also build fine on a mac or windows. The use of this docker is completely optional. You should have no trouble developing the service on any os that supports GO. When you run the two services and want to test a GET be sure to set your Accepts and Content-Type headers to application/json otherwise it will return a 404.</p>\n\n<p>In addition to this, certain recommendations that you can follow:</p>\n\n<p><u>Cassandra recomedations</u></p>\n\n<ul>\n\t<li>Never use a secondary index &ndash; find a way not to need one.</li>\n\t<li>Use the right partition key for your table(s). Time series data for example should have a composite partition key with a time bucket for the partition key.</li>\n\t<li>Use the right clustering keys for your table(s).</li>\n\t<li>Watch out for unbounded row growth</li>\n</ul>\n\n<p><u>Recommended Cassandra reads/references:</u></p>\n\n<ul>\n\t<li>Cassandra High Availability, by Robbie Stickland, Packt publishing</li>\n\t<li>Cassandra Data Modeling and Analysis, by C.Y. Kan, Packt publishing</li>\n\t<li>Cassandra Design Patterns, by Sanjay Sharma, Packt publishing</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p>Finally as you can tell, the first time setup of these challenges is elaborate and requires knowledge in multiple areas.</p>\n\n<p>We are looking for ways to reduce the barriers to entry. Bonus considerations will be made for submissions that provide a simpler setup to run the challenges.</p>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30049381",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalSubmissionGuidelines": "<p>Submit your source code in zip file to TopCoder Online Review. Your submission must include the following:</p>\n\n<ul>\n\t<li>Detailed setup instructions</li>\n\t<li>Documentation of unit tests</li>\n\t<li>Unit test coverage report</li>\n\t<li>Updated docker image which includes your microservice&nbsp;(Optional)</li>\n</ul>\n",
+  "forumId": 28693,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=28693",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 51,
+  "numberOfSubmissions": 4,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-18T20:59:00.000Z",
+      "actualStartTime": "2015-03-18T20:59:00.000Z",
+      "scheduledEndTime": "2015-03-25T20:56:00.000Z",
+      "actualendTime": "2015-03-25T20:56:00.000Z",
+      "_id": "58132044550dfb3b52b2a77c"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-18T21:06:00.000Z",
+      "actualStartTime": "2015-03-18T21:06:00.000Z",
+      "scheduledEndTime": "2015-03-25T20:56:00.000Z",
+      "actualendTime": "2015-03-25T20:56:00.000Z",
+      "_id": "58132044550dfb3b52b2a77b"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-25T20:56:00.000Z",
+      "actualStartTime": "2015-03-25T20:56:00.000Z",
+      "scheduledEndTime": "2015-03-30T16:01:00.000Z",
+      "actualendTime": "2015-03-30T16:01:00.000Z",
+      "_id": "58132044550dfb3b52b2a77a"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-30T16:01:00.000Z",
+      "actualStartTime": "2015-03-30T16:01:00.000Z",
+      "scheduledEndTime": "2015-03-31T16:03:00.000Z",
+      "actualendTime": "2015-03-31T16:03:00.000Z",
+      "_id": "58132044550dfb3b52b2a779"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-31T16:03:00.000Z",
+      "actualStartTime": "2015-03-31T16:03:00.000Z",
+      "scheduledEndTime": "2015-04-01T00:59:00.000Z",
+      "actualendTime": "2015-04-01T00:59:00.000Z",
+      "_id": "58132044550dfb3b52b2a778"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-03-18T20:59:00.000Z",
+  "prize": [
+    1500,
+    1000
+  ],
+  "projectId": 8463,
+  "registrants": [
+    {
+      "handle": "chicapi",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-18T21:50:00.000Z",
+      "submissionDate": "2015-03-25T20:54:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a777"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-18T21:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a776"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-18T21:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a775"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-18T22:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a774"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T01:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a773"
+    },
+    {
+      "handle": "_indy",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T01:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a772"
+    },
+    {
+      "handle": "bannie2492",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T02:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a771"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T09:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a770"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T06:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a76f"
+    },
+    {
+      "handle": "xiulin_li",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T06:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a76e"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T08:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a76d"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T10:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a76c"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T10:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a76b"
+    },
+    {
+      "handle": "maniek",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T10:37:00.000Z",
+      "submissionDate": "2015-03-25T20:53:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a76a"
+    },
+    {
+      "handle": "orirmi",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T10:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a769"
+    },
+    {
+      "handle": "bluenet",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T12:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a768"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T14:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a767"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T15:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a766"
+    },
+    {
+      "handle": "alexdebrie",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T15:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a765"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T15:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a764"
+    },
+    {
+      "handle": "ananthhh",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T18:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a763"
+    },
+    {
+      "handle": "mikebeyer",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T20:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a762"
+    },
+    {
+      "handle": "pedrosaraiva",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T23:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a761"
+    },
+    {
+      "handle": "sri02",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-20T01:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a760"
+    },
+    {
+      "handle": "dianluxiaozi",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-20T03:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a75f"
+    },
+    {
+      "handle": "sabbirhs",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-20T05:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a75e"
+    },
+    {
+      "handle": "Manawasp",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-20T07:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a75d"
+    },
+    {
+      "handle": "mhrabovcin",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-20T09:43:00.000Z",
+      "submissionDate": "2015-03-25T12:53:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a75c"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-20T11:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a75b"
+    },
+    {
+      "handle": "foreignfun38",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-20T14:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a75a"
+    },
+    {
+      "handle": "iCare",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-20T14:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a759"
+    },
+    {
+      "handle": "JGeeks",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-20T15:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a758"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-20T17:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a757"
+    },
+    {
+      "handle": "SPChoria",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-20T22:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a756"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-20T22:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a755"
+    },
+    {
+      "handle": "ksavinash",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-21T08:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a754"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-21T09:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a753"
+    },
+    {
+      "handle": "ohyan07",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-21T09:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a752"
+    },
+    {
+      "handle": "chok68",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-21T20:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a751"
+    },
+    {
+      "handle": "thientri",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-21T23:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a750"
+    },
+    {
+      "handle": "xin135",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-22T10:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a74f"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-22T12:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a74e"
+    },
+    {
+      "handle": "piotrrojek",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-22T20:50:00.000Z",
+      "submissionDate": "2015-03-25T20:43:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a74d"
+    },
+    {
+      "handle": "mike.chow",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-23T07:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a74c"
+    },
+    {
+      "handle": "smcconnell",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-23T13:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a74b"
+    },
+    {
+      "handle": "gedex",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-23T22:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a74a"
+    },
+    {
+      "handle": "ValTrof",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-24T01:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a749"
+    },
+    {
+      "handle": "alpe1",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-24T06:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a748"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-24T16:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a747"
+    },
+    {
+      "handle": "xiufei",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-24T08:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a746"
+    },
+    {
+      "handle": "ifox",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-25T05:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132044550dfb3b52b2a745"
+    }
+  ],
+  "registrationEndDate": "2015-03-25T20:56:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-03-25T20:56:00.000Z",
+  "submissions": [
+    {
+      "handle": "maniek",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 88.75,
+      "finalScore": 90,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-03-25T20:53:00.000Z",
+      "_id": "58132044550dfb3b52b2a780"
+    },
+    {
+      "handle": "chicapi",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 90,
+      "finalScore": 90,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-03-25T20:54:00.000Z",
+      "_id": "58132044550dfb3b52b2a77f"
+    },
+    {
+      "handle": "mhrabovcin",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 86.88,
+      "finalScore": 89.38,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-03-25T12:53:00.000Z",
+      "_id": "58132044550dfb3b52b2a77e"
+    },
+    {
+      "handle": "piotrrojek",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 68.75,
+      "finalScore": 68.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-03-25T20:43:00.000Z",
+      "_id": "58132044550dfb3b52b2a77d"
+    }
+  ],
+  "technology": [
+    "API",
+    "Go"
+  ]
+}

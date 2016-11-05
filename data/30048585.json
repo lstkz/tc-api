@@ -1,0 +1,424 @@
+{
+  "_id": 30048585,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T11:01:02.284Z",
+  "appealsEndDate": "2015-01-31T02:59:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "!!72hrs!! GE Patent Processing Tool Part 1",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2 dir=\"ltr\"><strong>Project Overview</strong></h2>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">GE processes thousands of patent applications a year in the US alone. &nbsp;They have applications from other countries with applicable info called &quot;prior art.&quot; &nbsp;This info (prior art) sometimes needs to be transposed from one application to another, a process that is done manually today and can take anywhere from five minutes to an hour. I think you can see the value that this tool could provide when you think about this process happening over thousands of applications. </span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">We are running series of POC challenges to build a tool that could automate this process.</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The final tool we want to build, will have the following workflow : </span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">A user opens a web page to have two functionality : </span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">upload a patent application that contains the &lsquo;prior art&rsquo; information</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">upload an optional file that contains key/value pairs representing additional information that will be replacing default values used in building the final output </span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">A php application backend will handle the upload functionality, and delegate logic to a java command line utility (packaged in jar file) passing the files to the utility</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The utility will parse the input arguments, and decide the type of input file of both input files</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">For the patent application file, the utility extracts the &lsquo;prior art&rsquo; information, and construct an xml</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">For optional file (let&rsquo;s call it &lsquo;extra info&rsquo; file), the utility converts the file to xml</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">the utility uses a mapping file, the converted xmls, and create a pdf/xls/csv file, store it locally, and return the full path to the file to the php</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">the php will read the file and send it back to the user.</span></p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\"><strong>Challenge Requirement</strong></h2>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">In this challenge you are building the java command line utility, we are removing the process of converting input to xml of the scope of this challenge. The output of the utility will be a csv file.</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">You are addressing the following in this challenge : </span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">Build a command line java utility</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">The utility accepts two xml input files as arguments</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">First xml file is the &lsquo;prior art&rsquo; patent document, and it&rsquo;s structure must match the provided XSD, you need to perform validation</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">The 2nd file structure can be like this :</span><br />\n\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">&lt;items&gt;</span><br />\n\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">&nbsp;&nbsp;&nbsp; </span><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">&lt;item name=&rdquo;key1&rdquo; value=&rdquo;value1&rdquo; /&gt;</span><br />\n\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">&nbsp;&nbsp;&nbsp; </span><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">&lt;item name=&rdquo;key2&rdquo; value=&rdquo;value2&rdquo; /&gt;</span><br />\n\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">&nbsp;&nbsp;&nbsp; </span><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">&lt;item name=&rdquo;key3&rdquo; value=&rdquo;value3&rdquo; /&gt;</span><br />\n\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">&lt;/items&gt;</span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">It should have a configured Map file : map the fields between &lsquo;prior art&rsquo; fields and optional fields, and the output file here is some notes to consider when designing the mapping file structure : </span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">A field should have a flag attribute to indicate whether it is required or optional</span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">If field is optional then default value should be present</span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">A field should have a file attribute to indicate which xml to read the field from</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">Field should have XPath url to read it&rsquo;s value from corresponding xml, i.e. if the field&rsquo;s value should be taken from &lsquo;prior art&rsquo; xml, then the XPath url value will be used to get the value from the xml. You need to provide a solution if the field is expecting more than one value.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">Each field/item in the xml represents a csv column.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">The format of the file would look like this :</span><br />\n\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">&lt;mapping&gt;</span><br />\n\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">&nbsp;&nbsp;&nbsp; </span><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">&lt;item name=&rdquo;key1&rdquo; required=&rdquo;true&rdquo; file=&rdquo;prior-art&rdquo; column-name=&rdquo;key-column-1&rdquo; multiple=&rdquo;false&rdquo;/&gt;</span><br />\n\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">&nbsp;&nbsp;&nbsp; </span><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">&lt;item name=&rdquo;key2&rdquo; required=&rdquo;false&rdquo; file=&rdquo;extra-info&rdquo; value=&rdquo;value2&rdquo; &nbsp;column-name=&rdquo;key-column-2&rdquo; multiple=&rdquo;true&rdquo;/&gt;</span><br />\n\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">&lt;/mapping&gt;</span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">&lsquo;name&rsquo; represents the field name to read from prior-art or extra-info xml</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">&lsquo;column-name&rsquo; represents the column name in output csv file</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">&lsquo;multiple&rsquo; attributes is a flag indicates whether or not there are multiple values to read from the xml</span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">We want to support two output formats of the csv, we are providing sample in challenge forums for each output format.</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">The output format should be sent as input argument to the utility, either &#39;standard&#39; or &#39;multiple&#39;, the corresponding csv formatter should be used based on the passed type.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">Design the csv format class to be pluggable interface that have two concrete implementation, each implementation will support one csv format.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">The output file will be parsed by some other applications, make sure the format is machine-readable and can easily be parsed.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">For &quot;Multiple&quot; sample file, make sure you add delimiter between sections to be easily parsed.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"font-size:16px\">We only provided output sample for Example 3.</span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">The tool should store the output file locally or to a predefined directory folder (can be passed as argument when calling the utility)</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">The utility should return the full path to the output file.</span></p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">You need to take the following notes into account when building the tool :</span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">It is a java command line tool that will be invoked and executed by php code.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">Implementation should use a facade (interfaces) and adapter design patterns (and any other proper design patterns) to make it possible to extend the functionality in future.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">You should use XPath to manipulate the XML.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">The XPath URL when manipulating XML content should not be hardcoded in code, the XSD might change in future so we need to make sure it is only configured in the mapping file.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">You can use an open source library to read XML and Mapping files, and to build the output file.</span></p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:23px\">Documents</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">Provided in challenge forums the XSD file, and 3 samples of input files and their output.</span></p>\n\n<h2 dir=\"ltr\"><strong>Test</strong></h2>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">We will use the samples to test your solution, the output is expected to match the provided output samples. Make sure to test them thoroughly.</span></p>\n\n<h1 dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:21px\">Submission Deliverables</span></h1>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">Below is an overview of the deliverables:</span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">A fully implemented tool with all the functionality defined by the requirements above.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:16px\">A complete and detailed readme document explaining how to deploy the application including configuration information.</span></p>\n\t</li>\n</ul>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30048585",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalSubmissionGuidelines": "<p>.</p>\n",
+  "forumId": 27929,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=27929",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 30,
+  "numberOfSubmissions": 5,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-24T22:14:00.000Z",
+      "actualStartTime": "2015-01-24T22:14:00.000Z",
+      "scheduledEndTime": "2015-01-27T22:19:00.000Z",
+      "actualendTime": "2015-01-27T22:19:00.000Z",
+      "_id": "58132fee550dfb3b52b8d788"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-24T22:20:00.000Z",
+      "actualStartTime": "2015-01-24T22:20:00.000Z",
+      "scheduledEndTime": "2015-01-27T22:19:00.000Z",
+      "actualendTime": "2015-01-27T22:19:00.000Z",
+      "_id": "58132fee550dfb3b52b8d787"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-27T22:19:00.000Z",
+      "actualStartTime": "2015-01-27T22:19:00.000Z",
+      "scheduledEndTime": "2015-01-29T22:48:00.000Z",
+      "actualendTime": "2015-01-29T22:48:00.000Z",
+      "_id": "58132fee550dfb3b52b8d786"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-29T22:48:00.000Z",
+      "actualStartTime": "2015-01-29T22:48:00.000Z",
+      "scheduledEndTime": "2015-01-30T22:49:00.000Z",
+      "actualendTime": "2015-01-30T22:49:00.000Z",
+      "_id": "58132fee550dfb3b52b8d785"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-30T22:49:00.000Z",
+      "actualStartTime": "2015-01-30T22:49:00.000Z",
+      "scheduledEndTime": "2015-01-31T02:59:00.000Z",
+      "actualendTime": "2015-01-31T02:59:00.000Z",
+      "_id": "58132fee550dfb3b52b8d784"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-01-24T22:14:00.000Z",
+  "prize": [
+    800,
+    400
+  ],
+  "projectId": 8554,
+  "registrants": [
+    {
+      "handle": "icarusk",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-25T02:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d783"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-25T04:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d782"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-25T04:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d781"
+    },
+    {
+      "handle": "phaniram",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-25T06:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d780"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-25T07:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d77f"
+    },
+    {
+      "handle": "monumahiya",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-25T10:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d77e"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-25T11:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d77d"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-26T02:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d77c"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-25T14:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d77b"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-25T15:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d77a"
+    },
+    {
+      "handle": "lohitbisht2010",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-25T16:15:00.000Z",
+      "submissionDate": "2015-01-27T19:35:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d779"
+    },
+    {
+      "handle": "anshumanbanerje",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-25T17:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d778"
+    },
+    {
+      "handle": "hrum-hrum",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-25T17:49:00.000Z",
+      "submissionDate": "2015-01-27T10:47:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d777"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-25T18:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d776"
+    },
+    {
+      "handle": "Luckyodell",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-25T20:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d775"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-25T22:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d774"
+    },
+    {
+      "handle": "sri02",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-25T23:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d773"
+    },
+    {
+      "handle": "misaxi",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-26T01:02:00.000Z",
+      "submissionDate": "2015-01-27T21:06:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d772"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-26T04:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d771"
+    },
+    {
+      "handle": "arjun_singh",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-26T04:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d770"
+    },
+    {
+      "handle": "karmakaze",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-26T06:38:00.000Z",
+      "submissionDate": "2015-01-27T18:12:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d76f"
+    },
+    {
+      "handle": "makalaoscar",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-26T13:29:00.000Z",
+      "submissionDate": "2015-01-27T20:06:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d76e"
+    },
+    {
+      "handle": "Ninja91",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-26T14:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d76d"
+    },
+    {
+      "handle": "wellybelly",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-27T02:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d76c"
+    },
+    {
+      "handle": "gauravs23",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-27T03:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d76b"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-27T15:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d76a"
+    },
+    {
+      "handle": "tongkunvwang",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-27T09:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d769"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-27T09:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d768"
+    },
+    {
+      "handle": "s.senthilkumar",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-27T10:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d767"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-27T13:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d766"
+    }
+  ],
+  "registrationEndDate": "2015-01-27T22:19:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-01-27T22:19:00.000Z",
+  "submissions": [
+    {
+      "handle": "karmakaze",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 96.25,
+      "finalScore": 96.25,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-01-27T18:12:00.000Z",
+      "_id": "58132fee550dfb3b52b8d78d"
+    },
+    {
+      "handle": "misaxi",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 88.75,
+      "finalScore": 91.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-01-27T21:06:00.000Z",
+      "_id": "58132fee550dfb3b52b8d78c"
+    },
+    {
+      "handle": "hrum-hrum",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 88.75,
+      "finalScore": 88.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-01-27T10:47:00.000Z",
+      "_id": "58132fee550dfb3b52b8d78b"
+    },
+    {
+      "handle": "lohitbisht2010",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 81.25,
+      "finalScore": 81.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-01-27T19:35:00.000Z",
+      "_id": "58132fee550dfb3b52b8d78a"
+    },
+    {
+      "handle": "makalaoscar",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 68.75,
+      "finalScore": 68.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-01-27T20:06:00.000Z",
+      "_id": "58132fee550dfb3b52b8d789"
+    }
+  ],
+  "technology": [
+    "Java",
+    "XML"
+  ]
+}

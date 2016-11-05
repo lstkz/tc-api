@@ -1,0 +1,323 @@
+{
+  "_id": 30034373,
+  "_isComplete": true,
+  "__v": 2105,
+  "_lastUpdate": "2016-11-05T11:06:16.066Z",
+  "appealsEndDate": "2013-06-13T04:05:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "PoC Assembly - TopCoder Cockpit JBoss 7 Deployment",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Cancelled - Zero Submissions",
+  "detailedRequirements": "<p>TopCoder is attempting to upgrade the JBoss version for TopCoder Cockpit from JBoss 4 to JBoss 7.</p>\n\n<p>JBoss Application Server 7 is the latest release in a series of JBoss application server offerings. JBoss Application Server 7, is a fast, powerful, implementation of the Java Enterprise Edition 6 specification. The state-of-the-art architecture built on the Modular Service Container enables services on-demand when your application requires them.</p>\n\n<p>The deployment on JBoss 7 is completely different comparing with JBoss 4.</p>\n\n<p>This contest is going to explore the deployment for TopCoder Cockpit, by taking the deployment pieces from JBoss 4 and update the configurations to make it TopCoder Cockpit site work properly under JBoss 7.</p>\n\n<p>So we can get a better knowledge and consider the next steps for code level update.</p>\n\n<h2><span style=\"color: rgb(255, 0, 0);\">Competition Task Overview</span></h2>\n\n<p>For this attempt, following deployment pieces should be properly addressed</p>\n\n<ul>\n\t<li>Driver registration and Data Sources configuration (direct-ds.xml)</li>\n\t<li>Static content (static.ear file)</li>\n\t<li>Dependent java libraries and configurations (libs.7z and conf.7z)</li>\n\t<li>Security enterprise application (security.ear)</li>\n\t<li>direct application (direct.ear)</li>\n</ul>\n\n<h3><span style=\"color:#008000;\">Help Info</span></h3>\n\n<ul>\n\t<li>The deployment should be under <ins><jboss_root&gt; ins=\"\" standalone=\"\"> directory.</jboss_root&gt;></ins></li>\n\t<li>For hot deployment, you just need to create a file name <b><deploy_partname&gt;.dodeploy< b=\"\"> under <ins><jboss_root&gt; deployments=\"\" ins=\"\" standalone=\"\"></jboss_root&gt;></ins></deploy_partname&gt;.dodeploy<></b></li>\n</ul>\n\n<h3><b><span style=\"color: rgb(255, 0, 0);\">Driver Registration and Data Sources Configuration</span></b></h3>\n\n<p>Before this contest, we have done the initial steps to address the deployment of data sources that needed by TopCoder cockpit application.</p>\n\n<p>You can check <span class=\"nobr\"><a href=\"http://apps.topcoder.com/wiki/display/%7Efireice/TopCoder+Cockpit+-+JBoss+7+Migration\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/~fireice/TopCoder+Cockpit+-+JBoss+7+Migration</a></span> for detail steps.</p>\n\n<p><img align=\"absmiddle\" alt=\"\" border=\"0\" height=\"16\" src=\"http://apps.topcoder.com/wiki/images/icons/emoticons/warning.gif\" width=\"16\" />I actually didn&#39;t verify that the data source connection is working properly or not by testing, you can do that through JBoss CLI, or write a simple Java application to verify that.</p>\n\n<h3><b><span style=\"color:#FF0000;\">Static Content</span></b></h3>\n\n<p>Generally, you just need to drop the <ins>static.ear</ins> file under <ins>jboss_root/standalone/deployments</ins> directory. But that will not take affect by default, as the jboss welcome content occupied the root context. you need to set in your standalone/domain configuration file the enable-welcome-root parameter to false (by default it&#39;s true) for the web subsystem. The <b>enable-welcome-root</b> controls whether or not to deploy JBoss&#39; welcome-content application at root context.</p>\n\n<p>Please check <span class=\"nobr\"><a href=\"http://www.mastertheboss.com/jboss-web-server/how-to-deploy-a-web-application-on-the-root-context-on-jboss-as-7\" rel=\"nofollow\">http://www.mastertheboss.com/jboss-web-server/how-to-deploy-a-web-application-on-the-root-context-on-jboss-as-7</a></span> for reference.</p>\n\n<h3><b><span style=\"color:#FF0000;\">Dependent Java Libraries and Configurations </span></b></h3>\n\n<p>Unlike JBoss 4, if we wants some java libraries that can be shared by different application, we simply drop the jar files under <ins>deploy/default/lib</ins> directory.</p>\n\n<p>In JBoss 7, there is so such way to do that. The JBoss 7 uses fully modular system based on JBoss Modules.</p>\n\n<p>What you can do is create a Module, and place it into modules/. Then simply reference that newly created module from our app(s). See <span class=\"nobr\"><a href=\"http://in.relation.to/Bloggers/ModularizedJavaWithJBossModules\" rel=\"nofollow\">http://in.relation.to/Bloggers/ModularizedJavaWithJBossModules</a></span> for reference.</p>\n\n<p>To reference it, simply add the following to <ins>MANIFEST.MF</ins>:</p>\n\n<p><span style=\"background-color:#00FF00;\">Dependencies: my.module</span></p>\n\n<p>one thought for simply deployment is we can create a customized module that holds all the jars needed by TopCoder Cockpit and reference it in the application.</p>\n\n<p>Please investigate that what is the common way to deploy shared configurations.</p>\n\n<h3><b><span style=\"color:#FF0000;\">Security enterprise application</span></b></h3>\n\n<p>The application provides some common functionality that is used by TopCoder Cockpit, like login etc.</p>\n\n<p>According to previously investigation, for ejb 2.x deployment, the original <ins>jboss.xml</ins> will not take affect, instead you should define a <ins>jboss-ejb3.xml</ins> file, please check <span class=\"nobr\"><a href=\"https://docs.jboss.org/author/display/AS71/Deployment+Descriptors+used+In+AS7.1\" rel=\"nofollow\">https://docs.jboss.org/author/display/AS71/Deployment+Descriptors+used+In+AS7.1</a></span> for detail information about configuration.</p>\n\n<h3><b><span style=\"color:#FF0000;\">Direct Application</span></b></h3>\n\n<p>This is the main application for TopCoder Cockpit, it contains many ejb modules and web modules.</p>\n\n<p>Basically, if you figure out the common change progress, it can be easily applied to others.</p>\n\n<h3><b><span style=\"color: rgb(255, 0, 0);\">Smoke Testing</span></b></h3>\n\n<p>Beside moniting the jboss server log, please do some smoke testing, make sure that your changes do works against JBoss 7, like web module, JNDI lookup, ejb module, database operations etc.</p>\n\n<p>Following smoke tests are good to start</p>\n\n<ul>\n\t<li>Login</li>\n\t<li>Create Project</li>\n\t<li>Create Contest</li>\n\t<li>View Contest</li>\n</ul>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><b><span style=\"color: rgb(255, 0, 0);\">Documentation Provided</span></b></h2>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; font-size: 12px; line-height: 16px;\">The deployment pieces that are taking from JBoss 4 will be provided in forum.</p>\n\n<h3><b><span style=\"color:#FF0000;\">Resources</span></b></h3>\n\n<p>There is a Cockpit Site Resource page that contains documentation / instructions for the VM instance you will be issued upon request. It is located here: <span class=\"nobr\"><a href=\"http://apps.topcoder.com/wiki/display/projects/Direct+VM\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/projects/Direct+VM</a></span></p>\n\n<h3><b><span style=\"color:#FF0000;\">Virtual Machine</span></b></h3>\n\n<p>VM specific information is found here: <span class=\"nobr\"><a href=\"http://apps.topcoder.com/wiki/display/projects/Direct+VM\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/projects/Direct+VM</a></span> and <span class=\"nobr\"><a href=\"http://www.topcoder.com/wiki/display/docs/VM+Image+2.5\" rel=\"nofollow\">http://www.topcoder.com/wiki/display/docs/VM+Image+2.5</a></span>.<br />\nUpon registration as a submitter or reviewer you will need to request a VM based on the new TopCoder Cockpit/Direct image. To request your image, please use the forum.</p>\n\n<p>Before requesting your VM, you need to ensure that you have an SSH key created and in your member profile. Instructions to do so are here: <span class=\"nobr\"><a href=\"http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key\" rel=\"nofollow\">http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key</a></span>, and instructions to connect afterwards are here: <span class=\"nobr\"><a href=\"http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key\" rel=\"nofollow\">http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key</a></span>.</p>\n",
+  "digitalRunPoints": 450,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30034373",
+  "event": {
+    "id": 3436,
+    "description": "2013 TopCoder(R) Open",
+    "shortDescription": "tco13"
+  },
+  "finalFixEndDate": "2013-06-14T16:05:00.000Z",
+  "finalSubmissionGuidelines": "<h2><strong><span style=\"color:#FF0000;\"><span style=\"line-height: 1.6em;\">Submission Deliverables</span></span></strong></h2>\n\n<ul>\n\t<li>Updated deployment pieces that can be easily deployed into JBoss 7 and working properly.</li>\n\t<li>The competitor should provide a deployment document. This document should include a step-by-step guide on the deployment.</li>\n\t<li>A document that explains about the changes and relative reference for understanding.</li>\n</ul>\n\n<h2><span style=\"color:#FF0000;\"><strong>Final Submission</strong></span></h2>\n\n<p><span style=\"font-size:12px;\">For each member, the final submission should be uploaded to the Online Review Tool.</span></p>\n",
+  "forumId": 18220,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=18220",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 17,
+  "numberOfSubmissions": 0,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-06-04T00:26:00.000Z",
+      "actualStartTime": "2013-06-04T00:26:00.000Z",
+      "scheduledEndTime": "2013-06-04T00:27:00.000Z",
+      "actualendTime": "2013-06-04T00:27:00.000Z",
+      "_id": "581dbd28550dfb3b52be3805"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-06-04T00:27:00.000Z",
+      "actualStartTime": "2013-06-04T00:27:00.000Z",
+      "scheduledEndTime": "2013-06-04T02:26:00.000Z",
+      "actualendTime": "2013-06-04T02:26:00.000Z",
+      "_id": "581dbd28550dfb3b52be3804"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2013-06-04T04:00:00.000Z",
+      "actualStartTime": "2013-06-04T04:00:00.000Z",
+      "scheduledEndTime": "2013-06-06T04:00:00.000Z",
+      "actualendTime": "2013-06-06T04:00:00.000Z",
+      "_id": "581dbd28550dfb3b52be3803"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-06-04T04:05:00.000Z",
+      "actualStartTime": "2013-06-04T04:05:00.000Z",
+      "scheduledEndTime": "2013-06-09T04:05:00.000Z",
+      "actualendTime": "2013-06-09T04:05:00.000Z",
+      "_id": "581dbd28550dfb3b52be3802"
+    },
+    {
+      "type": "Screening",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-06-09T04:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-06-09T16:05:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd28550dfb3b52be3801"
+    },
+    {
+      "type": "Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-06-09T16:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-06-11T16:05:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd28550dfb3b52be3800"
+    },
+    {
+      "type": "Appeals",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-06-11T16:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-06-12T16:05:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd28550dfb3b52be37ff"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-06-12T16:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-06-13T04:05:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd28550dfb3b52be37fe"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-06-13T04:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-06-13T16:05:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd28550dfb3b52be37fd"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-06-13T16:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-06-14T16:05:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd28550dfb3b52be37fc"
+    },
+    {
+      "type": "Final Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-06-14T16:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-06-15T04:05:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd28550dfb3b52be37fb"
+    },
+    {
+      "type": "Approval",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-06-15T04:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-06-20T04:05:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd28550dfb3b52be37fa"
+    },
+    {
+      "type": "Post-Mortem",
+      "status": "Closed",
+      "scheduledStartTime": "2013-06-09T04:06:00.000Z",
+      "actualStartTime": "2013-06-09T04:06:00.000Z",
+      "scheduledEndTime": "2013-06-10T04:06:00.000Z",
+      "actualendTime": "2013-06-10T04:06:00.000Z",
+      "_id": "581dbd28550dfb3b52be37f9"
+    }
+  ],
+  "platforms": [],
+  "postingDate": "2013-06-04T04:00:00.000Z",
+  "prize": [
+    1000,
+    500
+  ],
+  "projectId": 6454,
+  "registrants": [
+    {
+      "handle": "Ghost_141",
+      "reliability": "26%",
+      "registrationDate": "2013-06-04T04:04:00.000Z",
+      "submissionDate": null,
+      "rating": "485",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd28550dfb3b52be37f8"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2013-06-04T04:49:00.000Z",
+      "submissionDate": null,
+      "rating": "972",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbd28550dfb3b52be37f7"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-04T04:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd28550dfb3b52be37f6"
+    },
+    {
+      "handle": "gonia_119",
+      "reliability": "13%",
+      "registrationDate": "2013-06-04T05:18:00.000Z",
+      "submissionDate": null,
+      "rating": "840",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd28550dfb3b52be37f5"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-04T07:19:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd28550dfb3b52be37f4"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-04T08:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd28550dfb3b52be37f3"
+    },
+    {
+      "handle": "brain_cn",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-04T08:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd28550dfb3b52be37f2"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-04T12:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd28550dfb3b52be37f1"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2013-06-04T12:45:00.000Z",
+      "submissionDate": null,
+      "rating": "1423",
+      "colorStyle": "color: #6666FF",
+      "_id": "581dbd28550dfb3b52be37f0"
+    },
+    {
+      "handle": "padegal12",
+      "reliability": "0%",
+      "registrationDate": "2013-06-04T13:53:00.000Z",
+      "submissionDate": null,
+      "rating": "693",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd28550dfb3b52be37ef"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "0%",
+      "registrationDate": "2013-06-04T14:54:00.000Z",
+      "submissionDate": null,
+      "rating": "997",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbd28550dfb3b52be37ee"
+    },
+    {
+      "handle": "freegod",
+      "reliability": "26%",
+      "registrationDate": "2013-06-04T15:12:00.000Z",
+      "submissionDate": null,
+      "rating": "819",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd28550dfb3b52be37ed"
+    },
+    {
+      "handle": "vokie",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-05T03:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd28550dfb3b52be37ec"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-05T04:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd28550dfb3b52be37eb"
+    },
+    {
+      "handle": "devmodugu",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-05T08:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd28550dfb3b52be37ea"
+    },
+    {
+      "handle": "patka",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-05T14:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd28550dfb3b52be37e9"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-05T15:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd28550dfb3b52be37e8"
+    }
+  ],
+  "registrationEndDate": "2013-06-06T04:00:00.000Z",
+  "reliabilityBonus": 200,
+  "reviewScorecardId": 30001210,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2013-06-09T04:05:00.000Z",
+  "submissions": [],
+  "technology": [
+    "EJB",
+    "Java"
+  ]
+}

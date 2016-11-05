@@ -1,8 +1,8 @@
 {
   "_id": 30046517,
   "_isComplete": true,
-  "__v": 135,
-  "_lastUpdate": "2016-10-28T08:53:25.710Z",
+  "__v": 2444,
+  "_lastUpdate": "2016-11-05T11:07:33.267Z",
   "appealsEndDate": "2014-10-24T05:16:00.000Z",
   "challengeCommunity": "develop",
   "challengeName": "NodeJS Application Git and Deploy Shell Scripts",
@@ -15,11 +15,6 @@
   "detailedRequirements": "<div style=\"background:red;border:1px solid #ccc;padding:5px 10px;\">\n<h3 style=\"text-align:center\"><span style=\"color:#FFFFFF\">You are not writing or developing nodejs application in this challenge. You are writing shell scripts for a nodejs application.</span></h3>\n</div>\n\n<h2>Project Overview</h2>\n\n<p>The CSFV Community Gaming website project will provide the web site infrastructure and integration of games built to make formal program verification more cost-effective. This is web site that is available on the Internet <a href=\"http://www.verigames.com\">http://www.verigames.com</a>, and also delivered in a form where the server and the games can be installed and used behind a firewall.</p>\n\n<h2>Challenge Overview</h2>\n\n<p>We want to simplify the process of setting up development environment for competitors, and reviewers. The goal of this challenge is to produce shell scripts to automate deployment of CSFV applications from github repositories, automating running the applications, and automating the process to generate git patches and applying it.</p>\n\n<h2>Challenge Requirements</h2>\n\n<p>You will write shell scripts that address the following tasks :</p>\n\n<ol>\n\t<li>Cleanup task :\n\t<ol>\n\t\t<li>This task will cleanup all the folders created by Checkout and Deploy tasks</li>\n\t</ol>\n\t</li>\n\t<li>Checkout task :\n\t<ol>\n\t\t<li>For each github repository (the repositories will be configured and will be executed in order):\n\t\t<ol>\n\t\t\t<li>Checkout the code from configured repo link, by default, the folder name will match the repo name if &#39;folder_name&#39; attribute is not configured</li>\n\t\t\t<li>Checkout the branch configured in &#39;branch&#39; attribute, if not set, then checkout &#39;master&#39; branch by defualt.</li>\n\t\t\t<li>Create local branch of checked out branch from step (2), name of branch will be same as the checked out branch prefixed with &quot;local_&quot; string.</li>\n\t\t\t<li>(optional step) Lookup the patch name that matches the checked out repo folder name (with .patch extension) and apply it to the created local branch in step (3).</li>\n\t\t\t<li>Run &#39;npm install &lt;dependency&gt;&#39; where dependency is read from a configured list of checked out repositories that this repo depends on. i.e. csfv_cms_module depends on csfv_core_module, the command will be &#39;npm install ../csfv_core_module&quot;\n\t\t\t<ul>\n\t\t\t\t<li>We want to study the option to create symoblic links between folders here. <a href=\"https://www.npmjs.org/doc/cli/npm-link.html\">https://www.npmjs.org/doc/cli/npm-link.html</a></li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>Run &#39;npm install&#39; , you might need to pass arguments to this command so the result of executing it won&#39;t override the modules we installed in step (5)</li>\n\t\t\t<li>cd .. to root folder.</li>\n\t\t</ol>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li>Npm install task :\n\t<ol>\n\t\t<li>This task will clean up the folders to be replaced in node_modules of repositories and run &#39;npm install {dependency}&#39; as outlined in Checkout task.</li>\n\t\t<li>User can optionally run this task against specific checked out module. i.e. to recreate node_modules under csfv_frontend_module I should be able to run &#39;./deploy.sh --npm-install csfv_frontend_module&#39;</li>\n\t\t<li>It should also have option to install only the checked out folders or specific ones. We don&#39;t need to checkout external 3rd party libraries each time.</li>\n\t</ol>\n\t</li>\n\t<li>Run task :\n\t<ol>\n\t\t<li>Validate that memcached and mongo db are running.</li>\n\t\t<li>Setup entries in hosts file.\n\t\t<ul>\n\t\t\t<li>It is simple line <em>127.0.0.1 csfv.com</em></li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Copy env sample file to .env</li>\n\t\t<li>For each configured application that can run as standalone app :\n\t\t<ol>\n\t\t\t<li>Chose an arbitrary unused port in the Registered Port range - from 1024 through 49151 - and assign to the app by configuring the env variable used by the app.</li>\n\t\t\t<li>Store the port used in a folder created in root folder, the file shoud be named {folder_name}_info file.</li>\n\t\t\t<li>Run &#39;forever&#39; command of each start_files entry and append the PID and Log file name in {folder_name}_info file used in step (2)\n\t\t\t<ul>\n\t\t\t\t<li>It is not your responsibility to ensure that the application started successfully in forever. There can be errors caused by wrong configuration. It is out of scope.</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>Log errors or successful execution and print the {folder_name}_info content to log/stdout.</li>\n\t\t</ol>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li>Apply patch task :\n\t<ol>\n\t\t<li>It is It applies patches on each repo folder.</li>\n\t\t<li>It should first validate the patch then apply it.</li>\n\t\t<li>You can refer to this post for more info <a href=\"https://ariejan.net/2009/10/26/how-to-create-and-apply-a-patch-with-git/\">https://ariejan.net/2009/10/26/how-to-create-and-apply-a-patch-with-git/</a></li>\n\t</ol>\n\t</li>\n\t<li>Generat patch task :\n\t<ol>\n\t\t<li>This will generate patch files of each configured repository</li>\n\t\t<li>It should simply run the command that generate all commits made locally <em><strong>git format-patch master --stdout &gt; {folder_name}.patch</strong></em></li>\n\t\t<li>Zip the patches in a zip file with name csfv_submission_{timestamp}.zip</li>\n\t\t<li>Cleanup the patch files after zip generation</li>\n\t\t<li>Ask the user to upload submission to Online Review =)</li>\n\t</ol>\n\t</li>\n</ol>\n\n<p><em>Note that user should be able to run multiple tasks at the same time, or run a single task at a time. Generating patch task should NOT be be part of the task that run them all, it will not sound right to include it :)</em></p>\n\n<h2>Global Bash Functions</h2>\n\n<p>We want to study the possiblity to define the tasks as bash functions in .bashrc file so members can execute it from any folder without the need to copy/paste the deploy file to that directory.</p>\n\n<h2>Configuration File</h2>\n\n<p>There should be a configuration file that contains following information :</p>\n\n<ul>\n\t<li>List of repositories to be checked out\n\t<ul>\n\t\t<li>Git url : represents the URL used to checkout the repo</li>\n\t\t<li>branch (optional) : can be branch name, commit id, or tag. Script will use &#39;master&#39; if this is not set.</li>\n\t\t<li>folder_name (optional) : represents the folder name to checkout the repo to. It will be same repo name if absent.</li>\n\t\t<li>dependencies (optional) :\n\t\t<ul>\n\t\t\t<li>Array of the checked out repositories names this repo depends on. The dependency name should match &#39;folder_name&#39; if provided in that dependency&#39;s config.</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>standalone (optional) : optional flag indicates whether this app can be executed by Run task as standlone app.</li>\n\t\t<li>startup_files (optiona) : an array of js files, this must be provided if standalone is true, it will be the js file names to be executed by forever command.</li>\n\t\t<li>.. Other attributes if needed</li>\n\t</ul>\n\t</li>\n\t<li>Log folder path : where log files will be stored</li>\n\t<li>Info folder path : where the info files will be stored</li>\n\t<li>Version : script version</li>\n\t<li>.. other configurations if needed</li>\n</ul>\n\n<h2>General Notes</h2>\n\n<ol>\n\t<li>Every single step should be logged to stdout and a configured log file. Exit when error or when successfully done should be clearly logged as well.</li>\n\t<li>Shell script can prompt user for input if needed input from user.</li>\n\t<li>The shell usage should be clear and user should be able to ask for it. i.e. ./script.sh --help would print something like (this is example and you don&#39;t need to use same options names/alias) :<br />\n\tUsage ./script.sh [OPTIONS]<br />\n\t-c, --clean&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Clean up the repo folders<br />\n\t-d, --deploy&nbsp;&nbsp;&nbsp; Run the deployment scripts<br />\n\t.. etc</li>\n\t<li>For package.json of repositories that include csfv_xxx modules under &#39;dependencies&#39; attribute, you need to report that in challenge forums and Copilot will fix repo to move them to &#39;devDependencies&#39; folder.</li>\n\t<li>The tasks should be written taking into account that user can rerun it many times, it should always work as expected.</li>\n</ol>\n\n<h2>Github Repository</h2>\n\n<p>The code exists in private github repository <a href=\"https://github.com/topcoderinc/\">https://github.com/topcoderinc/</a></p>\n\n<p>This URL will give list of CSFV modules in scope <a href=\"https://github.com/topcoderinc?query=csfv_+only%3Aprivate+only%3Asources+\">https://github.com/topcoderinc?query=csfv_+only%3Aprivate+only%3Asources+</a> excluding the following modules :</p>\n\n<ul>\n\t<li>csfv_logaholic</li>\n\t<li>csfv_blog_module</li>\n\t<li>csfv_ui_prototypes</li>\n</ul>\n\n<p>Also nodejs_sitemap_generator is in scope <a href=\"https://github.com/topcoderinc/nodejs_sitemaps_generator\">nodejs_sitemaps_generator</a></p>\n\n<p>The application that can run as standalone are :</p>\n\n<ul>\n\t<li>csfv_frontend_module</li>\n\t<li>csfv_minisite_frontend_module :\n\t<ul>\n\t\t<li>This repo should be checkedout 5 times</li>\n\t\t<li>Each folder :\n\t\t<ul>\n\t\t\t<li>branch : minisiteX where X 1-5</li>\n\t\t\t<li>folder_name : minisiteX where X 1-5</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li>csfv_test_data_generator</li>\n\t<li>csfv_chat_module</li>\n\t<li>csfv_notification_module</li>\n\t<li>csfv_chat_frontend_app</li>\n\t<li>csfv_oauth2_server_module</li>\n\t<li>csfv_gaming_api_module</li>\n\t<li>csfv_cms_module</li>\n\t<li>nodejs_sitemaps_generator</li>\n</ul>\n\n<p>Lookup dependencies of each CSFV module from package.json</p>\n\n<h2>Target Environment</h2>\n\n<p>The script should run in *nux based OS (including Mac).</p>\n\n<h2>Project VMs</h2>\n\n<p>VMs will only be granted to experienced members. You have a past record in TC challenges. Or you can email Copilot with good reason/reference to assign you a VM if you are new to TopCoder challenges :)</p>\n\n<p>Members will assigned a CentOS VM that have Memcached and mongo db installed.</p>\n\n<p>&nbsp;</p>\n",
   "digitalRunPoints": 450,
   "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30046517",
-  "event": {
-    "id": 3442,
-    "description": "2015 topcoder Open",
-    "shortDescription": "tco15"
-  },
   "finalFixEndDate": "2014-10-25T17:16:00.000Z",
   "finalSubmissionGuidelines": "<h2>Submission Deliverables</h2>\n\n<p>Please refer to the Assembly Tutorial for submission deliverables: <span><a href=\"http://apps.topcoder.com/wiki/display/tc/Module+Assembly+Competition+Tutorial\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/tc/Module+Assembly+Competition+Tutorial<sup><img alt=\"\" class=\"rendericon\" src=\"http://apps.topcoder.com/wiki/images/icons/linkext7.gif\" style=\"height:7px; width:7px\" /></sup></a></span></p>\n\n<ul>\n\t<li>Submission archive containing 1 <em>deploy shell script</em> and 1 <em>deploy configuration file</em> that addresses all tasks/requirements outlined above.</li>\n\t<li>Deployment guide containing step-by-step instructions for deployment.</li>\n</ul>\n",
   "forumId": 26124,
@@ -28,253 +23,8 @@
   "numberOfCheckpointsPrizes": 0,
   "numberOfRegistrants": 13,
   "numberOfSubmissions": 1,
-  "phases": [
-    {
-      "type": "Specification Submission",
-      "status": "Closed",
-      "scheduledStartTime": "2014-10-16T11:57:00.000Z",
-      "actualStartTime": "2014-10-16T11:57:00.000Z",
-      "scheduledEndTime": "2014-10-16T11:58:00.000Z",
-      "actualendTime": "2014-10-16T11:58:00.000Z",
-      "_id": "581312056f0ff48440134c49"
-    },
-    {
-      "type": "Specification Review",
-      "status": "Closed",
-      "scheduledStartTime": "2014-10-16T11:58:00.000Z",
-      "actualStartTime": "2014-10-16T11:58:00.000Z",
-      "scheduledEndTime": "2014-10-16T14:18:00.000Z",
-      "actualendTime": "2014-10-16T14:18:00.000Z",
-      "_id": "581312056f0ff48440134c48"
-    },
-    {
-      "type": "Registration",
-      "status": "Closed",
-      "scheduledStartTime": "2014-10-16T14:18:00.000Z",
-      "actualStartTime": "2014-10-16T14:18:00.000Z",
-      "scheduledEndTime": "2014-10-18T14:19:00.000Z",
-      "actualendTime": "2014-10-18T14:19:00.000Z",
-      "_id": "581312056f0ff48440134c47"
-    },
-    {
-      "type": "Submission",
-      "status": "Closed",
-      "scheduledStartTime": "2014-10-16T14:23:00.000Z",
-      "actualStartTime": "2014-10-16T14:23:00.000Z",
-      "scheduledEndTime": "2014-10-20T14:17:00.000Z",
-      "actualendTime": "2014-10-20T14:17:00.000Z",
-      "_id": "581312056f0ff48440134c46"
-    },
-    {
-      "type": "Screening",
-      "status": "Closed",
-      "scheduledStartTime": "2014-10-20T14:17:00.000Z",
-      "actualStartTime": "2014-10-20T14:17:00.000Z",
-      "scheduledEndTime": "2014-10-20T17:16:00.000Z",
-      "actualendTime": "2014-10-20T17:16:00.000Z",
-      "_id": "581312056f0ff48440134c45"
-    },
-    {
-      "type": "Review",
-      "status": "Scheduled",
-      "scheduledStartTime": "2014-10-20T17:16:00.000Z",
-      "actualStartTime": null,
-      "scheduledEndTime": "2014-10-22T17:16:00.000Z",
-      "actualendTime": null,
-      "_id": "581312056f0ff48440134c44"
-    },
-    {
-      "type": "Appeals",
-      "status": "Scheduled",
-      "scheduledStartTime": "2014-10-22T17:16:00.000Z",
-      "actualStartTime": null,
-      "scheduledEndTime": "2014-10-23T17:16:00.000Z",
-      "actualendTime": null,
-      "_id": "581312056f0ff48440134c43"
-    },
-    {
-      "type": "Appeals Response",
-      "status": "Scheduled",
-      "scheduledStartTime": "2014-10-23T17:16:00.000Z",
-      "actualStartTime": null,
-      "scheduledEndTime": "2014-10-24T05:16:00.000Z",
-      "actualendTime": null,
-      "_id": "581312056f0ff48440134c42"
-    },
-    {
-      "type": "Aggregation",
-      "status": "Scheduled",
-      "scheduledStartTime": "2014-10-24T05:16:00.000Z",
-      "actualStartTime": null,
-      "scheduledEndTime": "2014-10-24T17:16:00.000Z",
-      "actualendTime": null,
-      "_id": "581312056f0ff48440134c41"
-    },
-    {
-      "type": "Final Fix",
-      "status": "Scheduled",
-      "scheduledStartTime": "2014-10-24T17:16:00.000Z",
-      "actualStartTime": null,
-      "scheduledEndTime": "2014-10-25T17:16:00.000Z",
-      "actualendTime": null,
-      "_id": "581312056f0ff48440134c40"
-    },
-    {
-      "type": "Final Review",
-      "status": "Scheduled",
-      "scheduledStartTime": "2014-10-25T17:16:00.000Z",
-      "actualStartTime": null,
-      "scheduledEndTime": "2014-10-26T05:16:00.000Z",
-      "actualendTime": null,
-      "_id": "581312056f0ff48440134c3f"
-    },
-    {
-      "type": "Approval",
-      "status": "Scheduled",
-      "scheduledStartTime": "2014-10-26T05:16:00.000Z",
-      "actualStartTime": null,
-      "scheduledEndTime": "2014-10-31T05:16:00.000Z",
-      "actualendTime": null,
-      "_id": "581312056f0ff48440134c3e"
-    },
-    {
-      "type": "Post-Mortem",
-      "status": "Closed",
-      "scheduledStartTime": "2014-10-20T17:17:00.000Z",
-      "actualStartTime": "2014-10-20T17:17:00.000Z",
-      "scheduledEndTime": "2014-10-21T10:17:00.000Z",
-      "actualendTime": "2014-10-21T10:17:00.000Z",
-      "_id": "581312056f0ff48440134c3d"
-    }
-  ],
-  "platforms": [
-    "Other"
-  ],
   "postingDate": "2014-10-16T14:18:00.000Z",
-  "prize": [
-    1000,
-    500
-  ],
   "projectId": 5104,
-  "registrants": [
-    {
-      "handle": "wcheung",
-      "reliability": "n/a",
-      "registrationDate": "2014-10-16T16:45:00.000Z",
-      "submissionDate": null,
-      "rating": null,
-      "colorStyle": "color: #000000",
-      "_id": "581312056f0ff48440134c3c"
-    },
-    {
-      "handle": "panoptimum",
-      "reliability": "0%",
-      "registrationDate": "2014-10-16T15:02:00.000Z",
-      "submissionDate": null,
-      "rating": "1256",
-      "colorStyle": "color: #6666FF",
-      "_id": "581312056f0ff48440134c3b"
-    },
-    {
-      "handle": "woodjhon",
-      "reliability": "0%",
-      "registrationDate": "2014-10-16T15:05:00.000Z",
-      "submissionDate": null,
-      "rating": "782",
-      "colorStyle": "color: #999999",
-      "_id": "581312056f0ff48440134c3a"
-    },
-    {
-      "handle": "blu3fox",
-      "reliability": "n/a",
-      "registrationDate": "2014-10-16T16:21:00.000Z",
-      "submissionDate": null,
-      "rating": null,
-      "colorStyle": "color: #000000",
-      "_id": "581312056f0ff48440134c39"
-    },
-    {
-      "handle": "Easyhard",
-      "reliability": "90%",
-      "registrationDate": "2014-10-16T16:39:00.000Z",
-      "submissionDate": null,
-      "rating": "1276",
-      "colorStyle": "color: #6666FF",
-      "_id": "581312056f0ff48440134c38"
-    },
-    {
-      "handle": "sunbinbrother",
-      "reliability": "n/a",
-      "registrationDate": "2014-10-17T00:39:00.000Z",
-      "submissionDate": null,
-      "rating": null,
-      "colorStyle": "color: #000000",
-      "_id": "581312056f0ff48440134c37"
-    },
-    {
-      "handle": "gjw99",
-      "reliability": "0%",
-      "registrationDate": "2014-10-17T03:42:00.000Z",
-      "submissionDate": null,
-      "rating": "1031",
-      "colorStyle": "color: #00A900",
-      "_id": "581312056f0ff48440134c36"
-    },
-    {
-      "handle": "testXuSanping",
-      "reliability": "n/a",
-      "registrationDate": "2014-10-17T04:09:00.000Z",
-      "submissionDate": null,
-      "rating": null,
-      "colorStyle": "color: #000000",
-      "_id": "581312056f0ff48440134c35"
-    },
-    {
-      "handle": "alfiya_Zi",
-      "reliability": "n/a",
-      "registrationDate": "2014-10-17T15:02:00.000Z",
-      "submissionDate": null,
-      "rating": null,
-      "colorStyle": "color: #000000",
-      "_id": "581312056f0ff48440134c34"
-    },
-    {
-      "handle": "mauhur",
-      "reliability": "n/a",
-      "registrationDate": "2014-10-17T16:25:00.000Z",
-      "submissionDate": null,
-      "rating": null,
-      "colorStyle": "color: #000000",
-      "_id": "581312056f0ff48440134c33"
-    },
-    {
-      "handle": "Schpotsky",
-      "reliability": "0%",
-      "registrationDate": "2014-10-17T19:06:00.000Z",
-      "submissionDate": null,
-      "rating": "1447",
-      "colorStyle": "color: #6666FF",
-      "_id": "581312056f0ff48440134c32"
-    },
-    {
-      "handle": "OlinaRuan",
-      "reliability": "6%",
-      "registrationDate": "2014-10-18T01:06:00.000Z",
-      "submissionDate": "2014-10-20T13:58:00.000Z",
-      "rating": "1045",
-      "colorStyle": "color: #00A900",
-      "_id": "581312056f0ff48440134c31"
-    },
-    {
-      "handle": "SePulTribe",
-      "reliability": "0%",
-      "registrationDate": "2014-10-18T13:16:00.000Z",
-      "submissionDate": null,
-      "rating": "585",
-      "colorStyle": "color: #999999",
-      "_id": "581312056f0ff48440134c30"
-    }
-  ],
   "registrationEndDate": "2014-10-18T14:19:00.000Z",
   "reliabilityBonus": 200,
   "reviewScorecardId": 30001470,
@@ -291,11 +41,261 @@
       "points": 0,
       "submissionStatus": "Failed Screening",
       "submissionDate": "2014-10-20T13:58:00.000Z",
-      "_id": "581312056f0ff48440134c4a"
+      "_id": "581dbd75550dfb3b52be49ef"
     }
+  ],
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-16T11:57:00.000Z",
+      "actualStartTime": "2014-10-16T11:57:00.000Z",
+      "scheduledEndTime": "2014-10-16T11:58:00.000Z",
+      "actualendTime": "2014-10-16T11:58:00.000Z",
+      "_id": "581dbd75550dfb3b52be49ee"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-16T11:58:00.000Z",
+      "actualStartTime": "2014-10-16T11:58:00.000Z",
+      "scheduledEndTime": "2014-10-16T14:18:00.000Z",
+      "actualendTime": "2014-10-16T14:18:00.000Z",
+      "_id": "581dbd75550dfb3b52be49ed"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-16T14:18:00.000Z",
+      "actualStartTime": "2014-10-16T14:18:00.000Z",
+      "scheduledEndTime": "2014-10-18T14:19:00.000Z",
+      "actualendTime": "2014-10-18T14:19:00.000Z",
+      "_id": "581dbd75550dfb3b52be49ec"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-16T14:23:00.000Z",
+      "actualStartTime": "2014-10-16T14:23:00.000Z",
+      "scheduledEndTime": "2014-10-20T14:17:00.000Z",
+      "actualendTime": "2014-10-20T14:17:00.000Z",
+      "_id": "581dbd75550dfb3b52be49eb"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-20T14:17:00.000Z",
+      "actualStartTime": "2014-10-20T14:17:00.000Z",
+      "scheduledEndTime": "2014-10-20T17:16:00.000Z",
+      "actualendTime": "2014-10-20T17:16:00.000Z",
+      "_id": "581dbd75550dfb3b52be49ea"
+    },
+    {
+      "type": "Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-10-20T17:16:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-10-22T17:16:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd75550dfb3b52be49e9"
+    },
+    {
+      "type": "Appeals",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-10-22T17:16:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-10-23T17:16:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd75550dfb3b52be49e8"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-10-23T17:16:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-10-24T05:16:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd75550dfb3b52be49e7"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-10-24T05:16:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-10-24T17:16:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd75550dfb3b52be49e6"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-10-24T17:16:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-10-25T17:16:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd75550dfb3b52be49e5"
+    },
+    {
+      "type": "Final Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-10-25T17:16:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-10-26T05:16:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd75550dfb3b52be49e4"
+    },
+    {
+      "type": "Approval",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-10-26T05:16:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-10-31T05:16:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd75550dfb3b52be49e3"
+    },
+    {
+      "type": "Post-Mortem",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-20T17:17:00.000Z",
+      "actualStartTime": "2014-10-20T17:17:00.000Z",
+      "scheduledEndTime": "2014-10-21T10:17:00.000Z",
+      "actualendTime": "2014-10-21T10:17:00.000Z",
+      "_id": "581dbd75550dfb3b52be49e2"
+    }
+  ],
+  "registrants": [
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-16T16:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd75550dfb3b52be49e1"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "0%",
+      "registrationDate": "2014-10-16T15:02:00.000Z",
+      "submissionDate": null,
+      "rating": "1256",
+      "colorStyle": "color: #6666FF",
+      "_id": "581dbd75550dfb3b52be49e0"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-10-16T15:05:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd75550dfb3b52be49df"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-16T16:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd75550dfb3b52be49de"
+    },
+    {
+      "handle": "Easyhard",
+      "reliability": "90%",
+      "registrationDate": "2014-10-16T16:39:00.000Z",
+      "submissionDate": null,
+      "rating": "1276",
+      "colorStyle": "color: #6666FF",
+      "_id": "581dbd75550dfb3b52be49dd"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-17T00:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd75550dfb3b52be49dc"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-10-17T03:42:00.000Z",
+      "submissionDate": null,
+      "rating": "1031",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbd75550dfb3b52be49db"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-17T04:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd75550dfb3b52be49da"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-17T15:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd75550dfb3b52be49d9"
+    },
+    {
+      "handle": "mauhur",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-17T16:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd75550dfb3b52be49d8"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "0%",
+      "registrationDate": "2014-10-17T19:06:00.000Z",
+      "submissionDate": null,
+      "rating": "1447",
+      "colorStyle": "color: #6666FF",
+      "_id": "581dbd75550dfb3b52be49d7"
+    },
+    {
+      "handle": "OlinaRuan",
+      "reliability": "6%",
+      "registrationDate": "2014-10-18T01:06:00.000Z",
+      "submissionDate": "2014-10-20T13:58:00.000Z",
+      "rating": "1045",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbd75550dfb3b52be49d6"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2014-10-18T13:16:00.000Z",
+      "submissionDate": null,
+      "rating": "585",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd75550dfb3b52be49d5"
+    }
+  ],
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "prize": [
+    1000,
+    500
   ],
   "technology": [
     "Node.js",
+    "Other"
+  ],
+  "platforms": [
     "Other"
   ]
 }

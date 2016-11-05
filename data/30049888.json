@@ -1,0 +1,278 @@
+{
+  "_id": 30049888,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T11:00:57.537Z",
+  "appealsEndDate": "2015-05-02T11:14:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "SunShot - Solar Retina Ruby On Rails Update 3",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2015-05-27T20:31:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -44893716,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h1 dir=\"ltr\">Project Overview</h1>\n\n<p dir=\"ltr\">The Solar Retina is a software platform that provides real-time intelligence of total &ldquo;behind-the-meter&rdquo; solar PV (Photovoltaics) generation on the distribution system. Using crowdsourced solar generation data from actual PVs on the distribution grid, we provide superior distributed solar generation analysis</p>\n\n<h1 dir=\"ltr\">Challenge Overview</h1>\n\n<p dir=\"ltr\">We are making few changes to Ruby on Rails application in this challenge as outlined below.</p>\n\n<p dir=\"ltr\">The application was built in a past assembly challenge, you can refer to it to understand what we built:</p>\n\n<p dir=\"ltr\"><a href=\"http://www.topcoder.com/challenge-details/30048722/?type=develop&amp;noncache=true\">http://www.topcoder.com/challenge-details/30048722/?type=develop&amp;noncache=true</a></p>\n\n<h1 dir=\"ltr\">Challenge Requirements</h1>\n\n<p dir=\"ltr\">You will address the following in this challenge :</p>\n\n<h2 dir=\"ltr\">Aggregation Types</h2>\n\n<p dir=\"ltr\">Right now we are importing data into location_data table as is, the data are time series data with 5 minutes interval.</p>\n\n<p dir=\"ltr\">In frontend when we try to retrieve the time series to render chart for large periods (i.e. 180 days) we notice a performance issues and too much delays in retrieving the data.</p>\n\n<p dir=\"ltr\">So we are introducing new tables to store aggregations of the data, so during import you will add the following steps after inserting the data from csv into location_data :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Aggregate data into daily intervals :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">This step should be executed right after completing the insert from csv for the given location_id.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">For each new location id aggregate data from location_data for that location by executing this query :<br />\n\t\tselect (<br />\n\t\t&nbsp;&nbsp; &nbsp;FROM_UNIXTIME(date_time,&#39;%Y-%m-%d&#39;)) as date_time,<br />\n\t\t&nbsp;&nbsp; &nbsp;sum(instantaneous_power) as w,<br />\n\t\t&nbsp;&nbsp; &nbsp;sum(ramp_rate) as r<br />\n\t\tfrom location_data &nbsp;<br />\n\t\twhere location_id = {location_id}<br />\n\t\tgroup by FROM_UNIXTIME(date_time,&#39;%Y-%m-%d&#39;) ;</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Insert the returned data into location_data_day table. The columns will be same as location_data table.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Aggregate data into hourly intervals :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">This is the second aggregation we are executing.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Query to execute is :<br />\n\t\tSELECT<br />\n\t\tUNIX_TIMESTAMP(FROM_UNIXTIME(date_time,&#39;%Y-%m-%d %H&#39;)) as date_time,<br />\n\t\tsum(instantaneous_power) as w,<br />\n\t\tsum(ramp_rate) as r<br />\n\t\tfrom location_data<br />\n\t\twhere location_id = {location_id}<br />\n\t\tgroup by FROM_UNIXTIME(date_time,&#39;%Y-%m-%d %H&#39;) ;</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Insert data into location_data_hr table. Same fields are other tables.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Aggregate data into 15 minutes interval :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">This is the last aggregation type.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">The query is little bit tricky :<br />\n\t\tselect</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p dir=\"ltr\">&nbsp;quarter, sum(instantaneous_power), sum(ramp_rate)</p>\n\n<p dir=\"ltr\">from</p>\n\n<p dir=\"ltr\">(</p>\n\n<p dir=\"ltr\">&nbsp;select</p>\n\n<p dir=\"ltr\">&nbsp;&nbsp;&nbsp;location_data.*,</p>\n\n<p dir=\"ltr\">&nbsp;&nbsp;&nbsp;concat(</p>\n\n<p dir=\"ltr\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FROM_UNIXTIME(date_time,&#39;%Y-%m-%d %H&#39;),</p>\n\n<p dir=\"ltr\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case</p>\n\n<p dir=\"ltr\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;when minute(FROM_UNIXTIME(date_time)) between &nbsp;0 and 14 then &#39;:00&#39;</p>\n\n<p dir=\"ltr\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;when minute(FROM_UNIXTIME(date_time)) between 15 and 29 then &#39;:15&#39;</p>\n\n<p dir=\"ltr\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;when minute(FROM_UNIXTIME(date_time)) between 30 and 44 then &#39;:30&#39;</p>\n\n<p dir=\"ltr\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;when minute(FROM_UNIXTIME(date_time)) between 45 and 59 then &#39;:45&#39;</p>\n\n<p dir=\"ltr\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</p>\n\n<p dir=\"ltr\">&nbsp;&nbsp;&nbsp;) as quarter</p>\n\n<p dir=\"ltr\">&nbsp;from location_data</p>\n\n<p dir=\"ltr\">&nbsp;where location_id = {location_id}</p>\n\n<p dir=\"ltr\">) as quarters</p>\n\n<p dir=\"ltr\">group by quarter;</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Insert data into location_data_quarter table. same fields as others.</p>\n\t</li>\n</ul>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Remove auditing fields from location_data_xxx tables, not needed.</p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Frontend Charts Aggregation</h2>\n\n<p dir=\"ltr\">Based on the updates we are making in importer step to store data grouped into intervals, we will update the frontend JS code to pull data based on selected date interval :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">&ldquo;Day&rdquo; : use 5 minutes interval from location_data .</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">&ldquo;7 Days&rdquo; : use 15 minutes interval from location_data_quarter</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">&ldquo;30 days&rdquo; : use 1 hr interval from location_data_hr</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">&ldquo;180 days&rdquo; : user 1 day interval from location_data_day</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">&ldquo;Other&rdquo; : it will follow the constraints above :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">&lt;= day : 5 minutes interval data</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">&gt; day and =&lt; 7 days : 15 minutes interval data</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">&gt; 7 days and =&lt; 30 days : 1 hr interval data</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">&gt; 30 days : 1 day interval data.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Importer Fix</h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Importer should use <a href=\"https://github.com/zdennis/activerecord-import\">activerecord-import library</a> to insert batches into DB.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Fix time used to calculate the date_time should start from 1/1/2014 EST.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">We are providing you with lib/importer_methods.rb, it has these updates but you need to make some changes to get the library working, i.e. updating Gemfile.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Update application startup to run any pending or in-progress import task. We might got some crashes and this requires proceeding the current import.</p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Performance Chart Calculation Fix</h2>\n\n<p dir=\"ltr\">Performance Index calculation shouldn&#39;t be greater than one in any case. &nbsp;Since it is &nbsp;(Sum of Energy Generation) / (Sum of Maximum Capacity).</p>\n\n<p dir=\"ltr\">Here is more details about the calculation <a href=\"https://drive.google.com/drive/u/0/folders/0BxGw3rNZWrkgVEVMdjFvQzRUczA/0By6n2kEXozMwfnh2RkdZS2F2Y1Q1V0xienZJbDFzWmtHWVVvUTAzWjRqSFBjRUNib2w3YzQ\">https://drive.google.com/drive/u/0/folders/0BxGw3rNZWrkgVEVMdjFvQzRUczA/0By6n2kEXozMwfnh2RkdZS2F2Y1Q1V0xienZJbDFzWmtHWVVvUTAzWjRqSFBjRUNib2w3YzQ</a></p>\n\n<p dir=\"ltr\">Make the fix for this issue.</p>\n\n<h2 dir=\"ltr\">&ldquo;Other&rdquo; tab in Chart popup</h2>\n\n<p dir=\"ltr\">For the &quot;Other&quot; date series, where the user selects date and time, it immediately calculates on change. &nbsp;The client would like there to be an apply button in the div so that they can pick start date and time, then hit apply to have it calculate.</p>\n\n<h2 dir=\"ltr\">Zooming in chart</h2>\n\n<p dir=\"ltr\">Implement zooming in chart <a href=\"http://www.flotcharts.org/flot/examples/navigate/index.html\">http://www.flotcharts.org/flot/examples/navigate/index.html</a>&nbsp;&nbsp;</p>\n\n<h2 dir=\"ltr\">Playback Heat map</h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Update play button to use latest date in db when start playing.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Update options to be 1hr, 4hrs, 8hrs, and 12hrs.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">We will use 5 minutes aggregation (location_data) for this one.</p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Chart Tabs Unit of Measures</h2>\n\n<p dir=\"ltr\">Add units to the labels on the three graph-selection buttons</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">generation (W)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">performance index (p.u.)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">ramp rate (W/s)</p>\n\t</li>\n</ul>\n\n<h1 dir=\"ltr\">Testing</h1>\n\n<p dir=\"ltr\">You are provided with sample csv file and dump mysql, you can use it for testing.</p>\n\n<h1 dir=\"ltr\">Documents</h1>\n\n<p dir=\"ltr\">The current solution is provided in challenge forums.</p>\n\n<h1 dir=\"ltr\">Deliverables</h1>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Patch file of updated source code that implemented the requirements.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">readme file to reviewer.</p>\n\t</li>\n</ul>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30049888",
+  "finalSubmissionGuidelines": "<p>.</p>\n",
+  "forumId": 29130,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=29130",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 9,
+  "numberOfSubmissions": 11,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2015-04-27T20:31:00.000Z",
+      "actualStartTime": "2015-04-27T20:31:00.000Z",
+      "scheduledEndTime": "2015-05-27T20:31:00.000Z",
+      "actualendTime": null,
+      "_id": "58132fe9550dfb3b52b8d33f"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-27T23:31:00.000Z",
+      "actualStartTime": "2015-04-27T23:31:00.000Z",
+      "scheduledEndTime": "2015-05-02T11:14:00.000Z",
+      "actualendTime": "2015-05-02T11:14:00.000Z",
+      "_id": "58132fe9550dfb3b52b8d33e"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2015-04-27T20:36:00.000Z",
+      "actualStartTime": "2015-04-27T20:36:00.000Z",
+      "scheduledEndTime": "2015-05-27T20:36:00.000Z",
+      "actualendTime": null,
+      "_id": "58132fe9550dfb3b52b8d33d"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-04-27T20:31:00.000Z",
+  "prize": [
+    800
+  ],
+  "projectId": 8574,
+  "registrants": [
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-27T21:35:00.000Z",
+      "submissionDate": "2015-05-02T02:45:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe9550dfb3b52b8d33c"
+    },
+    {
+      "handle": "cubic_a",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-27T22:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe9550dfb3b52b8d33b"
+    },
+    {
+      "handle": "karthikbecse",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-28T02:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe9550dfb3b52b8d33a"
+    },
+    {
+      "handle": "xuwf",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-28T08:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe9550dfb3b52b8d339"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-28T11:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe9550dfb3b52b8d338"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-28T13:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe9550dfb3b52b8d337"
+    },
+    {
+      "handle": "yogen",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-28T15:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe9550dfb3b52b8d336"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-29T02:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe9550dfb3b52b8d335"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-29T04:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fe9550dfb3b52b8d334"
+    }
+  ],
+  "registrationEndDate": "2015-05-27T20:31:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-05-27T20:36:00.000Z",
+  "submissions": [
+    {
+      "handle": "ahmed.seddiq",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-04-27T23:29:00.000Z",
+      "_id": "58132fe9550dfb3b52b8d34a"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-04-28T04:10:00.000Z",
+      "_id": "58132fe9550dfb3b52b8d349"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-04-28T10:25:00.000Z",
+      "_id": "58132fe9550dfb3b52b8d348"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-04-29T04:56:00.000Z",
+      "_id": "58132fe9550dfb3b52b8d347"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-04-28T00:44:00.000Z",
+      "_id": "58132fe9550dfb3b52b8d346"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-04-29T13:03:00.000Z",
+      "_id": "58132fe9550dfb3b52b8d345"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-05-02T02:45:00.000Z",
+      "_id": "58132fe9550dfb3b52b8d344"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-04-29T21:01:00.000Z",
+      "_id": "58132fe9550dfb3b52b8d343"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-04-30T05:03:00.000Z",
+      "_id": "58132fe9550dfb3b52b8d342"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-04-30T16:15:00.000Z",
+      "_id": "58132fe9550dfb3b52b8d341"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-05-01T20:08:00.000Z",
+      "_id": "58132fe9550dfb3b52b8d340"
+    }
+  ],
+  "technology": [
+    "MySQL",
+    "Ruby",
+    "Ruby on Rails"
+  ]
+}

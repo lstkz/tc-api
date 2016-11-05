@@ -1,0 +1,322 @@
+{
+  "_id": 30041739,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:42:35.024Z",
+  "appealsEndDate": "2014-08-10T02:31:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "NASA Astronaut Email - TCP Proxy Notification Manager Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><span>NASA needs to integrate the ION Disruption Tolerant Networking (DTN) implementation of Bundle Protocol (BP) with Microsoft Outlook and Microsoft Exchange Server to support the transfer of astronaut email to/from the International Space Station (ISS).</span></p>\n\n<p><span>Microsoft Exchange Server currently supports RPC over HTTP(s) protocol (a.k.a. Outlook Anywhere -&nbsp; http://msdn.microsoft.com/en-us/library/cc243950.aspx). TopCoder will assemble an HTTP(s) proxy that will use DTN to transport the data to earth.</span></p>\n\n<p><span>This objective will be divided in 3 parts. This is the second part of the competition which is to change the working HTTP(s) </span>proxy and add a Notification Manager Layer. At this moment, this notification layer will manage a set of threads in a single process. It might look it is an overkill, but these threads will be needed when DTN is introduced.</p>\n\n<p>The first part of the assembly developed a multi-threaded TCP proxy. The <strong>srv_loop</strong> function waits for Outlook client connections and the <strong>con_loop</strong> opens a connection with Exchange Server and loops reading and writing data from the Outlook client socket to a new Exchange Service socket and vice versa. Picture bellow illustrates the process:</p>\n\n<p><img alt=\"\" src=\"https://s3.amazonaws.com/romanotc/AE+arch-1.jpg\" /></p>\n\n<p>&nbsp;</p>\n\n<p>The requirement of the notification layer is based on the picture bellow (<span>there is no architecture for this contest)</span>:</p>\n\n<p><img alt=\"\" src=\"https://s3.amazonaws.com/romanotc/AE+arch-2.jpg\" /></p>\n\n<p>&nbsp;</p>\n\n<p>The notification manager is an abastraction implemented using global variables and C functions. It will basically have the following elements, but you are free to add, remove and rename them:</p>\n\n<ul>\n\t<li>A set of functions to receive and send events to and from threads: <strong>action_request</strong> and <strong>action_response</strong> which needs to handle. The arguments may vary depending on the action that will take place.</li>\n\t<li>A connection datastore:an in-memory map of &lt;connection id&gt; to a pair &lt;client socket, server socket&gt;</li>\n\t<li>The connection ID can be a sequential number incremented at every connection open request</li>\n</ul>\n\n<p>The manage should be able to handle the following requests and responses from the threads:</p>\n\n<ul>\n\t<li>OPEN_CONN - the <strong>srv_loop</strong> requests a new connection to the server passing the client socket as argument (step 2).&nbsp;\n\n\t<ul>\n\t\t<li>Connection manager defines a new connection ID and open a new Thread (T1) to connect to exchange server. The new connection must be done in a new thread because when DTN is introduced this process will be asynchronous.</li>\n\t\t<li>Thread T1 will connect to exchange server (step 3) and reply by calling the action_reponse with one of the following status (step 4):\n\t\t<ul>\n\t\t\t<li>CONN_OK: connection is established, keep client connected</li>\n\t\t\t<li>CONN_NOK: connection failed, close client connection</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Once the notification manager receives either of the responses, it will start two threads T2 and T3 passing the connection id to both of them.</li>\n\t\t<li>If the response is CONN_NOK, it should close the client socket.</li>\n\t</ul>\n\t</li>\n\t<li>Thread T2 is the Outlook client socket thread. It will continuosuly read data (non-blocking) from the outlook client socket (step 5a). When new data arrives, this thread will inform the Notification Manager using a message type CLIENT_DATA (step 5b).\n\t<ul>\n\t\t<li>Notification Manager upon receiving client data will write this data to thread T3 buffer associated with the given connection ID.</li>\n\t</ul>\n\t</li>\n\t<li>Thread T3 is the Exchange server socket thread. Similarly, it will read data (non-blocking) from the exchange server socket. (step 6a) When new data arrives, this thread will inform the Notification Manager using a message type SERVER_DATA (step 6b).\n\t<ul>\n\t\t<li>Notification Manager upon receiving server data will write this data to thread T2 buffer associated with the given connection ID.</li>\n\t</ul>\n\t</li>\n\t<li>Thread T2 and T3 write buffer:\n\t<ul>\n\t\t<li>Writing and reading from SSL sockets cannot occur concurrently.</li>\n\t\t<li>A write buffer needs to be created to allow the thread to finish reading without blocking the notification manager</li>\n\t\t<li>The write buffer can be implemented as a synchronized FIFO list</li>\n\t\t<li>Whenever there is data in the write buffer, the thread must write to socket and avoid reading in the meanwhile</li>\n\t\t<li>A synchronization lock/mutex must be created to avoid the concurrency</li>\n\t</ul>\n\t</li>\n\t<li>If any of T2 or T3 connection is closed, the thread will send a CLOSE_CONN to Notification Manager\n\t<ul>\n\t\t<li>Notification Manager will inform the other party associated with the given connection ID to close its connection.</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3><span style=\"color:#FF0000\"><strong>The assembly is complete if one is able to send and receive emails through the proxy.</strong></span></h3>\n",
+  "digitalRunPoints": 540,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30041739",
+  "finalFixEndDate": "2014-08-12T10:57:00.000Z",
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<p><span>A complete list of deliverables can be found in the TopCoder Assembly competition Tutorial at:</span></p>\n\n<h2><span><a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a><br />\n&nbsp;<br />\n<u>Deliverables</u></span></h2>\n\n<p><span>&nbsp;&nbsp;&nbsp; Source code and configuration files.<br />\n&nbsp;&nbsp;&nbsp; Deployment guide to configure and verify the application.</span></p>\n\n<h2><span>&nbsp;<br />\n<u>Technology overview</u></span></h2>\n\n<ul>\n\t<li><span>&nbsp;&nbsp;&nbsp; Linux (Redhat or Ubuntu)</span></li>\n\t<li><span>&nbsp;&nbsp;&nbsp; C</span></li>\n\t<li><span>&nbsp;&nbsp;&nbsp; HTTP 1.0/1.1</span></li>\n\t<li><span>&nbsp;&nbsp;&nbsp; Microsoft Outlook 2010</span></li>\n\t<li><span>&nbsp;&nbsp;&nbsp; Exchange Server 2010</span></li>\n\t<li><span>&nbsp;&nbsp;&nbsp; Outlook Anywhere (aka RPC over HTTP)</span></li>\n</ul>\n\n<h2><span>&nbsp;<br />\n<u>Development Environment</u></span></h2>\n\n<ul>\n\t<li><span>You should be able to develop this in a Linux OS without any Amazon VMs, but if needed, you may request a VM by email to romanoTC: romanotc@copilots.topcoder.com.</span></li>\n\t<li><span>Attached to the forum there is a document with instructions on how to setup your Outlook client.</span></li>\n\t<li>Attached to the forum there is the previous assembly code with deployment guide.</li>\n</ul>\n</div>\n",
+  "forumId": 22222,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=22222",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 15,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-31T02:16:00.000Z",
+      "actualStartTime": "2014-07-31T02:16:00.000Z",
+      "scheduledEndTime": "2014-07-31T02:17:00.000Z",
+      "actualendTime": "2014-07-31T02:17:00.000Z",
+      "_id": "581355cb550dfb3b52c51d75"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-31T02:17:00.000Z",
+      "actualStartTime": "2014-07-31T02:17:00.000Z",
+      "scheduledEndTime": "2014-07-31T04:34:00.000Z",
+      "actualendTime": "2014-07-31T04:34:00.000Z",
+      "_id": "581355cb550dfb3b52c51d74"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-31T13:00:00.000Z",
+      "actualStartTime": "2014-07-31T13:00:00.000Z",
+      "scheduledEndTime": "2014-08-02T13:00:00.000Z",
+      "actualendTime": "2014-08-02T13:00:00.000Z",
+      "_id": "581355cb550dfb3b52c51d73"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-31T13:05:00.000Z",
+      "actualStartTime": "2014-07-31T13:05:00.000Z",
+      "scheduledEndTime": "2014-08-06T13:05:00.000Z",
+      "actualendTime": "2014-08-06T13:05:00.000Z",
+      "_id": "581355cb550dfb3b52c51d72"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-06T13:05:00.000Z",
+      "actualStartTime": "2014-08-06T13:05:00.000Z",
+      "scheduledEndTime": "2014-08-06T14:13:00.000Z",
+      "actualendTime": "2014-08-06T14:13:00.000Z",
+      "_id": "581355cb550dfb3b52c51d71"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-06T14:13:00.000Z",
+      "actualStartTime": "2014-08-06T14:13:00.000Z",
+      "scheduledEndTime": "2014-08-08T18:29:00.000Z",
+      "actualendTime": "2014-08-08T18:29:00.000Z",
+      "_id": "581355cb550dfb3b52c51d70"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-08T18:29:00.000Z",
+      "actualStartTime": "2014-08-08T18:29:00.000Z",
+      "scheduledEndTime": "2014-08-09T18:29:00.000Z",
+      "actualendTime": "2014-08-09T18:29:00.000Z",
+      "_id": "581355cb550dfb3b52c51d6f"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-09T18:29:00.000Z",
+      "actualStartTime": "2014-08-09T18:29:00.000Z",
+      "scheduledEndTime": "2014-08-10T02:31:00.000Z",
+      "actualendTime": "2014-08-10T02:31:00.000Z",
+      "_id": "581355cb550dfb3b52c51d6e"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-10T02:31:00.000Z",
+      "actualStartTime": "2014-08-10T02:31:00.000Z",
+      "scheduledEndTime": "2014-08-10T04:21:00.000Z",
+      "actualendTime": "2014-08-10T04:21:00.000Z",
+      "_id": "581355cb550dfb3b52c51d6d"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-10T04:21:00.000Z",
+      "actualStartTime": "2014-08-10T04:21:00.000Z",
+      "scheduledEndTime": "2014-08-11T16:30:00.000Z",
+      "actualendTime": "2014-08-11T16:30:00.000Z",
+      "_id": "581355cb550dfb3b52c51d6c"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-11T16:30:00.000Z",
+      "actualStartTime": "2014-08-11T16:30:00.000Z",
+      "scheduledEndTime": "2014-08-12T10:26:00.000Z",
+      "actualendTime": "2014-08-12T10:26:00.000Z",
+      "_id": "581355cb550dfb3b52c51d6b"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-12T12:30:00.000Z",
+      "actualStartTime": "2014-08-12T12:30:00.000Z",
+      "scheduledEndTime": "2014-08-17T12:30:00.000Z",
+      "actualendTime": "2014-08-17T12:30:00.000Z",
+      "_id": "581355cb550dfb3b52c51d6a"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-12T10:26:00.000Z",
+      "actualStartTime": "2014-08-12T10:26:00.000Z",
+      "scheduledEndTime": "2014-08-12T10:57:00.000Z",
+      "actualendTime": "2014-08-12T10:57:00.000Z",
+      "_id": "581355cb550dfb3b52c51d69"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-12T10:57:00.000Z",
+      "actualStartTime": "2014-08-12T10:57:00.000Z",
+      "scheduledEndTime": "2014-08-12T12:30:00.000Z",
+      "actualendTime": "2014-08-12T12:30:00.000Z",
+      "_id": "581355cb550dfb3b52c51d68"
+    }
+  ],
+  "platforms": [
+    "AWS"
+  ],
+  "postingDate": "2014-07-31T13:00:00.000Z",
+  "prize": [
+    1200,
+    600
+  ],
+  "projectId": 7519,
+  "registrants": [
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-31T13:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355cb550dfb3b52c51d67"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-31T13:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355cb550dfb3b52c51d66"
+    },
+    {
+      "handle": "singhdhiraj",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-31T13:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355cb550dfb3b52c51d65"
+    },
+    {
+      "handle": "rawuza",
+      "reliability": "20%",
+      "registrationDate": "2014-07-31T15:17:00.000Z",
+      "submissionDate": "2014-08-06T05:57:00.000Z",
+      "rating": "1026",
+      "colorStyle": "color: #00A900",
+      "_id": "581355cb550dfb3b52c51d64"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-07-31T15:52:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "581355cb550dfb3b52c51d63"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "0%",
+      "registrationDate": "2014-07-31T21:44:00.000Z",
+      "submissionDate": null,
+      "rating": "58",
+      "colorStyle": "color: #999999",
+      "_id": "581355cb550dfb3b52c51d62"
+    },
+    {
+      "handle": "shreen19",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-01T03:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355cb550dfb3b52c51d61"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "13%",
+      "registrationDate": "2014-08-01T03:11:00.000Z",
+      "submissionDate": null,
+      "rating": "1530",
+      "colorStyle": "color: #DDCC00",
+      "_id": "581355cb550dfb3b52c51d60"
+    },
+    {
+      "handle": "freegod",
+      "reliability": "46%",
+      "registrationDate": "2014-08-01T03:37:00.000Z",
+      "submissionDate": null,
+      "rating": "1194",
+      "colorStyle": "color: #00A900",
+      "_id": "581355cb550dfb3b52c51d5f"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "6%",
+      "registrationDate": "2014-08-01T05:58:00.000Z",
+      "submissionDate": null,
+      "rating": "1032",
+      "colorStyle": "color: #00A900",
+      "_id": "581355cb550dfb3b52c51d5e"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-01T15:07:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "581355cb550dfb3b52c51d5d"
+    },
+    {
+      "handle": "pranjal_shukla",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-01T19:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355cb550dfb3b52c51d5c"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-08-02T07:22:00.000Z",
+      "submissionDate": null,
+      "rating": "1031",
+      "colorStyle": "color: #00A900",
+      "_id": "581355cb550dfb3b52c51d5b"
+    },
+    {
+      "handle": "sweetu",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-02T08:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355cb550dfb3b52c51d5a"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2014-08-02T09:54:00.000Z",
+      "submissionDate": null,
+      "rating": "585",
+      "colorStyle": "color: #999999",
+      "_id": "581355cb550dfb3b52c51d59"
+    }
+  ],
+  "registrationEndDate": "2014-08-02T13:00:00.000Z",
+  "reliabilityBonus": 240,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-08-06T13:05:00.000Z",
+  "submissions": [
+    {
+      "handle": "rawuza",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 93.83,
+      "finalScore": 94,
+      "points": 540,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-08-06T05:57:00.000Z",
+      "_id": "581355cb550dfb3b52c51d76"
+    }
+  ],
+  "technology": [
+    "C"
+  ]
+}

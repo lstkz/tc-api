@@ -1,0 +1,463 @@
+{
+  "_id": 30050556,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T11:00:19.226Z",
+  "appealsEndDate": "2015-10-24T22:24:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Managed Risk - Custom Reporting Module Frontend Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\">The client is looking to build dynamic reports out of database tables of data. Their current tool allows these reports to be built by a developer, but this requires a normal development cycle to build, test, and release these reports. They would like to have a system in place that allows them to build these custom reports, joining multiple database objects (tables, views, stored procedures) if necessary, into dynamic data to populate different visualizations.</p>\n\n<p dir=\"ltr\">The closest system to equate it to would be Salesforce Reporting. In there, you can wire up multiple related objects into a grouped, filtered, and sorted data source. &nbsp;</p>\n\n<p dir=\"ltr\">In previous challenge we built the backend services, models, and database layer of this application.</p>\n\n<p dir=\"ltr\">The goal of this challenge is to build the ASP.NET frontend with jQuery and implement the required REST backend controllers.</p>\n\n<h2 dir=\"ltr\">Challenge Requirements</h2>\n\n<h3 dir=\"ltr\"><u>Pages in Scope</u></h3>\n\n<p dir=\"ltr\">You will implement &ldquo;Generate/Edit Report&rdquo; page flow, and &ldquo;Report Details&rdquo; Page.</p>\n\n<h3 dir=\"ltr\"><u>Architecture</u></h3>\n\n<p dir=\"ltr\">You are provided with an architecture documents, it in extensive implementation notes are provided at method documentation on UML Class Diagrams. Please follow them for implementing the required controllers .</p>\n\n<p dir=\"ltr\">Please read the whole Application Design Specification first. All the details not mentioned in this specification are provided in that document.</p>\n\n<h3 dir=\"ltr\"><u>Authentication</u></h3>\n\n<p dir=\"ltr\">Authentication and authorization are out of scope for this project, the backend should expect network ID to be passed to the backend.</p>\n\n<p dir=\"ltr\">So in this challenge you need to enable windows authentication in IIS, and use that information to authorize the user.</p>\n\n<h3 dir=\"ltr\"><u>Front End Classes</u></h3>\n\n<p dir=\"ltr\">This assembly is responsible for implementing all classes on class diagram &quot;Front End Class Diagram&quot; that will be needed to implement the frontend pages in scope of this challenge.</p>\n\n<p dir=\"ltr\">The REST API endpoints of the handlers are configured via web.config like below:</p>\n\n<p dir=\"ltr\">&lt;httpHandlers&gt;</p>\n\n<p dir=\"ltr\">&nbsp;&lt;add verb=&quot;supported http verbs&quot; path=&quot;path&quot; type=&quot;namespace.classname, assemblyname&quot; /&gt;</p>\n\n<p dir=\"ltr\">&lt;httpHandlers&gt;</p>\n\n<p dir=\"ltr\">The path is up to assemblers, it may be like &lt;base-url&gt;/&lt;handler-name&gt;.</p>\n\n<h3 dir=\"ltr\"><u>Rendering Report Charts</u></h3>\n\n<p dir=\"ltr\">Report charts are rendered in preview report step in Generate report flow and Report details page.</p>\n\n<p dir=\"ltr\">You will use DevExpress ASP.NET Chart Control to render charts, the provided UI prototype includes a placeholder images for the report charts, you are not required to skin the charts in this challenge, you will use the default DevExpress Chart Control theme.</p>\n\n<p dir=\"ltr\">When rendering a report graph, it calls IReportService.SearchReportData to search all data (PageNumber = 0) of the report. The following graph types should be supported:</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong>Line Chart</strong></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- This <a href=\"http://demos.devexpress.com/XtraChartsDemos/PointAndLineViewTypes/LineSeries.aspx\">link</a> contains usage details and an example.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The report.XAxisFieldName indicates the X axis field, other selected fields of the report are shown in Y axis. For every field shown in Y axis, a line is drew for it. For a column to be shown in Y axis, its series values are [row 0 value of the column, row 1 value of the column, &hellip; etc.].</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong>Bar Chart</strong></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- This <a href=\"http://demos.devexpress.com/XtraChartsDemos/BarViewTypes/BarSeries.aspx\">link</a> contains usage details and an example.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The report.XAxisFieldName indicates the X axis field, other selected fields of the report are shown in Y axis. For every field shown in Y axis, a serial of bars (same color) are drew. For a column to be shown in Y axis, its series values are [row 0 value of the column, row 1 value of the column, &hellip; etc.].</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong>Stacked Bar Chart</strong></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- This <a href=\"http://demos.devexpress.com/XtraChartsDemos/BarViewTypes/BarStackedSeries.aspx\">link</a> contains usage details and an example.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The report.XAxisFieldName indicates the X axis field, other selected fields of the report are shown in Y axis. For every field shown in Y axis, a serial of bars (same color) are drew. For a column to be shown in Y axis, its series values are [row 0 value of the column, row 1 value of the column, &hellip; etc.].</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong>Stacked Area Chart</strong></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- This <a href=\"http://demos.devexpress.com/XtraChartsDemos/AreaViewTypes/AreaStackedSeries.aspx\">link</a> contains usage details and an example.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The report.XAxisFieldName indicates the X axis field, other selected fields of the report are shown in Y axis. For every field shown in Y axis, an area (same color) is rendered. For a column to be shown in Y axis, its series values are [row 0 value of the column, row 1 value of the column, &hellip; etc.].</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong>Pie Chart</strong></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- This <a href=\"http://demos.devexpress.com/XtraChartsDemos/PieViewTypes/PieSeries.aspx\">link</a> contains usage details and an example.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- This graph has no X/Y axis. All report&#39;s selected fields are shown as separate value. The report data grid should contain only one row of data.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong>Bubble Chart</strong></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- This <a href=\"http://demos.devexpress.com/XtraChartsDemos/PointAndLineViewTypes/BubbleSeries.aspx\">link</a> contains usage details.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The report&#39;s grid data should contain 4 columns: X axis value, Y axis value, metric name, metric value. Each row represents a bubble in the chart.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ol>\n\n<h3 dir=\"ltr\"><u>Report Detail page</u></h3>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Note that chart is rendered in server side, and other content is managed in client side using REST API.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">When the page is rendered, retrieve report by id, if report.DisplayGraph is true, then the report graph should be shown, as per &ldquo;Rendering Report Charts&rdquo; section.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">It calls SearchReportDataHandler to search report data to show in the table.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">All the header filters should be converted to valid SQL filter strings, and bound to the ReportDataSearchCriteria.AdditionalFilterStrings. Filter string is like &ldquo;Table.Column &gt; 1&rdquo;, &ldquo;Table.Column LIKE %abc%&rdquo;, etc. Assemblers may provide filter input according to corresponding column types, if column type is text type (VARCHAR, etc.), allow to enter substring filter; if column type is date type (DATE, DATETIME, etc.), allow to select start and end date; if column type is numeric, allow to input lower and upper bounds.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The &ldquo;Group By&rdquo; filter in the header should be removed.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">If &ldquo;Email&rdquo; is clicked, it calls SendReportEmailHandler.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">If &ldquo;Print&rdquo; is clicked, it uses the browsers&#39; print functionality to print the current page.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">For report export button, it is out of scope.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">&ldquo;Add to Dashboard&rdquo; button is out of scope.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">If &ldquo;Edit&rdquo; is clicked, it forwards user to the Edit Report page, this page is same as generate report page but with report data already populated to allow user to edit report instead of create.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The upper right &ldquo;Save&rdquo; button should be removed.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">If the &ldquo;CUSTOMIZE CHART&rdquo; section data is updated, then it calls UpdateReportHandler to update the report data, and refresh the page so that the chart is updated. The handling of this section is similar to the Generate Custom Reports page, setup step 5, see &ldquo;Generate Custom Reports page&rdquo; item (6) for details.</p>\n\t</li>\n</ol>\n\n<h3 dir=\"ltr\"><u>Generate Custom Reports page</u></h3>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">In the Base Data section:</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- All database objects are retrieved using GetAllDatabaseObjectsHandler method.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- For each database object, its data are shown in a table, the data are retrieved using SearchDatabaseObjectDataHandler.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">In the Generate Report by Customization section, setup step 1:</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The database objects to select should be a multiple choice select, not just single. So that we may join them.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">In setup step 2:</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- There should be a field row for each column of selected database objects (though it may not be included).</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The Time Period selection should be enabled only if the column type is date or contains &ldquo;datetime&rdquo; (case insensitive). By default, it is none. For the drop down values of the Time Period control, the &ldquo;Total Period&rdquo; option should be removed.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">In setup step 3:</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The field calculation should allow user enter free form calculation text, this is more flexible, and the calculation string is like &ldquo;Table.Column / 2 + 3&rdquo;, &ldquo;Table1.Column1 + Table2.Column2&rdquo;, etc.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- It can be something like this :</p>\n\n\t\t<ol>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Type represents &nbsp;a &lt;TableName&gt; or Constant or Operator</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Options pick list depends on the selected type, if constant it should change to text field, if operator then it should list all allowed operators, if table name i.e. TableName1 then options will list the columns of that table. When clicking insert it will append the condition to the formula in text area.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">This JS query <a href=\"https://hiddentao.github.io/squel/\">https://hiddentao.github.io/squel/</a> allows you to validate the sql query, we are paying bonus payment if you implement it.</p>\n\t\t\t</li>\n\t\t</ol>\n\t\t</li>\n\t</ul>\n\t</li>\n</ol>\n\n<p dir=\"ltr\" style=\"margin-left:160px\"><br />\n<img src=\"https://lh3.googleusercontent.com/nl1H9n2VpaFrKfBN1jzJK4oQvW2x6LUEgBkQxm3KYQirlO3j8sSxSGZVl_gkIH7wj326CrKNAk1qu5L1dkwyT8hoyTRbzySJjpGfgfGEOt52n2pEfSCz3FdNkMHCs9U82swUl_ky\" style=\"height:233px; width:400px\" /></p>\n\n<ol start=\"5\">\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">In setup step 4:</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The filter calculation should allow user enter free form filter text, this is more flexible, and the filter string is like &ldquo;Table.Column = 123&rdquo;, &ldquo;Table1.Column1 &lt;= Table2.Column2&rdquo;, etc. It can be same as in step 3.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">In setup step 5:</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- All graph types are retrieved using GetAllGraphTypesHandler.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- In the Graph Options section, Data tab, this tab is enabled only if select graph type&rsquo;s SupportXYAxises is true, and it allows user to select a single X axis field, other fields are considered at Y axis.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- In the Graph Options section, Notations tab, the Axis Scale input is removed, this info may simply be included in X/Y axis labels.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">It calls CreateReportHandler to create the report.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">If preview button is clicked, the preview report page is shown, see &ldquo;Preview Report page&rdquo; section for details.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">In the schedule section, the schedule frequency input is removed, we just uses the hour/minute to specify email time. The scheduling controls are bound to straightforward mapping report properties, after saving report, the schedule will be handled in back end.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The same flow is used for edit report flow, the page will pre populate the page with report information to allow users to edit the report.</p>\n\t</li>\n</ol>\n\n<h3 dir=\"ltr\"><u>Preview Report</u></h3>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">This page accepts report object JSON in request body, it parse report from request body, then searches all report data of the given report, then follow section 1.2.2 to render the chart if report.DisplayGraph is true.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">It will show report table from the client side if report.DisplayReportData is true, by calling SearchReportDataHandler to get report data in client side.</p>\n\t</li>\n</ol>\n\n<h2 dir=\"ltr\">Unit Tests</h2>\n\n<p dir=\"ltr\">Updating unit tests for any backend bugs is out of scope.</p>\n\n<h2 dir=\"ltr\">Technology overview</h2>\n\n<p dir=\"ltr\">- Windows Server</p>\n\n<p dir=\"ltr\">- SQL Server 2012</p>\n\n<p dir=\"ltr\">- Visual Studio 2012</p>\n\n<p dir=\"ltr\">- IIS 7</p>\n\n<p dir=\"ltr\">- C#</p>\n\n<p dir=\"ltr\">- .NET Framework 4.5</p>\n\n<p dir=\"ltr\">- ASP.NET</p>\n\n<p dir=\"ltr\">- Unity 3.5 <a href=\"http://unity.codeplex.com/\">http://unity.codeplex.com/</a></p>\n\n<p dir=\"ltr\">- Enterprise Library 6 Logging <a href=\"https://msdn.microsoft.com/en-us/library/ff648951.aspx\">https://msdn.microsoft.com/en-us/library/ff648951.aspx</a></p>\n\n<p dir=\"ltr\">- Quartz.NET 2.3.3 <a href=\"http://quartznet.sourceforge.net/\">http://quartznet.sourceforge.net/</a></p>\n\n<p dir=\"ltr\">- jQuery 1.11.3 <a href=\"http://jquery.com\">http://jquery.com</a></p>\n\n<p dir=\"ltr\">- Microsoft OpenXML SDK 2.5 <a href=\"https://msdn.microsoft.com/en-us/library/office/bb448854.aspx\">https://msdn.microsoft.com/en-us/library/office/bb448854.aspx</a></p>\n\n<p dir=\"ltr\">- DevExpress ASP.NET Chart Control <a href=\"http://demos.devexpress.com/XtraChartsDemos/Default.aspx\">http://demos.devexpress.com/XtraChartsDemos/Default.aspx</a></p>\n\n<h2 dir=\"ltr\">Supported Browsers</h2>\n\n<p dir=\"ltr\">- IE10+<br />\n-&nbsp;Latest Google Chrome (Windows &amp; Mac OS)<br />\n-&nbsp;Latest Safari (Windows &amp; Mac OS)<br />\n-&nbsp;Latest Firefox (Windows &amp; Mac OS)</p>\n\n<h2 dir=\"ltr\">Existing Documents</h2>\n\n<p dir=\"ltr\">- Class Diagrams</p>\n\n<p dir=\"ltr\">- Sequence Diagrams</p>\n\n<p dir=\"ltr\">- Application Design Specification</p>\n\n<p dir=\"ltr\">- ERD</p>\n\n<p dir=\"ltr\">- Source Code that you will use as basis for your work.</p>\n\n<h1 dir=\"ltr\">GitLab Access</h1>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">You can get access to the Gitlab repo group in this tool <a href=\"http://tc-ragnar.herokuapp.com/ragnar/groups/5613f730d601610e000f21bd/290828\">http://tc-ragnar.herokuapp.com/ragnar/groups/5613f730d601610e000f21bd/290828</a> . &nbsp;If you are having trouble with the auto registration tool, please ask in the forums.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Once added to the team, fork the repository and work off this branch <a href=\"https://gitlab.com/aers-managed-risk/backend/tree/30050556-frontend-assembly\">https://gitlab.com/aers-managed-risk/backend/tree/30050556-frontend-assembly</a></p>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30050556",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalFixEndDate": "2015-10-31T07:29:00.000Z",
+  "finalSubmissionGuidelines": "<h1 dir=\"ltr\">Submission</h1>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Upload documentation for how to run your submission</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Upload all your solution as git patch files.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Add&nbsp;<strong>elkhawajah</strong>&nbsp;as a member of your forked repository</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Winner will be required to submit a merge request on gitlab against the branch specified.</p>\n\t</li>\n</ul>\n\n<p><br />\n&nbsp;</p>\n",
+  "forumId": 29727,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=29727",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 22,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-14T15:56:00.000Z",
+      "actualStartTime": "2015-10-14T15:56:00.000Z",
+      "scheduledEndTime": "2015-10-14T15:58:00.000Z",
+      "actualendTime": "2015-10-14T15:58:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aee4"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-14T15:58:00.000Z",
+      "actualStartTime": "2015-10-14T15:58:00.000Z",
+      "scheduledEndTime": "2015-10-15T00:25:00.000Z",
+      "actualendTime": "2015-10-15T00:25:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aee3"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-15T00:25:00.000Z",
+      "actualStartTime": "2015-10-15T00:25:00.000Z",
+      "scheduledEndTime": "2015-10-17T00:25:00.000Z",
+      "actualendTime": "2015-10-17T00:25:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aee2"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-15T00:31:00.000Z",
+      "actualStartTime": "2015-10-15T00:31:00.000Z",
+      "scheduledEndTime": "2015-10-21T01:26:00.000Z",
+      "actualendTime": "2015-10-21T01:26:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aee1"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-21T01:26:00.000Z",
+      "actualStartTime": "2015-10-21T01:26:00.000Z",
+      "scheduledEndTime": "2015-10-21T12:57:00.000Z",
+      "actualendTime": "2015-10-21T12:57:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aee0"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-21T12:57:00.000Z",
+      "actualStartTime": "2015-10-21T12:57:00.000Z",
+      "scheduledEndTime": "2015-10-23T11:11:00.000Z",
+      "actualendTime": "2015-10-23T11:11:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aedf"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-23T11:11:00.000Z",
+      "actualStartTime": "2015-10-23T11:11:00.000Z",
+      "scheduledEndTime": "2015-10-24T11:12:00.000Z",
+      "actualendTime": "2015-10-24T11:12:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aede"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-24T11:12:00.000Z",
+      "actualStartTime": "2015-10-24T11:12:00.000Z",
+      "scheduledEndTime": "2015-10-24T22:24:00.000Z",
+      "actualendTime": "2015-10-24T22:24:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aedd"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-24T22:24:00.000Z",
+      "actualStartTime": "2015-10-24T22:24:00.000Z",
+      "scheduledEndTime": "2015-10-25T00:09:00.000Z",
+      "actualendTime": "2015-10-25T00:09:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aedc"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-25T00:09:00.000Z",
+      "actualStartTime": "2015-10-25T00:09:00.000Z",
+      "scheduledEndTime": "2015-10-28T18:26:00.000Z",
+      "actualendTime": "2015-10-28T18:26:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aedb"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-28T18:27:00.000Z",
+      "actualStartTime": "2015-10-28T18:27:00.000Z",
+      "scheduledEndTime": "2015-10-29T00:58:00.000Z",
+      "actualendTime": "2015-10-29T00:58:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aeda"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-31T10:26:00.000Z",
+      "actualStartTime": "2015-10-31T10:26:00.000Z",
+      "scheduledEndTime": "2015-10-31T20:08:00.000Z",
+      "actualendTime": "2015-10-31T20:08:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aed9"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-29T00:58:00.000Z",
+      "actualStartTime": "2015-10-29T00:58:00.000Z",
+      "scheduledEndTime": "2015-10-29T16:22:00.000Z",
+      "actualendTime": "2015-10-29T16:22:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aed8"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-29T16:22:00.000Z",
+      "actualStartTime": "2015-10-29T16:22:00.000Z",
+      "scheduledEndTime": "2015-10-30T02:41:00.000Z",
+      "actualendTime": "2015-10-30T02:41:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aed7"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-30T02:41:00.000Z",
+      "actualStartTime": "2015-10-30T02:41:00.000Z",
+      "scheduledEndTime": "2015-10-30T06:11:00.000Z",
+      "actualendTime": "2015-10-30T06:11:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aed6"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-30T06:11:00.000Z",
+      "actualStartTime": "2015-10-30T06:11:00.000Z",
+      "scheduledEndTime": "2015-10-30T13:55:00.000Z",
+      "actualendTime": "2015-10-30T13:55:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aed5"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-30T13:55:00.000Z",
+      "actualStartTime": "2015-10-30T13:55:00.000Z",
+      "scheduledEndTime": "2015-10-31T02:07:00.000Z",
+      "actualendTime": "2015-10-31T02:07:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aed4"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-31T02:07:00.000Z",
+      "actualStartTime": "2015-10-31T02:07:00.000Z",
+      "scheduledEndTime": "2015-10-31T05:17:00.000Z",
+      "actualendTime": "2015-10-31T05:17:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aed3"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-31T05:17:00.000Z",
+      "actualStartTime": "2015-10-31T05:17:00.000Z",
+      "scheduledEndTime": "2015-10-31T07:29:00.000Z",
+      "actualendTime": "2015-10-31T07:29:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aed2"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-31T07:29:00.000Z",
+      "actualStartTime": "2015-10-31T07:29:00.000Z",
+      "scheduledEndTime": "2015-10-31T10:26:00.000Z",
+      "actualendTime": "2015-10-31T10:26:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aed1"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-10-15T00:25:00.000Z",
+  "prize": [
+    1800,
+    900
+  ],
+  "projectId": 8923,
+  "registrants": [
+    {
+      "handle": "evilkyro1965",
+      "reliability": "0%",
+      "registrationDate": "2015-10-15T01:33:00.000Z",
+      "submissionDate": null,
+      "rating": "744",
+      "colorStyle": "color: #999999",
+      "_id": "58132fc3550dfb3b52b8aed0"
+    },
+    {
+      "handle": "Amith",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-15T03:07:00.000Z",
+      "submissionDate": null,
+      "rating": "683",
+      "colorStyle": "color: #999999",
+      "_id": "58132fc3550dfb3b52b8aecf"
+    },
+    {
+      "handle": "csy2012",
+      "reliability": "0%",
+      "registrationDate": "2015-10-15T03:24:00.000Z",
+      "submissionDate": null,
+      "rating": "245",
+      "colorStyle": "color: #999999",
+      "_id": "58132fc3550dfb3b52b8aece"
+    },
+    {
+      "handle": "veshu",
+      "reliability": "46%",
+      "registrationDate": "2015-10-15T03:50:00.000Z",
+      "submissionDate": "2015-10-21T00:42:00.000Z",
+      "rating": "1231",
+      "colorStyle": "color: #6666FF",
+      "_id": "58132fc3550dfb3b52b8aecd"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-15T04:28:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58132fc3550dfb3b52b8aecc"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-15T05:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aecb"
+    },
+    {
+      "handle": "son4moon",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-15T05:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aeca"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-15T06:24:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58132fc3550dfb3b52b8aec9"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2015-10-15T10:09:00.000Z",
+      "submissionDate": null,
+      "rating": "1060",
+      "colorStyle": "color: #00A900",
+      "_id": "58132fc3550dfb3b52b8aec8"
+    },
+    {
+      "handle": "NightWolf",
+      "reliability": "88%",
+      "registrationDate": "2015-10-15T10:46:00.000Z",
+      "submissionDate": "2015-10-21T01:24:00.000Z",
+      "rating": "1621",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58132fc3550dfb3b52b8aec7"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-15T13:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aec6"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-15T14:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aec5"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-15T15:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aec4"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-15T15:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aec3"
+    },
+    {
+      "handle": "chrislee8",
+      "reliability": "0%",
+      "registrationDate": "2015-10-15T16:44:00.000Z",
+      "submissionDate": null,
+      "rating": "1010",
+      "colorStyle": "color: #00A900",
+      "_id": "58132fc3550dfb3b52b8aec2"
+    },
+    {
+      "handle": "dvakulishin",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-15T17:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aec1"
+    },
+    {
+      "handle": "rtty",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-15T19:34:00.000Z",
+      "submissionDate": null,
+      "rating": "634",
+      "colorStyle": "color: #999999",
+      "_id": "58132fc3550dfb3b52b8aec0"
+    },
+    {
+      "handle": "sabbirhs",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-16T02:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aebf"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-16T04:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aebe"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-16T12:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aebd"
+    },
+    {
+      "handle": "another1",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-16T14:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aebc"
+    },
+    {
+      "handle": "rajrkrish",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-16T16:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8aebb"
+    }
+  ],
+  "registrationEndDate": "2015-10-17T00:25:00.000Z",
+  "reliabilityBonus": 360,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-10-21T01:26:00.000Z",
+  "submissions": [
+    {
+      "handle": "NightWolf",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 77.21,
+      "finalScore": 88.33,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-10-21T01:24:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aee6"
+    },
+    {
+      "handle": "veshu",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 79.56,
+      "finalScore": 83.31,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-10-21T00:42:00.000Z",
+      "_id": "58132fc3550dfb3b52b8aee5"
+    }
+  ],
+  "technology": [
+    ".NET",
+    "ADO.NET",
+    "AJAX",
+    "API",
+    "ASP.NET",
+    "ASP.NET AJAX",
+    "C#",
+    "IIS",
+    "SQL Server"
+  ]
+}

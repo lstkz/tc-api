@@ -1,0 +1,406 @@
+{
+  "_id": 30035694,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:08:09.928Z",
+  "appealsEndDate": "2013-09-21T10:36:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Proof of Concept Assembly - FrameSkipper POC FFMPEG Implementation",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h1 style=\"padding: 0px; margin: 0px; font-family: Arial, Helvetica, sans-serif; line-height: normal;\">1. Project Overview</h1>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"padding: 0px; margin: 0px; color: rgb(0, 0, 0); font-family: Verdana, arial, sans-serif; line-height: 16px;\">Develop a software module for reducing the frame rate of live video stream from CCTV IP camera.</span></p>\n\n<h1 style=\"padding: 0px; margin: 0px; font-family: Arial, Helvetica, sans-serif; line-height: normal;\"><font color=\"#000000\" face=\"Verdana, arial, sans-serif\" style=\"padding: 0px; margin: 0px;\"><span style=\"padding: 0px; margin: 0px; line-height: 16px;\">2.&nbsp;</span></font>Competition Task Overview</h1>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"padding: 0px; margin: 0px; color: rgb(0, 0, 0); font-family: Verdana, arial, sans-serif; line-height: 16px;\">Note: We don&#39;t have the live stream source so you can just focus on general video files in this contest.</span></p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"padding: 0px; margin: 0px; color: rgb(0, 0, 0); font-family: Verdana, arial, sans-serif; line-height: 16px;\">The main point of the implementation requested is to not use full decode and encode to do transcoding. Most likely the transcode needs to be done in the DCT domain to achieve less CPU intense transcoding algorithm. Example research papers were provided in the project description.</span></p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px;\"><font color=\"#ff0000\" face=\"Verdana, arial, sans-serif\"><span style=\"line-height: 16px;\"><b>In First POC Assembly, we implement the algorithm based on JM 18.5 and the performance is better than original JM implementation.</b></span></font></p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px;\"><font color=\"#ff0000\" face=\"Verdana, arial, sans-serif\"><span style=\"line-height: 16px;\"><b>But the performance of JM Framework is not good so we need to implement the algorithm based on FFMPEG and the submission must get a better performance than FFMPEG implementation.</b></span></font></p>\n\n<h2 style=\"padding: 0px; margin: 0px; font-family: Arial, Helvetica, sans-serif; line-height: normal;\">2.1 Requirements</h2>\n\n<ol style=\"margin: 0px; font-family: Arial, Helvetica, sans-serif; line-height: normal; font-size: 13px; padding-top: 6px !important; padding-right: 0px !important; padding-bottom: 6px !important;\">\n\t<li style=\"padding: 0px; margin: 0px;\">It should reduce the frame rate of both h.264 and mpeg4(part2) live video stream.</li>\n\t<li style=\"padding: 0px; margin: 0px;\">The video stream is assumed to have only I-frame and P-frame.(No B-frames)</li>\n\t<li style=\"padding: 0px; margin: 0px;\">It should be less CPU intensive the transcoding a video stream(decode, reduce frame, and re encode)</li>\n\t<li style=\"padding: 0px; margin: 0px;\">The frame rate of the input video stream can vary while it is being inputed.</li>\n\t<li style=\"padding: 0px; margin: 0px;\">It should take &quot;Output frame rate&quot; as an input using dll parameter.</li>\n\t<li style=\"padding: 0px; margin: 0px;\">It should output h.264/mpeg4 frame as its output which can be decoded using &quot;ffmpeg decoder&quot;.</li>\n\t<li style=\"padding: 0px; margin: 0px;\">To achieve the necessary performance it can skip frames as 1/2, 1/3, 1/4, 1/5, 1/6 ... 1/10 frames from the original frame rate.</li>\n</ol>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Note: The assembly should NOT depend on any certain CPU / Hardware features.</p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">The performance of this project is important. Client will call it multiple times to process multiple streams at same time.</p>\n\n<h2 style=\"padding: 0px; margin: 0px; font-family: Arial, Helvetica, sans-serif; line-height: normal;\">2.2 Input</h2>\n\n<ul style=\"margin: 0px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; padding-top: 6px !important; padding-right: 0px !important; padding-bottom: 6px !important;\">\n\t<li style=\"padding: 0px; margin: 0px;\">H.264 frame (1~30 fps)</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Output fps parameter (1~30fps)&nbsp;</li>\n</ul>\n\n<h2 style=\"padding: 0px; margin: 0px; font-family: Arial, Helvetica, sans-serif; line-height: normal;\">2.3 Output</h2>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">H.264 frame (1~30 fps, less than input framerate)</p>\n\n<h2 style=\"padding: 0px; margin: 0px; font-family: Arial, Helvetica, sans-serif; line-height: normal;\">2.4 Project Deliverable</h2>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">FrameSkipper.dll (shared dll, 32bit and 64bit)</p>\n\n<h2 style=\"padding: 0px; margin: 0px; font-family: Arial, Helvetica, sans-serif; line-height: normal;\">2.5&nbsp;Supported Profiles</h2>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">h.264 supported profiles<br style=\"padding: 0px; margin: 0px;\" />\nhttp://en.wikipedia.org/wiki/H.264/MPEG-4_AVC&nbsp;</p>\n\n<ol style=\"margin: 0px; font-family: Arial, Helvetica, sans-serif; line-height: normal; font-size: 13px; padding-top: 6px !important; padding-right: 0px !important; padding-bottom: 6px !important;\">\n\t<li style=\"padding: 0px; margin: 0px;\">Baseline Profile (BP)</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Main Profile (MP)</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Extended Profile (XP)</li>\n\t<li style=\"padding: 0px; margin: 0px;\">High Profile (HiP)</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Progressive High Profile (PHiP)</li>\n\t<li style=\"padding: 0px; margin: 0px;\">High 4:4:4 Predictive Profile (Hi444PP)</li>\n</ol>\n\n<h2 style=\"padding: 0px; margin: 0px; font-family: Arial, Helvetica, sans-serif; line-height: normal;\">2.6&nbsp;Research Papers</h2>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">The content creation document is attached.</p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Original papers:</p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">https://docs.google.com/folder/d/0B0rMmRXYjUuKdWZyT1RBZGdBTHM/edit?usp=sharing</p>\n\n<h1 style=\"padding: 0px; margin: 0px; font-family: Arial, Helvetica, sans-serif; line-height: normal;\">3. Submission Deliverables</h1>\n\n<ul style=\"margin: 0px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; padding-top: 6px !important; padding-right: 0px !important; padding-bottom: 6px !important;\">\n\t<li style=\"padding: 0px; margin: 0px;\">Source Code</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Deployment Guide</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Test Files</li>\n</ul>\n\n<h1 style=\"padding: 0px; margin: 0px; font-family: Arial, Helvetica, sans-serif; line-height: normal;\">4.&nbsp;Technology Overview</h1>\n\n<ul style=\"margin: 0px; font-size: 13px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; padding-top: 6px !important; padding-right: 0px !important; padding-bottom: 6px !important;\">\n\t<li style=\"padding: 0px; margin: 0px;\">OS (compatible with both windows7 32bit and 64bit)</li>\n\t<li style=\"padding: 0px; margin: 0px;\">VisualStudio 2010 C++ (C++11 compatible)</li>\n\t<li style=\"padding: 0px; margin: 0px;\">STL</li>\n\t<li style=\"padding: 0px; margin: 0px;\">boost(1.49 or higher)</li>\n\t<li style=\"padding: 0px; margin: 0px;\">additional native library can be used</li>\n</ul>\n",
+  "digitalRunPoints": 900,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30035694",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2013-09-22T06:13:00.000Z",
+  "finalSubmissionGuidelines": "<p>N/A</p>\n",
+  "forumId": 17584,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=17584",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 26,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-09-12T10:54:00.000Z",
+      "actualStartTime": "2013-09-12T10:54:00.000Z",
+      "scheduledEndTime": "2013-09-12T10:55:00.000Z",
+      "actualendTime": "2013-09-12T10:55:00.000Z",
+      "_id": "58133fa9550dfb3b52be01e9"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-09-12T10:55:00.000Z",
+      "actualStartTime": "2013-09-12T10:55:00.000Z",
+      "scheduledEndTime": "2013-09-12T12:57:00.000Z",
+      "actualendTime": "2013-09-12T12:57:00.000Z",
+      "_id": "58133fa9550dfb3b52be01e8"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2013-09-12T12:57:00.000Z",
+      "actualStartTime": "2013-09-12T12:57:00.000Z",
+      "scheduledEndTime": "2013-09-14T12:57:00.000Z",
+      "actualendTime": "2013-09-14T12:57:00.000Z",
+      "_id": "58133fa9550dfb3b52be01e7"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-09-12T13:02:00.000Z",
+      "actualStartTime": "2013-09-12T13:02:00.000Z",
+      "scheduledEndTime": "2013-09-17T13:02:00.000Z",
+      "actualendTime": "2013-09-17T13:02:00.000Z",
+      "_id": "58133fa9550dfb3b52be01e6"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2013-09-17T13:02:00.000Z",
+      "actualStartTime": "2013-09-17T13:02:00.000Z",
+      "scheduledEndTime": "2013-09-17T22:33:00.000Z",
+      "actualendTime": "2013-09-17T22:33:00.000Z",
+      "_id": "58133fa9550dfb3b52be01e5"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-09-17T22:33:00.000Z",
+      "actualStartTime": "2013-09-17T22:33:00.000Z",
+      "scheduledEndTime": "2013-09-19T17:23:00.000Z",
+      "actualendTime": "2013-09-19T17:23:00.000Z",
+      "_id": "58133fa9550dfb3b52be01e4"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2013-09-19T17:23:00.000Z",
+      "actualStartTime": "2013-09-19T17:23:00.000Z",
+      "scheduledEndTime": "2013-09-20T17:23:00.000Z",
+      "actualendTime": "2013-09-20T17:23:00.000Z",
+      "_id": "58133fa9550dfb3b52be01e3"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2013-09-20T17:23:00.000Z",
+      "actualStartTime": "2013-09-20T17:23:00.000Z",
+      "scheduledEndTime": "2013-09-21T10:36:00.000Z",
+      "actualendTime": "2013-09-21T10:36:00.000Z",
+      "_id": "58133fa9550dfb3b52be01e2"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2013-09-21T10:36:00.000Z",
+      "actualStartTime": "2013-09-21T10:36:00.000Z",
+      "scheduledEndTime": "2013-09-21T11:46:00.000Z",
+      "actualendTime": "2013-09-21T11:46:00.000Z",
+      "_id": "58133fa9550dfb3b52be01e1"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-09-21T11:46:00.000Z",
+      "actualStartTime": "2013-09-21T11:46:00.000Z",
+      "scheduledEndTime": "2013-09-22T06:13:00.000Z",
+      "actualendTime": "2013-09-22T06:13:00.000Z",
+      "_id": "58133fa9550dfb3b52be01e0"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-09-22T06:13:00.000Z",
+      "actualStartTime": "2013-09-22T06:13:00.000Z",
+      "scheduledEndTime": "2013-09-22T06:27:00.000Z",
+      "actualendTime": "2013-09-22T06:27:00.000Z",
+      "_id": "58133fa9550dfb3b52be01df"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2013-09-22T06:27:00.000Z",
+      "actualStartTime": "2013-09-22T06:27:00.000Z",
+      "scheduledEndTime": "2013-09-27T06:27:00.000Z",
+      "actualendTime": "2013-09-27T06:27:00.000Z",
+      "_id": "58133fa9550dfb3b52be01de"
+    }
+  ],
+  "platforms": [],
+  "postingDate": "2013-09-12T12:57:00.000Z",
+  "prize": [
+    2000,
+    1000
+  ],
+  "projectId": 6176,
+  "registrants": [
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-12T13:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa9550dfb3b52be01dd"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-12T13:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa9550dfb3b52be01dc"
+    },
+    {
+      "handle": "sri02",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-12T13:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa9550dfb3b52be01db"
+    },
+    {
+      "handle": "gondzo",
+      "reliability": "13%",
+      "registrationDate": "2013-09-12T13:26:00.000Z",
+      "submissionDate": null,
+      "rating": "857",
+      "colorStyle": "color: #999999",
+      "_id": "58133fa9550dfb3b52be01da"
+    },
+    {
+      "handle": "superastrom",
+      "reliability": "0%",
+      "registrationDate": "2013-09-12T13:39:00.000Z",
+      "submissionDate": null,
+      "rating": "482",
+      "colorStyle": "color: #999999",
+      "_id": "58133fa9550dfb3b52be01d9"
+    },
+    {
+      "handle": "Micha{Corp}",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-12T13:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa9550dfb3b52be01d8"
+    },
+    {
+      "handle": "tongkunvwang",
+      "reliability": "0%",
+      "registrationDate": "2013-09-12T13:53:00.000Z",
+      "submissionDate": null,
+      "rating": "278",
+      "colorStyle": "color: #999999",
+      "_id": "58133fa9550dfb3b52be01d7"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2013-09-12T14:28:00.000Z",
+      "submissionDate": null,
+      "rating": "829",
+      "colorStyle": "color: #999999",
+      "_id": "58133fa9550dfb3b52be01d6"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "6%",
+      "registrationDate": "2013-09-12T14:42:00.000Z",
+      "submissionDate": null,
+      "rating": "816",
+      "colorStyle": "color: #999999",
+      "_id": "58133fa9550dfb3b52be01d5"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "20%",
+      "registrationDate": "2013-09-12T15:55:00.000Z",
+      "submissionDate": "2013-09-17T12:28:00.000Z",
+      "rating": "473",
+      "colorStyle": "color: #999999",
+      "_id": "58133fa9550dfb3b52be01d4"
+    },
+    {
+      "handle": "googlesmkm",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-12T18:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa9550dfb3b52be01d3"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-12T18:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa9550dfb3b52be01d2"
+    },
+    {
+      "handle": "pirosl_tc",
+      "reliability": "0%",
+      "registrationDate": "2013-09-12T19:13:00.000Z",
+      "submissionDate": null,
+      "rating": "761",
+      "colorStyle": "color: #999999",
+      "_id": "58133fa9550dfb3b52be01d1"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "0%",
+      "registrationDate": "2013-09-12T20:48:00.000Z",
+      "submissionDate": null,
+      "rating": "906",
+      "colorStyle": "color: #00A900",
+      "_id": "58133fa9550dfb3b52be01d0"
+    },
+    {
+      "handle": "eduardomelendez",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-12T21:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa9550dfb3b52be01cf"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "0%",
+      "registrationDate": "2013-09-12T22:56:00.000Z",
+      "submissionDate": null,
+      "rating": "58",
+      "colorStyle": "color: #999999",
+      "_id": "58133fa9550dfb3b52be01ce"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-12T23:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa9550dfb3b52be01cd"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2013-09-13T00:18:00.000Z",
+      "submissionDate": null,
+      "rating": "1423",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133fa9550dfb3b52be01cc"
+    },
+    {
+      "handle": "brain_cn",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-13T01:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa9550dfb3b52be01cb"
+    },
+    {
+      "handle": "lillysun",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-13T01:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa9550dfb3b52be01ca"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-13T16:16:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58133fa9550dfb3b52be01c9"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-13T09:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa9550dfb3b52be01c8"
+    },
+    {
+      "handle": "veera.a",
+      "reliability": "n/a",
+      "registrationDate": "2013-09-13T13:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa9550dfb3b52be01c7"
+    },
+    {
+      "handle": "rawuza",
+      "reliability": "100%",
+      "registrationDate": "2013-09-13T14:29:00.000Z",
+      "submissionDate": null,
+      "rating": "1070",
+      "colorStyle": "color: #00A900",
+      "_id": "58133fa9550dfb3b52be01c6"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2013-09-13T16:40:00.000Z",
+      "submissionDate": null,
+      "rating": "592",
+      "colorStyle": "color: #999999",
+      "_id": "58133fa9550dfb3b52be01c5"
+    },
+    {
+      "handle": "haipt81",
+      "reliability": "73%",
+      "registrationDate": "2013-09-14T02:05:00.000Z",
+      "submissionDate": null,
+      "rating": "1307",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133fa9550dfb3b52be01c4"
+    }
+  ],
+  "registrationEndDate": "2013-09-14T12:57:00.000Z",
+  "reliabilityBonus": 400,
+  "reviewScorecardId": 30001210,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2013-09-17T13:02:00.000Z",
+  "submissions": [
+    {
+      "handle": "yedtoss",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 98.33,
+      "finalScore": 99.17,
+      "points": 900,
+      "submissionStatus": "Active",
+      "submissionDate": "2013-09-17T12:28:00.000Z",
+      "_id": "58133fa9550dfb3b52be01ea"
+    }
+  ],
+  "technology": [
+    "C++"
+  ]
+}

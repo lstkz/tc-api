@@ -1,0 +1,293 @@
+{
+  "_id": 30041738,
+  "_isComplete": true,
+  "__v": 2158,
+  "_lastUpdate": "2016-11-05T11:06:21.710Z",
+  "appealsEndDate": "2014-10-07T15:59:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "NASA Astronaut Email - Bug Hunt",
+  "challengeType": "Bug Hunt",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Cancelled - Failed Review",
+  "detailedRequirements": "<p><span><span><span>NASA needs to integrate the ION Disruption Tolerant Networking (DTN) implementation of Bundle Protocol (BP) with Microsoft Outlook and Microsoft Exchange Server to support the transfer of astronaut email to/from the International Space Station (ISS).</span></span></span> Communications are delayed and frequently disrupted due to ISS structural blockage and Tracking and Data Relay Satellite System (TDRSS) handovers.&nbsp; The combination of delay and disruptions causes Microsoft Outlook to frequently have problems and become unusable, particularly when sending emails with large attachments, such as pictures or videos. See more at: http://www.topcoder.com/dtn/astronaut-email</p>\n\n<div id=\"stcpDiv\" style=\"position: absolute; top: -1999px; left: -1988px;\">Astronauts currently use Microsoft Outlook on the ISS connected to a Microsoft Exchange Server on the ground to send and receive email from ISS.&nbsp; The current system operates over TCP/IP on links that are delayed and frequently disrupted due to ISS structural blockage and Tracking and Data Relay Satellite System (TDRSS) handovers.&nbsp; The combination of delay and disruptions causes Microsoft Outlook to frequently have problems and become unusable, particularly when sending emails with large attachments, such as pictures or videos. - See more at: http://www.topcoder.com/dtn/astronaut-email/#sthash.H3NtLHMI.dpuf</div>\n\n<div id=\"stcpDiv\" style=\"position: absolute; top: -1999px; left: -1988px;\">Astronauts currently use Microsoft Outlook on the ISS connected to a Microsoft Exchange Server on the ground to send and receive email from ISS.&nbsp; The current system operates over TCP/IP on links that are delayed and frequently disrupted due to ISS structural blockage and Tracking and Data Relay Satellite System (TDRSS) handovers.&nbsp; The combination of delay and disruptions causes Microsoft Outlook to frequently have problems and become unusable, particularly when sending emails with large attachments, such as pictures or videos. - See more at: http://www.topcoder.com/dtn/astronaut-email/#sthash.H3NtLHMI.dpuf</div>\n\n<p>TopCoder created and deployed a DTNTUN network interface that can transmit TCP/IP over DTN using the Bundle Protocol. We need to test and find bugs in the DTN tunnel.</p>\n\n<p>There is a deployed system, but we will provide EC2 servers for bug hunters. It is needed because you will have to introduce delays and failures to test the ISS environment.</p>\n\n<p>We are mainly interested in bugs that may occur with the following scenarios:</p>\n\n<ul>\n\t<li>Outlook connection:\n\t<ul>\n\t\t<li>What happens when network is disrupted?</li>\n\t\t<li>Can we send an email and it is kept in outlook outbox until network is restablished?</li>\n\t\t<li>Does outlook become unresponsive?</li>\n\t</ul>\n\t</li>\n\t<li>Large email attachments:\n\t<ul>\n\t\t<li>What happens when network is disrupted in the middle of a file transfer?</li>\n\t\t<li>Is the file retransmitted after network is restablished?</li>\n\t\t<li>Does outlook become unresponsive when network is disrupted while sending and/or receiving a large email?</li>\n\t</ul>\n\t</li>\n\t<li>Calendars and tasks</li>\n\t<li>Disrupt communication (simulated using ION-DTN owltsim)</li>\n\t<li>Packet loss (simulated using ION-DTN owltsim)</li>\n</ul>\n\n<p>The customer supplied also a very specific list of tests (which might overlap with the above list):</p>\n\n<ul>\n\t<li>We should have a test case to demonstrate that non-DTN email on the ground can operate in parallel with DTN email.&nbsp; This would involve one ground user sending an email to another ground user while other users are sending email to a space user through the DTN proxy, but all are using the same Exchange server.&nbsp; This would require multiple users on the ground.</li>\n\t<li>I would add a test case where a large email is sent but the client loses connection to the proxy before the message is completely sent (similar to a wireless connection dropout).&nbsp; When the connection is reestablished, the message should be sent successfully.</li>\n\t<li>I would also add a test case where the outlook client is closed before the message leaves the outbox.&nbsp; When the outlook client reopens, the message should be sent successfully.</li>\n\t<li>I would add a test case with significant rate mismatches between the space clients/space proxy and between the space proxy/ground proxy, with the lower rate between the space/ground proxies.&nbsp; This is analogous to the ISS scenario.&nbsp; The ISS onboard network is 100 Mbps, but space link rate can vary significantly and is much less at times.&nbsp; The BP rate can be controlled in the ionrc configuration file in bytes/sec and there are other rate-limiting options depending on the convergence layer.&nbsp; We could try space link rates of 500 kbps, 1 Mbps, 5 Mbps, 10 Mbps and 50 Mbps.&nbsp; ISS is also planning to upgrade the onboard network to 1 Gbps, so the rate mismatch will be greater in the future.</li>\n\t<li>For the test cases that involve injecting delay, I would specify a range of times to test.&nbsp; Something like (0.5, 1.5, 3, 10, 30, 60, 120, 1200, 1800) seconds for the one-way light time.</li>\n\t<li>Similarly, for the test cases the involve injecting errors, I would specify a range.&nbsp; Something like error rates of (1e-4, 1e-3, 1e-2, 1e-1, 1.5e-1, 2.0e-1)</li>\n</ul>\n\n<p><strong><span><span><span><span><span><span><span><span><span><span><span><span><span><span>The guidelines for this contest are given below:</span></span></span></span></span></span></span></span></span></span></span></span></span></span></strong></p>\n\n<ul>\n\t<li><span><span><span><span><span><span><span><span><span><span><span><span><span>As issues are identified they need to be logged in Jira: </span></span></span></span></span></span></span></span></span></span></span></span></span>https://apps.topcoder.com/bugs/browse/DTNX</li>\n\t<li><span><span><span><span><span><span><span><span><span><span><span><span><span>Issues must include clear descriptions, test cases and steps to reproduce and expected vs. actual results in order to be counted.</span></span></span></span></span></span></span></span></span></span></span></span></span></li>\n\t<li><span><span><span><span><span><span><span><span><span><span><span><span><span>Please provide logs or files used to test.</span></span></span></span></span></span></span></span></span></span></span></span></span></li>\n\t<li><span><span><span><span><span><span><span><span><span><span><span><span><span>First competitor to find an issue gets credit, duplicates will not be counted.</span></span></span></span></span></span></span></span></span></span></span></span></span></li>\n\t<li><span><span><span><span><span><span><span><span><span><span><span><span><span>Reviewer will accept, reject or mark the issues as duplicate.</span></span></span></span></span></span></span></span></span></span></span></span></span></li>\n\t<li><span><span><span><span><span><span><span><span><span><span><span><span><span>Please <strong>DO</strong> take a look at the reported bugs, duplicated bugs cost your work time and the reviewer&#39;s time.</span></span></span></span></span></span></span></span></span></span></span></span></span></li>\n</ul>\n\n<div style=\"font-family: Arial, Helvetica, Verdana, sans-serif; font-size: 12px; line-height: 16px; border: 1px solid rgb(0, 153, 0); background-color: rgb(221, 255, 221); padding: 10px; margin: 5px;\">\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><strong>Important Notice:</strong></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span>You must also be the first person to report the issue and submit it while submission phase is open. Any issues before and after the submission phase will NOT be counted.</span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n</div>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span style=\"color:#0000FF\"><span style=\"font-size:13px\"><strong>Additional Resources </strong></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span>Some of the additional resources helpful for the project are</span></span></span></span></span></span></span></span></span></span></span></span></span></span>:</p>\n\n<ul>\n\t<li>DTN TUN submission and source code: explains how to setup EC2 and OpenVPN as well as outlook client.</li>\n\t<li>Test Scenarios</li>\n</ul>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><strong>Contest Prize Eligibility</strong></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<div>\n<div style=\"font-size: 12px; line-height: 16px; border: 1px solid rgb(0, 153, 0); background-color: rgb(221, 255, 221); padding: 10px; margin: 5px;\">\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span>The submitter with the most accepted bugs will win the contest.</span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n</div>\n</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30041738",
+  "finalSubmissionGuidelines": "<div class=\"ng-binding\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span style=\"color:#c00000\"><strong>Bug Report Process </strong></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span style=\"color:#0000FF\"><strong>Bug Report Format</strong></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span>For each report of a limitation or bug, we need the following information:</span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<ul>\n\t<li><span><span><span><span><span><span><span><span><span><span><span><span><span>Steps to reproduce, including any needed information</span></span></span></span></span></span></span></span></span></span></span></span></span></li>\n\t<li><span><span><span><span><span><span><span><span><span><span><span><span><span>Screen shots (if applicable)</span></span></span></span></span></span></span></span></span></span></span></span></span></li>\n\t<li><span><span><span><span><span><span><span><span><span><span><span><span><span>Configuration files used in each endpoint</span></span></span></span></span></span></span></span></span></span></span></span></span></li>\n\t<li><span><span><span><span><span><span><span><span><span><span><span><span><span>Expected results after the bug is fixed</span></span></span></span></span></span></span></span></span></span></span></span></span></li>\n\t<li><span><span><span><span><span><span><span><span><span><span><span><span><span>Current results, before the bug is fixed</span></span></span></span></span></span></span></span></span></span></span></span></span></li>\n</ul>\n\n<div>\n<div style=\"font-size: 12px; line-height: 16px; border: 1px solid rgb(0, 153, 0); background-color: rgb(221, 255, 221); padding: 10px; margin: 5px;\">\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span style=\"color:#FF0000\">&nbsp;<strong>Important Notice:</strong></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<ul>\n\t<li><span><span><span><span><span><span><span><span><span><span><span><span><span>If you do&nbsp;<strong>not</strong>&nbsp;properly document your bug reports, they will likely be rejected due to lack of information or documentation. Also, make sure your bug reports are reasonably general.</span></span></span></span></span></span></span></span></span></span></span></span></span></li>\n\t<li><span><span><span><span><span><span><span><span><span><span><span><span><span>If you submit the same bug that is seen in multiple screens, for instance, you will likely only get credit for the original bug report. The others will all be closed as duplicates.</span></span></span></span></span></span></span></span></span></span></span></span></span></li>\n</ul>\n</div>\n\n<p><strong>IMPORTANT</strong>:</p>\n\n<p>Unlike other bug hunts, we will also reward<strong><span style=\"color:#FF0000\"> $500,00</span></strong> for a second place.</p>\nA bonus of <span style=\"font-size:14px\"><span style=\"color:rgb(255, 0, 0)\"><strong>$500</strong></span></span> for the first person to hit 100 defects (only 1 person will be eligible for the bonus)\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span style=\"color:#0000FF\"><strong>Ticket Logging and Test Scenarios Report</strong></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n</div>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span>You will log your tickets here: </span></span></span></span></span></span></span></span></span></span></span></span></span><a href=\"https://apps.topcoder.com/bugs/browse/DTNX\">https://apps.topcoder.com/bugs/browse/DTNX</a></p>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span style=\"color:#0000FF\"><strong>Scoring</strong></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><strong>The Scoring guidelines followed for the contest are given below:</strong></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<div style=\"font-size: 12px; line-height: 16px; border: 1px solid rgb(0, 153, 0); background-color: rgb(221, 255, 221); padding: 10px; margin: 5px;\">\n<ul>\n\t<li><span><span><span><span><span><span><span><span><span><span><span><span><span>For scoring, the submitter with the most accepted bugs will win.</span></span></span></span></span></span></span></span></span></span></span></span></span></li>\n\t<li><span><span><span><span><span><span><span><span><span><span><span><span><span>For submitters who submit but don&#39;t take first placement, if they submit bugs that aren&#39;t covered in the first&nbsp; place submission, they will receive </span></span></span></span></span></span></span></span></span></span></span></span></span><strong><span style=\"color:#FF0000\"><span style=\"font-size:14px\">$10</span></span></strong><span><span><span><span><span><span><span><span><span><span><span><span><span> for each unique bug reported <strong>up to a maximum of </strong></span></span></span></span></span></span></span></span></span></span></span></span></span><span style=\"color:#FF0000\"><strong>$500,00</strong></span><span><span><span><span><span><span><span><span><span><span><span><span><span>.&nbsp;</span></span></span></span></span></span></span></span></span></span></span></span></span></li>\n</ul>\n</div>\n\n<div style=\"font-size: 12px; line-height: 16px; border: 1px solid rgb(0, 153, 0); background-color: rgb(221, 255, 221); padding: 10px; margin: 5px;\">\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span style=\"color:rgb(255, 0, 0)\">&nbsp;<strong>Important Notice:</strong></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span>If two submitters submit the same bug report, the submitter who submitted the report first into Github Issues will get credit for the bug. The second submitter will not.&nbsp;</span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n</div>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span style=\"color:#0000FF\"><span><strong>Tips </strong></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><strong>Some of the tips helpful for the contest are:</strong></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<ul>\n\t<li><span><span><span><span><span><span><span><span><span><span><span><span><span>Submitting what is obviously the same issue multiple times with small variations will only annoy the reviewer that has to sort through all the issues and will only count as one issue anyway. If it&#39;s less obvious if it is the same issue or not, use your best judgment and the reviewers will do the same.</span></span></span></span></span></span></span></span></span></span></span></span></span></li>\n\t<li><span><span><span><span><span><span><span><span><span><span><span><span><span>Put an eye on the issues being submitted by other members to minimize the time you may be spending on duplicate efforts. Knowing what has already been reported will allow you to better focus your time on finding yet undiscovered issues.</span></span></span></span></span></span></span></span></span></span></span></span></span></li>\n\t<li><span><span><span><span><span><span><span><span><span><span><span><span><span>Double check your steps to reproduce and test cases to make sure they are clear. Make sure your steps include creation of any necessary data.</span></span></span></span></span></span></span></span></span></span></span></span></span></li>\n</ul>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span style=\"color:#c00000\"><strong>Environment Setup</strong></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<ul>\n\t<li>You should request EC2 VMs on the forum</li>\n\t<li>You should request access to Jira on the forum</li>\n\t<li>ION-DTN source code: http://sourceforge.net/projects/ion-dtn\n\t<ul>\n\t\t<li><em><strong>There are a large number of regression tests in ion-open-source/tests that could be copied and adapted to test delay, retransmission and disrupcy. &nbsp;For example, the ltp-retransmission test.</strong></em></li>\n\t\t<li>Look at <strong>owltsim</strong> tool and adjust DTN configuration files to test different scenarios</li>\n\t\t<li>Both issue-324-ltp-files and issue-364-dtpc are good examples of how to include owltsim in a test scenario. In both cases the one-way light time is only 1 second and the &quot;channel noise&quot; rate is fairly low (like 5% datagram loss), but these parameters are easy to adjust.</li>\n\t\t<li>The &quot;limbo&quot; test is a good example of using duct blocking to implement link disruption.</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span style=\"color:#c00000\"><strong>Submission Deliverables</strong></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span>You need report your issues in Jira: </span></span></span></span></span></span></span></span></span></span></span></span></span></span>https://apps.topcoder.com/bugs/browse/DTNX<span><span><span><span><span><span><span><span><span><span><span><span><span><span> </span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span>Please submit a report file containing the overall tests you performed (positive and negative).</span></span></span></span></span></span></span></span></span></span></span></span></span></span> Also, list the bug reports you submitted.</p>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n",
+  "forumId": 22221,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=22221",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 21,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-29T21:58:00.000Z",
+      "actualStartTime": "2014-09-29T21:58:00.000Z",
+      "scheduledEndTime": "2014-09-29T21:59:00.000Z",
+      "actualendTime": "2014-09-29T21:59:00.000Z",
+      "_id": "581dbd2d550dfb3b52be3dd4"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-29T21:59:00.000Z",
+      "actualStartTime": "2014-09-29T21:59:00.000Z",
+      "scheduledEndTime": "2014-09-30T01:36:00.000Z",
+      "actualendTime": "2014-09-30T01:36:00.000Z",
+      "_id": "581dbd2d550dfb3b52be3dd3"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-30T01:36:00.000Z",
+      "actualStartTime": "2014-09-30T01:36:00.000Z",
+      "scheduledEndTime": "2014-10-03T01:36:00.000Z",
+      "actualendTime": "2014-10-03T01:36:00.000Z",
+      "_id": "581dbd2d550dfb3b52be3dd2"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-30T01:42:00.000Z",
+      "actualStartTime": "2014-09-30T01:42:00.000Z",
+      "scheduledEndTime": "2014-10-06T01:42:00.000Z",
+      "actualendTime": "2014-10-06T01:42:00.000Z",
+      "_id": "581dbd2d550dfb3b52be3dd1"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-06T01:42:00.000Z",
+      "actualStartTime": "2014-10-06T01:42:00.000Z",
+      "scheduledEndTime": "2014-10-07T15:59:00.000Z",
+      "actualendTime": "2014-10-07T15:59:00.000Z",
+      "_id": "581dbd2d550dfb3b52be3dd0"
+    }
+  ],
+  "platforms": [
+    "AWS"
+  ],
+  "postingDate": "2014-09-30T01:36:00.000Z",
+  "prize": [
+    1000
+  ],
+  "projectId": 7519,
+  "registrants": [
+    {
+      "handle": "winterflame",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T01:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd2d550dfb3b52be3dcf"
+    },
+    {
+      "handle": "sdgun",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T01:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd2d550dfb3b52be3dce"
+    },
+    {
+      "handle": "nithyaasworld",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T01:39:00.000Z",
+      "submissionDate": "2014-10-04T10:14:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd2d550dfb3b52be3dcd"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T02:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd2d550dfb3b52be3dcc"
+    },
+    {
+      "handle": "jyapayne",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T03:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd2d550dfb3b52be3dcb"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T03:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd2d550dfb3b52be3dca"
+    },
+    {
+      "handle": "onetliviu",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T05:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd2d550dfb3b52be3dc9"
+    },
+    {
+      "handle": "Kaumad",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T05:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd2d550dfb3b52be3dc8"
+    },
+    {
+      "handle": "liumei",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T08:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd2d550dfb3b52be3dc7"
+    },
+    {
+      "handle": "topcoder09",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T11:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd2d550dfb3b52be3dc6"
+    },
+    {
+      "handle": "shubhendus",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T13:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd2d550dfb3b52be3dc5"
+    },
+    {
+      "handle": "karthikbecse",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T14:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd2d550dfb3b52be3dc4"
+    },
+    {
+      "handle": "sjalan14",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T16:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd2d550dfb3b52be3dc3"
+    },
+    {
+      "handle": "Button-JC",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-01T07:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd2d550dfb3b52be3dc2"
+    },
+    {
+      "handle": "pun_aga",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-01T16:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd2d550dfb3b52be3dc1"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-01T18:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd2d550dfb3b52be3dc0"
+    },
+    {
+      "handle": "TeeJones",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-01T21:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd2d550dfb3b52be3dbf"
+    },
+    {
+      "handle": "f0rc0d3r",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-02T07:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd2d550dfb3b52be3dbe"
+    },
+    {
+      "handle": "kaygee",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-02T11:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd2d550dfb3b52be3dbd"
+    },
+    {
+      "handle": "Rupinder.Kaur",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-02T14:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd2d550dfb3b52be3dbc"
+    },
+    {
+      "handle": "Arya1",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-02T17:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd2d550dfb3b52be3dbb"
+    }
+  ],
+  "registrationEndDate": "2014-10-03T01:36:00.000Z",
+  "reliabilityBonus": 200,
+  "reviewScorecardId": 30001220,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2014-10-06T01:42:00.000Z",
+  "submissions": [
+    {
+      "handle": "nithyaasworld",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 10,
+      "finalScore": 10,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-10-04T10:14:00.000Z",
+      "_id": "581dbd2d550dfb3b52be3dd5"
+    }
+  ],
+  "technology": [
+    "C"
+  ]
+}

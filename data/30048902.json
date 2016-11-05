@@ -1,0 +1,354 @@
+{
+  "_id": 30048902,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T11:01:04.393Z",
+  "appealsEndDate": "2015-02-16T22:35:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "GE Patent Processing Tool - php",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2015-03-12T11:11:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -51493724,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<div style=\"background:#eee;border:1px solid #ccc;padding:5px 10px;\">\n<h2><span>2nd place prize : We will keep challenge active for 24hrs after accepting first submission, anyone submit a valid submission before end of the 24hrs period will get a $150.</span></h2>\n</div>\n\n<h1 dir=\"ltr\"><span><span>Project Overview</span></span></h1>\n\n<p dir=\"ltr\"><span><span style=\"font-size:12px\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">GE processes thousands of patent applications a year in the US alone. &nbsp;They have applications from other countries with applicable info called &quot;prior art.&quot; &nbsp;This info (prior art) sometimes needs to be transposed from one application to another, a process that is done manually today and can take anywhere from five minutes to an hour. I think you can see the value that this tool could provide when you think about this process happening over thousands of applications. </span></span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-size:12px\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">We are running series of POC challenges to build a tool that could automate this process.</span></span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-size:12px\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">The final tool we want to build, will have the following workflow : </span></span></span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:12px\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">A user opens a web page to have two functionality : </span></span></span></p>\n\n\t<ul>\n\t\t<li>\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:12px\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">upload a patent application that contains the &lsquo;prior art&rsquo; information</span></span></span></p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:12px\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">upload an optional file that contains key/value pairs representing additional information that will be replacing default values used in building the final output </span></span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:12px\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">A php application backend will handle the upload functionality, and delegate logic to a java command line utility (packaged in jar file) passing the files to the utility</span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:12px\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">The utility will parse the input arguments, and decide the type of input file of both input files</span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:12px\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">For the patent application file, the utility extracts the &lsquo;prior art&rsquo; information, and construct an xml</span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:12px\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">For optional file (let&rsquo;s call it &lsquo;extra info&rsquo; file), the utility converts the file to xml</span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:12px\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">the utility uses a mapping file, the converted xmls, and create a pdf/xls/csv file, store it locally, and return the full path to the file to the php</span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:12px\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">the php will read the file and send it back to the user.</span></span></span></p>\n\t</li>\n</ul>\n\n<h2><span>Challenge Requirements</span></h2>\n\n<p><span>You have built two java command line utilities :</span></p>\n\n<ul>\n\t<li><span>First one accepts a PDF file that includes a set of images and convert it to a machine-readable XML and </span>output it to XML file.</li>\n\t<li><span>Second utility accepts the XML file (the output from first utility) and procide a csv file (can be opened in excel as well).</span></li>\n</ul>\n\n<p>We have also built a quick java web application with angularjs/bootstrap as frontend as a demo, you can see the UI in this page <a href=\"http://50.19.161.84:8885/\">http://50.19.161.84:8885/</a></p>\n\n<p><span>The goal of this challenge is to build a php web application :</span></p>\n\n<ul>\n\t<li>Use the same angularjs/bootstrap page and update it to match the provide client branding references. (you need to use logo, colors .. etc)</li>\n\t<li>Build a php backend with following functionality :\n\t<ul>\n\t\t<li>Upload pdf functionality, user will upload one file at a time.</li>\n\t\t<li>Execute the java jar files one by one (the output of first jar will be input to 2nd jar file), you can use <a href=\"http://php.net/manual/en/function.exec.php\">exec</a> function.\n\t\t<ul>\n\t\t\t<li>We need to track the output of the jar execution, if a jar execution failed then output should be sent back to the frontend page.</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Same as we are doing in the sample java web application, we want to store the requests in local database file.\n\t\t<ul>\n\t\t\t<li>Improve the logic to update task status to &#39;Failed&#39; if error happened, right now the UI will show error message but it does not update the task status.</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Add &#39;queuing&#39; functionality, user should not be able to run multiple tasks in parallel, it should be one task at a time.\n\t\t<ul>\n\t\t\t<li>Also store in the database a status &#39;Pending&#39; for tasks in queue.</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li>Write detailed deployment document to setup, run and verify your solution.</li>\n</ul>\n\n<h2><span><span>Documents</span></span></h2>\n\n<p><span>Provided in challenge forums the jar file solutions, some pdf sample files. Use it for testing.</span></p>\n\n<h2>Jar Utilities Usage</h2>\n\n<p>First (ORC to XML) jar : java -jar &lt;jar-name.jar&gt; &lt;pdf-full-path&gt; &lt;output file path&gt;</p>\n\n<p>Second (XML to CSV) jar : java -jar &lt;jar-name.jar&gt; &lt;input xml file&gt; [standard | multiple]</p>\n\n<h2><span>Deployment Environment</span></h2>\n\n<ul>\n\t<li><span>Target OS is Linux (CentOS or Ubuntu).</span></li>\n\t<li><span>Use environment variables for any setting/configuration that is environment specific</span>.</li>\n</ul>\n\n<h2><span><span>Deliverable</span></span></h2>\n\n<ul>\n\t<li><span><span>A Fully implemented solution that addresses the requirements above.</span></span></li>\n\t<li><span><span>A detailed readme to setup and run the solution.</span></span></li>\n</ul>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30048902",
+  "finalSubmissionGuidelines": "<p>.</p>\n",
+  "forumId": 28217,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=28217",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 25,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2015-02-10T11:11:00.000Z",
+      "actualStartTime": "2015-02-10T11:11:00.000Z",
+      "scheduledEndTime": "2015-03-12T11:11:00.000Z",
+      "actualendTime": null,
+      "_id": "58132ff0550dfb3b52b8da57"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-13T05:27:00.000Z",
+      "actualStartTime": "2015-02-13T05:27:00.000Z",
+      "scheduledEndTime": "2015-02-16T12:00:00.000Z",
+      "actualendTime": "2015-02-16T12:00:00.000Z",
+      "_id": "58132ff0550dfb3b52b8da56"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2015-02-10T11:17:00.000Z",
+      "actualStartTime": "2015-02-10T11:17:00.000Z",
+      "scheduledEndTime": "2015-03-12T11:17:00.000Z",
+      "actualendTime": null,
+      "_id": "58132ff0550dfb3b52b8da55"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-16T12:02:00.000Z",
+      "actualStartTime": "2015-02-16T12:02:00.000Z",
+      "scheduledEndTime": "2015-02-16T12:39:00.000Z",
+      "actualendTime": "2015-02-16T12:39:00.000Z",
+      "_id": "58132ff0550dfb3b52b8da54"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-16T16:47:00.000Z",
+      "actualStartTime": "2015-02-16T16:47:00.000Z",
+      "scheduledEndTime": "2015-02-16T22:35:00.000Z",
+      "actualendTime": "2015-02-16T22:35:00.000Z",
+      "_id": "58132ff0550dfb3b52b8da53"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-02-10T11:11:00.000Z",
+  "prize": [
+    500
+  ],
+  "projectId": 8554,
+  "registrants": [
+    {
+      "handle": "chicapi",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-10T14:59:00.000Z",
+      "submissionDate": "2015-02-16T16:47:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da52"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-10T13:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da51"
+    },
+    {
+      "handle": "nightraider",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-10T15:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da50"
+    },
+    {
+      "handle": "xiulin_li",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-10T16:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da4f"
+    },
+    {
+      "handle": "shireesha08",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-11T11:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da4e"
+    },
+    {
+      "handle": "LieutenantRoger",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-10T16:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da4d"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-10T16:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da4c"
+    },
+    {
+      "handle": "iCare",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-10T16:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da4b"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-10T18:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da4a"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-10T21:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da49"
+    },
+    {
+      "handle": "PavanKumar12345",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-11T04:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da48"
+    },
+    {
+      "handle": "Fidukj40",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-11T06:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da47"
+    },
+    {
+      "handle": "sabbirhs",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-11T16:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da46"
+    },
+    {
+      "handle": "Kirill.Kup",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-11T22:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da45"
+    },
+    {
+      "handle": "Nirvana-Rulez",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-12T00:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da44"
+    },
+    {
+      "handle": "Luckyodell",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-12T10:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da43"
+    },
+    {
+      "handle": "crazygo",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-12T14:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da42"
+    },
+    {
+      "handle": "jjhavstad",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-12T13:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da41"
+    },
+    {
+      "handle": "atry",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-12T20:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da40"
+    },
+    {
+      "handle": "srg-tikhonov",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-12T22:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da3f"
+    },
+    {
+      "handle": "cjbrassington",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-13T00:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da3e"
+    },
+    {
+      "handle": "nishant3001",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-13T09:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da3d"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-14T13:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da3c"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-14T16:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da3b"
+    },
+    {
+      "handle": "jiangyy12",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-16T21:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132ff0550dfb3b52b8da3a"
+    }
+  ],
+  "registrationEndDate": "2015-03-12T11:11:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-03-12T11:17:00.000Z",
+  "submissions": [
+    {
+      "handle": "chicapi",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-02-13T05:27:00.000Z",
+      "_id": "58132ff0550dfb3b52b8da5a"
+    },
+    {
+      "handle": "chicapi",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-02-13T12:24:00.000Z",
+      "_id": "58132ff0550dfb3b52b8da59"
+    },
+    {
+      "handle": "chicapi",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-02-16T16:47:00.000Z",
+      "_id": "58132ff0550dfb3b52b8da58"
+    }
+  ],
+  "technology": [
+    "CSS",
+    "HTML",
+    "Java",
+    "JavaScript",
+    "PHP"
+  ]
+}

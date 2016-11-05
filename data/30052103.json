@@ -1,0 +1,453 @@
+{
+  "_id": 30052103,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:59:46.392Z",
+  "appealsEndDate": "2015-11-28T13:38:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "SunShot - Hot4Solar Python Web Application",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\"><span style=\"line-height:1.6\">Hot 4 Solar! web application purpose is to helping find potential customers who are most prepared to buy solar panels.</span></p>\n\n<p dir=\"ltr\">The goal of this challenge is to build the application backend of the application and integrate it with the frontend UI prototype.</p>\n\n<h1 dir=\"ltr\">Challenge Requirements</h1>\n\n<p dir=\"ltr\">You will address the following in this challenge :</p>\n\n<h2 dir=\"ltr\">Technology Stack</h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- You will use Python, Django, MySQL and JQuery Ajax stack in this challenge.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- You are encouraged to use Django REST Framework.</p>\n\t</li>\n</ul>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Use open source ORM module for database.</p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Entity Models</h2>\n\n<p>&nbsp;</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Locations</p>\n\n\t<ul>\n\t\t<li>\n\t\t<p dir=\"ltr\">- id</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">- permitId</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">- address</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">- zipcode</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">- long</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">- lat</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">- installationDate</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">- contractorId</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- LocationsData</p>\n\n\t<ul>\n\t\t<li>\n\t\t<p dir=\"ltr\">- id</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">- location_id</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">- averageCostPerWatt</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">- projection</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">- hotness</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Contractors</p>\n\n\t<ul>\n\t\t<li>\n\t\t<p dir=\"ltr\">- id</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">- name</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">AggregatedLocationsData</p>\n\n\t<ul>\n\t\t<li>\n\t\t<p dir=\"ltr\">- id</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">- zipcode</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">- averageCostPerWatt</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">- projection</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">- hotness</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">- locations (array of location ids)</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">- averageGrowth</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">- increments (array of key/value, key represents date, and value is +/- integer that represents the installation count happened in given date)</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p dir=\"ltr\">Note the following :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">You can add more models as needed, and suggest changes to the models above.</p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Backend Functionality</h2>\n\n<p dir=\"ltr\">We need the following backend functionality for the Ajax Calls from frontend :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Note that response should be in JSON format.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>GET /locations</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This endpoint will be used to retrieve installers rendered in <a href=\"https://drive.google.com/file/d/0BxNVnWK-ZGA6UFhyNGlUVUhscms/view?usp=sharing\">the map screen.</a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This will retrieve locations.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Filtering parameters are optional, we can filter by any field in the locations model.</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- We need a filtering parameters to allow retrieval of locations within provided lon/lat range passed from frontend, the range will be pulled from google geocode api.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Refer to this <a href=\"http://stackoverflow.com/questions/4834772/get-all-records-from-mysql-database-that-are-within-google-maps-getbounds\">SO question</a> to understand how to search long/lat using google geocoding</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This will retrieve all locations matched the search.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>GET /contractors</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This endpoint will be used to retrieve contractors popup rendered in <a href=\"https://drive.google.com/file/d/0BxNVnWK-ZGA6NXdOSlFWdDQydFk/view?usp=sharing\">the map screen.</a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This returns list of contractors in database.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- We need long/lat range parameters same as in GET /locations endpoint to filter contractors by address.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The response should include the contractor id and name.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>GET /locations/statistics</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This endpoint will be used to retrieve statics popup rendered in <a href=\"https://drive.google.com/file/d/0BxNVnWK-ZGA6ZlEyQkdYd1p5cUk/view?usp=sharing\">the map screen.</a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This will get statistics of provided location ids or long/lat range, one of these parameters must present, if neither then return error.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Locations will be passed in query string as comma separated location ids.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Radius parameter (optional) will be passed, we will not need this parameter in backend logic, and we will include it in response.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- If long/lat range then we need to retrieve the locations that fall within the long/lat range, we only need the location ids.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Using location ids :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- using LocationData of passed in locationIds calculate average of following fields :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- hotness</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- averageCostPerWatt</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- projection</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Prediction chart plot data :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Group locations by year using installation date</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- For each group calculate the average cost/watt from LocationData.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- The x-axix will be the years, and left y-axix will be the average cost/watt.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Response will include following fields :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- hotness</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- averageCostPerWatt</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- projection</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- growth</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- predictionChart (object with array of plots)</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>GET /locations/statistics/aggregate</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This endpoint will be used to retrieve statistics list the <a href=\"https://drive.google.com/file/d/0BxNVnWK-ZGA6Z1ZwUzZiQXVRMkE/view?usp=sharing\">the list view page.</a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- input parameters are :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- long/lat google gecode range same as above endpoints.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- offset</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- limit</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- sortColumn</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- sortOrder</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Using google reverse geocoding, get list of zipcodes in the provided long/lat range, and retrieve all data from AggregatedLocationsData that related to the zipcodes with pagination.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- We also need to aggregate summary of the data retrieved to be displayed at top summary section in the page, the aggregation will be calculate these fields (pagination does not apply here):</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- locations count</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- average hotness from all locations</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- average projection from all locations</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">average cost/watt from all locations</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Note the following about returned data :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Pagination should be enforced in this case.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Pagination parameters :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- offset (0 by default) - page number</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- limit (10 by default) - page size</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- sortBy (optional) - default to zipcode</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- sortOrder (optional) - default to ascending</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- response fields will be :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- pagination information</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- total</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- offset</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- limit</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- sortBy</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- sortOrder</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- summary :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- installersCount</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- hotness</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- projection</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- cost/watt</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- locationData array, each element will be a LocationData record.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>GET /locations/statistics/export</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This endpoint will be used to perform the export feature the <a href=\"https://drive.google.com/file/d/0BxNVnWK-ZGA6Z1ZwUzZiQXVRMkE/view?usp=sharing\">the list view page.</a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Input parameters :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- long/lat google gecode range same as above endpoints.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- SortColumn</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- SortOrder</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Same logic as /locations/statistics/aggregate endpoint except that we don&rsquo;t apply pagination to retrieve data.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Export AggregatedLocations to csv file format.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The logic for retrieving data should be same as GET /locations/statics/aggregate endpoint.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Sorting should be applied to exported data as passed.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>GET /locations/timeline</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This will retrieve locations on provided datetime for timeline feature in <a href=\"https://drive.google.com/file/d/0BxNVnWK-ZGA6azRYS3lybm1TVEU/view?usp=sharing\">this screen.</a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The input parameters are :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- long/lat google gecode range same as above endpoints.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- period : week, month, quarter, year</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Group locations using installation_date as follow depends on the period parameter :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- week : group by day</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- month : group by week</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- quarter : group by week</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- year : group by month</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Return the locations, response structure should be 2d array, the first array level is the grouped period, i.e. week period each item in array represents a day, the second dimension array is the locations long/lat. you don&rsquo;t need to include any other informations.</p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Job Scheduler</h2>\n\n<p dir=\"ltr\">Create a script that populate AggregatedLocationsData table.</p>\n\n<p dir=\"ltr\">Run by job scheduler out of the box that does the following :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Cleanup existing AggregatedLocationData table.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Aggregate Locations documents by zipcode.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- For each Locations group :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Get AggregatedLocationsData of group zipcode if exists to be updated.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Store the location ids in AggregatedLocationsData#locations field.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Calculate Growth</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Group locations by installation date and calculate the percentage of increase in number of locations between the current month and the preceding month. It can be positive or negative.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Store the value in &nbsp;AggergatedLocationsData#averageGrowth</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- It is a percentage value.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Calculate the average Cost / Watts for locations and store it in averageCostPerWatt field.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Calculate the average Projection for locations and store it in averageProjection field.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Calculate the average Hotness for locations and store it in averageHotness field.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Calculate Increments in past 30 days</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Get latest date in the increments array if exist, if not exist then we calculate the increments for all locations in group.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Group locations by installation date</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Put the date and locations count in key/value pair and store it in increments array.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Update/Store the information in AggregatedLocations document.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Frontend Pages</h2>\n\n<p dir=\"ltr\">You are provided with UI prototype in challenge forums, and you will implement the following pages, note the following :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The pages should be django templates.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- All interaction within the dashboard page (i.e. switching from map view to list view, playing timeline .. etc. will be via ajax call.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Landing Page</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Page : home.html</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This page will has static content, and will be mainly for navigation to other pages</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Signup Page, My Account Pages and Login Popup</u></h3>\n\n<p dir=\"ltr\">These will be dummy pages in this challenge, you will convert them to python template but no real backend to support them. For login use same way for login and displaying invalid login as in ui prototype.</p>\n\n<h3 dir=\"ltr\"><u>Dashboard Page</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Page : dashboard.html</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- By default the map view tab is selected, other tabs are inactive.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- By default the map will render USA map.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- By default Location input field is empty, this field should support auto complete feature using google geocode API.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The flow when user select or enter an address in location input field &nbsp;:</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Retrieve the address lon/lat bounds (northeast and southeast) from google geocode api.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Call GET /locations endpoint to retrieve locations</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Render the locations as red markers in the map as shown in the UI prototype</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The map support clustering, this functionality should still exist.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- User can select a radius in the map by clicking single click on map then when (+) cursor appears, click and drag to create a circle layer :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Return the lon/lat boundaries of the created layer.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Call GET /locations/statistics endpoint by passing the required input parameter</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The response will be rendered in the right side div that appeared</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Heat map button :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Clicking on the button will create a heatmap for the locations as currently done in the UI prototype.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Installers button :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- It will display a popup with installers contractor names that represent currently rendered locations on the map, user can filter the locations by unchecking/checking the options.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Clicking on the button will display popup with contractors pulled from GET /contractors endpoint</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- By default All options are selected.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- When user toggle the selected contractor to hide/show locations associated with that contractor.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Timeline button :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- This will display a timeline player control, it will give user a timeline view of the history of installers in a given period.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Logic and flow:</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- User already selected/provided a location in location input field.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- User click on Timeline button, a call made to GET /locations/timeline with default period. By default it will select per week period,</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- When user changes the period another call should be made to backend.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Play/stop/pause buttons should be disabled during call to backend.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- The timeline play and render locations as shown in UI prototype.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Period dropdown should be disabled while timeline is running.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- When timeline finish it should reset the data in map.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- When</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">is &nbsp;be implemented as shown</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Call GET /contractors to get list of contractors to fill the Installers popup</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- List View button</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- This will display a list view of aggregated locations data.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- It will be empty if no address is provided.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- If address is provided it will make a call to GET /locations/statistics/aggregate endpoint</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The page will support pagination/sorting in server side as implemented in the aggregate endpoint.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Export button will call /locations/statistics/export endpoint.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Validation</u></h3>\n\n<p dir=\"ltr\">Add proper validation for input parameters :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Input parameter if required should not be empty or null.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Input parameter should be in proper format, i.e. datetime.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Logging</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Add proper logging for method entry, method exit at INFO level.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Add proper logging for input parameters, and return parameters at DEBUG level.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Add proper logging for errors in ERROR level.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Test Data</u></h3>\n\n<p dir=\"ltr\">Build a test data script that generate data in table, please make the addresses in San Francisco city.</p>\n\n<h3 dir=\"ltr\"><u>Hosting</u></h3>\n\n<p dir=\"ltr\">It is preferred if you provide scripts and steps to deploy the application on Heroku.</p>\n\n<h3 dir=\"ltr\"><u>Documentation</u></h3>\n\n<p dir=\"ltr\">Provide a detailed README documentation for how to setup and configure the application.</p>\n\n<h3 dir=\"ltr\"><u>Configurations</u></h3>\n\n<p dir=\"ltr\">You are expected to use environment variables to store sensitive information and environment-specific configurations. &nbsp; &nbsp;</p>\n\n<h3 dir=\"ltr\"><u>Abstracting and Design Patterns</u></h3>\n\n<p dir=\"ltr\">Please make sure to create helper/interface to include the common code/functionality.</p>\n\n<p dir=\"ltr\">Also please make sure your design is flexible, use facade design pattern and adapter design pattern (and any other proper design pattern) to enable future extensibility of the solution.</p>\n\n<h3 dir=\"ltr\"><u>Coding Standard</u></h3>\n\n<p dir=\"ltr\">Follow python coding best practices : <a href=\"http://www.python.org/dev/peps/pep-0008/\">PEP 8</a> for the main text, and<a href=\"http://www.python.org/dev/peps/pep-0257/\"> PEP 257</a> for docstring conventions</p>\n\n<h2 dir=\"ltr\">Technology</h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Python version 3.x running on Ubuntu</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- MySQL Latest stable version.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Django 1.8.x</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- AngularJS</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Bootstrap</p>\n\t</li>\n</ul>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30052103",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<h1 dir=\"ltr\">Deliverable</h1>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- All source code that implement the requirement.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- README in markup language</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Verification document contains steps to verify your solution.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Test data generator script.</p>\n\t</li>\n</ul>\n",
+  "forumId": 31195,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=31195",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 34,
+  "numberOfSubmissions": 4,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-16T19:18:00.000Z",
+      "actualStartTime": "2015-11-16T19:18:00.000Z",
+      "scheduledEndTime": "2015-11-23T19:18:00.000Z",
+      "actualendTime": "2015-11-23T19:18:00.000Z",
+      "_id": "58132fa2550dfb3b52b893db"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-16T19:23:00.000Z",
+      "actualStartTime": "2015-11-16T19:23:00.000Z",
+      "scheduledEndTime": "2015-11-23T19:18:00.000Z",
+      "actualendTime": "2015-11-23T19:18:00.000Z",
+      "_id": "58132fa2550dfb3b52b893da"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-23T19:18:00.000Z",
+      "actualStartTime": "2015-11-23T19:18:00.000Z",
+      "scheduledEndTime": "2015-11-27T11:34:00.000Z",
+      "actualendTime": "2015-11-27T11:34:00.000Z",
+      "_id": "58132fa2550dfb3b52b893d9"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-27T11:34:00.000Z",
+      "actualStartTime": "2015-11-27T11:34:00.000Z",
+      "scheduledEndTime": "2015-11-28T11:34:00.000Z",
+      "actualendTime": "2015-11-28T11:34:00.000Z",
+      "_id": "58132fa2550dfb3b52b893d8"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-28T11:34:00.000Z",
+      "actualStartTime": "2015-11-28T11:34:00.000Z",
+      "scheduledEndTime": "2015-11-28T13:38:00.000Z",
+      "actualendTime": "2015-11-28T13:38:00.000Z",
+      "_id": "58132fa2550dfb3b52b893d7"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-11-16T19:18:00.000Z",
+  "prize": [
+    1800,
+    900
+  ],
+  "projectId": 9154,
+  "registrants": [
+    {
+      "handle": "hajmoh",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-16T20:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893d6"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-16T21:21:00.000Z",
+      "submissionDate": "2015-11-23T19:18:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893d5"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-16T21:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893d4"
+    },
+    {
+      "handle": "billthu",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-17T00:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893d3"
+    },
+    {
+      "handle": "SPChoria",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-17T00:59:00.000Z",
+      "submissionDate": "2015-11-23T11:01:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893d2"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-17T02:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893d1"
+    },
+    {
+      "handle": "PeterBest",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-17T04:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893d0"
+    },
+    {
+      "handle": "Kuhan",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-17T05:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893cf"
+    },
+    {
+      "handle": "tpabla",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-17T06:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893ce"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-17T06:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893cd"
+    },
+    {
+      "handle": "gvir",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-17T06:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893cc"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-17T11:59:00.000Z",
+      "submissionDate": "2015-11-23T18:47:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893cb"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-17T12:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893ca"
+    },
+    {
+      "handle": "bannie2492",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-17T15:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893c9"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-17T16:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893c8"
+    },
+    {
+      "handle": "jaindsonvs",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-17T16:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893c7"
+    },
+    {
+      "handle": "demo.b",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-17T18:57:00.000Z",
+      "submissionDate": "2015-11-23T18:00:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893c6"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-17T19:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893c5"
+    },
+    {
+      "handle": "son4moon",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-18T00:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893c4"
+    },
+    {
+      "handle": "agus.mw",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-18T03:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893c3"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-18T11:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893c2"
+    },
+    {
+      "handle": "zaixiang",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-19T01:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893c1"
+    },
+    {
+      "handle": "altaironfire",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-20T12:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893c0"
+    },
+    {
+      "handle": "vitocorleone201",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-19T08:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893bf"
+    },
+    {
+      "handle": "coderx86",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-19T13:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893be"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-19T16:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893bd"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-19T18:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893bc"
+    },
+    {
+      "handle": "fish00",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-19T19:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893bb"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-20T10:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893ba"
+    },
+    {
+      "handle": "chrislee8",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-20T17:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893b9"
+    },
+    {
+      "handle": "kajman",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T13:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893b8"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-21T17:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893b7"
+    },
+    {
+      "handle": "chtbharti",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T08:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893b6"
+    },
+    {
+      "handle": "spritab",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T16:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa2550dfb3b52b893b5"
+    }
+  ],
+  "registrationEndDate": "2015-11-23T19:18:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-11-23T19:18:00.000Z",
+  "submissions": [
+    {
+      "handle": "ahmed.seddiq",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 87.5,
+      "finalScore": 93.75,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-11-23T19:18:00.000Z",
+      "_id": "58132fa2550dfb3b52b893df"
+    },
+    {
+      "handle": "deedee",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 87.5,
+      "finalScore": 87.5,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-23T18:47:00.000Z",
+      "_id": "58132fa2550dfb3b52b893de"
+    },
+    {
+      "handle": "SPChoria",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 85,
+      "finalScore": 85,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-23T11:01:00.000Z",
+      "_id": "58132fa2550dfb3b52b893dd"
+    },
+    {
+      "handle": "demo.b",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 83.75,
+      "finalScore": 83.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-23T18:00:00.000Z",
+      "_id": "58132fa2550dfb3b52b893dc"
+    }
+  ],
+  "technology": [
+    "HTML",
+    "JQuery",
+    "JavaScript",
+    "MySQL",
+    "Other",
+    "Python"
+  ]
+}

@@ -1,0 +1,281 @@
+{
+  "_id": 30052305,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:59:26.252Z",
+  "appealsEndDate": "2015-11-30T12:27:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "SunShot - MySunBuddy Python Matching Logic Update F2F",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2015-12-29T02:03:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -26301305,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">The application called MySunBuddy, it is a peer-to-peer platform to facilitate the purchase and selling of solar net metering credits.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">This is a django/python challenge, you will be updating the matching logic between buyer/seller as outlined below.</span></span></p>\n\n<h1 dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:26.6667px\">Task Overview</span></span></h1>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">In match_script.py we do the buyer/seller matching, it reference the users zip code entry, use the &quot;mapping&quot; dictionary to get load zone and utility provider attributes, and then if there is a match, we proceed in matching logic.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">We have built a georeference python script that lookup utility provider and load zone from shapefile, and we want to use it to replace the &ldquo;mapping&rdquo; dictionary.</span></span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; line-height:1.6\">With the georeference function, load zone and utility provider will be a populated fields in the user model during the registration process. The matching logic will then use these two fields to test if there is a valid matching between buyer and seller, rather than having to map the zip code to a load zone and utility provider, and use those values.</span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">So overall, we need to be sure to have load zone and utility provider as fields in the user record. Those fields will be populated by passing the user&#39;s address into the google maps geocoding API, and then passing the latitude and longitude to the shape function, which will return utility provider and load zone. These attributes will then be used to determine if there is a valid matching.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">So the list of changes in the challenge : </span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Add two new fields to use model : utility_provider and load_zone</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Removing Mapping model</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- During registration, when user set an address, use google geocoding api to lookup the long/lat address of the user, if address is invalid, prompt the user to provide valid address.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- &nbsp;Then use the provided loadzone-shapefile-search python script to lookup the utility provider and load zone. Then insert these records in the newly created user record. </span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- If no matching found then store null in these two fields.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- During Matching logic, use these two fields to group buyer/seller matching. Skip users that have null values for these fields.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Note that google api key and any other sensitive data must be configurable.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Update README as needed.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Your code should be documented and follow python coding best practices : </span><a href=\"http://www.python.org/dev/peps/pep-0008/\" style=\"text-decoration:none;\"><u>PEP 8</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> for the main text, and</span><a href=\"http://www.python.org/dev/peps/pep-0257/\" style=\"text-decoration:none;\"><u> PEP 257</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> for docstring conventions.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Put common code in helpers.</span></span></p>\n\n<p dir=\"ltr\"><em><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">It is a PLUS to implement google geocoding api validation in frontend to inform user if the address is valid or not, we will pay $100 bonus to implement this with good UX (user experience).</span></span></em></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">If you need any clarifications, please ask in forums.</span></span></p>\n\n<h1 dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:26.6667px\">Source Code</span></span></h1>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Provided in gitlab </span><u style=\"text-decoration:none\"><a href=\"https://gitlab.com/tc-sunshot-r2/ss2-my-sun-buddy/\" style=\"text-decoration:none;\">https://gitlab.com/tc-sunshot-r2/ss2-my-sun-buddy/</a></u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Check forums to get access and Follow README to deploy the code.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">The shapefile script is provided under loadzone-shapefile-search folder, the shapefile contains information for the states in these US states </span><a href=\"http://www.ferc.gov/market-oversight/mkt-electric/new-england/elec-ne-zones.pdf\" style=\"text-decoration:none;\"><u>http://www.ferc.gov/market-oversight/mkt-electric/new-england/elec-ne-zones.pdf</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> </span></span></p>\n\n<h1 dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:26.6667px\">Deliverable</span></span></h1>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Git patch file of changes.</span></span></p>\n\n<p><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Verification steps</span></span></p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30052305",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<p>.</p>\n",
+  "forumId": 31374,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=31374",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 19,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2015-11-29T02:03:00.000Z",
+      "actualStartTime": "2015-11-29T02:03:00.000Z",
+      "scheduledEndTime": "2015-12-29T02:03:00.000Z",
+      "actualendTime": null,
+      "_id": "58132f8e550dfb3b52b88bbf"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-29T09:03:00.000Z",
+      "actualStartTime": "2015-11-29T09:03:00.000Z",
+      "scheduledEndTime": "2015-11-30T02:30:00.000Z",
+      "actualendTime": "2015-11-30T02:30:00.000Z",
+      "_id": "58132f8e550dfb3b52b88bbe"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2015-11-29T02:08:00.000Z",
+      "actualStartTime": "2015-11-29T02:08:00.000Z",
+      "scheduledEndTime": "2015-12-29T02:08:00.000Z",
+      "actualendTime": null,
+      "_id": "58132f8e550dfb3b52b88bbd"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-30T02:32:00.000Z",
+      "actualStartTime": "2015-11-30T02:32:00.000Z",
+      "scheduledEndTime": "2015-11-30T12:27:00.000Z",
+      "actualendTime": "2015-11-30T12:27:00.000Z",
+      "_id": "58132f8e550dfb3b52b88bbc"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-11-29T02:03:00.000Z",
+  "prize": [
+    500
+  ],
+  "projectId": 9156,
+  "registrants": [
+    {
+      "handle": "deedee",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-29T12:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132f8e550dfb3b52b88bbb"
+    },
+    {
+      "handle": "2239913528",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-29T12:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132f8e550dfb3b52b88bba"
+    },
+    {
+      "handle": "vvvpig",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-29T02:56:00.000Z",
+      "submissionDate": "2015-11-30T01:32:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132f8e550dfb3b52b88bb9"
+    },
+    {
+      "handle": "szy2015",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-29T03:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132f8e550dfb3b52b88bb8"
+    },
+    {
+      "handle": "Ninja91",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-29T03:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132f8e550dfb3b52b88bb7"
+    },
+    {
+      "handle": "Sin27",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-29T03:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132f8e550dfb3b52b88bb6"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-29T07:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132f8e550dfb3b52b88bb5"
+    },
+    {
+      "handle": "gets0ul",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-29T07:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132f8e550dfb3b52b88bb4"
+    },
+    {
+      "handle": "fireant",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-29T07:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132f8e550dfb3b52b88bb3"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-29T08:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132f8e550dfb3b52b88bb2"
+    },
+    {
+      "handle": "code_now",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-29T08:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132f8e550dfb3b52b88bb1"
+    },
+    {
+      "handle": "gpbencke",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-29T08:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132f8e550dfb3b52b88bb0"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-29T09:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132f8e550dfb3b52b88baf"
+    },
+    {
+      "handle": "Michelle.Smith",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-29T16:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132f8e550dfb3b52b88bae"
+    },
+    {
+      "handle": "ShindouHikaru",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-29T16:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132f8e550dfb3b52b88bad"
+    },
+    {
+      "handle": "navneetzz",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-29T20:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132f8e550dfb3b52b88bac"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-30T02:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132f8e550dfb3b52b88bab"
+    },
+    {
+      "handle": "rppala90",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-30T03:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132f8e550dfb3b52b88baa"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-30T03:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132f8e550dfb3b52b88ba9"
+    }
+  ],
+  "registrationEndDate": "2015-12-29T02:03:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-12-29T02:08:00.000Z",
+  "submissions": [
+    {
+      "handle": "vvvpig",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-11-29T09:02:00.000Z",
+      "_id": "58132f8e550dfb3b52b88bc1"
+    },
+    {
+      "handle": "vvvpig",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-11-30T01:32:00.000Z",
+      "_id": "58132f8e550dfb3b52b88bc0"
+    }
+  ],
+  "technology": [
+    "Python"
+  ]
+}

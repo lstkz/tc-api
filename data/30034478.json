@@ -1,0 +1,433 @@
+{
+  "_id": 30034478,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:08:15.537Z",
+  "appealsEndDate": "2013-06-20T16:06:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "REPOST!!! Release Assembly - TC Cockpit Bug Race Cost and Fees Part 1",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2 style=\"line-height: normal; padding: 0px; margin: 0px; font-family: Arial, Helvetica, sans-serif;\"><strong style=\"padding: 0px; margin: 0px;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0); line-height: 1.2em; font-family: Arial, Helvetica, Verdana, sans-serif;\">Project Overview</span></strong></h2>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Right now we don&#39;t handle fees for project level bug races and contest bug races if the billing is fixed (instead of %) which is what need to be fixed in this series of assemblies.</p>\n\n<h2 style=\"font-weight: bold; line-height: normal; padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">Competition Task Overview</span></h2>\n\n<h3 style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px;\"><strong><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">Requirements</span></strong></h3>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px;\">To fix this, a possible solution involves the following changes:</p>\n\n<ol>\n\t<li style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px;\">Add two columns to tc_direct_project, bug fee and bug fee percentage.</li>\n\t<li style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px;\"><span style=\"font-size: 13px;\">Add a fake type here for bug race for fixed fee.</span></li>\n\t<li style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px;\"><span style=\"font-size: 13px;\">When associating&nbsp;a billing to a project, you should either set the % or fixed on tc_direct_project based on the setting. In most cases&nbsp;there will be only one billing per project so it would be straightforward to do this. But in some rare cases there can be multiple billing accounts for a project, in that case&nbsp;we will have to selelct anyone (probably the latest one) to use. So a possible implementation is:&nbsp;whenever a new billing account is assoicated to a project,&nbsp;we use the new one&rsquo;s setting; If we remove a billing from a project, we either reset the settings to null if there&#39;s no billing associated with the project any more or we pick one from the remaining billing accounts associated with the project.</span></li>\n</ol>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px;\">For this contest, the scope is to get the code updated and the queries updated to make sure the invoice report is correct.&nbsp;</p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px;\"><strong><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">References</span></strong></p>\n\n<ol>\n\t<li style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px;\"><span style=\"font-size: 13px;\">You can go to&nbsp;</span><a href=\"http://www.topcoder.com/direct/settings/admin/contestFee\" style=\"font-size: 13px;\">this page</a><span style=\"font-size: 13px;\">&nbsp;to set billing (fixed or %) using &#39;TC Accounting&#39; role (you&#39;ll probably have to try this on VM,&nbsp;see &quot;set_contest_fee.png&quot; for reference</span><span style=\"font-size: 13px;\">).</span></li>\n\t<li style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px;\"><span style=\"font-size: 13px;\">You can associate billing when editing a project (https://www.topcoder.com/direct/editProject?formData.projectId=<projectid&gt;< span=\"\"><span style=\"font-size: 13px; color: rgb(34, 34, 34); font-family: arial, sans-serif; line-height: normal;\">) or starting a new project (</span><a href=\"https://www.topcoder.com/direct/createNewProject.action\" style=\"font-size: 13px;\">https://www.topcoder.com/direct/createNewProject.action</a><span style=\"font-size: 13px;\">). See &quot;</span><span style=\"font-size: 13px;\">edit_project_associate_billing.png</span><span style=\"font-size: 13px;\">&quot; and &quot;</span><span style=\"font-size: 13px;\">start_project_associate_billing.png</span><span style=\"font-size: 13px;\">&quot; for reference.</span></projectid&gt;<></span></li>\n\t<li style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px;\"><span style=\"font-size: 13px;\">To see where invoice report is generated, refer to&nbsp;<span style=\"font-size: 13px;\">&quot;</span><span style=\"font-size: 13px;\">invoice_report.png&quot;.</span></span></li>\n</ol>\n\n<h3 style=\"font-weight: bold; line-height: normal; padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">SVN</span></h3>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 16px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><span style=\"padding: 0px; margin: 0px; font-family: sans-serif, Arial, Verdana, 'Trebuchet MS'; line-height: 1.6em;\">Please email&nbsp;<a href=\"mailto:support@topcoder.com\" style=\"color: rgb(51, 51, 51); padding: 0px; margin: 0px;\">support@topcoder.com</a>&nbsp;to request access to direct trunk, please include the contest title/link and your user name in the email.</span></p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Direct Trunk:&nbsp;<a href=\"https://coder.topcoder.com/tcs/clients/cronos/applications/direct/trunk/\" style=\"color: rgb(51, 51, 51); padding: 0px; margin: 0px;\">https://coder.topcoder.com/tcs/clients/cronos/applications/direct/trunk/</a><br style=\"padding: 0px; margin: 0px;\" />\nDB Trunk:&nbsp;<a href=\"https://coder.topcoder.com/internal/database/scripts/trunk\" style=\"color: rgb(51, 51, 51); padding: 0px; margin: 0px;\">https://coder.topcoder.com/internal/database/scripts/trunk</a></p>\n\n<h3 style=\"font-weight: bold; line-height: normal; padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">VM</span></h3>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"padding: 0px; margin: 0px; line-height: 1.6em;\">VM specific information is found here:&nbsp;<a href=\"http://www.topcoder.com/wiki/display/docs/VM+Image+2.5\" style=\"color: rgb(51, 51, 51); padding: 0px; margin: 0px;\">http://www.topcoder.com/wiki/display/docs/VM+Image+2.5</a>.</span></p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Upon registration as a submitter or reviewer you will need to request a VM based on the new TopCoder Cockpit/Direct image. To request your image, please use the forum.</p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Before requesting your VM, you need to ensure that you have an SSH key created and in your member profile. Instructions to do so are here:&nbsp;<a href=\"http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key\" style=\"color: rgb(51, 51, 51); padding: 0px; margin: 0px;\">http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key</a>, and instructions to connect afterwards are here:&nbsp;<a href=\"http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key\" style=\"color: rgb(51, 51, 51); padding: 0px; margin: 0px;\">http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key</a>.</p>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">There is a TC Site Resource page that contains documentation / instructions for the VM instance you will be issued upon request. It is located here:&nbsp;<a href=\"http://www.topcoder.com/wiki/display/projects/Cockpit%2CDirect+VM\" style=\"color: rgb(51, 51, 51); padding: 0px; margin: 0px;\">http://www.topcoder.com/wiki/display/projects/Cockpit%2CDirect+VM</a></p>\n\n<h2 style=\"font-weight: bold; line-height: normal; padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">Technology Overview</span></h2>\n\n<ul style=\"font-size: 13px; margin: 0px; line-height: 16px; font-family: Arial, Helvetica, Verdana, sans-serif; padding-top: 6px !important; padding-right: 0px !important; padding-bottom: 6px !important;\">\n\t<li style=\"padding: 0px; margin: 0px;\">Java 1.5</li>\n\t<li style=\"padding: 0px; margin: 0px;\">JSP</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Struts 2</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Redhat Linux</li>\n\t<li style=\"padding: 0px; margin: 0px;\">JBoss 4.0.2</li>\n\t<li style=\"padding: 0px; margin: 0px;\">Informix 10.0</li>\n</ul>\n",
+  "digitalRunPoints": 585,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30034478",
+  "event": {
+    "id": 3436,
+    "description": "2013 TopCoder(R) Open",
+    "shortDescription": "tco13"
+  },
+  "finalFixEndDate": "2013-06-21T13:25:00.000Z",
+  "finalSubmissionGuidelines": "<h2 style=\"line-height: normal; padding: 0px; margin: 0px; font-family: Arial, Helvetica, sans-serif;\"><strong style=\"padding: 0px; margin: 0px; line-height: 1.2em;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\"><span style=\"padding: 0px; margin: 0px; line-height: 1.6em;\">Submission Deliverables</span></span></strong></h2>\n\n<ul style=\"font-size: 13px; margin: 0px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; padding-top: 6px !important; padding-right: 0px !important; padding-bottom: 6px !important;\">\n\t<li style=\"padding: 0px; margin: 0px;\">Source code which are necessary to meet all the requirements stated above, including java class, jsp files, sql files etc.</li>\n\t<li style=\"padding: 0px; margin: 0px;\">The competitor should provide a deployment document. This document should include a step-by-step guide on the deployment.</li>\n\t<li style=\"padding: 0px; margin: 0px;\">The test data (as sql script)&nbsp;needed to test the fixes.</li>\n</ul>\n\n<h2 style=\"line-height: normal; padding: 0px; margin: 0px; font-family: Arial, Helvetica, sans-serif;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\"><strong style=\"padding: 0px; margin: 0px;\">Final Submission</strong></span></h2>\n\n<p style=\"font-size: 13px; padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"padding: 0px; margin: 0px;\">For each member, the final submission should be uploaded to the Online Review Tool.</span></p>\n",
+  "forumId": 18185,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=18185",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 29,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-06-11T09:52:00.000Z",
+      "actualStartTime": "2013-06-11T09:52:00.000Z",
+      "scheduledEndTime": "2013-06-11T09:53:00.000Z",
+      "actualendTime": "2013-06-11T09:53:00.000Z",
+      "_id": "58133faf550dfb3b52be0a48"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-06-11T09:53:00.000Z",
+      "actualStartTime": "2013-06-11T09:53:00.000Z",
+      "scheduledEndTime": "2013-06-11T11:55:00.000Z",
+      "actualendTime": "2013-06-11T11:55:00.000Z",
+      "_id": "58133faf550dfb3b52be0a47"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2013-06-11T15:00:00.000Z",
+      "actualStartTime": "2013-06-11T15:00:00.000Z",
+      "scheduledEndTime": "2013-06-13T15:00:00.000Z",
+      "actualendTime": "2013-06-13T15:00:00.000Z",
+      "_id": "58133faf550dfb3b52be0a46"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-06-11T15:05:00.000Z",
+      "actualStartTime": "2013-06-11T15:05:00.000Z",
+      "scheduledEndTime": "2013-06-17T15:05:00.000Z",
+      "actualendTime": "2013-06-17T15:05:00.000Z",
+      "_id": "58133faf550dfb3b52be0a45"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2013-06-17T15:05:00.000Z",
+      "actualStartTime": "2013-06-17T15:05:00.000Z",
+      "scheduledEndTime": "2013-06-18T02:01:00.000Z",
+      "actualendTime": "2013-06-18T02:01:00.000Z",
+      "_id": "58133faf550dfb3b52be0a44"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-06-18T02:01:00.000Z",
+      "actualStartTime": "2013-06-18T02:01:00.000Z",
+      "scheduledEndTime": "2013-06-19T14:32:00.000Z",
+      "actualendTime": "2013-06-19T14:32:00.000Z",
+      "_id": "58133faf550dfb3b52be0a43"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2013-06-19T14:32:00.000Z",
+      "actualStartTime": "2013-06-19T14:32:00.000Z",
+      "scheduledEndTime": "2013-06-20T13:55:00.000Z",
+      "actualendTime": "2013-06-20T13:55:00.000Z",
+      "_id": "58133faf550dfb3b52be0a42"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2013-06-20T13:55:00.000Z",
+      "actualStartTime": "2013-06-20T13:55:00.000Z",
+      "scheduledEndTime": "2013-06-20T16:06:00.000Z",
+      "actualendTime": "2013-06-20T16:06:00.000Z",
+      "_id": "58133faf550dfb3b52be0a41"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2013-06-20T16:06:00.000Z",
+      "actualStartTime": "2013-06-20T16:06:00.000Z",
+      "scheduledEndTime": "2013-06-20T16:11:00.000Z",
+      "actualendTime": "2013-06-20T16:11:00.000Z",
+      "_id": "58133faf550dfb3b52be0a40"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-06-20T16:11:00.000Z",
+      "actualStartTime": "2013-06-20T16:11:00.000Z",
+      "scheduledEndTime": "2013-06-21T13:25:00.000Z",
+      "actualendTime": "2013-06-21T13:25:00.000Z",
+      "_id": "58133faf550dfb3b52be0a3f"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-06-21T13:25:00.000Z",
+      "actualStartTime": "2013-06-21T13:25:00.000Z",
+      "scheduledEndTime": "2013-06-21T13:51:00.000Z",
+      "actualendTime": "2013-06-21T13:51:00.000Z",
+      "_id": "58133faf550dfb3b52be0a3e"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2013-06-21T13:51:00.000Z",
+      "actualStartTime": "2013-06-21T13:51:00.000Z",
+      "scheduledEndTime": "2013-06-28T13:51:00.000Z",
+      "actualendTime": "2013-06-28T13:51:00.000Z",
+      "_id": "58133faf550dfb3b52be0a3d"
+    }
+  ],
+  "platforms": [],
+  "postingDate": "2013-06-11T15:00:00.000Z",
+  "prize": [
+    1300,
+    650
+  ],
+  "projectId": 4531,
+  "registrants": [
+    {
+      "handle": "mhykol",
+      "reliability": "0%",
+      "registrationDate": "2013-06-11T15:04:00.000Z",
+      "submissionDate": null,
+      "rating": "819",
+      "colorStyle": "color: #999999",
+      "_id": "58133faf550dfb3b52be0a3c"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "0%",
+      "registrationDate": "2013-06-11T19:17:00.000Z",
+      "submissionDate": null,
+      "rating": "997",
+      "colorStyle": "color: #00A900",
+      "_id": "58133faf550dfb3b52be0a3b"
+    },
+    {
+      "handle": "soywu",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-11T15:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faf550dfb3b52be0a3a"
+    },
+    {
+      "handle": "flexme",
+      "reliability": "100%",
+      "registrationDate": "2013-06-11T15:27:00.000Z",
+      "submissionDate": "2013-06-17T09:20:00.000Z",
+      "rating": "2015",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58133faf550dfb3b52be0a39"
+    },
+    {
+      "handle": "devmodugu",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-11T15:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faf550dfb3b52be0a38"
+    },
+    {
+      "handle": "kalc",
+      "reliability": "6%",
+      "registrationDate": "2013-06-11T15:33:00.000Z",
+      "submissionDate": null,
+      "rating": "1152",
+      "colorStyle": "color: #00A900",
+      "_id": "58133faf550dfb3b52be0a37"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "0%",
+      "registrationDate": "2013-06-11T15:37:00.000Z",
+      "submissionDate": null,
+      "rating": "860",
+      "colorStyle": "color: #999999",
+      "_id": "58133faf550dfb3b52be0a36"
+    },
+    {
+      "handle": "rajeshk87",
+      "reliability": "16%",
+      "registrationDate": "2013-06-11T17:08:00.000Z",
+      "submissionDate": null,
+      "rating": "464",
+      "colorStyle": "color: #999999",
+      "_id": "58133faf550dfb3b52be0a35"
+    },
+    {
+      "handle": "rakeshk_87",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-11T18:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faf550dfb3b52be0a34"
+    },
+    {
+      "handle": "patka",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-11T18:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faf550dfb3b52be0a33"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2013-06-11T18:20:00.000Z",
+      "submissionDate": null,
+      "rating": "1423",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133faf550dfb3b52be0a32"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-11T21:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faf550dfb3b52be0a31"
+    },
+    {
+      "handle": "brain_cn",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-12T02:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faf550dfb3b52be0a30"
+    },
+    {
+      "handle": "ecnu_haozi",
+      "reliability": "26%",
+      "registrationDate": "2013-06-12T02:46:00.000Z",
+      "submissionDate": null,
+      "rating": "980",
+      "colorStyle": "color: #00A900",
+      "_id": "58133faf550dfb3b52be0a2f"
+    },
+    {
+      "handle": "ksladkov",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-12T05:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faf550dfb3b52be0a2e"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-12T08:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faf550dfb3b52be0a2d"
+    },
+    {
+      "handle": "Rhapsody0710",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-12T08:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faf550dfb3b52be0a2c"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-12T10:36:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58133faf550dfb3b52be0a2b"
+    },
+    {
+      "handle": "minghaotsai",
+      "reliability": "66%",
+      "registrationDate": "2013-06-12T13:08:00.000Z",
+      "submissionDate": null,
+      "rating": "1311",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133faf550dfb3b52be0a2a"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-12T14:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faf550dfb3b52be0a29"
+    },
+    {
+      "handle": "copperybean",
+      "reliability": "13%",
+      "registrationDate": "2013-06-12T14:45:00.000Z",
+      "submissionDate": null,
+      "rating": "473",
+      "colorStyle": "color: #999999",
+      "_id": "58133faf550dfb3b52be0a28"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-12T15:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faf550dfb3b52be0a27"
+    },
+    {
+      "handle": "gondzo",
+      "reliability": "13%",
+      "registrationDate": "2013-06-12T20:58:00.000Z",
+      "submissionDate": null,
+      "rating": "812",
+      "colorStyle": "color: #999999",
+      "_id": "58133faf550dfb3b52be0a26"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "6%",
+      "registrationDate": "2013-06-13T01:05:00.000Z",
+      "submissionDate": null,
+      "rating": "568",
+      "colorStyle": "color: #999999",
+      "_id": "58133faf550dfb3b52be0a25"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-13T01:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faf550dfb3b52be0a24"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-13T06:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faf550dfb3b52be0a23"
+    },
+    {
+      "handle": "isv",
+      "reliability": "33%",
+      "registrationDate": "2013-06-13T07:41:00.000Z",
+      "submissionDate": null,
+      "rating": "947",
+      "colorStyle": "color: #00A900",
+      "_id": "58133faf550dfb3b52be0a22"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "n/a",
+      "registrationDate": "2013-06-13T10:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faf550dfb3b52be0a21"
+    },
+    {
+      "handle": "Veve",
+      "reliability": "33%",
+      "registrationDate": "2013-06-13T14:41:00.000Z",
+      "submissionDate": null,
+      "rating": "1410",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133faf550dfb3b52be0a20"
+    }
+  ],
+  "registrationEndDate": "2013-06-13T15:00:00.000Z",
+  "reliabilityBonus": 260,
+  "reviewScorecardId": 30001210,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2013-06-17T15:05:00.000Z",
+  "submissions": [
+    {
+      "handle": "flexme",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 98.96,
+      "finalScore": 99.79,
+      "points": 585,
+      "submissionStatus": "Active",
+      "submissionDate": "2013-06-17T09:20:00.000Z",
+      "_id": "58133faf550dfb3b52be0a49"
+    }
+  ],
+  "technology": [
+    "Java"
+  ]
+}

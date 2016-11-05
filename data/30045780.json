@@ -1,0 +1,328 @@
+{
+  "_id": 30045780,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T23:13:46.989Z",
+  "appealsEndDate": "2014-09-24T08:54:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Salesforce Service Cloud - Update a custom link to open in new tab",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\"><span><strong>Environment:&nbsp;</strong></span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:15px; line-height:1.6\">The Salesforce.com Service Cloud Console.</span></p>\n\n<p dir=\"ltr\">&nbsp;</p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:15px; line-height:1.6\">There is a custom link on the Case Page, doing some Javascript code:</span></p>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:15px\"><img src=\"https://lh6.googleusercontent.com/aTbbGD_uAJ5iAQbcpVq9NlC80MEDX_SaZdUG6f4UD4GFuPslP8646IHpU5IpyvslN8X6hPU__kOJ2L85VPhjLrEAqjmoxqsRNSuk3SisrerS8rUi-XngU9wEE3yg6VomQA\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:175px; transform:rotate(0.00rad); width:444px\" /></span></span></p>\n\n<p><br />\n&nbsp;</p>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:15px\">The link changes the current tab to a &lsquo;send an email&rsquo; page, as such:</span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:15px\"><img src=\"https://lh6.googleusercontent.com/dlScbQvglgHy-bOae1BdukkLsH7AjNX5R7LOUCQDSC7F8gr0u7gclBhg_4Rw9JPaEAouCjOmWGVPOut_GNXxsB_fg7U5lv27lXajHVKP768HyXKWGRilxLYx93z2oU23ng\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:101px; transform:rotate(0.00rad); width:333px\" /></span></span></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:15px\">The goal of the challenge is to make the link open a new secondary tab instead of reusing the current tab, so it looks like this:</span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:15px\"><img src=\"https://lh3.googleusercontent.com/rpKVAv-BiasJBOb4vog8DWlIklj9lZxHHx4XvOqNUAdeHlqO3M1rYBdnQM2Htzw2OJY2eGftvJjnhD_n_E6mu4aRDfByjKgQYIc1J1srgXnZ59Map1RS4KhRV4CY0x2EEw\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:85px; transform:rotate(0.00rad); width:466px\" /></span></span></p>\n\n<p><br />\n&nbsp;</p>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:15px\">The code for the Reply button is currently:</span></span></p>\n\n<p><br />\n{!REQUIRESCRIPT(&quot;/soap/ajax/29.0/connection.js&quot;)}&nbsp;<br />\nresult = sforce.connection.query(&quot;SELECT Id FROM EmailMessage where parentid = &#39;{!Case.Id}&#39; and incoming = true ORDER BY CreatedDate DESC limit 1 &quot;);&nbsp;<br />\nrecords = result.getArray(&quot;records&quot;);&nbsp;<br />\nif (records != null &amp;&amp; records.length &gt;0) {&nbsp;<br />\nlocation.replace(&#39;/_ui/core/email/author/EmailAuthor?email_id=&#39;+records[0].Id+&#39;&amp;replyToAll=0&amp;retURL={!Case.Id}&#39;);&nbsp;<br />\n} else {&nbsp;<br />\nvar email=&#39;&#39;;&nbsp;<br />\nswitch(&quot;{!Case.Origin}&quot;) &nbsp;{&nbsp;<br />\ncase &quot;test1&quot;:&nbsp;<br />\nemail=&quot;test1@test.com&quot;;&nbsp;<br />\nbreak;&nbsp;<br />\ncase &quot;test2&quot;:&nbsp;<br />\nemail=&quot;test2@test.com&quot;;&nbsp;<br />\nbreak;&nbsp;<br />\ndefault:&nbsp;<br />\nemail=&quot;testtt@test.com&quot;;&nbsp;<br />\nbreak;&nbsp;<br />\n}&nbsp;<br />\nvar addressee = &#39;p24={!Case.SuppliedEmail}&#39;;&nbsp;</p>\n\n<p>if (&quot;{!Case.ContactId}&quot; &amp;&amp; &quot;{!Case.ContactId}&quot; != null &amp;&amp; &quot;{!Case.ContactId}&quot; != &#39;&#39;) {&nbsp;<br />\naddressee = &#39;p2_lkid={!Case.ContactId}&#39;;&nbsp;<br />\n}&nbsp;<br />\nvar windurl = &#39;/_ui/core/email/author/EmailAuthor?retURL={!Case.Id}&amp;p3_lkid={!Case.Id}&amp;rtype=003&amp;&#39;+addressee+&#39;&amp;p26=&#39;+email;&nbsp;<br />\nif (typeof(srcUp) == &#39;function&#39;) {&nbsp;<br />\nsrcUp(windurl);&nbsp;<br />\n} else {&nbsp;<br />\nlocation.replace(windurl);&nbsp;<br />\n} }</p>\n\n<p><br />\n&nbsp;</p>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:15px\">The following technology must be used:</span></span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent\">Salesforce Console Integration Toolkit documented at </span><a href=\"http://www.salesforce.com/us/developer/docs/api_console/index.htm\" style=\"text-decoration:none;\"><u>http://www.salesforce.com/us/developer/docs/api_console/index.htm</u></a></span></p>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:15px\">The following technology may also be used:</span></span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent\">Javascript</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent\">Apex/Visualforce (if you want to embed or recode the link inside a Visualforce page)</span></span></p>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:15px\">Deliverables:</span></span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent\">code with clear comments</span></span></p>\n\t</li>\n\t<li dir=\"ltr\"><span><span style=\"background-color:transparent\">test class(es)</span></span></li>\n</ul>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30045780",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalSubmissionGuidelines": "<p><span style=\"font-size:13px\">Judging Criteria:</span></p>\n\n<ul>\n\t<li><span>Clarity of code</span></li>\n\t<li><span>Completeness of solution</span></li>\n</ul>\n",
+  "forumId": 25506,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=25506",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 18,
+  "numberOfSubmissions": 6,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-13T13:00:00.000Z",
+      "actualStartTime": "2014-09-13T13:00:00.000Z",
+      "scheduledEndTime": "2014-09-19T13:00:00.000Z",
+      "actualendTime": "2014-09-19T13:00:00.000Z",
+      "_id": "5813dbab550dfb3b52ea6339"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-13T13:05:00.000Z",
+      "actualStartTime": "2014-09-13T13:05:00.000Z",
+      "scheduledEndTime": "2014-09-19T13:00:00.000Z",
+      "actualendTime": "2014-09-19T13:00:00.000Z",
+      "_id": "5813dbab550dfb3b52ea6338"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-19T13:00:00.000Z",
+      "actualStartTime": "2014-09-19T13:00:00.000Z",
+      "scheduledEndTime": "2014-09-22T09:48:00.000Z",
+      "actualendTime": "2014-09-22T09:48:00.000Z",
+      "_id": "5813dbab550dfb3b52ea6337"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-22T09:48:00.000Z",
+      "actualStartTime": "2014-09-22T09:48:00.000Z",
+      "scheduledEndTime": "2014-09-23T09:48:00.000Z",
+      "actualendTime": "2014-09-23T09:48:00.000Z",
+      "_id": "5813dbab550dfb3b52ea6336"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-23T09:48:00.000Z",
+      "actualStartTime": "2014-09-23T09:48:00.000Z",
+      "scheduledEndTime": "2014-09-24T08:54:00.000Z",
+      "actualendTime": "2014-09-24T08:54:00.000Z",
+      "_id": "5813dbab550dfb3b52ea6335"
+    }
+  ],
+  "platforms": [
+    "Salesforce.com"
+  ],
+  "postingDate": "2014-09-13T13:00:00.000Z",
+  "prize": [
+    350,
+    150
+  ],
+  "projectId": 8038,
+  "registrants": [
+    {
+      "handle": "sudha613",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-14T13:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbab550dfb3b52ea6334"
+    },
+    {
+      "handle": "sathishvenks",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-13T18:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbab550dfb3b52ea6333"
+    },
+    {
+      "handle": "Ashish413",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-13T19:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbab550dfb3b52ea6332"
+    },
+    {
+      "handle": "turbotech321",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-14T01:33:00.000Z",
+      "submissionDate": "2014-09-14T02:29:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbab550dfb3b52ea6331"
+    },
+    {
+      "handle": "reshma_jewrani",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-14T12:05:00.000Z",
+      "submissionDate": "2014-09-17T17:35:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbab550dfb3b52ea6330"
+    },
+    {
+      "handle": "pbforce",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-14T12:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbab550dfb3b52ea632f"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-14T12:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbab550dfb3b52ea632e"
+    },
+    {
+      "handle": "mischievous_me",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-14T16:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbab550dfb3b52ea632d"
+    },
+    {
+      "handle": "TEPavan",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-14T17:30:00.000Z",
+      "submissionDate": "2014-09-16T01:38:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbaa550dfb3b52ea632c"
+    },
+    {
+      "handle": "sunhong",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-15T03:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbaa550dfb3b52ea632b"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-15T13:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbaa550dfb3b52ea632a"
+    },
+    {
+      "handle": "DanyOnForce",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-15T19:41:00.000Z",
+      "submissionDate": "2014-09-16T00:08:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbaa550dfb3b52ea6329"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-16T10:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbaa550dfb3b52ea6328"
+    },
+    {
+      "handle": "amit_choudhary",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-16T16:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbaa550dfb3b52ea6327"
+    },
+    {
+      "handle": "salesforcesmarty",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-16T18:40:00.000Z",
+      "submissionDate": "2014-09-16T19:46:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbaa550dfb3b52ea6326"
+    },
+    {
+      "handle": "devsfdctc",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-16T19:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbaa550dfb3b52ea6325"
+    },
+    {
+      "handle": "argolite",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-16T23:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbaa550dfb3b52ea6324"
+    },
+    {
+      "handle": "TopCoder_Syam",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-17T02:01:00.000Z",
+      "submissionDate": "2014-09-18T13:11:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbaa550dfb3b52ea6323"
+    }
+  ],
+  "registrationEndDate": "2014-09-19T13:00:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2014-09-19T13:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "reshma_jewrani",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 87.5,
+      "finalScore": 90,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-09-17T17:35:00.000Z",
+      "_id": "5813dbab550dfb3b52ea633f"
+    },
+    {
+      "handle": "salesforcesmarty",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 81.25,
+      "finalScore": 81.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-09-16T19:46:00.000Z",
+      "_id": "5813dbab550dfb3b52ea633e"
+    },
+    {
+      "handle": "DanyOnForce",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 78.75,
+      "finalScore": 78.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-09-16T00:08:00.000Z",
+      "_id": "5813dbab550dfb3b52ea633d"
+    },
+    {
+      "handle": "TEPavan",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 62.5,
+      "finalScore": 62.5,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-09-16T01:38:00.000Z",
+      "_id": "5813dbab550dfb3b52ea633c"
+    },
+    {
+      "handle": "TopCoder_Syam",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 46.25,
+      "finalScore": 46.25,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-09-18T13:11:00.000Z",
+      "_id": "5813dbab550dfb3b52ea633b"
+    },
+    {
+      "handle": "turbotech321",
+      "placement": 6,
+      "screeningScore": null,
+      "initialScore": 33.75,
+      "finalScore": 33.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-09-14T02:29:00.000Z",
+      "_id": "5813dbab550dfb3b52ea633a"
+    }
+  ],
+  "technology": [
+    "Apex",
+    "JavaScript",
+    "Visualforce"
+  ]
+}

@@ -1,0 +1,659 @@
+{
+  "_id": 30052267,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:07:30.390Z",
+  "appealsEndDate": "2016-01-23T01:21:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "USA Diving Team iOS iPad App - Backend Assemlby",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></h2>\n\n<p>The goal of this project is to design and build an iPad application that will allow the USA Diving team to track the performance of divers as they prepare for official diving events and Olympic trials. Closely monitoring the day-to-day well-being and performance of divers in training will allow coaches and physicians to adjust individual training programs, for improved results.</p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Competition Task Overview</span></h2>\n\n<p>For this challenge, we need to build the backend RESTful services to be consuded by the frontend / iOS app.</p>\n\n<p>In general we need you to do the following:</p>\n\n<ul>\n\t<li>Design the data model / database schema (you must provide sql scripts to create / drop / clear db tables and insert / clear test data)</li>\n\t<li>Design and implement the backend services as RESTful web services using Node.js</li>\n\t<li>We&#39;ll use Postgres for database</li>\n\t<li>We&#39;ll store videos to Amazon S3 and store links in this app. Videos should not be public.</li>\n\t<li>The backend services will run on Heroku</li>\n\t<li><span style=\"background-color:rgb(255, 255, 0)\">We do not have an architecture for this challenge so asking questions early in the forum is important for you to understand the tasks.</span></li>\n</ul>\n\n<p><span style=\"color:#0000FF\"><strong>Data Model</strong></span></p>\n\n<p>You will need to go through the storyboard and find out what exact field / data columns need to included in the data model. I believe we&#39;ll at least need to have the following data models in the database:</p>\n\n<ul>\n\t<li>coach: note coach is different from user, because a coach can login and manage diver but divers cannot login</li>\n\t<li><span>diver: note &quot;Coach of Record&quot; field is not needed and will be removed from the UI, so it&#39;s not needed in the data model either</span></li>\n\t<li><span>session: this is basically a group of dives with some additional fields like injury report / notes for the whole session</span></li>\n\t<li>dive: this represents a single dive.</li>\n</ul>\n\n<p><strong><span style=\"color:#0000FF\">REST API Guidelines</span></strong></p>\n\n<p>Header: Content-Type=&ldquo;application/json&rdquo;</p>\n\n<p>Standard HTTP response codes are used to indicate success and error conditions. Specifically the following HTTP response codes will be used:<br />\n- 200 OK - if the request was successful<br />\n- 400 BAD REQUEST - if there was problem with the request (e.g. malformed or some parameters are missing)<br />\n- 401 NOT AUTHORIZED - if the request didn&#39;t bear authentication information (in cookie) or the authentication information is invalid.<br />\n- 403 FORBIDDEN - if the requesting user didn&#39;t have permission to perform the requested operation<br />\n- 404 NOT FOUND - if the resource in request did not exist<br />\n- 405 METHOD NOT SUPPORTED - if the request was made via an unsupported HTTP method<br />\n- 500 INTERNAL SERVER ERROR - if the request was properly formatted, but the operation failed on the server side</p>\n\n<p><strong><span style=\"color:rgb(0, 0, 255)\">REST API Details</span></strong></p>\n\n<ul>\n\t<li>Coach\n\t<ul>\n\t\t<li>Register\n\t\t<ul>\n\t\t\t<li>POST /api/v1/coaches</li>\n\t\t\t<li>Creates a new coach</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Login\n\t\t<ul>\n\t\t\t<li>POST /api/v1/login</li>\n\t\t\t<li>Logs the coach into the app</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Logout\n\t\t<ul>\n\t\t\t<li>POST /api/v1/logout</li>\n\t\t\t<li>Logs out the coach</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li>Diver\n\t<ul>\n\t\t<li>Get divers\n\t\t<ul>\n\t\t\t<li>GET /api/v1/divers</li>\n\t\t\t<li>Gets the list of divers for the coach</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Create diver\n\t\t<ul>\n\t\t\t<li>POST /api/v1/divers</li>\n\t\t\t<li>Creates a new diver</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Get diver details\n\t\t<ul>\n\t\t\t<li>GET /api/v1/divers/{diverid}</li>\n\t\t\t<li>Gets details for the diver</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Delete diver\n\t\t<ul>\n\t\t\t<li>DELETE /api/v1/divers/{diverid}</li>\n\t\t\t<li>Deletes the diver</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Update diver\n\t\t<ul>\n\t\t\t<li>PUT /api/v1/divers/{diverid}</li>\n\t\t\t<li>Updates the diver</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<ul>\n\t<li>Session\n\t<ul>\n\t\t<li>Get sessions\n\t\t<ul>\n\t\t\t<li>GET /api/v1/divers/{diverid}/sessions</li>\n\t\t\t<li>Gets the list of sessions for the diver</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Create session\n\t\t<ul>\n\t\t\t<li>POST <span>/api/v1/divers/{diverid}/sessions</span></li>\n\t\t\t<li>Creates a new session</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Get session details\n\t\t<ul>\n\t\t\t<li>GET <span>/api/v1/divers/{diverid}/sessions/{sessionid}</span></li>\n\t\t\t<li>Gets details for the session</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Delete session\n\t\t<ul>\n\t\t\t<li>DELETE&nbsp;<span>/api/v1/divers/{diverid}/sessions/{sessionid}</span></li>\n\t\t\t<li>Deletes the session</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Update session\n\t\t<ul>\n\t\t\t<li>PUT <span>/api/v1/divers/{diverid}/sessions/{sessionid}</span></li>\n\t\t\t<li>Updates the session</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li>Dive\n\t<ul>\n\t\t<li>Get dive\n\t\t<ul>\n\t\t\t<li>GET <span>/api/v1/divers/{diverid}/sessions/{sessionid}/dives/{diveid}</span></li>\n\t\t\t<li>Gets the list of dives for the session</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Create <span>dive</span>\n\t\t<ul>\n\t\t\t<li>POST <span>/api/v1/divers/{diverid}/sessions/{sessionid}/dives</span></li>\n\t\t\t<li>Creates a new dive</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Get <span>dive</span> details\n\t\t<ul>\n\t\t\t<li>GET <span>/api/v1/divers/{diverid}/sessions/{sessionid}/dives/{diveid}</span></li>\n\t\t\t<li>Gets details for the diver</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Delete <span>dive</span>\n\t\t<ul>\n\t\t\t<li>DELETE&nbsp;<span>/api/v1/divers/{diverid}/sessions/{sessionid}/dives/{diveid}</span></li>\n\t\t\t<li>Deletes the dive</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Update <span>dive</span>\n\t\t<ul>\n\t\t\t<li>PUT&nbsp;<span>/api/v1/divers/{diverid}/sessions/{sessionid}/dives/{diveid}</span></li>\n\t\t\t<li>Updates the dive</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Upload Video\n\t\t<ul>\n\t\t\t<li>POST /api/v1/divers/{diverid}/sessions/{sessionid}/dives/{diveid}/videos</li>\n\t\t\t<li>Uploads a video for this specific dive, the video should be saved to Amazon s3 and link is stored inside the dive model</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li><span>Delete Video</span>\n\t\t<ul>\n\t\t\t<li>DELETE /api/v1/divers/{diverid}/sessions/{sessionid}/dives/{diveid}/videos</li>\n\t\t\t<li>Deletes the video associated with the dive</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li><span>Misc</span>\n\t<ul>\n\t\t<li><span>Sync Data</span>\n\t\t<ul>\n\t\t\t<li><span>POST /api/v1/misc/syncdata</span></li>\n\t\t\t<li><span>This will sync data with the server. </span><span style=\"background-color:#FFFF00\">We just need some basic sync mechanism here, for example we can store latest modified date as revision for the whole dataset, and if the data on iPad is newer we simply push all data (including videos) from iPad to the server; otherwise we do nothing (i.e. this only pushes data and never pulls). If possible this api should provide progress back to the caller</span></li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Send Report\n\t\t<ul>\n\t\t\t<li><span>POST /api/v1/misc/sendreport</span></li>\n\t\t\t<li>All the data is first synced with the server (i.e. same process as the Sync Data process.</li>\n\t\t\t<li>The backend is triggered to create and email a report to a pre-configured list of email addresses. The report will contain dive statistics for all divers the coach is managing (including information from the health / injury reports).&nbsp;<span style=\"background-color:rgb(255, 255, 0)\">If possible this api should provide progress back to the caller.</span></li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Technology Overview</span></h2>\n\n<ul>\n\t<li>Heroku</li>\n\t<li>Postgres</li>\n\t<li>Nodejs</li>\n\t<li>Amazon S3</li>\n</ul>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Documentation Provided</span></h2>\n\n<p>Register to see documents in the forum.</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30052267",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalFixEndDate": "2016-02-14T03:00:00.000Z",
+  "finalSubmissionGuidelines": "<h2><strong><span style=\"color:rgb(255, 0, 0)\">Submission Deliverables</span></strong></h2>\n\n<p>Below is an overview of the deliverables:</p>\n\n<ul>\n\t<li>Full code that covers all mentioned requirements</li>\n\t<li>Code must be well documented</li>\n\t<li>REST API document and postman file</li>\n\t<li>SQL scripts for the database</li>\n\t<li>A complete and detailed deployment document explaining how to deploy the application including configuration information.</li>\n</ul>\n\n<h2><span style=\"color:rgb(255, 0, 0)\"><strong>Final Submission</strong></span></h2>\n\n<p>For each member, the final submission should be uploaded via the challenge detail page on&nbsp;<a href=\"http://www.topcoder.com/\" style=\"color: rgb(102, 102, 102); padding: 0px; margin: 0px;\">topcoder.com</a>.</p>\n",
+  "forumId": 31339,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=31339",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 43,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-12T11:03:00.000Z",
+      "actualStartTime": "2016-02-12T11:03:00.000Z",
+      "scheduledEndTime": "2016-02-13T02:16:00.000Z",
+      "actualendTime": "2016-02-13T02:16:00.000Z",
+      "_id": "58133f82550dfb3b52bde390"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-13T02:16:00.000Z",
+      "actualStartTime": "2016-02-13T02:16:00.000Z",
+      "scheduledEndTime": "2016-02-14T03:00:00.000Z",
+      "actualendTime": "2016-02-14T03:00:00.000Z",
+      "_id": "58133f82550dfb3b52bde38f"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-14T03:00:00.000Z",
+      "actualStartTime": "2016-02-14T03:00:00.000Z",
+      "scheduledEndTime": "2016-02-14T08:46:00.000Z",
+      "actualendTime": "2016-02-14T08:46:00.000Z",
+      "_id": "58133f82550dfb3b52bde38e"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-14T08:46:00.000Z",
+      "actualStartTime": "2016-02-14T08:46:00.000Z",
+      "scheduledEndTime": "2016-02-19T08:46:00.000Z",
+      "actualendTime": "2016-02-19T08:46:00.000Z",
+      "_id": "58133f82550dfb3b52bde38d"
+    },
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-01-13T07:26:00.000Z",
+      "actualStartTime": "2016-01-13T07:26:00.000Z",
+      "scheduledEndTime": "2016-01-13T07:28:00.000Z",
+      "actualendTime": "2016-01-13T07:28:00.000Z",
+      "_id": "58133f82550dfb3b52bde38c"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-01-13T07:28:00.000Z",
+      "actualStartTime": "2016-01-13T07:28:00.000Z",
+      "scheduledEndTime": "2016-01-14T03:08:00.000Z",
+      "actualendTime": "2016-01-14T03:08:00.000Z",
+      "_id": "58133f82550dfb3b52bde38b"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-01-14T03:08:00.000Z",
+      "actualStartTime": "2016-01-14T03:08:00.000Z",
+      "scheduledEndTime": "2016-01-16T03:08:00.000Z",
+      "actualendTime": "2016-01-16T03:08:00.000Z",
+      "_id": "58133f82550dfb3b52bde38a"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-01-14T03:14:00.000Z",
+      "actualStartTime": "2016-01-14T03:14:00.000Z",
+      "scheduledEndTime": "2016-01-19T03:09:00.000Z",
+      "actualendTime": "2016-01-19T03:09:00.000Z",
+      "_id": "58133f82550dfb3b52bde389"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2016-01-19T03:09:00.000Z",
+      "actualStartTime": "2016-01-19T03:09:00.000Z",
+      "scheduledEndTime": "2016-01-19T14:00:00.000Z",
+      "actualendTime": "2016-01-19T14:00:00.000Z",
+      "_id": "58133f82550dfb3b52bde388"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-01-19T14:00:00.000Z",
+      "actualStartTime": "2016-01-19T14:00:00.000Z",
+      "scheduledEndTime": "2016-01-21T14:02:00.000Z",
+      "actualendTime": "2016-01-21T14:02:00.000Z",
+      "_id": "58133f82550dfb3b52bde387"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-01-21T14:02:00.000Z",
+      "actualStartTime": "2016-01-21T14:02:00.000Z",
+      "scheduledEndTime": "2016-01-22T14:02:00.000Z",
+      "actualendTime": "2016-01-22T14:02:00.000Z",
+      "_id": "58133f82550dfb3b52bde386"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-01-22T14:02:00.000Z",
+      "actualStartTime": "2016-01-22T14:02:00.000Z",
+      "scheduledEndTime": "2016-01-23T01:21:00.000Z",
+      "actualendTime": "2016-01-23T01:21:00.000Z",
+      "_id": "58133f82550dfb3b52bde385"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2016-01-23T01:21:00.000Z",
+      "actualStartTime": "2016-01-23T01:21:00.000Z",
+      "scheduledEndTime": "2016-01-23T10:12:00.000Z",
+      "actualendTime": "2016-01-23T10:12:00.000Z",
+      "_id": "58133f82550dfb3b52bde384"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2016-01-23T10:12:00.000Z",
+      "actualStartTime": "2016-01-23T10:12:00.000Z",
+      "scheduledEndTime": "2016-01-24T05:59:00.000Z",
+      "actualendTime": "2016-01-24T05:59:00.000Z",
+      "_id": "58133f82550dfb3b52bde383"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-01-24T05:59:00.000Z",
+      "actualStartTime": "2016-01-24T05:59:00.000Z",
+      "scheduledEndTime": "2016-01-24T17:16:00.000Z",
+      "actualendTime": "2016-01-24T17:16:00.000Z",
+      "_id": "58133f82550dfb3b52bde382"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2016-01-26T02:55:00.000Z",
+      "actualStartTime": "2016-01-26T02:55:00.000Z",
+      "scheduledEndTime": "2016-02-03T11:12:00.000Z",
+      "actualendTime": "2016-02-03T11:12:00.000Z",
+      "_id": "58133f82550dfb3b52bde381"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2016-01-24T17:16:00.000Z",
+      "actualStartTime": "2016-01-24T17:16:00.000Z",
+      "scheduledEndTime": "2016-01-25T16:13:00.000Z",
+      "actualendTime": "2016-01-25T16:13:00.000Z",
+      "_id": "58133f82550dfb3b52bde380"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-01-25T16:13:00.000Z",
+      "actualStartTime": "2016-01-25T16:13:00.000Z",
+      "scheduledEndTime": "2016-01-26T02:54:00.000Z",
+      "actualendTime": "2016-01-26T02:54:00.000Z",
+      "_id": "58133f82550dfb3b52bde37f"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-03T11:13:00.000Z",
+      "actualStartTime": "2016-02-03T11:13:00.000Z",
+      "scheduledEndTime": "2016-02-12T03:19:00.000Z",
+      "actualendTime": "2016-02-12T03:19:00.000Z",
+      "_id": "58133f82550dfb3b52bde37e"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-12T03:19:00.000Z",
+      "actualStartTime": "2016-02-12T03:19:00.000Z",
+      "scheduledEndTime": "2016-02-12T11:02:00.000Z",
+      "actualendTime": "2016-02-12T11:02:00.000Z",
+      "_id": "58133f82550dfb3b52bde37d"
+    }
+  ],
+  "platforms": [
+    "Heroku",
+    "AWS",
+    "NodeJS"
+  ],
+  "postingDate": "2016-01-14T03:08:00.000Z",
+  "prize": [
+    1000,
+    500
+  ],
+  "projectId": 9246,
+  "registrants": [
+    {
+      "handle": "panoptimum",
+      "reliability": "0%",
+      "registrationDate": "2016-01-14T08:45:00.000Z",
+      "submissionDate": null,
+      "rating": "1089",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f82550dfb3b52bde37c"
+    },
+    {
+      "handle": "e06widu",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T06:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde37b"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T03:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde37a"
+    },
+    {
+      "handle": "code56Life",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T03:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde379"
+    },
+    {
+      "handle": "Amith",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T04:04:00.000Z",
+      "submissionDate": null,
+      "rating": "683",
+      "colorStyle": "color: #999999",
+      "_id": "58133f82550dfb3b52bde378"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T04:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde377"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2016-01-14T04:41:00.000Z",
+      "submissionDate": null,
+      "rating": "520",
+      "colorStyle": "color: #999999",
+      "_id": "58133f82550dfb3b52bde376"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T05:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde375"
+    },
+    {
+      "handle": "phonechen",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T05:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde374"
+    },
+    {
+      "handle": "kiril.kartunov",
+      "reliability": "100%",
+      "registrationDate": "2016-01-14T06:40:00.000Z",
+      "submissionDate": "2016-01-18T20:48:00.000Z",
+      "rating": "1264",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133f82550dfb3b52bde373"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "20%",
+      "registrationDate": "2016-01-14T06:50:00.000Z",
+      "submissionDate": "2016-01-18T23:41:00.000Z",
+      "rating": "951",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f82550dfb3b52bde372"
+    },
+    {
+      "handle": "gondzo",
+      "reliability": "40%",
+      "registrationDate": "2016-01-14T07:56:00.000Z",
+      "submissionDate": null,
+      "rating": "825",
+      "colorStyle": "color: #999999",
+      "_id": "58133f82550dfb3b52bde371"
+    },
+    {
+      "handle": "h5jack",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T08:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde370"
+    },
+    {
+      "handle": "jjlights",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T08:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde36f"
+    },
+    {
+      "handle": "rckw",
+      "reliability": "70%",
+      "registrationDate": "2016-01-14T08:49:00.000Z",
+      "submissionDate": "2016-01-19T02:17:00.000Z",
+      "rating": "991",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f82550dfb3b52bde36e"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "0%",
+      "registrationDate": "2016-01-14T10:02:00.000Z",
+      "submissionDate": null,
+      "rating": "618",
+      "colorStyle": "color: #999999",
+      "_id": "58133f82550dfb3b52bde36d"
+    },
+    {
+      "handle": "toode",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T10:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde36c"
+    },
+    {
+      "handle": "michael_tang",
+      "reliability": "0%",
+      "registrationDate": "2016-01-14T13:26:00.000Z",
+      "submissionDate": null,
+      "rating": "497",
+      "colorStyle": "color: #999999",
+      "_id": "58133f82550dfb3b52bde36b"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T13:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde36a"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T13:59:00.000Z",
+      "submissionDate": null,
+      "rating": "717",
+      "colorStyle": "color: #999999",
+      "_id": "58133f82550dfb3b52bde369"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T14:05:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58133f82550dfb3b52bde368"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T14:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde367"
+    },
+    {
+      "handle": "diogenesjcs",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T16:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde366"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "0%",
+      "registrationDate": "2016-01-14T17:12:00.000Z",
+      "submissionDate": null,
+      "rating": "1374",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133f82550dfb3b52bde365"
+    },
+    {
+      "handle": "ptarunn",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T16:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde364"
+    },
+    {
+      "handle": "jaindsonvs",
+      "reliability": "11%",
+      "registrationDate": "2016-01-14T18:22:00.000Z",
+      "submissionDate": null,
+      "rating": "1300",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133f82550dfb3b52bde363"
+    },
+    {
+      "handle": "ramirobg94",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T21:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde362"
+    },
+    {
+      "handle": "vimrc",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-14T23:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde361"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "0%",
+      "registrationDate": "2016-01-15T02:37:00.000Z",
+      "submissionDate": null,
+      "rating": "1032",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f82550dfb3b52bde360"
+    },
+    {
+      "handle": "freegod",
+      "reliability": "26%",
+      "registrationDate": "2016-01-15T05:33:00.000Z",
+      "submissionDate": null,
+      "rating": "1045",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f82550dfb3b52bde35f"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-15T07:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde35e"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2016-01-15T10:42:00.000Z",
+      "submissionDate": null,
+      "rating": "1060",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f82550dfb3b52bde35d"
+    },
+    {
+      "handle": "mihaiserban",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-15T12:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde35c"
+    },
+    {
+      "handle": "herodolphin",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-15T12:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde35b"
+    },
+    {
+      "handle": "superastrom",
+      "reliability": "26%",
+      "registrationDate": "2016-01-15T14:33:00.000Z",
+      "submissionDate": null,
+      "rating": "779",
+      "colorStyle": "color: #999999",
+      "_id": "58133f82550dfb3b52bde35a"
+    },
+    {
+      "handle": "swosko",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-15T15:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde359"
+    },
+    {
+      "handle": "Shadrach",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-15T16:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde358"
+    },
+    {
+      "handle": "spanhawk",
+      "reliability": "26%",
+      "registrationDate": "2016-01-15T18:36:00.000Z",
+      "submissionDate": null,
+      "rating": "805",
+      "colorStyle": "color: #999999",
+      "_id": "58133f82550dfb3b52bde357"
+    },
+    {
+      "handle": "Colossalfy",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-15T19:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde356"
+    },
+    {
+      "handle": "paragdulam",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-15T20:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde355"
+    },
+    {
+      "handle": "winterflame",
+      "reliability": "0%",
+      "registrationDate": "2016-01-15T21:30:00.000Z",
+      "submissionDate": null,
+      "rating": "978",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f82550dfb3b52bde354"
+    },
+    {
+      "handle": "eduardomelendez",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-15T22:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde353"
+    },
+    {
+      "handle": "MADDAN8687",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-16T01:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f82550dfb3b52bde352"
+    }
+  ],
+  "registrationEndDate": "2016-01-16T03:08:00.000Z",
+  "reliabilityBonus": 200,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2016-01-19T03:09:00.000Z",
+  "submissions": [
+    {
+      "handle": "stevenfrog",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 93.79,
+      "finalScore": 93.98,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-01-18T23:41:00.000Z",
+      "_id": "58133f82550dfb3b52bde393"
+    },
+    {
+      "handle": "rckw",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 90.67,
+      "finalScore": 90.67,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-01-19T02:17:00.000Z",
+      "_id": "58133f82550dfb3b52bde392"
+    },
+    {
+      "handle": "kiril.kartunov",
+      "placement": 3,
+      "screeningScore": 100,
+      "initialScore": 87.31,
+      "finalScore": 87.94,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-01-18T20:48:00.000Z",
+      "_id": "58133f82550dfb3b52bde391"
+    }
+  ],
+  "technology": [
+    "Node.js",
+    "PostgreSQL",
+    "REST"
+  ]
+}

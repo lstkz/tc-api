@@ -1,0 +1,336 @@
+{
+  "_id": 30035802,
+  "_isComplete": true,
+  "__v": 2373,
+  "_lastUpdate": "2016-11-05T11:07:41.112Z",
+  "appealsEndDate": "2014-05-17T06:39:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "EPA Android App and PM - Back End and Data Management Module Architecture",
+  "challengeType": "Architecture",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Cancelled - Failed Screening",
+  "detailedRequirements": "<p><span><span><span style=\"color:#FF0000\"><span style=\"font-size:16px\"><strong>1. Project Overview</strong></span></span></span></span></p>\n\n<p><span><span><span><span>The EPA is a U.S. federal government agency devoted to safeguarding the environment. One of the EPA&#39;s great concerns is the </span></span></span>proliferation <span><span><span>of cyanobacterial harmful blooms (cyanoHABs) in the nation&#39;s lakes. The following resources provide information on what cyanoHABs are and how they threaten the environment.</span> </span></span></span></p>\n\n<ul style=\"list-style-type:square\">\n\t<li><span><span><span><span><a href=\"http://www2.epa.gov/nutrient-policy-data/cyanobacterial-harmful-algal-blooms-cyanohabs\">EPA: Cyanobacterial Harmful Blooms (CyanoHABs)</a></span></span></span></span></li>\n\t<li><span><span><span><span><a href=\"http://www.youtube.com/watch?v=CDOLdF0PnA0\">University of North Carolina: Cyanobacteria [video]</a></span></span></span></span></li>\n</ul>\n\n<p><span><span><span><span>The TopCoder project on cyanoHABs aims to develop an algorithm that will be deployed in an Android app with mapping and data visualization capabilities. The app will inform local and federal policy makers about locations where bloom events are likely to occur, allowing them to concentrate their efforts in those areas.</span></span></span></span></p>\n\n<p><span><span><span><span><span style=\"font-size:16px\"><span style=\"color:rgb(255, 0, 0)\"><strong>2. Contest Overview</strong></span></span></span></span></span></span></p>\n\n<p><strong>Welcome to a very exciting and one of the most important architecture contest for EPA Android App project !!!</strong></p>\n\n<p><span>In this contest, we are looking for you to design the module architecture for complete back-end system of EPA Android App. We want you to use all the available information architecture in form of wireframes, system architecture and application requirements specification to develop this module architecture. We will also provide access to the prototype and front-end that have been already developed. Finally, we will also provide you component design for a component that is required to be embedded into the backend. </span></p>\n\n<div style=\"background:#eee;border:1px solid #ccc;padding:5px 10px;\"><span><img alt=\"enlightened\" src=\"https://www.topcoder.com/scripts/ckeditor/ckeditor/plugins/smiley/images/lightbulb.gif\" style=\"height:20px; width:20px\" title=\"enlightened\" /> <strong>Tips for Success:</strong></span></div>\n\n<div style=\"background:#eee;border:1px solid #ccc;padding:5px 10px;\">\n<ul>\n\t<li><span><span style=\"color:#008000\">Asking questions early and getting feedback is very important for the success of this competition. </span></span></li>\n\t<li><span><span style=\"color:#008000\">Ask questions if you feel anything is confusing, or if you have any questions on the provided resources.</span></span></li>\n\t<li><span style=\"color:#FF0000\">Please Note: This contest has an extended submission phase of 7 days due to the larger scope. Please prepare your submissions accordingly and give enough time at the end to check that all requirements are covered.</span></li>\n</ul>\n</div>\n\n<p><span>&nbsp;</span></p>\n\n<p><span>We have two major modules in this Android App server system and following are the short description for each of them:</span></p>\n\n<p><span>1.) <strong>EPA Android App Back-End:</strong> This module will house all the back-end operations of the app. We envision it to be hosted on a server like Amazon EC2. The backed will contain a computation-intensive prediction algorithm which is going to be developed using Marathon match. The details of algorithm will not be available for this contest. The module will also be responsible for aggregation analysis to be done using the available data which will be sent to this module from the data management module explained next. This module will have very heavy computation, complete automation and very less data processing. </span></p>\n\n<p>Some key points to consider while designing architecture for this module:</p>\n\n<p>- It needs to be flexible to fit the prediction algorithm that comes out of the Marathon Match.</p>\n\n<p>- This module will receive data only from data management module. It can either do it by polling a shared folder where the data will already be stored by data management module once it processes it or it can directly get the data from data management module.</p>\n\n<p>- This module will send notifications and push image data (jpgs and pngs) to app front-end. It will also send results from algorithm and aggregation analysis to app front-end and also to the admin website front-end.</p>\n\n<p>- This module is always expected to receive data in the form of csv format (to be used for analysis and algorithm) and light-weight images to be pushed to front-end.</p>\n\n<p>- This module is required to be performance conscious.</p>\n\n<p><span>2.) <strong>EPA Android App Data Management Module:</strong> This module will be responsible for doing all the data-processing tasks. There is a lot of data available in different formats - mostly geo-spatial data and hence it is required to be preprocessed before wither sending it to front-end or sending to the above back-end module for algorithm analysis. All the validation, conversion and standardization of data will be done in this module. In addition to other tasks, this module will also contain a component that will be used for data standardization.<strong> </strong>We have provided design document of the component.</span> This module will have a lot of data processing and I/O intensive tasks.</p>\n\n<p>Some key points to consider while designing architecture for this module:</p>\n\n<p>- It needs to fit the component which will be used for data standardization.</p>\n\n<p>- As mentioned above, this module will receive data in different formats (mostly tif and xls files) and this module will convert them into csv files based on some constraints. These constraints will be covered by the component but that component will be embedded as a part of this module.</p>\n\n<p>- This module will also validate the data that is received and see if that data is useful. For example, on cannot get any Geospatial information from jpg images. The images must be in GeoTiff format to be useful for data extraction.</p>\n\n<p>- This module will receive data only from admin website. It can either do it by polling a shared folder where the data will already be stored by admin website or it can directly get the data from admin website - storing in shared folder is preferable option.</p>\n\n<p>- This module will also convert heavy tif images into light-weight jpg/images after the component has already extracted data from those images. These converted light weight images will then be sent to backend which will then push it to front-end for display.</p>\n\n<p>- This module is also required to be performance conscious, specifically I/O performance.<br />\n<br />\n<span><span><span><span><span><strong><span style=\"color:#FF0000\"><span style=\"font-size:16px\">3. Data Details</span></span></strong></span></span></span></span></span></p>\n\n<p><span><span>We have two types of input data:</span></span></p>\n\n<ul>\n\t<li><span><span>Image Data : GeoTiff images which has geo-encoded information</span></span></li>\n\t<li><span><span>Text Data: Excel files containing data.</span></span></li>\n</ul>\n\n<p><span><span>The data is in very large amounts. <span>The images will always be GeoTiff. The data management module will have the component which will read all this data and convert into single canonical structure. The component design document will provide information about this process.</span></span></span></p>\n\n<p><span><span><span><span><span><strong><span style=\"color:#FF0000\"><span style=\"font-size:16px\">4. Technology Overview</span></span></strong></span></span></span></span></span></p>\n\n<p><span>1. The Android App front-end has been developed for Android 4.1-4.4 support using android developer tools. It also uses Google Maps Android API v2, AChartEngine 1.1.0 and ProgressWheel.</span></p>\n\n<p><span>2. The Data Standardization component (to be embedded in data management module) is developed in Java.</span></p>\n\n<p><span>3. The Admin Website is a CMS developed using Django framework 1.6.1, Python 2.7x and PIL 1.1.7.</span></p>\n\n<p><span><strong>4.</strong> <strong>We are open to use of any technology for the back-end and data management module as far as it does not limit any specific OS requirements. Please remember that the backend will in-house algorithm obtained from Marathon Match, hence the architecture needs to be flexible to include that algorithm.</strong></span></p>\n\n<p><span>5. We plan to host the back-end and data management module along with the admin website on a single (same) server - ex. Amazon EC2 Server.</span></p>\n\n<p><span>6. Open source software resources are welcome, but they must have third party support services available.</span> Please ask in forum when in doubt.</p>\n\n<p><strong>7.&nbsp; You are allowed to use any open source DB, data storage mechanisms for storing data at various stages.</strong></p>\n\n<p><span>8. Image data is being read using <span><span><a href=\"http://www.gdal.org/\">gdal Library.</a></span></span></span> You are welcome to suggest/use other libraries but remember the component for data conversion uses this library</p>\n\n<p><strong>9. Please note that the developers are not allowed to use any component from TC Catalog for this contest.</strong></p>\n\n<p><span><span><span><span><strong><span style=\"color:#FF0000\"><span style=\"font-size:16px\">5. Resources Provided</span></span></strong></span></span></span></span></p>\n\n<p><span><span><span><span>The following resources have been provided in the forums. You will be able to access it after registration:</span></span></span></span></p>\n\n<p><span>1.) Conceptualization Document</span></p>\n\n<p><span>2.) EPA Android App Front-End and EPA Admin Website Wireframes</span></p>\n\n<p><span>3.) EPA Android App Front-End and EPA Admin Website Prototype</span></p>\n\n<p><span>4.) EPA Android App Data Standardization Design Document.</span></p>\n\n<p>5.) System Design Specification</p>\n\n<p>6.) System Architecture TCUML</p>\n\n<p>7.) Application Requirements Specification and Use Case TCUML</p>\n\n<p><strong>Please Note: In case of</strong><strong> discrepancies, the System Architecture and ARS takes precedence over all other resources as they are the most update one. Please follow them and if there is still confusion, please ask in forums.</strong><br />\n<strong>, </strong></p>\n",
+  "digitalRunPoints": 990,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30035802",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2014-05-18T18:39:00.000Z",
+  "finalSubmissionGuidelines": "<div style=\"background:#eee;border:1px solid #ccc;padding:5px 10px;\">\n<p><span><span>We want you to submit the following deliverables:</span></span></p>\n\n<ul>\n\t<li><span><span>Application Design Specification</span></span></li>\n\t<li><span><span>Sequence Diagrams</span></span></li>\n\t<li><span><span>Interface Diagrams</span></span></li>\n\t<li><span><span>ER Diagram</span></span></li>\n\t<li>Assembly Specifications</li>\n\t<li>Requirements Implementation Mapping</li>\n</ul>\n\n<p>You can refer <a href=\"http://apps.topcoder.com/wiki/display/tc/Module+Architecture+Tutorial+-+Deliverables\">here</a> to know more description on the templates and other details related to above mentioned required documents.</p>\n\n<p><span><span><span><strong>Please Note: </strong>For Section 508 compliance, this contest must follow the accessibility rules provided here: &nbsp;<a href=\"http://developer.android.com/guide/topics/ui/accessibility/index.html\" target=\"_blank\">http://developer.android.com/guide/topics/ui/accessibility/index.html</a></span></span></span></p>\n</div>\n",
+  "forumId": 19140,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=19140",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 17,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-05T11:19:00.000Z",
+      "actualStartTime": "2014-05-05T11:19:00.000Z",
+      "scheduledEndTime": "2014-05-05T11:19:00.000Z",
+      "actualendTime": "2014-05-05T11:19:00.000Z",
+      "_id": "581dbd7d550dfb3b52be54fc"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-05T11:19:00.000Z",
+      "actualStartTime": "2014-05-05T11:19:00.000Z",
+      "scheduledEndTime": "2014-05-05T16:04:00.000Z",
+      "actualendTime": "2014-05-05T16:04:00.000Z",
+      "_id": "581dbd7d550dfb3b52be54fb"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-05T16:04:00.000Z",
+      "actualStartTime": "2014-05-05T16:04:00.000Z",
+      "scheduledEndTime": "2014-05-10T04:04:00.000Z",
+      "actualendTime": "2014-05-10T04:04:00.000Z",
+      "_id": "581dbd7d550dfb3b52be54fa"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-05T16:09:00.000Z",
+      "actualStartTime": "2014-05-05T16:09:00.000Z",
+      "scheduledEndTime": "2014-05-13T16:09:00.000Z",
+      "actualendTime": "2014-05-13T16:09:00.000Z",
+      "_id": "581dbd7d550dfb3b52be54f9"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-13T16:09:00.000Z",
+      "actualStartTime": "2014-05-13T16:09:00.000Z",
+      "scheduledEndTime": "2014-05-13T18:39:00.000Z",
+      "actualendTime": "2014-05-13T18:39:00.000Z",
+      "_id": "581dbd7d550dfb3b52be54f8"
+    },
+    {
+      "type": "Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-05-13T18:39:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-05-15T18:39:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd7d550dfb3b52be54f7"
+    },
+    {
+      "type": "Appeals",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-05-15T18:39:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-05-16T18:39:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd7d550dfb3b52be54f6"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-05-16T18:39:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-05-17T06:39:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd7d550dfb3b52be54f5"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-05-17T06:39:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-05-17T18:39:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd7d550dfb3b52be54f4"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-05-17T18:39:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-05-18T18:39:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd7d550dfb3b52be54f3"
+    },
+    {
+      "type": "Final Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-05-18T18:39:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-05-19T06:39:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd7d550dfb3b52be54f2"
+    },
+    {
+      "type": "Approval",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-05-19T06:39:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-05-24T06:39:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd7d550dfb3b52be54f1"
+    },
+    {
+      "type": "Post-Mortem",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-13T18:39:00.000Z",
+      "actualStartTime": "2014-05-13T18:39:00.000Z",
+      "scheduledEndTime": "2014-05-14T16:02:00.000Z",
+      "actualendTime": "2014-05-14T16:02:00.000Z",
+      "_id": "581dbd7d550dfb3b52be54f0"
+    }
+  ],
+  "platforms": [
+    "Mobile"
+  ],
+  "postingDate": "2014-05-05T16:04:00.000Z",
+  "prize": [
+    2200,
+    1100
+  ],
+  "projectId": 6243,
+  "registrants": [
+    {
+      "handle": "xiaoruby",
+      "reliability": "13%",
+      "registrationDate": "2014-05-05T16:40:00.000Z",
+      "submissionDate": null,
+      "rating": "1133",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbd7d550dfb3b52be54ef"
+    },
+    {
+      "handle": "DanLazar",
+      "reliability": "0%",
+      "registrationDate": "2014-05-05T16:44:00.000Z",
+      "submissionDate": null,
+      "rating": "1124",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbd7d550dfb3b52be54ee"
+    },
+    {
+      "handle": "argolite",
+      "reliability": "20%",
+      "registrationDate": "2014-05-05T18:13:00.000Z",
+      "submissionDate": null,
+      "rating": "821",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd7d550dfb3b52be54ed"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "0%",
+      "registrationDate": "2014-05-05T19:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7d550dfb3b52be54ec"
+    },
+    {
+      "handle": "paolog",
+      "reliability": "1%",
+      "registrationDate": "2014-05-05T20:16:00.000Z",
+      "submissionDate": "2014-05-13T13:25:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7d550dfb3b52be54eb"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-05T22:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7d550dfb3b52be54ea"
+    },
+    {
+      "handle": "michael_tang",
+      "reliability": "0%",
+      "registrationDate": "2014-05-06T00:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7d550dfb3b52be54e9"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-06T00:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7d550dfb3b52be54e8"
+    },
+    {
+      "handle": "chuxy111",
+      "reliability": "0%",
+      "registrationDate": "2014-05-06T02:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7d550dfb3b52be54e7"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "13%",
+      "registrationDate": "2014-05-06T04:25:00.000Z",
+      "submissionDate": null,
+      "rating": "472",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd7d550dfb3b52be54e6"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-06T07:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7d550dfb3b52be54e5"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "0%",
+      "registrationDate": "2014-05-06T10:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7d550dfb3b52be54e4"
+    },
+    {
+      "handle": "BLE",
+      "reliability": "0%",
+      "registrationDate": "2014-05-07T07:17:00.000Z",
+      "submissionDate": null,
+      "rating": "1143",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbd7d550dfb3b52be54e3"
+    },
+    {
+      "handle": "ademoet",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-07T14:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7d550dfb3b52be54e2"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-05-07T15:43:00.000Z",
+      "submissionDate": null,
+      "rating": "541",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd7d550dfb3b52be54e1"
+    },
+    {
+      "handle": "BeBetter",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-09T03:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7d550dfb3b52be54e0"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-09T10:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7d550dfb3b52be54df"
+    }
+  ],
+  "registrationEndDate": "2014-05-10T04:04:00.000Z",
+  "reliabilityBonus": 440,
+  "reviewScorecardId": 30001463,
+  "reviewType": null,
+  "screeningScorecardId": 30001330,
+  "submissionEndDate": "2014-05-13T16:09:00.000Z",
+  "submissions": [
+    {
+      "handle": "paolog",
+      "placement": null,
+      "screeningScore": 30,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Failed Screening",
+      "submissionDate": "2014-05-13T13:25:00.000Z",
+      "_id": "581dbd7d550dfb3b52be54fd"
+    }
+  ],
+  "technology": [
+    "Android"
+  ]
+}

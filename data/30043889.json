@@ -1,0 +1,491 @@
+{
+  "_id": 30043889,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:07:45.339Z",
+  "appealsEndDate": "2014-07-27T05:50:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "TopCoder Direct API Setup and implement My Created Challenges API",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><strong>Project </strong><strong>Overview</strong></p>\n\n<p>In this project, we want to build the RESTful API to be used by TopCoder Direct and other TopCoder applications. The API will mainly focus on management of challenge like creating draft challenge, updating challenge, getting a list of active challenges etc. and management of direct project like creating new project, updating a project, getting project challenges.</p>\n\n<p>The project will based on Java 6 and use Spring 3.2 framework.</p>\n\n<p><strong>Challenge </strong><strong>Overview</strong></p>\n\n<p>This challenge will be the first setup of Direct API, you are required to set up the code base structure and implement a simple API for getting the challenges created by the request user.</p>\n\n<p><strong>Requirement </strong><strong>Details</strong></p>\n\n<p><strong>(1)</strong><strong><u>Set up Direct API code base structure</u></strong></p>\n\n<p>The technology requirements</p>\n\n<ul>\n\t<li>JDK version 6</li>\n\t<li>Spring version 3.2.9 &ndash; Spring MVC with Rest support will be used to implement the REST API.</li>\n\t<li>Spring Security 3.2.4 -&nbsp;<a href=\"http://projects.spring.io/spring-security/\">http://projects.spring.io/spring-security/</a></li>\n\t<li>Latest Jackson version compatible with Java 6 and Spring 3.2 (<a href=\"https://github.com/FasterXML/jackson\">https://github.com/FasterXML/jackson</a>) &ndash; for Json processing</li>\n\t<li>Log4J 1.2.5 &ndash; for logging in the API</li>\n\t<li>JUnit 4.7 &ndash; for unit testing</li>\n\t<li>Maven &ndash; for managing project dependences, build, and deploy</li>\n\t<li>Informix 11.5 &ndash; database which stores all the topcoder data</li>\n\t<li>Tomcat sever - use as the app server to host the direct API</li>\n</ul>\n\n<p>Code base structure</p>\n\n<ul>\n\t<li>Source code folder (e.g. src) to put the main codes and test codes into</li>\n\t<li>Maven build file in the top level</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p><strong>(2)</strong><strong><u>Implement API for getting my created challenges</u></strong></p>\n\n<p>The API should be /direct/v1/challenges</p>\n\n<p>It returns all the challenges created by request user. For each challenge, it should contain the common data in the following:</p>\n\n<ul>\n\t<li>Challenge name</li>\n\t<li>Challenge ID</li>\n\t<li>Challenge Type / Category</li>\n\t<li>Client Name / ID - optional</li>\n\t<li>Billing Name / ID - optional</li>\n\t<li>Direct Project Name / ID - optional, the draft challenge can have no direct project associated</li>\n\t<li>Member Cost Data\n\t<ul style=\"list-style-type:circle\">\n\t\t<li>Prizes (all the placements &ndash; from the prize table)</li>\n\t\t<li>DR points</li>\n\t</ul>\n\t</li>\n\t<li>Challenge Technologies (multiple)</li>\n\t<li>Challenge Platforms (multiple)</li>\n\t<li>Challenge Start Date / time &ndash; use the registration phase start time</li>\n\t<li>Challenge End Date / time &ndash; use the end date of last phase of the challenge</li>\n</ul>\n\n<p>The API only allow logged on user to access.</p>\n\n<p>Please configure / develop Spring Security Filter Chain by Spring Security OAuth 2.0.1 (<a href=\"http://projects.spring.io/spring-security-oauth\">http://projects.spring.io/spring-security-oauth</a>) for this API.</p>\n\n<p>The filter chain should take the authorization header from http request, use jwt (supported by Spring Security OAuth - check spring-security-oauth / spring-security-jwt)&nbsp;to verify the token and get the user handle / id from return value of jwt component.</p>\n\n<p>The API implementation should develop a utility to read the query from plain text file to string. Follow the query naming conventions&nbsp;here:&nbsp;<a href=\"https://github.com/cloudspokes/tc-api/tree/master/queries\">https://github.com/cloudspokes/tc-api/tree/master/queries</a></p>\n\n<p>The utility class should have a helper method to take the query name and find the matched file in a folder, the folder path should be configured in a property file and injected into spring configuration file.</p>\n\n<p>Please use Spring JDBC Query Template to run the query, develop Data Model and Result Mapper for this API.</p>\n\n<p>For this API, we want the filtering feature &ndash; the following filters are required:</p>\n\n<ul>\n\t<li>Type &ndash; active/past/draft</li>\n\t<li>Challenge type</li>\n\t<li>Technology (multiple)</li>\n\t<li>Platform (multiple)</li>\n\t<li>Direct Project ID</li>\n\t<li>Direct Project Name</li>\n\t<li>Challenge Status</li>\n</ul>\n\n<p>For this API, we want pagination feature &ndash; the following pagination parameters are needed:</p>\n\n<ul>\n\t<li>Page Size</li>\n\t<li>Page Number</li>\n</ul>\n\n<p>For ordering, we want to sort by challenge end date descending.</p>\n\n<p><span style=\"color:#FF0000\"><u><strong>Http Response Code and Error Handling</strong></u></span></p>\n\n<p>200 - Success</p>\n\n<p>401 - Unauthorized (anonymous&nbsp;user can&#39;t access my challenges api)</p>\n\n<p>405 - Method Not Allowed (my challenges api only support GET method)</p>\n\n<p>500 - Internal Server Error (any other errors)</p>\n\n<p><span style=\"color:#FF0000\"><u><strong>Success Response Format</strong></u></span></p>\n\n<p><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">{</span></p>\n\n<p style=\"margin-left:40px\"><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">id: &lt;backend_created_id&gt;,</span></p>\n\n<p style=\"margin-left:40px\"><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">result: {</span></p>\n\n<p style=\"margin-left:80px\"><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">success: true|false,</span></p>\n\n<p style=\"margin-left:80px\"><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">status: 200,</span></p>\n\n<p style=\"margin-left:80px\"><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">content: {id:}</span></p>\n\n<p style=\"margin-left:80px\"><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">}</span></p>\n\n<p><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">}</span></p>\n\n<p><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">status--&gt; http status code</span></p>\n\n<p><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">id --&gt; some id that is created in backend to use in future for frontend app and logging</span></p>\n\n<p><span style=\"color:#FF0000\"><u><strong><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">Error Response Format</span></strong></u></span></p>\n\n<p><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">{</span></p>\n\n<p style=\"margin-left:40px\"><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">id: &lt;backend_created_id&gt;,</span></p>\n\n<p style=\"margin-left:40px\"><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">result: {</span></p>\n\n<p style=\"margin-left:80px\"><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">success: false,</span></p>\n\n<p style=\"margin-left:80px\"><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">status: 400,</span></p>\n\n<p style=\"margin-left:80px\"><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">content: {&lt;error_message&gt;}</span></p>\n\n<p style=\"margin-left:80px\"><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">debug: {</span></p>\n\n<p style=\"margin-left:120px\"><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">detail: &lt;detailed_message&gt;</span></p>\n\n<p style=\"margin-left:120px\"><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">stackTrace: &lt;stack_trace&gt;</span></p>\n\n<p style=\"margin-left:120px\"><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">}</span></p>\n\n<p style=\"margin-left:80px\"><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">}</span></p>\n\n<p><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">}</span></p>\n\n<p><span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">status--&gt;http status code</span><br />\n<span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">id--&gt;some id that is created in backend to use in future for frontend app and logging</span><br />\n<span style=\"font-family:arial,helvetica,verdana,sans-serif; font-size:12px\">debug--&gt;debug information</span></p>\n\n<p><strong><span style=\"font-size:14px\">Environment Setup</span></strong></p>\n\n<p><font color=\"#696969\">The tomcat should be setup in your local environment for development, for the informix database, you can either setup the informix 11.5 database at your local environment or request a VM to use the informix database on VM remotely.</font></p>\n\n<h2><strong><span style=\"font-size:14px\">VM Environment:</span></strong></h2>\n\n<p><span style=\"color:rgb(105, 105, 105)\">If You need a TopCoder VM which has informix database setup</span><span style=\"color:rgb(105, 105, 105)\">&nbsp;to work on this challenge, please request the VM in the challenge forum.</span></p>\n\n<p><span style=\"color:rgb(105, 105, 105)\">Information about VM can be found below:</span></p>\n\n<p><span style=\"color:rgb(105, 105, 105)\">VM specific information is found here:&nbsp;</span><span style=\"color:rgb(105, 105, 105)\">&nbsp;</span><a href=\"http://www.topcoder.com/wiki/display/docs/VM+Image+2.5\" style=\"color: rgb(51, 51, 51); padding: 0px; margin: 0px;\"><span style=\"color:rgb(105, 105, 105)\">http://www.topcoder.com/wiki/display/docs/VM+Image+2.5</span></a><span style=\"color:rgb(105, 105, 105)\">. Upon registration as a submitter or reviewer you will need to request a VM based on the new TopCoder image. To request your image, please use the forum. Before requesting your VM, you need to ensure that you have an SSH key created and in your member profile. Instructions to do so are here:&nbsp;</span><a href=\"http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key\" style=\"color: rgb(51, 51, 51); padding: 0px; margin: 0px;\"><span style=\"color:rgb(105, 105, 105)\">http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key</span></a><span style=\"color:rgb(105, 105, 105)\">, and instructions to connect afterwards are here:&nbsp;</span><a href=\"http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key\" style=\"color: rgb(51, 51, 51); padding: 0px; margin: 0px;\"><span style=\"color:rgb(105, 105, 105)\">http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key</span></a><span style=\"color:rgb(105, 105, 105)\">.</span></p>\n",
+  "digitalRunPoints": 720,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30043889",
+  "finalFixEndDate": "2014-08-04T19:11:00.000Z",
+  "finalSubmissionGuidelines": "<ul>\n\t<li>Deployment Guide with the details on setup the local development environment</li>\n\t<li>Source Code</li>\n\t<li>Test Data</li>\n</ul>\n",
+  "forumId": 23927,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=23927",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 25,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-15T13:40:00.000Z",
+      "actualStartTime": "2014-07-15T13:40:00.000Z",
+      "scheduledEndTime": "2014-07-15T13:41:00.000Z",
+      "actualendTime": "2014-07-15T13:41:00.000Z",
+      "_id": "58133f91550dfb3b52bdf79e"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-15T13:41:00.000Z",
+      "actualStartTime": "2014-07-15T13:41:00.000Z",
+      "scheduledEndTime": "2014-07-15T15:34:00.000Z",
+      "actualendTime": "2014-07-15T15:34:00.000Z",
+      "_id": "58133f91550dfb3b52bdf79d"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-16T01:00:00.000Z",
+      "actualStartTime": "2014-07-16T01:00:00.000Z",
+      "scheduledEndTime": "2014-07-19T01:00:00.000Z",
+      "actualendTime": "2014-07-19T01:00:00.000Z",
+      "_id": "58133f91550dfb3b52bdf79c"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-16T01:05:00.000Z",
+      "actualStartTime": "2014-07-16T01:05:00.000Z",
+      "scheduledEndTime": "2014-07-22T01:00:00.000Z",
+      "actualendTime": "2014-07-22T01:00:00.000Z",
+      "_id": "58133f91550dfb3b52bdf79b"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-22T01:00:00.000Z",
+      "actualStartTime": "2014-07-22T01:00:00.000Z",
+      "scheduledEndTime": "2014-07-22T09:25:00.000Z",
+      "actualendTime": "2014-07-22T09:25:00.000Z",
+      "_id": "58133f91550dfb3b52bdf79a"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-22T09:25:00.000Z",
+      "actualStartTime": "2014-07-22T09:25:00.000Z",
+      "scheduledEndTime": "2014-07-25T21:04:00.000Z",
+      "actualendTime": "2014-07-25T21:04:00.000Z",
+      "_id": "58133f91550dfb3b52bdf799"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-25T21:04:00.000Z",
+      "actualStartTime": "2014-07-25T21:04:00.000Z",
+      "scheduledEndTime": "2014-07-26T21:04:00.000Z",
+      "actualendTime": "2014-07-26T21:04:00.000Z",
+      "_id": "58133f91550dfb3b52bdf798"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-26T21:04:00.000Z",
+      "actualStartTime": "2014-07-26T21:04:00.000Z",
+      "scheduledEndTime": "2014-07-27T05:50:00.000Z",
+      "actualendTime": "2014-07-27T05:50:00.000Z",
+      "_id": "58133f91550dfb3b52bdf797"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-27T05:50:00.000Z",
+      "actualStartTime": "2014-07-27T05:50:00.000Z",
+      "scheduledEndTime": "2014-07-28T01:52:00.000Z",
+      "actualendTime": "2014-07-28T01:52:00.000Z",
+      "_id": "58133f91550dfb3b52bdf796"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-28T01:52:00.000Z",
+      "actualStartTime": "2014-07-28T01:52:00.000Z",
+      "scheduledEndTime": "2014-07-28T21:48:00.000Z",
+      "actualendTime": "2014-07-28T21:48:00.000Z",
+      "_id": "58133f91550dfb3b52bdf795"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-28T21:48:00.000Z",
+      "actualStartTime": "2014-07-28T21:48:00.000Z",
+      "scheduledEndTime": "2014-07-29T14:56:00.000Z",
+      "actualendTime": "2014-07-29T14:56:00.000Z",
+      "_id": "58133f91550dfb3b52bdf794"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-05T17:50:00.000Z",
+      "actualStartTime": "2014-08-05T17:50:00.000Z",
+      "scheduledEndTime": "2014-08-10T17:50:00.000Z",
+      "actualendTime": "2014-08-10T17:50:00.000Z",
+      "_id": "58133f91550dfb3b52bdf793"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-29T14:56:00.000Z",
+      "actualStartTime": "2014-07-29T14:56:00.000Z",
+      "scheduledEndTime": "2014-07-30T13:45:00.000Z",
+      "actualendTime": "2014-07-30T13:45:00.000Z",
+      "_id": "58133f91550dfb3b52bdf792"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-30T13:45:00.000Z",
+      "actualStartTime": "2014-07-30T13:45:00.000Z",
+      "scheduledEndTime": "2014-07-31T10:47:00.000Z",
+      "actualendTime": "2014-07-31T10:47:00.000Z",
+      "_id": "58133f91550dfb3b52bdf791"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-31T10:47:00.000Z",
+      "actualStartTime": "2014-07-31T10:47:00.000Z",
+      "scheduledEndTime": "2014-07-31T12:47:00.000Z",
+      "actualendTime": "2014-07-31T12:47:00.000Z",
+      "_id": "58133f91550dfb3b52bdf790"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-31T12:47:00.000Z",
+      "actualStartTime": "2014-07-31T12:47:00.000Z",
+      "scheduledEndTime": "2014-08-01T12:44:00.000Z",
+      "actualendTime": "2014-08-01T12:44:00.000Z",
+      "_id": "58133f91550dfb3b52bdf78f"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-01T12:44:00.000Z",
+      "actualStartTime": "2014-08-01T12:44:00.000Z",
+      "scheduledEndTime": "2014-08-03T11:44:00.000Z",
+      "actualendTime": "2014-08-03T11:44:00.000Z",
+      "_id": "58133f91550dfb3b52bdf78e"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-03T11:44:00.000Z",
+      "actualStartTime": "2014-08-03T11:44:00.000Z",
+      "scheduledEndTime": "2014-08-04T11:37:00.000Z",
+      "actualendTime": "2014-08-04T11:37:00.000Z",
+      "_id": "58133f91550dfb3b52bdf78d"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-04T11:37:00.000Z",
+      "actualStartTime": "2014-08-04T11:37:00.000Z",
+      "scheduledEndTime": "2014-08-04T19:11:00.000Z",
+      "actualendTime": "2014-08-04T19:11:00.000Z",
+      "_id": "58133f91550dfb3b52bdf78c"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-04T19:11:00.000Z",
+      "actualStartTime": "2014-08-04T19:11:00.000Z",
+      "scheduledEndTime": "2014-08-05T17:50:00.000Z",
+      "actualendTime": "2014-08-05T17:50:00.000Z",
+      "_id": "58133f91550dfb3b52bdf78b"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2014-07-16T01:00:00.000Z",
+  "prize": [
+    1600,
+    800
+  ],
+  "projectId": 7817,
+  "registrants": [
+    {
+      "handle": "gondzo",
+      "reliability": "13%",
+      "registrationDate": "2014-07-16T01:07:00.000Z",
+      "submissionDate": "2014-07-21T22:47:00.000Z",
+      "rating": "565",
+      "colorStyle": "color: #999999",
+      "_id": "58133f91550dfb3b52bdf78a"
+    },
+    {
+      "handle": "evilkyro1965",
+      "reliability": "28%",
+      "registrationDate": "2014-07-16T01:21:00.000Z",
+      "submissionDate": null,
+      "rating": "1172",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f91550dfb3b52bdf789"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-16T02:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f91550dfb3b52bdf788"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "6%",
+      "registrationDate": "2014-07-16T02:55:00.000Z",
+      "submissionDate": null,
+      "rating": "755",
+      "colorStyle": "color: #999999",
+      "_id": "58133f91550dfb3b52bdf787"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-16T03:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f91550dfb3b52bdf786"
+    },
+    {
+      "handle": "Ghost_141",
+      "reliability": "80%",
+      "registrationDate": "2014-07-16T03:40:00.000Z",
+      "submissionDate": "2014-07-21T22:50:00.000Z",
+      "rating": "1359",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133f91550dfb3b52bdf785"
+    },
+    {
+      "handle": "suno1234",
+      "reliability": "40%",
+      "registrationDate": "2014-07-16T03:45:00.000Z",
+      "submissionDate": "2014-07-21T20:31:00.000Z",
+      "rating": "917",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f91550dfb3b52bdf784"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-07-16T06:53:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58133f91550dfb3b52bdf783"
+    },
+    {
+      "handle": "flytoj2ee",
+      "reliability": "33%",
+      "registrationDate": "2014-07-16T06:56:00.000Z",
+      "submissionDate": null,
+      "rating": "1397",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133f91550dfb3b52bdf782"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-16T07:47:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58133f91550dfb3b52bdf781"
+    },
+    {
+      "handle": "s0nl4c",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-16T09:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f91550dfb3b52bdf780"
+    },
+    {
+      "handle": "jol",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-16T10:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f91550dfb3b52bdf77f"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2014-07-16T11:37:00.000Z",
+      "submissionDate": null,
+      "rating": "1055",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f91550dfb3b52bdf77e"
+    },
+    {
+      "handle": "ngc248",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-16T14:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f91550dfb3b52bdf77d"
+    },
+    {
+      "handle": "rakeshk_87",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-16T17:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f91550dfb3b52bdf77c"
+    },
+    {
+      "handle": "schmoel",
+      "reliability": "100%",
+      "registrationDate": "2014-07-16T19:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f91550dfb3b52bdf77b"
+    },
+    {
+      "handle": "cosherx",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-16T23:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f91550dfb3b52bdf77a"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "6%",
+      "registrationDate": "2014-07-17T09:44:00.000Z",
+      "submissionDate": null,
+      "rating": "1093",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f91550dfb3b52bdf779"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-17T12:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f91550dfb3b52bdf778"
+    },
+    {
+      "handle": "OlinaRuan",
+      "reliability": "6%",
+      "registrationDate": "2014-07-17T12:47:00.000Z",
+      "submissionDate": null,
+      "rating": "1047",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f91550dfb3b52bdf777"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "13%",
+      "registrationDate": "2014-07-17T12:53:00.000Z",
+      "submissionDate": null,
+      "rating": "1457",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133f91550dfb3b52bdf776"
+    },
+    {
+      "handle": "rajeshk87",
+      "reliability": "0%",
+      "registrationDate": "2014-07-17T15:07:00.000Z",
+      "submissionDate": null,
+      "rating": "600",
+      "colorStyle": "color: #999999",
+      "_id": "58133f91550dfb3b52bdf775"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-17T18:18:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58133f91550dfb3b52bdf774"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-18T14:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f91550dfb3b52bdf773"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "0%",
+      "registrationDate": "2014-07-18T21:48:00.000Z",
+      "submissionDate": null,
+      "rating": "58",
+      "colorStyle": "color: #999999",
+      "_id": "58133f91550dfb3b52bdf772"
+    }
+  ],
+  "registrationEndDate": "2014-07-19T01:00:00.000Z",
+  "reliabilityBonus": 320,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-07-22T01:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "Ghost_141",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 88.59,
+      "finalScore": 89.33,
+      "points": 503.99999999999994,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-07-21T22:50:00.000Z",
+      "_id": "58133f91550dfb3b52bdf7a1"
+    },
+    {
+      "handle": "suno1234",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 85.72,
+      "finalScore": 85.72,
+      "points": 216,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-07-21T20:31:00.000Z",
+      "_id": "58133f91550dfb3b52bdf7a0"
+    },
+    {
+      "handle": "gondzo",
+      "placement": null,
+      "screeningScore": 0,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Failed Screening",
+      "submissionDate": "2014-07-21T22:47:00.000Z",
+      "_id": "58133f91550dfb3b52bdf79f"
+    }
+  ],
+  "technology": [
+    "Java",
+    "REST",
+    "SQL",
+    "Spring"
+  ]
+}

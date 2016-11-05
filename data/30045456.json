@@ -1,0 +1,364 @@
+{
+  "_id": 30045456,
+  "_isComplete": true,
+  "__v": 2433,
+  "_lastUpdate": "2016-11-05T11:06:12.426Z",
+  "appealsEndDate": "2014-09-09T15:49:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Document Canvas iPad iOS8 Swift App",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Cancelled - Zero Submissions",
+  "detailedRequirements": "<h2><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></h2>\n\n<p><span>Document Canvas iPad App is&nbsp;</span><span>an iPad app for concept of document canvas where user can interact with salesforce chatter files and organize them into local folders.</span></p>\n\n<p>This challenge is to build this iPad app by latest Swift programming language and iOS 8.</p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Competition Task Overview</span></h2>\n\n<p>For this challenge, the following features are required:</p>\n\n<ul style=\"margin-left:10px\">\n\t<li>Native/iPad Portrait Only/iOS 8+, &nbsp;bundle ID is com.appirio.mobile.dc</li>\n\t<li>Build by latest&nbsp;<strong><a href=\"https://developer.apple.com/xcode/downloads/\">Xcode6 beta6</a>/Swift</strong>, Use Swift as full major language anywhere possible,&nbsp;Objective-C can be used ONLY&nbsp;where Swift does not support a specific feature.</li>\n\t<li>Integrate with Salesforce Mobile SDK and Salesforce <a href=\"https://developer.salesforce.com/page/Chatter_API\">Chatter REST API</a>, we built one PoC Swift implement and you can take the winning code as reference.&nbsp;</li>\n\t<li>Chatter file download and upload functions should be&nbsp;encapsulated as two Swift scripts, which code is organized in a way that it will be simple to include into other Swift projects and reuse. Need document for usage of this two scripts.</li>\n\t<li>Offline support:&nbsp;\n\t<ul>\n\t\t<li>All feed data(non local folder/file) can be cached by SmartStore Soups&nbsp;which tie to auth lifespan, and will be re-fetch in each login.</li>\n\t\t<li>Any downloading files will be paused when device offline and auto start downloading when back to online.</li>\n\t\t<li>In offline env, any network opertaions in feed list view (refresh feed, scroll to bottom to fetch next page, download new file, logout, new post, comment, like, filter feed list) will popup alert &quot;This operation is unavailable for offline deivce&quot;. and will auto allow operate when back to online.</li>\n\t\t<li>When start the app in offline env, goto document canvas view directly.</li>\n\t</ul>\n\t</li>\n\t<li>In current phase, presume this app and device is used by single user, don&#39;t need consider multiple/different users login OAuth and offline data secure.</li>\n\t<li>Based on storyboard (Standard &amp; Retina). detail comments see &quot;UI&quot; section below.</li>\n</ul>\n\n<h3><span style=\"color:rgb(255, 0, 0)\">UI</span></h3>\n\n<ul style=\"margin-left:10px\">\n\t<li>Launch Image (Page_1)</li>\n\t<li>Login(Only required when device online): Use OAuth redirect to login salesforce then display feed list(Page_2_0), see provided code; if token expired&nbsp;in app running and request get fail, you need auto send refresh token to get new token to retry failed request.</li>\n\t<li>Chatter File Feed list (Page_2_0): <u>GET&nbsp;/chatter/feeds/files/me/feed-elements</u>\n\t<ul style=\"margin-left:10px\">\n\t\t<li>newer is on top, auto load next page when scrolling to last item.</li>\n\t\t<li>update the list by calling &quot;updatesUrl&quot;(see API) when login this app or clicking &quot;Refresh&quot; in left slidein menu.</li>\n\t\t<li>Only files types configured in the app can &quot;Move file to canvas&quot;. which should be configured in plist with both file types(images jpg/png/gif, PDF, word doc/docx, ppt/ppx, xls/xlsx) and icon image files mapping.</li>\n\t\t<li>Click &quot;Move file to canvas&quot; will start downloading file(Download_Flow.jpg), the UI will display state like Page_2_6 and then Page_2_7. you need maintain file state with its downloading/downloaded/deleted from local(same like not download).</li>\n\t\t<li>Like, Comment will go to Page_2_3, Page_2_4</li>\n\t</ul>\n\t</li>\n\t<li>Filter(Page_2_1): select one item will request file feed with the selection, default is &quot;All&quot;, others are group names for current user. No &quot;Company Feed&quot; here.</li>\n\t<li>Menu(Page_2_2): slide in/out from/to left.</li>\n\t<li>Create New Post(Page_2_5): can upload photo from gallery.</li>\n\t<li>Document Canvas(Page_3_0):\n\t<ul>\n\t\t<li>All folders/files shoud be dragable; root and all folders should be dropable.&nbsp;Regardless of &quot;My Canvas&quot; and &quot;Files from Chatter&quot;, able to DnD any and anywhere.</li>\n\t\t<li>Swipe on screen to change pages, change pagination to small dots (pagination indicator.zip) as indicator without clickable.</li>\n\t</ul>\n\t</li>\n\t<li>&quot;Files from Chatter&quot;(Page_3_0) is one temp location for downloading(with progress) and downloaded(not&nbsp;organized into canvas)&nbsp;files from chatter feed. you can search or operate on local files.</li>\n\t<li>&quot;Files from Chatter&quot; batch selection (Page_3_1), this display when toggle &quot;Select&quot; or &quot;Select All&quot;, then you can batch &quot;Move to my Canvas&quot;(Page_3_4, Page_3_5) or &quot;Delete&quot;(Page_3_2, Page_3_3), Note delete files will cancel its downloading in case and delete it from local and update its state in its file feed back to &quot;Move file to canvas&quot;.</li>\n\t<li>&quot;My Canvas&quot;: organize folders/files which downloaded and moved(drag) in my canvas. opertaions are almost same like upper,</li>\n\t<li>Single File View(Page_4): only downloaded file can open to view by system support.</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Documentation Provided</span></h2>\n\n<table style=\"border-collapse:collapse; border:2px solid rgb(153, 153, 153); font-size:12px; line-height:16px; margin:0px 0px 10px; padding:0px; vertical-align:top\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<th style=\"background-color:rgb(229, 229, 229); vertical-align:middle\"><span>File Name</span></th>\n\t\t\t<th style=\"background-color:rgb(229, 229, 229); vertical-align:middle\"><span>Note</span></th>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color:rgb(245, 245, 245); border-color:white; vertical-align:top\"><span>186250.zip</span></td>\n\t\t\t<td style=\"background-color:rgb(245, 245, 245); border-color:white; vertical-align:top\"><span>Storyboard, Standard &amp; Retina</span></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color:rgb(245, 245, 245); border-color:white; vertical-align:top\"><span>pagination indicator.zip</span></td>\n\t\t\t<td style=\"background-color:rgb(245, 245, 245); border-color:white; vertical-align:top\"><span>Pagination indicator PSD</span></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color:rgb(245, 245, 245); border-color:white; vertical-align:top\"><span>Salesforce Mobile SDK Swift Integration.zip</span></td>\n\t\t\t<td style=\"background-color:rgb(245, 245, 245); border-color:white; vertical-align:top\"><span><a href=\"http://community.topcoder.com/tc?module=ProjectDetail&amp;pj=30043293\">Proof Of Concept - Integrate Swift and Objective C and build iOS8 app with Salesforce Mobile SDK</a> winning submission, you can take this as reference how to integrate Swift with Salesforce Mobile SDK.&nbsp;<br />\n\t\t\tNote it works under Xcode6 beta2 but doesn&#39;t work under current Xcode6 beta6</span></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color:rgb(245, 245, 245); border-color:white; vertical-align:top\"><span>SFDC_Swift-build-fix-6.5.zip</span></td>\n\t\t\t<td style=\"background-color:rgb(245, 245, 245); border-color:white; vertical-align:top\"><span>This&#39;s our fix for the reference code to make it work under Xcode6 beta6</span></td>\n\t\t</tr>\n\t</tbody>\n</table>\n",
+  "digitalRunPoints": 810,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30045456",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2014-09-11T03:49:00.000Z",
+  "finalSubmissionGuidelines": "<p>&nbsp;</p>\n\n<h2><strong><span style=\"color:#FF0000\"><span>Submission Deliverables</span></span></strong></h2>\n\n<p><span style=\"font-size:12px\">A complete list of deliverables can be viewed in the TopCoder Assembly competition Tutorial at: <a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials&nbsp;</a></span></p>\n\n<p><span style=\"font-size:12px\">Below is an overview of the deliverables:</span></p>\n\n<ul>\n\t<li><span style=\"font-size:12px\">Fully implemented functionality defined by the requirements documentation.</span></li>\n\t<li><span style=\"font-size:12px\">A complete and detailed deployment documented explaining how to deploy the application including configuration information and verification.</span></li>\n</ul>\n\n<h2><span style=\"color:#FF0000\"><strong>Final Submission</strong></span></h2>\n\n<p><span style=\"font-size:12px\">For each member, the final submission should be uploaded to the Online Review Tool.</span></p>\n\n<h2>&nbsp;</h2>\n",
+  "forumId": 25002,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=25002",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 21,
+  "numberOfSubmissions": 0,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-28T14:41:00.000Z",
+      "actualStartTime": "2014-08-28T14:41:00.000Z",
+      "scheduledEndTime": "2014-08-28T14:42:00.000Z",
+      "actualendTime": "2014-08-28T14:42:00.000Z",
+      "_id": "581dbd24550dfb3b52be338a"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-28T14:42:00.000Z",
+      "actualStartTime": "2014-08-28T14:42:00.000Z",
+      "scheduledEndTime": "2014-08-28T19:49:00.000Z",
+      "actualendTime": "2014-08-28T19:49:00.000Z",
+      "_id": "581dbd24550dfb3b52be3389"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-28T19:49:00.000Z",
+      "actualStartTime": "2014-08-28T19:49:00.000Z",
+      "scheduledEndTime": "2014-08-30T19:49:00.000Z",
+      "actualendTime": "2014-08-30T19:49:00.000Z",
+      "_id": "581dbd24550dfb3b52be3388"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-28T19:54:00.000Z",
+      "actualStartTime": "2014-08-28T19:54:00.000Z",
+      "scheduledEndTime": "2014-09-05T15:49:00.000Z",
+      "actualendTime": "2014-09-05T15:49:00.000Z",
+      "_id": "581dbd24550dfb3b52be3387"
+    },
+    {
+      "type": "Screening",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-09-05T15:49:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-09-06T03:49:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd24550dfb3b52be3386"
+    },
+    {
+      "type": "Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-09-06T03:49:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-09-08T03:49:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd24550dfb3b52be3385"
+    },
+    {
+      "type": "Appeals",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-09-08T03:49:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-09-09T03:49:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd24550dfb3b52be3384"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-09-09T03:49:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-09-09T15:49:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd24550dfb3b52be3383"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-09-09T15:49:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-09-10T03:49:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd24550dfb3b52be3382"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-09-10T03:49:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-09-11T03:49:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd24550dfb3b52be3381"
+    },
+    {
+      "type": "Final Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-09-11T03:49:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-09-11T15:49:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd24550dfb3b52be3380"
+    },
+    {
+      "type": "Approval",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-09-11T15:49:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-09-16T15:49:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd24550dfb3b52be337f"
+    },
+    {
+      "type": "Post-Mortem",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-05T15:51:00.000Z",
+      "actualStartTime": "2014-09-05T15:51:00.000Z",
+      "scheduledEndTime": "2014-09-06T15:51:00.000Z",
+      "actualendTime": "2014-09-06T15:51:00.000Z",
+      "_id": "581dbd24550dfb3b52be337e"
+    }
+  ],
+  "platforms": [
+    "Salesforce.com",
+    "iOS"
+  ],
+  "postingDate": "2014-08-28T19:49:00.000Z",
+  "prize": [
+    1800,
+    900
+  ],
+  "projectId": 7984,
+  "registrants": [
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-28T20:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be337d"
+    },
+    {
+      "handle": "dojoma",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-28T22:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be337c"
+    },
+    {
+      "handle": "BLE",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-28T22:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be337b"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "6%",
+      "registrationDate": "2014-08-29T00:39:00.000Z",
+      "submissionDate": null,
+      "rating": "714",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd24550dfb3b52be337a"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "20%",
+      "registrationDate": "2014-08-29T00:44:00.000Z",
+      "submissionDate": null,
+      "rating": "950",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbd24550dfb3b52be3379"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-08-29T04:35:00.000Z",
+      "submissionDate": null,
+      "rating": "1031",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbd24550dfb3b52be3378"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-08-29T06:42:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd24550dfb3b52be3377"
+    },
+    {
+      "handle": "seriyvolk83",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-29T10:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3376"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-29T11:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3375"
+    },
+    {
+      "handle": "tongkunvwang",
+      "reliability": "0%",
+      "registrationDate": "2014-08-29T12:44:00.000Z",
+      "submissionDate": null,
+      "rating": "278",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd24550dfb3b52be3374"
+    },
+    {
+      "handle": "iversonLv",
+      "reliability": "0%",
+      "registrationDate": "2014-08-29T14:33:00.000Z",
+      "submissionDate": null,
+      "rating": "976",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbd24550dfb3b52be3373"
+    },
+    {
+      "handle": "Derwish",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-29T14:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3372"
+    },
+    {
+      "handle": "wellxchen",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-29T16:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3371"
+    },
+    {
+      "handle": "vikrambhatla83",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-29T17:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3370"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-29T21:05:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd24550dfb3b52be336f"
+    },
+    {
+      "handle": "taurus85",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-29T21:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be336e"
+    },
+    {
+      "handle": "Iris_Polaris",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-29T21:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be336d"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2014-08-29T23:29:00.000Z",
+      "submissionDate": null,
+      "rating": "895",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd24550dfb3b52be336c"
+    },
+    {
+      "handle": "supercharger",
+      "reliability": "0%",
+      "registrationDate": "2014-08-30T14:26:00.000Z",
+      "submissionDate": null,
+      "rating": "714",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd24550dfb3b52be336b"
+    },
+    {
+      "handle": "N1k1tung",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-30T15:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be336a"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-30T18:41:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd24550dfb3b52be3369"
+    }
+  ],
+  "registrationEndDate": "2014-08-30T19:49:00.000Z",
+  "reliabilityBonus": 360,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-09-05T15:49:00.000Z",
+  "submissions": [],
+  "technology": [
+    "Salesforce",
+    "Swift",
+    "Xcode",
+    "iOS"
+  ]
+}

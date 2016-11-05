@@ -1,0 +1,338 @@
+{
+  "_id": 30051795,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:41:53.711Z",
+  "appealsEndDate": "2015-11-09T17:18:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "WS1 Sample-Integration Analysis REST API [Swiftoberfest] Baton Rouge II",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><span><span><strong><em>Baton Rouge II</em></strong> is the one of several challenges to build out public facing mobile REST services on Heroku with Node.js to get Lab Transaction data from Heroku database. In this challenge we&#39;d like to extend pre-existing authentication API to build out data service that access data with existing Heroku Postgres database and provides this application data via REST API in JSON format to our mobile application.</span></span></p>\n\n<p><strong><span><span>Heroku Postgres Database</span></span></strong></p>\n\n<p><span><span>This challenge provides read only functionality to Quota, Load Details and Lab Trasaction data. Following requirements and information must be considered.</span></span></p>\n\n<ul>\n\t<li>This DB Sample/Load records get updated every day on schedule every 10min</li>\n\t<li>Data volume cosidered low 800 records per day total all tables</li>\n\t<li>Data access for this API READ ONLY</li>\n\t<li>REST Service will query <span><span>Quote and Lab Trasaction</span></span> data on demand from Heroku Postgres database</li>\n\t<li>Schema Design SQL is available as part of this challenge</li>\n\t<li>Postgres database is on Heroku and shared among all competitors (max 20 concurrent connections)</li>\n\t<li>Table need to be part of named schema: almasalesforce</li>\n</ul>\n\n<p><strong>Authorization API Required Update</strong></p>\n\n<p>Need to migrate users table from public schema to be part of almasalesforce</p>\n\n<p>Users table has new field growerid, that relates app user to grower Account record, Authorization API need to be modified to return this grower ID value as part of login request in addition to API KEY. Named value: growerid</p>\n\n<p><strong>REST Services Requirements</strong></p>\n\n<p>Services need to be versioned and available with authorization token that was created in prior challenge (Authorization Node.js code and documentation is avaialble as part of this challenge).</p>\n\n<p>Cane Quality API service</p>\n\n<ul>\n\t<li><span><span>Version endpoint &lt;heroku app base url&gt;/aps/1.0/sampledata</span></span></li>\n\t<li><span><span>method: GET</span></span></li>\n\t<li><span><span>HTTP Header parameters: APSKEY - authorization API key value</span></span></li>\n\t<li><span><span>Query parameters: growerid, date</span></span></li>\n</ul>\n\n<p>Service needs to query LabTransaction table based on Main Grower ID to get 2 recent days of samples for Yestarday &amp; Today (current date). Return a list of samples grouped in 2 sections for today and yestarday (prior day). Return all available data fields for selected records. This data will be used by mobile app to construct 2 sample lists for Yestarday/Today</p>\n\n<p>Daily Quota API service</p>\n\n<ul>\n\t<li><span><span>Version endpoint &lt;heroku app base url&gt;/aps/1.0/quota</span></span></li>\n\t<li><span><span>method: GET</span></span></li>\n\t<li><span><span>HTTP Header parameters: APSKEY - authorization API key value</span></span></li>\n\t<li><span><span>Query parameters: growerid, date</span></span></li>\n</ul>\n\n<p>Service will query table Quota based on Main Grower ID to get recent day (Today current date) quota record. Return all quota fields incluing id - primary key. Note that this record may need update form user app with Quota uopdate API.</p>\n\n<p>Daily Qiota Update API service</p>\n\n<ul>\n\t<li><span><span>Version endpoint &lt;heroku app base url&gt;/aps/1.0/quota</span></span></li>\n\t<li><span><span>method: POST</span></span></li>\n\t<li><span><span>HTTP Header parameters: APSKEY - authorization API key value</span></span></li>\n\t<li><span><span>Query parameters: quotaid, growerid, response, reason </span></span></li>\n</ul>\n\n<p>Update Quota Service enables user to accept or change the quota and provide a reason for change. Example be (bad weather cannot deliver 20 loads only 10 available). Service will update Quota quota based on quota id key and set value for response and reason. Response value will be NULL or &#39;Pending&#39; initially. When user update record it will be set to Accept, or Change and set Reson for rejection. Reason only required if grower changes the quote.</p>\n\n<p>Grower is identified by alphanumeric ID, this will also identify the app user.</p>\n\n<p>Shared DB Connection String: <em><span style=\"background-color:rgb(255, 255, 255); color:rgb(63, 63, 68); font-family:benton-sans,helvetica neue,helvetica,arial,sans-serif; font-size:14px\">postgres://vhtvypgxgvkltk:eFDbGZSihs7n_X32_kebuEpfNu@ec2-107-21-219-142.compute-1.amazonaws.com:5432/db7v1cqe49us55</span></em></p>\n\n<p>*SQL file provided to create your own copy of Postgres DB tables. Server API app needs to work with shared Heroku DB instance however due to limited connection (20) resources it is possible that it be consumed/busy. We recomend to use your wn copy of DB for development and migrate sample data from existing Postgres tables. We also provided sample data files archive to load sample data for development.</p>\n\n<p>Here are additional backup databases with sample data populated:</p>\n\n<p>DEV1: <span style=\"background-color:rgb(255, 255, 255); color:rgb(63, 63, 68); font-family:benton-sans,helvetica neue,helvetica,arial,sans-serif; font-size:14px\">postgres://hohlgkfywwltfd:8kuUUQipTENV5PP3ui1F_6oeim@ec2-54-204-15-48.compute-1.amazonaws.com:5432/d1h7ljjs54tvlb</span></p>\n\n<p><span style=\"background-color:rgb(255, 255, 255); color:rgb(63, 63, 68); font-family:benton-sans,helvetica neue,helvetica,arial,sans-serif; font-size:14px\">QA:&nbsp; postgres://cmlkbtsotpwfmy:GU5M8DK9ZjR433SKT3O90sdWtl@ec2-107-21-221-59.compute-1.amazonaws.com:5432/da6fq9fir41v9f</span></p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30051795",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<div class=\"previewMask\">\n<p><span><span><span><strong>Guidelines</strong>:</span></span></span></p>\n\n<ul>\n\t<li><span><span><span>REST API to use Node.js and <a href=\"http://expressjs.com/\">Express </a>framework</span></span></span></li>\n\t<li><span><span><span>Authentication use Node.js <a href=\"http://passportjs.org/\">Passport</a> framework</span></span></span></li>\n\t<li><span><span><span>document REST API with&nbsp;<a href=\"http://apiary.io/\">Apiary</a></span></span></span></li>\n\t<li><span><span><span>Deployment on <a href=\"https://www.heroku.com/home\">Heroku platform</a></span></span></span></li>\n\t<li><span><span><span>Postgres DB - Heroku addon</span></span></span></li>\n</ul>\n\n<h4><span><span><span><strong>Setup</strong>:</span></span></span></h4>\n\n<ul>\n\t<li><span><span><span>Send an email to <a href=\"mailto:igor@appirio.com?subject=Project%20Almasato&amp;body=Hi%21%20%0APlease%20add%20me%20to%20Project%20Almasato.%20My%20GitLab%20handle%20is%3A%20\">takumi3t9</a> and request to be added to the GitLabs Project Almasato Team</span></span></span></li>\n\t<li><span><span><span>Once added to the team for the Almasato repository, fork the repository, after the submission phase completes, make a merge request with your submission to&nbsp;<a href=\"https://gitlab.com/Almasato/BatonRouge/tree/BatonRouge2\">this branch</a></span></span></span></li>\n\t<li><span><span><span>Upload documentation for how to run your submission</span></span></span></li>\n\t<li><span><span><span>Upload all your source code as a zip</span></span></span></li>\n\t<li><span><span><span><span><span style=\"font-family:arial,helvetica,sans-serif\"><span>Provide a video overview of your submission</span></span></span></span></span></span></li>\n</ul>\n</div>\n</div>\n",
+  "forumId": 30903,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=30903",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 24,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-30T19:00:00.000Z",
+      "actualStartTime": "2015-10-30T19:00:00.000Z",
+      "scheduledEndTime": "2015-11-06T13:55:00.000Z",
+      "actualendTime": "2015-11-06T13:55:00.000Z",
+      "_id": "581355a1550dfb3b52c4f67d"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-30T19:05:00.000Z",
+      "actualStartTime": "2015-10-30T19:05:00.000Z",
+      "scheduledEndTime": "2015-11-06T13:55:00.000Z",
+      "actualendTime": "2015-11-06T13:55:00.000Z",
+      "_id": "581355a1550dfb3b52c4f67c"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-06T13:55:00.000Z",
+      "actualStartTime": "2015-11-06T13:55:00.000Z",
+      "scheduledEndTime": "2015-11-08T13:55:00.000Z",
+      "actualendTime": "2015-11-08T13:55:00.000Z",
+      "_id": "581355a1550dfb3b52c4f67b"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-08T13:55:00.000Z",
+      "actualStartTime": "2015-11-08T13:55:00.000Z",
+      "scheduledEndTime": "2015-11-09T06:10:00.000Z",
+      "actualendTime": "2015-11-09T06:10:00.000Z",
+      "_id": "581355a1550dfb3b52c4f67a"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-09T06:10:00.000Z",
+      "actualStartTime": "2015-11-09T06:10:00.000Z",
+      "scheduledEndTime": "2015-11-09T17:18:00.000Z",
+      "actualendTime": "2015-11-09T17:18:00.000Z",
+      "_id": "581355a1550dfb3b52c4f679"
+    }
+  ],
+  "platforms": [
+    "Heroku"
+  ],
+  "postingDate": "2015-10-30T19:00:00.000Z",
+  "prize": [
+    1000,
+    600
+  ],
+  "projectId": 9223,
+  "registrants": [
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-30T19:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f678"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-30T21:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f677"
+    },
+    {
+      "handle": "Urmass",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-30T22:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f676"
+    },
+    {
+      "handle": "NikhilKalige",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-30T22:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f675"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-31T05:01:00.000Z",
+      "submissionDate": "2015-11-04T04:01:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f674"
+    },
+    {
+      "handle": "halceyon",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-31T02:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f673"
+    },
+    {
+      "handle": "zsudraco",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-31T02:39:00.000Z",
+      "submissionDate": "2015-11-04T17:51:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f672"
+    },
+    {
+      "handle": "sribharathi1427",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-31T07:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f671"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-31T09:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f670"
+    },
+    {
+      "handle": "diogenesjcs",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-31T16:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f66f"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-01T04:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f66e"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-01T14:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f66d"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-01T16:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f66c"
+    },
+    {
+      "handle": "hash3r",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-01T16:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f66b"
+    },
+    {
+      "handle": "rakeshk_87",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-01T19:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f66a"
+    },
+    {
+      "handle": "jaindsonvs",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-01T20:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f669"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-02T02:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f668"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-02T02:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f667"
+    },
+    {
+      "handle": "tpabla",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-02T07:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f666"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-02T08:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f665"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-03T01:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f664"
+    },
+    {
+      "handle": "DHEERAJSONI",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-03T09:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f663"
+    },
+    {
+      "handle": "vimrc",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-05T01:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f662"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-06T07:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f661"
+    }
+  ],
+  "registrationEndDate": "2015-11-06T13:55:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-11-06T13:55:00.000Z",
+  "submissions": [
+    {
+      "handle": "zsudraco",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 87.5,
+      "finalScore": 90,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-11-04T17:51:00.000Z",
+      "_id": "581355a1550dfb3b52c4f67f"
+    },
+    {
+      "handle": "peakpado",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 83.75,
+      "finalScore": 87.5,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-04T04:01:00.000Z",
+      "_id": "581355a1550dfb3b52c4f67e"
+    }
+  ],
+  "technology": [
+    "Node.js",
+    "PostgreSQL",
+    "REST"
+  ]
+}

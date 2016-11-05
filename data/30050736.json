@@ -1,0 +1,492 @@
+{
+  "_id": 30050736,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T11:00:22.890Z",
+  "appealsEndDate": "2015-07-24T18:15:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "CrowdExchange Visualforce Development - Stories and Activities",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p>Topcoder is helping a client develop an internal crowdsourcing solution -- CrowdExchange. &nbsp;Publishers in this community will create Stories and Activities in the system which represent software development tasks which need to be completed. &nbsp;Members, the software developers, will log into the system, search to find activities they are interested in, and register to complete the tasks. &nbsp;After registering, a Member will submit zip files containing their submissions and the Publishers will review and score the work completed. &nbsp;In some ways, this community will work very much like Topcoder itself.&nbsp;</p>\n\n<p>In previous challenges, we&#39;ve laid a lot of the groundwork for this application. &nbsp;We&#39;ve developed Apex-based services for creating and maintaining Stories and Activities. &nbsp;We&#39;ve also developed workflow code to manage the lifecycle of a task as it moves to completion. &nbsp;And last, but certainly not least, our topcoder design and prototype community has produced a very appealing design and web site for this application. &nbsp;Now, we&#39;re going to put all the pieces together and a create a Salesforce.com Community Site by taking the given designs and implementing the functionality captured in the html pages. &nbsp;You will be using Javascript, Visualforce and Apex to tie the current prototype to the Force.com platform.</p>\n\n<p>In this challenge you are responsible for implementing the following html pages in Visualforce/Apex:</p>\n\n<p>1. member-stories.html&nbsp;<br />\n2. member-story-details.html<br />\n3. publisher-stories.html<br />\n4. publisher-story-details.html<br />\n5. publisher-create-story-step1.html<br />\n6. publisher-create-story-step2.html<br />\n7. publisher-create-story-step3.html<br />\n8. publisher-add-activity.html<br />\n9. publisher-activity-details-assign-register.html<br />\n10. publisher-activity-details-competition-review.html</p>\n\n<p><br />\nNotes:</p>\n\n<p>Members and Publishers are going to be identified by a field on the User Object: &nbsp;Crowd_Exchange_User_Type__c. &nbsp;The values here will be: None, Member, or Publisher. &nbsp;There will be Permission Sets associated with each of the user types.</p>\n\n<p>Our milestones and Activity Statuses have been updated since these html prototypes where prepared. &nbsp; We now have the following milestones:</p>\n\n<p>Publish Date -- date that activity is made public and is visible to members and other publishers on the site.<br />\nStart Date -- date that activity is available for registration<br />\nRegistration Date -- due date for member registration<br />\nAssignment Date -- due date for publisher to assign a registered member to activity<br />\nSubmission Date -- due date for assigned member to submit code&nbsp;<br />\nReview Date -- due date for publisher to review submission<br />\nAcceptance Date -- date the publisher accepts submission<br />\nEnd Date -- date the activity is either completed or canceled.</p>\n\n<p>The milestones are displayed as the &quot;Timeline&quot; on our Activity detail and creation screens. A script is attached to insert the milestones into the milestone table -- milestones.txt. &nbsp;In addition to a few new milestones, there is some logic in how the milestones are displayed in the system. &nbsp;Not all the milestones will be shown/displayed on every page. &nbsp;We don&#39;t want users to be overwhelmed by entering dates for the milestones that are basically system determined. &nbsp;There is a flag on the milestone table -- Display_In_Initial_Setup__c -- which will determine if a particular milestone is visible. &nbsp;There are also default time durations with each milestone so we can publish default dates in the system and estimate when the activity workflow will complete. &nbsp;This should save users some keystrokes when updating dates in the system. &nbsp;A flow diagram is attached which outlines the workflow of the system in graphical form.</p>\n\n<p>All pages - You should implement the header and footer of each page as common components that can be included in all the pages listed below but the links to the Dashboard, Help, Search, Notifications, and Profile as well as the footer links can be dead links for now since those pages haven&#39;t been created yet.</p>\n\n<p>member-stories/publisher-stories<br />\n1. These two pages can be implemented as one page in Visualforce. &nbsp;All members and all publishers in the system can see all the stories/activities in the system that are not in draft status. &nbsp;<br />\n2. &nbsp;The text/field &quot;Stage&quot; should be relabelled &quot;Phase&quot;. &nbsp;This maps to the Activity__c.Status__c field. &nbsp;<br />\n3. &nbsp;Please implement filtering functionality on the page.</p>\n\n<p>member-activity-details-assigned.html<br />\n1. &nbsp;Do not implement the &quot;Submit&quot; button which will allow members to submit code to the application. &nbsp;We&#39;ll implement this in subsequent challenges. &nbsp;<br />\n2. &nbsp;We need to add an entry to the &quot;Importance&quot; key which shows the weight of each requirement with an associated color image. &nbsp;We actually are going to have 4 importance weightings - Critical, High, Normal, and Low.<br />\n3. &nbsp;You should implement the Activity Details, Registrants, and Chatter tabs of the Activity detail pages. &nbsp;The submission tab will be implemented in a subsequent challenge.<br />\n4. &nbsp;Members should be able to register for a challenge. &nbsp;The creates an entry in the Registration__c table.</p>\n\n<p>publisher-add-activity.html<br />\n1. Only milestones which have Display_In_Initial_Setup__c should be shown in the timeline.&nbsp;<br />\n2. The text label &quot;TimeLine&quot; should be updated to &quot;Timeline&quot;. &nbsp;<br />\n3. The &quot;Code Types&quot; text should be updated to &quot;Skills Requested&quot;. &nbsp;Entries in the Skill Requested tags should result in records being inserted into the ActivitySkills table. &nbsp;We have created a method to do this in the ActivityService class/interface. &nbsp;<br />\n4. The &quot;Add Activity via Copy&quot; can be a dead link for now. &nbsp;You do not need to implement this.</p>\n\n<p>publisher-create-story-step2.html&nbsp;<br />\n1. Only milestones which have Display_In_Initial_Setup__c should be shown in the timeline on this page.&nbsp;<br />\n2. The text label &quot;TimeLine&quot; should be updated to &quot;Timeline&quot;. &nbsp;<br />\n3. The &quot;Code Types&quot; text should be updated to &quot;Skills Requested&quot;. &nbsp;Entries in the Skill Requested tags should result in records being inserted into the ActivitySkills table. &nbsp;We have created a method to do this in the ActivityService class/interface. &nbsp;<br />\n4. Dates should be defaulted in the Timeline date field using dates derived by taking the current date and adding the days based on the value in the Milestones.Default_Time_Period__c field for the particular milestone.</p>\n\n<p>publisher-story-details.html<br />\n1. &quot;Edit Activity&quot; link should be disabled for publishers after the Submission Date deadline. &nbsp;&quot;Complete Activity&quot; text should be changed to &quot;Accept Submission&quot;. &nbsp;<br />\n2. The &quot;Accept Submission&quot; link should be disabled until after all reviews are complete. &nbsp;There is an Activity Status, &quot;Review Complete&quot;, which corresponds to this state. &nbsp;Clicking &quot;Accept Submission&quot; should change the status of the activity to &quot;Complete&quot; effectively closing an activity. &nbsp;&nbsp;<br />\n3. On this page, all Activity Milestones should be shown regardless of the Milestone.Display_In_Initial_Setup__c flag. &nbsp;<br />\n4. The label &nbsp;&quot;Time Line&quot; should be updated to &quot;Timeline&quot;. &nbsp;<br />\n5. Do not implement the &quot;Submissions&quot; tab of publisher-story-details.html. &nbsp;We&#39;ll implement that in a later challenge. &nbsp;<br />\n6. We need to add an entry to the &quot;Importance&quot; key which shows the weight of each requirement. &nbsp;We actually are going to have 4 importance weightings - Critical, High, Normal, and Low.<br />\n7. You should implement the Activity Details, Registrants, Recommended Members and Chatter tabs of the Activity detail pages.<br />\n8. &nbsp;Recommended Members should provide a list of members based on matching the skills of the Activity with the skills of our Members. &nbsp;This is a simple text search on Skill names between the ActivitySkills and UserSkills.<br />\n9. &nbsp;Publishers should be able to see registrants and performing assignment by selecting one of the registered members for an activity.</p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p><br />\n&nbsp;</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30050736",
+  "finalSubmissionGuidelines": "<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span>Your submission should be based on the data model and previously written code provided in the attached managed package link: &nbsp;</span></span><a href=\"https://login.salesforce.com/packaging/installPackage.apexp?p0=04t1a000000VISe\" id=\"ExportPackageDetailPage:theForm:versionDetailBlock:j_id135:j_id136:pkgInstallUrl\" name=\"ExportPackageDetailPage:theForm:versionDetailBlock:j_id135:j_id136:pkgInstallUrl\" style=\"color: rgb(0, 0, 0); font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: normal; background-color: rgb(255, 255, 255);\">https://login.salesforce.com/packaging/installPackage.apexp?p0=04t1a000000VISe</a><span><span>. &nbsp;Further c</span><span>hanges to the data model are allowed/expected as not every update in the UI may have been captured in the data model. &nbsp;However, forum posts are strongly encouraged to discuss pros and cons of various schema configurations. &nbsp;Please document your schema changes in the written documentation requested below.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span>You may submit your code either as an unmanaged package link or as metadata files for deployment by the Force.com Deployment tool. &nbsp; Please include all necessary libraries and dependencies to build and run your code. &nbsp;</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span>Please submit written documentation for your submission. &nbsp;Changes to the data model should be highlighted.</span></p>\n\t</li>\n\t<li dir=\"ltr\"><span>Please validate that all your tests run without errors. &nbsp;You might need to include code which manages data dependencies with your tests.</span><br />\n\t&nbsp;</li>\n\t<li dir=\"ltr\"><span>There are several attachments to this challenge. &nbsp;The protoype html code is included in the prototype.zip file along with text files to execute anonymous Apex to create milestones and some skills. &nbsp;In addition, there is a workflow diagram which outlines the process flow for Activities.&nbsp;</span></li>\n</ul>\n",
+  "forumId": 29895,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=29895",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 40,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-07-13T22:00:00.000Z",
+      "actualStartTime": "2015-07-13T22:00:00.000Z",
+      "scheduledEndTime": "2015-07-19T13:01:00.000Z",
+      "actualendTime": "2015-07-19T13:01:00.000Z",
+      "_id": "58132fc6550dfb3b52b8b3c0"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-07-13T22:05:00.000Z",
+      "actualStartTime": "2015-07-13T22:05:00.000Z",
+      "scheduledEndTime": "2015-07-21T12:59:00.000Z",
+      "actualendTime": "2015-07-21T12:59:00.000Z",
+      "_id": "58132fc6550dfb3b52b8b3bf"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-07-21T12:59:00.000Z",
+      "actualStartTime": "2015-07-21T12:59:00.000Z",
+      "scheduledEndTime": "2015-07-23T12:51:00.000Z",
+      "actualendTime": "2015-07-23T12:51:00.000Z",
+      "_id": "58132fc6550dfb3b52b8b3be"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-07-23T12:51:00.000Z",
+      "actualStartTime": "2015-07-23T12:51:00.000Z",
+      "scheduledEndTime": "2015-07-24T12:51:00.000Z",
+      "actualendTime": "2015-07-24T12:51:00.000Z",
+      "_id": "58132fc6550dfb3b52b8b3bd"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-07-24T12:51:00.000Z",
+      "actualStartTime": "2015-07-24T12:51:00.000Z",
+      "scheduledEndTime": "2015-07-24T18:15:00.000Z",
+      "actualendTime": "2015-07-24T18:15:00.000Z",
+      "_id": "58132fc6550dfb3b52b8b3bc"
+    }
+  ],
+  "platforms": [
+    "Salesforce.com",
+    "Force.com"
+  ],
+  "postingDate": "2015-07-13T22:00:00.000Z",
+  "prize": [
+    1800,
+    900
+  ],
+  "projectId": 8853,
+  "registrants": [
+    {
+      "handle": "elkhawajah",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T00:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3bb"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T02:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3ba"
+    },
+    {
+      "handle": "JStasio",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T02:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3b9"
+    },
+    {
+      "handle": "forcedevp",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T02:57:00.000Z",
+      "submissionDate": "2015-07-21T09:49:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3b8"
+    },
+    {
+      "handle": "dvakulishin",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T03:22:00.000Z",
+      "submissionDate": "2015-07-21T10:34:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3b7"
+    },
+    {
+      "handle": "krishna_b",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T04:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3b6"
+    },
+    {
+      "handle": "Colinh84",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T05:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3b5"
+    },
+    {
+      "handle": "Tanay.Barman",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T05:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3b4"
+    },
+    {
+      "handle": "iamjeerge",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T05:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3b3"
+    },
+    {
+      "handle": "pbforce",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T06:30:00.000Z",
+      "submissionDate": "2015-07-21T12:43:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3b2"
+    },
+    {
+      "handle": "varun_tiwari",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T06:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3b1"
+    },
+    {
+      "handle": "abhiOnCloud",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T08:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3b0"
+    },
+    {
+      "handle": "helperyadav",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T07:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3af"
+    },
+    {
+      "handle": "ilfil",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T08:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3ae"
+    },
+    {
+      "handle": "DanyOnForce",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T08:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3ad"
+    },
+    {
+      "handle": "swati_gour",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T08:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3ac"
+    },
+    {
+      "handle": "chok68",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T08:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3ab"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T08:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3aa"
+    },
+    {
+      "handle": "snehaheda",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T09:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3a9"
+    },
+    {
+      "handle": "tohar999",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T10:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3a8"
+    },
+    {
+      "handle": "ravi0389",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T11:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3a7"
+    },
+    {
+      "handle": "brunch",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T12:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3a6"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T13:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3a5"
+    },
+    {
+      "handle": "Ganesh_Madhu",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T16:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3a4"
+    },
+    {
+      "handle": "cyberforce",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T17:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3a3"
+    },
+    {
+      "handle": "devsforce",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T18:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3a2"
+    },
+    {
+      "handle": "sfdcdev11981",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-14T23:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3a1"
+    },
+    {
+      "handle": "tanmayeshpande",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-15T02:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b3a0"
+    },
+    {
+      "handle": "jayjays",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-16T05:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b39f"
+    },
+    {
+      "handle": "ngire",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-15T14:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b39e"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-15T06:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b39d"
+    },
+    {
+      "handle": "Em_Hamza",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-15T09:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b39c"
+    },
+    {
+      "handle": "ChenXiaoTemp",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-15T12:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b39b"
+    },
+    {
+      "handle": "szy2015",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-15T16:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b39a"
+    },
+    {
+      "handle": "rahuls91221",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-15T18:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b399"
+    },
+    {
+      "handle": "darkwater",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-15T19:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b398"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-16T06:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b397"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-17T10:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b396"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-18T14:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b395"
+    },
+    {
+      "handle": "DHEERAJSONI",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-18T15:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc6550dfb3b52b8b394"
+    }
+  ],
+  "registrationEndDate": "2015-07-19T13:01:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-07-21T12:59:00.000Z",
+  "submissions": [
+    {
+      "handle": "dvakulishin",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 83.75,
+      "finalScore": 83.75,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-07-21T10:34:00.000Z",
+      "_id": "58132fc6550dfb3b52b8b3c3"
+    },
+    {
+      "handle": "forcedevp",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 78.75,
+      "finalScore": 80.63,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-07-21T09:49:00.000Z",
+      "_id": "58132fc6550dfb3b52b8b3c2"
+    },
+    {
+      "handle": "pbforce",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 40,
+      "finalScore": 40,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-07-21T12:43:00.000Z",
+      "_id": "58132fc6550dfb3b52b8b3c1"
+    }
+  ],
+  "technology": [
+    "Apex",
+    "HTML",
+    "JavaScript",
+    "Salesforce",
+    "Visualforce",
+    "jQuery"
+  ]
+}

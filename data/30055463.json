@@ -1,0 +1,268 @@
+{
+  "_id": 30055463,
+  "_isComplete": true,
+  "__v": 2380,
+  "_lastUpdate": "2016-11-05T11:03:36.384Z",
+  "appealsEndDate": "2016-10-16T15:33:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Fast 48hrs!! Topcoder Direct - Make Forum Creation Optional",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Cancelled - Failed Review",
+  "detailedRequirements": "When testing&nbsp;tc direct project service by integrating with direct app, we found it is very slow to create a new project, check the following logs.<br />\n<br />\n<span style=\"font-size:10px\">14:12:30,239 INFO &nbsp;[STDOUT] Enter into method [ProjectServiceBean#createProject(TCSubject, ProjectData)]<br />\n14:12:30,239 INFO &nbsp;[STDOUT] Parameters: project data: 8547899:<br />\n14:12:30,239 INFO &nbsp;[STDOUT] Parameters: project data: {1}<br />\n14:12:30,290 INFO &nbsp;[STDOUT] Returns: &lt;project id: 11009, name: Tony Test 2, description: s fsddsfsdfsdf sdf dsf , statusId: 1, forum category id: null, project type:No Project Type, project category:No Project Category, fixed bug contest fee:N/A, percentage bug contest fee:N/A, completion date:Not completed&gt;<br />\n14:12:30,290 INFO &nbsp;[STDOUT] Exit into method [ProjectServiceBean#createProject(ProjectData)]<br />\n14:12:30,291 INFO &nbsp;[STDOUT] [Enter method: PermissionServiceBean.getPermissions(userid, resourceId)]<br />\n14:12:30,291 INFO &nbsp;[STDOUT] [param1: 8,547,899, param2: 11,009]<br />\n14:12:30,299 INFO &nbsp;[STDOUT] [Exit method: getPermissions(userid, resourceId)]<br />\n14:12:30,299 INFO &nbsp;[STDOUT] [Enter method: PermissionServiceBean.addPermission(permission)]<br />\n14:12:30,299 INFO &nbsp;[STDOUT] [param1: null]<br />\n14:12:30,306 INFO &nbsp;[STDOUT] [Exit method: addPermission(permission)]<br />\n14:12:30,306 INFO &nbsp;[STDOUT] Enter into method [ProjectServiceBean#getProject(tcSubject, long)]<br />\n14:12:30,307 INFO &nbsp;[STDOUT] Parameters: current user id: 8,547,899<br />\n14:12:30,307 INFO &nbsp;[STDOUT] Parameters: project id: 11,009<br />\n14:12:30,307 INFO &nbsp;[STDOUT] Returns: &lt;project id: 11009, name: Tony Test 2, description: s fsddsfsdfsdf sdf dsf , statusId: 1, forum category id: null, project type:No Project Type, project category:No Project Category, fixed bug contest fee:N/A, percentage bug contest fee:N/A, completion date:Not completed&gt;<br />\n14:12:30,307 INFO &nbsp;[STDOUT] Exit into method [ProjectServiceBean#getProject(long)]<br />\n14:12:35,793 INFO &nbsp;[STDOUT] [Enter method: PermissionServiceBean.getPermissionsByProject(resourceId)]<br />\n14:12:35,793 INFO &nbsp;[STDOUT] [param1: 11,009]<br />\n14:12:35,817 INFO &nbsp;[STDOUT] [Exit method: getPermissionsByProject(resourceId)]<br />\n14:12:36,038 INFO &nbsp;[STDOUT] Enter into method [ProjectServiceBean#updateProject(TCSubject, ProjectData)]<br />\n14:12:36,038 INFO &nbsp;[STDOUT] Parameters: project data: 8,547,899<br />\n14:12:36,038 INFO &nbsp;[STDOUT] Parameters: project data: {1}<br />\n14:12:36,050 INFO &nbsp;[STDOUT] Exit into method [ProjectServiceBean#updateProject(ProjectData)]<br />\n14:12:36,051 INFO &nbsp;[STDOUT] [Enter method: UserServiceBean.getUserHandle(8547899)]<br />\n14:12:36,051 INFO &nbsp;[STDOUT] [param1: 8,547,899]<br />\n14:12:36,058 INFO &nbsp;[STDOUT] [Exit method: getUserHandle(userid)]<br />\n<br />\n<span style=\"font-size:14px\">If you dive into the code (</span></span><a href=\"https://github.com/appirio-tech/direct-app/blob/dev/services/project_service_facade/src/java/main/com/topcoder/service/facade/project/ejb/ProjectServiceFacadeBean.java#L526\">https://github.com/appirio-tech/direct-app/blob/dev/services/project_service_facade/src/java/main/com/topcoder/service/facade/project/ejb/ProjectServiceFacadeBean.java#L526</a><span style=\"font-size:10px\"><span style=\"font-size:14px\">), you can see the big slowness is at</span><br />\n<br />\n14:12:30,307 INFO &nbsp;[STDOUT] Exit into method [ProjectServiceBean#getProject(long)]</span><br />\n<span style=\"font-size:10px\">14:12:35,793 INFO &nbsp;[STDOUT] [Enter method: PermissionServiceBean.getPermissionsByProject(resourceId)]<br />\n<br />\n<span style=\"font-size:14px\">which is related to the code block here&nbsp;</span></span><a href=\"https://github.com/appirio-tech/direct-app/blob/dev/services/project_service_facade/src/java/main/com/topcoder/service/facade/project/ejb/ProjectServiceFacadeBean.java#L983-L1010\">https://github.com/appirio-tech/direct-app/blob/dev/services/project_service_facade/src/java/main/com/topcoder/service/facade/project/ejb/ProjectServiceFacadeBean.java#L983-L1010</a><br />\n<br />\nSo we&#39;d like to support a way to create project without creating forum.<br />\n<br />\nFollowing are the expected to way to proceed.<br />\n<br />\n1. Update&nbsp;<a href=\"https://github.com/appirio-tech/direct-app/blob/dev/services/project_service_facade/src/java/main/com/topcoder/service/facade/project/ProjectServiceFacade.java\">https://github.com/appirio-tech/direct-app/blob/dev/services/project_service_facade/src/java/main/com/topcoder/service/facade/project/ProjectServiceFacade.java</a>&nbsp;by adding a new method, which can be used to call to create project without creating forum. Please refactor existing <u>createProject</u> method if we can reuse it and add this option in. <span style=\"color:#FF0000\">Notes, the existing functionality in direct app should not be affected.</span><br />\n2. Update the implementation in <u>project service facade service</u>.<br />\n3. Fork&nbsp;<a href=\"https://github.com/appirio-tech/temp-maven-repo\">https://github.com/appirio-tech/temp-maven-repo</a>, then&nbsp;Build a new project_service_facade.jar and install to it.<br />\n4. Update tc-direct-project-service to use your fork instead (see&nbsp;<a href=\"https://github.com/appirio-tech/temp-maven-repo/blob/master/README.md\">https://github.com/appirio-tech/temp-maven-repo/blob/master/README.md</a>) and update the logic in (src/main/java/com/topcoder/service/project/manager/ProjectManager.java) to call the corresponding method to create project without creating forum.<br />\n<br />\n<u>About Testing</u><br />\n1. For testing, it is actually impossible to test really forum creation, so you need to add debug logging to demonostrate instead of real call in (<a href=\"https://github.com/appirio-tech/direct-app/blob/dev/services/project_service_facade/src/java/main/com/topcoder/service/facade/project/ejb/ProjectServiceFacadeBean.java#L969\">https://github.com/appirio-tech/direct-app/blob/dev/services/project_service_facade/src/java/main/com/topcoder/service/facade/project/ejb/ProjectServiceFacadeBean.java#L969</a>)<br />\n2. To run direct app locally, you can follow&nbsp;<a href=\"https://github.com/appirio-tech/tc-common-tutorials/tree/master/docker/direct-app\">https://github.com/appirio-tech/tc-common-tutorials/tree/master/docker/direct-app</a>&nbsp;to build and run<br />\n3. After running direct app locally in docker, you can run the tc direct project service locally by hooking with the direct app in docker, and use POSTMan to send create project request for testing (see docs directory for reference).<br />\n<br />\n<u>Winner Responsibility</u><br />\n<br />\nWinner will be responsible to create the PRs for merging.<br />\n<br />\n1. PR for direct app<br />\n2. PR for&nbsp;temp-maven-repo<br />\n3. PR for tc-direct-project-service (this will be done internally since it is private, but winner will help with any merging problem)<br />\n<br />\n<br />\n<br />\n<br />\n<br />\n&nbsp;",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30055463",
+  "finalSubmissionGuidelines": "- Code change for new feature.<br />\n- Deployment and Verification Steps",
+  "forumId": 34255,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=34255",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 18,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-10-13T03:51:00.000Z",
+      "actualStartTime": "2016-10-13T03:51:00.000Z",
+      "scheduledEndTime": "2016-10-15T03:51:00.000Z",
+      "actualendTime": "2016-10-15T03:51:00.000Z",
+      "_id": "581dbc88550dfb3b52be011f"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-10-13T03:56:00.000Z",
+      "actualStartTime": "2016-10-13T03:56:00.000Z",
+      "scheduledEndTime": "2016-10-15T03:51:00.000Z",
+      "actualendTime": "2016-10-15T03:51:00.000Z",
+      "_id": "581dbc88550dfb3b52be011e"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-10-15T03:51:00.000Z",
+      "actualStartTime": "2016-10-15T03:51:00.000Z",
+      "scheduledEndTime": "2016-10-16T03:39:00.000Z",
+      "actualendTime": "2016-10-16T03:39:00.000Z",
+      "_id": "581dbc88550dfb3b52be011d"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-10-16T03:40:00.000Z",
+      "actualStartTime": "2016-10-16T03:40:00.000Z",
+      "scheduledEndTime": "2016-10-16T08:35:00.000Z",
+      "actualendTime": "2016-10-16T08:35:00.000Z",
+      "_id": "581dbc88550dfb3b52be011c"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-10-16T08:35:00.000Z",
+      "actualStartTime": "2016-10-16T08:35:00.000Z",
+      "scheduledEndTime": "2016-10-16T15:33:00.000Z",
+      "actualendTime": "2016-10-16T15:33:00.000Z",
+      "_id": "581dbc88550dfb3b52be011b"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-10-13T03:51:00.000Z",
+  "prize": [
+    250,
+    150
+  ],
+  "projectId": 7817,
+  "registrants": [
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-13T04:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc88550dfb3b52be011a"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-13T04:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc88550dfb3b52be0119"
+    },
+    {
+      "handle": "jorje.b",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-13T05:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc88550dfb3b52be0118"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-13T05:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc88550dfb3b52be0117"
+    },
+    {
+      "handle": "ananthhh",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-13T05:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc88550dfb3b52be0116"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-13T06:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc88550dfb3b52be0115"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-13T10:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc88550dfb3b52be0114"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-13T15:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc88550dfb3b52be0113"
+    },
+    {
+      "handle": "mehblahwhatever",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-13T18:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc88550dfb3b52be0112"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-13T19:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc88550dfb3b52be0111"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-13T22:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc88550dfb3b52be0110"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-14T00:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc88550dfb3b52be010f"
+    },
+    {
+      "handle": "deas",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-14T09:31:00.000Z",
+      "submissionDate": "2016-10-15T03:13:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc88550dfb3b52be010e"
+    },
+    {
+      "handle": "ptarunn",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-14T13:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc88550dfb3b52be010d"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-14T16:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc88550dfb3b52be010c"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-14T17:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc88550dfb3b52be010b"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-15T03:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc88550dfb3b52be010a"
+    },
+    {
+      "handle": "chandrasekhar.d",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-15T02:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc88550dfb3b52be0109"
+    }
+  ],
+  "registrationEndDate": "2016-10-15T03:51:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-10-15T03:51:00.000Z",
+  "submissions": [
+    {
+      "handle": "deas",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 75,
+      "finalScore": 75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-10-15T03:13:00.000Z",
+      "_id": "581dbc88550dfb3b52be0120"
+    }
+  ],
+  "technology": [
+    "Docker",
+    "Java",
+    "REST"
+  ]
+}

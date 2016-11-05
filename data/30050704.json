@@ -1,0 +1,668 @@
+{
+  "_id": 30050704,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T09:53:35.047Z",
+  "appealsEndDate": "2015-07-15T10:24:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Fun Series - Data Science - Trip Safety",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h1><span>Overview</span></h1>\n\n<p>A large amount of data has been and continues to be collected from the vehicles that ABC Corp&nbsp; uses for delivery of cargo to customers. The data includes On-board Computer (OBC) alarms that record exceptional driving events such as excessive speed, speed changes, and tractor stability during operation. Existing OBC data is correlated with other information such as time of day, driver status, route details, cargo, and weather conditions to provide a broad spectrum of data related to ABC corp deliveries.</p>\n\n<p>Since accidents are extremely rare and since the ideal objective would be to prevent all accidents, OBC alarms (occurring on fewer than 5% of all trips) are considered an important factor in managing safety. Preparation for the current match assumes that the ability to use correlated data to anticipate and thus reduce OBC events will further increase the safety of trips.</p>\n\n<h1><span>Problem Statement</span></h1>\n\n<p>The current challenge will be successful when community provides algorithmic solutions that, when run, can identify which trips in a dataset are most likely to involve alarms from on-board computers. These algorithms will ultimately provide input to the logistical planning system used by ABC corp.<a name=\"h.eig9s7lx490j\"></a><a name=\"h.vrvutxeh457c\"></a></p>\n\n<h1><span>Overview of Data</span></h1>\n\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:373px\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"height:21px; width:144px\">\n\t\t\t<p>source</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:87px\">\n\t\t\t<p>&nbsp;</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:143px\">\n\t\t\t<p>pilot</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:21px; width:144px\">\n\t\t\t<p>dist</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:87px\">\n\t\t\t<p>&nbsp;</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:143px\">\n\t\t\t<p>pilot2</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:21px; width:144px\">\n\t\t\t<p>cycles</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:87px\">\n\t\t\t<p>&nbsp;</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:143px\">\n\t\t\t<p>pilot_exp</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:21px; width:144px\">\n\t\t\t<p>complexity</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:87px\">\n\t\t\t<p>&nbsp;</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:143px\">\n\t\t\t<p>pilot_visits_prev</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:21px; width:144px\">\n\t\t\t<p>cargo</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:87px\">\n\t\t\t<p>&nbsp;</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:143px\">\n\t\t\t<p>pilot_hours_prev</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:21px; width:144px\">\n\t\t\t<p>stops</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:87px\">\n\t\t\t<p>&nbsp;</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:143px\">\n\t\t\t<p>pilot_duty_hrs_prev</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:21px; width:144px\">\n\t\t\t<p>start_month</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:87px\">\n\t\t\t<p>&nbsp;</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:143px\">\n\t\t\t<p>pilot_dist_prev</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:21px; width:144px\">\n\t\t\t<p>start_day_of_month</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:87px\">\n\t\t\t<p>&nbsp;</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:143px\">\n\t\t\t<p>route_risk_1</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:21px; width:144px\">\n\t\t\t<p>start_day_of_week</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:87px\">\n\t\t\t<p>&nbsp;</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:143px\">\n\t\t\t<p>route_risk_2</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:21px; width:144px\">\n\t\t\t<p>start_time</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:87px\">\n\t\t\t<p>&nbsp;</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:143px\">\n\t\t\t<p>weather</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:21px; width:144px\">\n\t\t\t<p>days</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:87px\">\n\t\t\t<p>&nbsp;</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:143px\">\n\t\t\t<p>visibility</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:21px; width:144px\">\n\t\t\t<p>pilot</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:87px\">\n\t\t\t<p>&nbsp;</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:21px; width:143px\">\n\t\t\t<p><strong><u>Risk_involved</u></strong></p>\n\t\t\t</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p>&nbsp;</p>\n\n<h2><span style=\"font-size:13px\">The target variable is Risk_involved is the aggregagation of all OBC events. In &nbsp;the training data set it has the levels &ldquo;n&rdquo; and &ldquo;r&rdquo; which means not risky and risky respectively. The training data set contains around 80 K records . The test data set has around 42 K records. You need to predict the value of Risk_involved column in the test data file . </span><u>Your ouput would be the test.csv with the values for Risk_involved column along with their probabilities which would be used to generate the AUC by using ROC curves..</u></h2>\n\n<p>Here is one sample output record that is expected:</p>\n\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:656px\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>source</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:48px\">\n\t\t\t<p>dist</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:55px\">\n\t\t\t<p>cycles</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>complexity</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>cargo</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:45px\">\n\t\t\t<p>stops</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:95px\">\n\t\t\t<p>start_month</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:153px\">\n\t\t\t<p>start_day_of_month</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>L04</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:48px\">\n\t\t\t<p>267</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:55px\">\n\t\t\t<p>1</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>14</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>5</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:45px\">\n\t\t\t<p>2</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:95px\">\n\t\t\t<p>10</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:153px\">\n\t\t\t<p>20</p>\n\t\t\t</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p>&nbsp;</p>\n\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:690px\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"height:20px; width:148px\">\n\t\t\t<p>start_day_of_week</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>start_time</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>days</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>pilot</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>pilot2</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>pilot_exp</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:109px\">\n\t\t\t<p>pilot_visits_prev</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:20px; width:148px\">\n\t\t\t<p>7</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>1632</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>0.33</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>17355</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>0</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>3</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:109px\">\n\t\t\t<p>1</p>\n\t\t\t</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p>&nbsp;</p>\n\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:522px\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"height:20px; width:114px\">\n\t\t\t<p>pilot_hours_prev</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:134px\">\n\t\t\t<p>pilot_duty_hrs_prev</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:100px\">\n\t\t\t<p>pilot_dist_prev</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>route_risk_1</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>route_risk_2</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:20px; width:114px\">\n\t\t\t<p>17.6</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:134px\">\n\t\t\t<p>13.1</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:100px\">\n\t\t\t<p>942.9</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>97</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>209</p>\n\t\t\t</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p>&nbsp;</p>\n\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:359px\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>weather</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>visibility</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:99px\">\n\t\t\t<p><strong>Risk_involved</strong></p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p><strong>Prob</strong></p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>2</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p>8.466666667</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:99px\">\n\t\t\t<p><strong>r</strong></p>\n\t\t\t</td>\n\t\t\t<td style=\"height:20px; width:87px\">\n\t\t\t<p><strong>0.52</strong></p>\n\t\t\t</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30050704",
+  "finalSubmissionGuidelines": "<p><u>Your ouput would be the test.csv with the values for Risk_involved column along with their probabilities which would be used to generate the AUC by using ROC curves..</u></p>\n\n<p>Upload output csv file for submiting this challenge.</p>\n",
+  "forumId": 29873,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=29873",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 63,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-07-07T04:00:00.000Z",
+      "actualStartTime": "2015-07-07T04:00:00.000Z",
+      "scheduledEndTime": "2015-07-12T03:59:00.000Z",
+      "actualendTime": "2015-07-12T03:59:00.000Z",
+      "_id": "5813201f550dfb3b52b281b9"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-07-07T04:05:00.000Z",
+      "actualStartTime": "2015-07-07T04:05:00.000Z",
+      "scheduledEndTime": "2015-07-12T03:59:00.000Z",
+      "actualendTime": "2015-07-12T03:59:00.000Z",
+      "_id": "5813201f550dfb3b52b281b8"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-07-12T03:59:00.000Z",
+      "actualStartTime": "2015-07-12T03:59:00.000Z",
+      "scheduledEndTime": "2015-07-14T10:23:00.000Z",
+      "actualendTime": "2015-07-14T10:23:00.000Z",
+      "_id": "5813201f550dfb3b52b281b7"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-07-14T10:23:00.000Z",
+      "actualStartTime": "2015-07-14T10:23:00.000Z",
+      "scheduledEndTime": "2015-07-15T10:23:00.000Z",
+      "actualendTime": "2015-07-15T10:23:00.000Z",
+      "_id": "5813201f550dfb3b52b281b6"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-07-15T10:23:00.000Z",
+      "actualStartTime": "2015-07-15T10:23:00.000Z",
+      "scheduledEndTime": "2015-07-15T10:24:00.000Z",
+      "actualendTime": "2015-07-15T10:24:00.000Z",
+      "_id": "5813201f550dfb3b52b281b5"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-07-07T04:00:00.000Z",
+  "prize": [],
+  "projectId": 8943,
+  "registrants": [
+    {
+      "handle": "callmekatootie",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-07T05:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b281b4"
+    },
+    {
+      "handle": "raman_sharma",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-07T05:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b281b3"
+    },
+    {
+      "handle": "yadabdas",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-07T06:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b281b2"
+    },
+    {
+      "handle": "ranhan429",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-07T10:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b281b1"
+    },
+    {
+      "handle": "igormat",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-07T10:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b281b0"
+    },
+    {
+      "handle": "megaterik",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-07T10:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b281af"
+    },
+    {
+      "handle": "gogo244",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-07T10:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b281ae"
+    },
+    {
+      "handle": "moshu",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-07T18:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b281ad"
+    },
+    {
+      "handle": "trowavo",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-07T20:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b281ac"
+    },
+    {
+      "handle": "Derwish",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-07T20:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b281ab"
+    },
+    {
+      "handle": "forcedevp",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-08T03:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b281aa"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-08T03:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b281a9"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-08T04:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b281a8"
+    },
+    {
+      "handle": "Towhid",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-08T05:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b281a7"
+    },
+    {
+      "handle": "akala",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-08T07:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b281a6"
+    },
+    {
+      "handle": "agungsantoso",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-08T07:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b281a5"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-08T07:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b281a4"
+    },
+    {
+      "handle": "p.yuvanesh",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-08T08:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b281a3"
+    },
+    {
+      "handle": "poletaev",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-08T09:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b281a2"
+    },
+    {
+      "handle": "xkhaloda",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-08T10:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b281a1"
+    },
+    {
+      "handle": "mlahia",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-08T10:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b281a0"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-08T10:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b2819f"
+    },
+    {
+      "handle": "akhilrana690041",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-08T12:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b2819e"
+    },
+    {
+      "handle": "aletort",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-08T13:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b2819d"
+    },
+    {
+      "handle": "chensiji1989",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-08T15:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b2819c"
+    },
+    {
+      "handle": "hardikprajapati",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-09T18:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b2819b"
+    },
+    {
+      "handle": "singhmgit",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-08T17:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b2819a"
+    },
+    {
+      "handle": "TiPo",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-08T17:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28199"
+    },
+    {
+      "handle": "jeevananne",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-08T17:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28198"
+    },
+    {
+      "handle": "Ceh97",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-08T20:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28197"
+    },
+    {
+      "handle": "xmj",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-08T23:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28196"
+    },
+    {
+      "handle": "louy08",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-08T23:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28195"
+    },
+    {
+      "handle": "sri02",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-09T06:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28194"
+    },
+    {
+      "handle": "adityaputra",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-09T01:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28193"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-09T06:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28192"
+    },
+    {
+      "handle": "1415259",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-09T08:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28191"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-09T12:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28190"
+    },
+    {
+      "handle": "e-max",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-09T13:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b2818f"
+    },
+    {
+      "handle": "HristoHristov",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-09T17:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b2818e"
+    },
+    {
+      "handle": "nighthawkwai",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-10T01:44:00.000Z",
+      "submissionDate": "2015-07-12T03:59:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b2818d"
+    },
+    {
+      "handle": "JasPuneet",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-10T08:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b2818c"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-10T11:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b2818b"
+    },
+    {
+      "handle": "andrew_emel",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-10T12:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b2818a"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-10T15:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28189"
+    },
+    {
+      "handle": "Jatin.Arora",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-10T18:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28188"
+    },
+    {
+      "handle": "nagaral89",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-10T20:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28187"
+    },
+    {
+      "handle": "oshani",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-10T21:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28186"
+    },
+    {
+      "handle": "sonal71",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-10T21:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28185"
+    },
+    {
+      "handle": "uhateme",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-11T01:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28184"
+    },
+    {
+      "handle": "ddaafftt",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-11T02:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28183"
+    },
+    {
+      "handle": "Divyansh.Saxena",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-11T01:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28182"
+    },
+    {
+      "handle": "thilankawillbe",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-11T02:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28181"
+    },
+    {
+      "handle": "daviortega",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-11T02:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28180"
+    },
+    {
+      "handle": "BrandonWind",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-11T04:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b2817f"
+    },
+    {
+      "handle": "alxcoh",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-11T05:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b2817e"
+    },
+    {
+      "handle": "rjmquinto",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-11T08:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b2817d"
+    },
+    {
+      "handle": "lmammino",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-11T09:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b2817c"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-11T10:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b2817b"
+    },
+    {
+      "handle": "cboss",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-11T14:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b2817a"
+    },
+    {
+      "handle": "klo86min",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-11T16:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28179"
+    },
+    {
+      "handle": "cjpena",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-11T18:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28178"
+    },
+    {
+      "handle": "Ironhawks",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-11T19:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28177"
+    },
+    {
+      "handle": "sachith500",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-12T02:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813201f550dfb3b52b28176"
+    }
+  ],
+  "registrationEndDate": "2015-07-12T03:59:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-07-12T03:59:00.000Z",
+  "submissions": [
+    {
+      "handle": "nighthawkwai",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 62.5,
+      "finalScore": 62.5,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-07-12T03:59:00.000Z",
+      "_id": "5813201f550dfb3b52b281ba"
+    }
+  ],
+  "technology": [
+    "Other"
+  ]
+}

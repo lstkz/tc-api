@@ -1,0 +1,368 @@
+{
+  "_id": 30053446,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:59:55.564Z",
+  "appealsEndDate": "2016-05-14T12:55:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Lets App - iOS AWS Lambda Integration Part 4 F2F Challenge",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2016-05-31T13:33:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -12950735,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span style=\"color:#FFFFFF\"><span style=\"background-color:#DAA520\">We have recieved a submission that is good but need additional fixes, the submitter is not available and we are offering $200 to fix the issues in his submission, the details posted here&nbsp;http://forums.topcoder.com/?module=Category&amp;categoryID=32407</span></span></h2>\n\n<p><br />\nLet&#39;s App is a mobile social network app to help users connect with friends and plan on site activities.<br />\n&nbsp;<br />\nThe goal of this challenge is to update the comments thread in the Activity/Photo details screen to have real time comments using <a href=\"https://www.pubnub.com/\">Pubnub.com</a>. In addition to improve the UX of these screens.<br />\n&nbsp;<br />\n<strong>Challenge Requirements</strong><br />\n&nbsp;<br />\n<strong><u>Invision App</u></strong><br />\n<br />\nTo view current design screens we prototyped and currently integrating with backend you can check here :<br />\n&nbsp;<br />\n<strong>Activity Details screen</strong> <a href=\"https://projects.invisionapp.com/share/765X7JXVY#/screens/115618505\">https://projects.invisionapp.com/share/765X7JXVY#/screens/115618505</a><br />\n<strong>Photo (shared or posted) Details screen</strong> <a href=\"https://projects.invisionapp.com/share/765X7JXVY#/screens/128264199\">https://projects.invisionapp.com/share/765X7JXVY#/screens/128264199</a><br />\n&nbsp;<br />\n<strong>Amazon Mobile Hub iOS SDK</strong><br />\nAmazon Mobile Hub SDK already integrated with the current XCode project, we have the signup and signin flows integrated.<br />\n&nbsp;<br />\nIf you are facing a problem with current SDK or when making calls to AWS Lambda function, please post in forums, it might be AWS configuration issue.<br />\n&nbsp;<br />\n<strong><u>Features To Integrate</u></strong><br />\nThe scope will integrate following features :<br />\n- Real time comments using pubnub.com<br />\n- Revamp how we pull comments and post it.<br />\n&nbsp;<br />\nThe pubnub real time integration will be in the iOS side not the backend side, meaning that when user post a comment and get added to backend, we emit the action to channel.<br />\n&nbsp;<br />\n<strong><u>Integration Requirements</u></strong><br />\n1. Current app will reload comments every few seconds, this behavior will be removed in this challenge.<br />\n2. When opening the screen pull the comments as currently done.<br />\n3. Change the spinner to be only in the comments section without the current dark background. It is currently blocking actions in the screen until comments are loaded.<br />\n4. Subscribe user to the channel to start publishing or receiving real time comments.<br />\n5. You need to study pubnub and investigate how to emit and receive messages.<br />\n6. The channel will cover the whole screen details, but for now we are only addressing comments section, in future it will address updating activity, likes, invitees, and photos.<br />\n7. The following actions will emit to the channel :</p>\n\n<p style=\"margin-left:40px\">1. Posting a comment.<br />\n2. Posting a comment with photo : in this case the emit should wait until photo is fully uploaded.<br />\n3. Posting a photo without comment via comment section : in this case the emit should wait until photo is fully uploaded.<br />\n4. Adding photo to activity : in this case emit should wait until photo is fully uploaded.<br />\n5. Liking a comment/photo.</p>\n\n<p>8. Document the structure of the message to emit in the code, not sure about the valid format but we expect you can pass a json object.</p>\n\n<p style=\"margin-left:40px\">1. For posted comment/photo it can have the following fields, it will be the response of the posted photo or comment object.<br />\n2. For like action it can be the comment#Id</p>\n\n<p>9. Also we expect that each action to be emitted will include an action type to identify what the action so ios app can render it properly, i.e. actionType=comment expect new comment received, actionType=like, a new like for comment. This will give us flexibility to add more actionType in futures to handle activity update or other real time update in the screen.<br />\n10. Take into consideration that the pubnub.com will be used from backend in future to emit messages to ios apps for these detail screens.<br />\n11. Update the displayed photos in the comments thread or details screen to use the correct dimension as mentioned here <a href=\"https://drive.google.com/open?id=0B5_NPazXhVVyaXRZZnlqc01ORnM\">https://drive.google.com/open?id=0B5_NPazXhVVyaXRZZnlqc01ORnM</a><br />\n12. When adding a photo or comment with photo please start with the small size that need to be rendered in the comments section, once it is uploaded immediately make the call to backend. Don&rsquo;t wait until the large size image is uploaded, the large size should be uploaded silently and posting comment should not wait for it to be fully uploaded to s3.<br />\n13. When posting the comment show it in the comment thread right away even if it includes a photo, add a fade styling or spinner below the date section in comment as indication the comment is being posted and app is working on it instead of using the spinner with dark background.<br />\n14. When user leaves the screen, unsubscribe the user from the channel.<br />\n15. BUG TO FIX : comment will include likesCount field, should be used to set the likes count for each comment.<br />\n16. BUG TO FIX : myLikes array is returned from GetComments function used to set the like/heart of each comment for the currently logged in user.<br />\n<br />\n<br />\n<strong><u>Again, it is very important that the ios app be fast in processing the action without letting the user wait for long time, that simply by showing the content posted by the user even if there is a background task that do a backend call or upload. YOUR submission will be judged based on this note.</u></strong><br />\n&nbsp;<br />\n<strong><u>Postman File</u></strong><br />\nAttached in the challenge forums postman file that you can use in postman app to test the lambda functions, see sample calls and responses <a href=\"https://www.getpostman.com/\">https://www.getpostman.com/</a><br />\nThe URL you will use to test the calls is <a href=\"http://54.164.65.111:3500\">http://54.164.65.111:3500</a><br />\n&nbsp;<br />\nFor FB and Google access tokens we create demo page to get them &nbsp;<a href=\"http://54.164.65.111:5000\">http://54.164.65.111:5000</a> (this is only needed when you test the backend via postman, you will use the FB/Google iOS SDK to get these tokens if user signup using these social networks)<br />\n&nbsp;<br />\nThe function&#39;s name in postman is in format /User/{function_name}, the AWS lambda function format is User_{function_name} so when you invoke function make sure to follow the format User_{function_name}.<br />\n&nbsp;<br />\n<strong><u>Deliverable</u></strong><br />\n- Git patch file of the changes you made to the XCode project.<br />\n- Deployment guide and verification document.<br />\n&nbsp;</p>\n\n<ol>\n</ol>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30053446",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<p>.</p>\n",
+  "forumId": 32407,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=32407",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 22,
+  "numberOfSubmissions": 5,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2016-05-01T13:33:00.000Z",
+      "actualStartTime": "2016-05-01T13:33:00.000Z",
+      "scheduledEndTime": "2016-05-31T13:33:00.000Z",
+      "actualendTime": null,
+      "_id": "58132fab550dfb3b52b8a029"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-01T22:11:00.000Z",
+      "actualStartTime": "2016-05-01T22:11:00.000Z",
+      "scheduledEndTime": "2016-05-02T13:12:00.000Z",
+      "actualendTime": "2016-05-02T13:12:00.000Z",
+      "_id": "58132fab550dfb3b52b8a028"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2016-05-01T13:38:00.000Z",
+      "actualStartTime": "2016-05-01T13:38:00.000Z",
+      "scheduledEndTime": "2016-05-31T13:38:00.000Z",
+      "actualendTime": null,
+      "_id": "58132fab550dfb3b52b8a027"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-02T13:13:00.000Z",
+      "actualStartTime": "2016-05-02T13:13:00.000Z",
+      "scheduledEndTime": "2016-05-03T11:13:00.000Z",
+      "actualendTime": "2016-05-03T11:13:00.000Z",
+      "_id": "58132fab550dfb3b52b8a026"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-04T16:39:00.000Z",
+      "actualStartTime": "2016-05-04T16:39:00.000Z",
+      "scheduledEndTime": "2016-05-08T12:19:00.000Z",
+      "actualendTime": "2016-05-08T12:19:00.000Z",
+      "_id": "58132fab550dfb3b52b8a025"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-08T12:20:00.000Z",
+      "actualStartTime": "2016-05-08T12:20:00.000Z",
+      "scheduledEndTime": "2016-05-08T13:24:00.000Z",
+      "actualendTime": "2016-05-08T13:24:00.000Z",
+      "_id": "58132fab550dfb3b52b8a024"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-12T19:57:00.000Z",
+      "actualStartTime": "2016-05-12T19:57:00.000Z",
+      "scheduledEndTime": "2016-05-14T12:55:00.000Z",
+      "actualendTime": "2016-05-14T12:55:00.000Z",
+      "_id": "58132fab550dfb3b52b8a023"
+    }
+  ],
+  "platforms": [
+    "iOS"
+  ],
+  "postingDate": "2016-05-01T13:33:00.000Z",
+  "prize": [
+    300
+  ],
+  "projectId": 9372,
+  "registrants": [
+    {
+      "handle": "seriyvolk83",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-01T16:04:00.000Z",
+      "submissionDate": "2016-05-12T19:56:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a022"
+    },
+    {
+      "handle": "julia_vladi",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-01T18:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a021"
+    },
+    {
+      "handle": "JinkProject",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-01T18:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a020"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-01T22:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a01f"
+    },
+    {
+      "handle": "tinggao72",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-02T00:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a01e"
+    },
+    {
+      "handle": "albet.januar",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-02T00:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a01d"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-02T03:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a01c"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-02T13:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a01b"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-02T22:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a01a"
+    },
+    {
+      "handle": "jaysoncoppo",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-03T04:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a019"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-03T08:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a018"
+    },
+    {
+      "handle": "avismara",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-04T07:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a017"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-04T15:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a016"
+    },
+    {
+      "handle": "akshat91",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-04T17:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a015"
+    },
+    {
+      "handle": "phonechen",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-04T17:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a014"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T03:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a013"
+    },
+    {
+      "handle": "mrdo_90",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T04:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a012"
+    },
+    {
+      "handle": "mopedigg36",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T02:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a011"
+    },
+    {
+      "handle": "-ronin-",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T03:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a010"
+    },
+    {
+      "handle": "lnk.anton",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-10T09:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a00f"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-11T21:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a00e"
+    },
+    {
+      "handle": "sophyphilo",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-12T07:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b8a00d"
+    }
+  ],
+  "registrationEndDate": "2016-05-31T13:33:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-05-31T13:38:00.000Z",
+  "submissions": [
+    {
+      "handle": "seriyvolk83",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-02T06:16:00.000Z",
+      "_id": "58132fab550dfb3b52b8a02e"
+    },
+    {
+      "handle": "seriyvolk83",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-01T22:10:00.000Z",
+      "_id": "58132fab550dfb3b52b8a02d"
+    },
+    {
+      "handle": "seriyvolk83",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-04T16:38:00.000Z",
+      "_id": "58132fab550dfb3b52b8a02c"
+    },
+    {
+      "handle": "seriyvolk83",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-05-12T19:56:00.000Z",
+      "_id": "58132fab550dfb3b52b8a02b"
+    },
+    {
+      "handle": "seriyvolk83",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-04T16:54:00.000Z",
+      "_id": "58132fab550dfb3b52b8a02a"
+    }
+  ],
+  "technology": [
+    "iOS"
+  ]
+}

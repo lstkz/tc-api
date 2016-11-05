@@ -1,0 +1,314 @@
+{
+  "_id": 30054553,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:06:35.734Z",
+  "appealsEndDate": "2016-06-24T14:14:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Topcoder Submission - Get Submission Files",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "For this challenge, we&#39;d like to add a new endpoint for retrieving files related to the given submission id.\n<h2><br />\nFunctional Requirements</h2>\n<u>Endpoint</u><br />\n<br />\n<span style=\"color:rgb(34, 34, 34); font-family:arial,sans-serif; font-size:12.8px\">GET /v3/submissions/:submissionId/files<br />\n<br />\n-&nbsp;It should support filtering by type</span><br />\n<br />\nadd support to the submission service to fetch submissions by filter. The Core library provides functionality to translate filter query params into java objects, for example:<br />\n<br />\n&nbsp; &nbsp; @GET<br />\n&nbsp; &nbsp; @Timed<br />\n&nbsp; &nbsp; public ApiResponse searchChallengesOfUser(@PathParam(&quot;handle&quot;) String handle, @APIQueryParam(repClass = Challenge.class) QueryParameter query) {<br />\n&nbsp; &nbsp; &nbsp; &nbsp; try {<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; logger.debug(&quot;searchChallengesOfUser&quot;);<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; QueryParameter augmentedQueryParam = query;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; augmentedQueryParam.getFilter().put(&quot;userHandles&quot;, handle.toLowerCase());<br />\n<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return MetadataApiResponseFactory.createResponse(challengeManager.searchUserChallenges(augmentedQueryParam));<br />\n<br />\n&nbsp; &nbsp; &nbsp; &nbsp; } catch (Exception e) {<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return ErrorHandler.handle(e, logger);<br />\n&nbsp; &nbsp; &nbsp; &nbsp; }<br />\n&nbsp; &nbsp; }<br />\n<br />\n?filter=type%3D{TYPES}<br />\n<br />\nThe above should return only submission files that are tied to given TYPES list.<br />\n<br />\n<span style=\"color:rgb(34, 34, 34); font-family:arial,sans-serif; font-size:12.8px\">-&nbsp;for each submission retrieved we need to refresh the pre-signed URL from the file service before retrieving, so that the pre signed url is valid when the client receives it.<br />\n- a user token need to be passed when calling file service, making sure the user can access files for the given submission, otherwise, error should be return.<br />\n- You can reference the responses about List All Submissions API, the expected response should be similar as</span><br />\n<br />\n{<br />\n&quot;id&quot;: &quot;-617961fc:14f2abcda80:-7e20&quot;,<br />\n&quot;result&quot;: {<br />\n&nbsp; &nbsp; &quot;success&quot;: true,<br />\n&nbsp; &nbsp; &quot;status&quot;: 200,<br />\n&nbsp; &nbsp; &quot;metadata&quot;: null,<br />\n&nbsp; &nbsp; &quot;version&quot;: &quot;v3&quot;,<br />\n&nbsp; &nbsp; &quot;content&quot;:{<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &quot;files&quot;: [<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;name&quot;: &quot;submission.zip&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;type&quot;: &quot;SUBMISSION_ZIP&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;mediaType&quot;: &quot;application/octet-stream&quot;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;preSignedUrl&quot;: &quot;https://bucket.s3.aws.com/submissions/2/submission.zip&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;status&quot;: &quot;PENDING&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;uploadedAt&quot;: null<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }, {<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;name&quot;: &quot;source.zip&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;type&quot;: &quot;SOURCE_ZIP&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;mediaType&quot;: &quot;application/octet-stream&quot;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;preSignedUrl&quot;: &quot;https://bucket.s3.aws.com/submissions/2/source.zip&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;status&quot;: &quot;PENDING&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;uploadedAt&quot;: null<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }, {<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;name&quot;: &quot;cover.png&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;type&quot;: &quot;DESIGN_COVER&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;mediaType&quot;: &quot;image/png&quot;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;preSignedUrl&quot;: &quot;https://bucket.s3.aws.com/submissions/2/cover.png&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;status&quot;: &quot;PENDING&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;uploadedAt&quot;: null<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />\n&nbsp; &nbsp; &nbsp; &nbsp; ]<br />\n&nbsp; &nbsp; }<br />\n}<br />\n<br />\n<u>Update API Doc</u><br />\nPlease update the&nbsp;service/apiary.apib&nbsp;to reflect the new changes.<br />\n<br />\n<u>About Tests and Documentation </u><br />\n- Complete javadoc is required: All classes, methods and fields must have javadoc comments, any method with more than 7 lines must also have inline comments<br />\n- Test code coverage must not decrease, please properly add tests for the new added logic<br />\n<br />\n<u>About Submission System</u><br />\nTo play with the whole submission system, you can follow&nbsp;<a href=\"https://github.com/appirio-tech/tc-common-tutorials/tree/master/submission-system\" style=\"line-height: 20.8px;\">https://github.com/appirio-tech/tc-common-tutorials/tree/master/submission-system</a>, &nbsp;The latest source code will be attached in forum.",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30054553",
+  "finalSubmissionGuidelines": "1. Code changes for implementing the requirements including documentation and tests<br />\n2. Test Data for verification<br />\n3. Verfication Steps",
+  "forumId": 33383,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33383",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 22,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-16T01:57:00.000Z",
+      "actualStartTime": "2016-06-16T01:57:00.000Z",
+      "scheduledEndTime": "2016-06-21T01:57:00.000Z",
+      "actualendTime": "2016-06-21T01:57:00.000Z",
+      "_id": "5813232b550dfb3b52b3e190"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-16T02:02:00.000Z",
+      "actualStartTime": "2016-06-16T02:02:00.000Z",
+      "scheduledEndTime": "2016-06-21T01:57:00.000Z",
+      "actualendTime": "2016-06-21T01:57:00.000Z",
+      "_id": "5813232b550dfb3b52b3e18f"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-21T01:57:00.000Z",
+      "actualStartTime": "2016-06-21T01:57:00.000Z",
+      "scheduledEndTime": "2016-06-23T13:47:00.000Z",
+      "actualendTime": "2016-06-23T13:47:00.000Z",
+      "_id": "5813232b550dfb3b52b3e18e"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-23T13:47:00.000Z",
+      "actualStartTime": "2016-06-23T13:47:00.000Z",
+      "scheduledEndTime": "2016-06-24T13:47:00.000Z",
+      "actualendTime": "2016-06-24T13:47:00.000Z",
+      "_id": "5813232b550dfb3b52b3e18d"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-24T13:47:00.000Z",
+      "actualStartTime": "2016-06-24T13:47:00.000Z",
+      "scheduledEndTime": "2016-06-24T14:14:00.000Z",
+      "actualendTime": "2016-06-24T14:14:00.000Z",
+      "_id": "5813232b550dfb3b52b3e18c"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-06-16T01:57:00.000Z",
+  "prize": [
+    400,
+    200
+  ],
+  "projectId": 9582,
+  "registrants": [
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-16T21:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e18b"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-16T02:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e18a"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-16T03:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e189"
+    },
+    {
+      "handle": "gvir",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-16T05:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e188"
+    },
+    {
+      "handle": "ananthhh",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-16T05:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e187"
+    },
+    {
+      "handle": "isv",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-16T06:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e186"
+    },
+    {
+      "handle": "roopats",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-16T11:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e185"
+    },
+    {
+      "handle": "yash.patel97",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-16T13:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e184"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-16T13:51:00.000Z",
+      "submissionDate": "2016-06-18T02:10:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e183"
+    },
+    {
+      "handle": "mehblahwhatever",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-16T14:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e182"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-16T15:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e181"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-16T15:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e180"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-16T16:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e17f"
+    },
+    {
+      "handle": "jack2810",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-16T17:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e17e"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-16T21:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e17d"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-17T00:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e17c"
+    },
+    {
+      "handle": "Urmass",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-17T10:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e17b"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-17T13:33:00.000Z",
+      "submissionDate": "2016-06-19T10:33:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e17a"
+    },
+    {
+      "handle": "narasimha.dvnr",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-17T15:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e179"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-18T16:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e178"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-20T00:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e177"
+    },
+    {
+      "handle": "arrata16",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-20T21:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e176"
+    }
+  ],
+  "registrationEndDate": "2016-06-21T01:57:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-06-21T01:57:00.000Z",
+  "submissions": [
+    {
+      "handle": "Standlove",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 93.75,
+      "finalScore": 96.25,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-06-18T02:10:00.000Z",
+      "_id": "5813232b550dfb3b52b3e192"
+    },
+    {
+      "handle": "stevenfrog",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 83.75,
+      "finalScore": 83.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-06-19T10:33:00.000Z",
+      "_id": "5813232b550dfb3b52b3e191"
+    }
+  ],
+  "technology": [
+    "Docker",
+    "Java"
+  ]
+}

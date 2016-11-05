@@ -1,0 +1,437 @@
+{
+  "_id": 30042880,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:16:04.723Z",
+  "appealsEndDate": "2014-05-29T16:46:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Randivoo Mobile iPhone App New Screens Module Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></h2>\n\n<p>In this project, we will build RandivooPlus iPhone app that uses Bluetoo Low Energy (BLE) to interact with iBeacons (<a href=\"http://en.wikipedia.org/wiki/IBeacon\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">http://en.wikipedia.org/wiki/IBeacon</a>). When someone walks towards a door that is equiped with an Estimote beacon (<a href=\"http://estimote.com/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">http://estimote.com</a>), his/her iPhone will receive signals from the beacon and send out a command to open the door. The app has been built in previous contests, and we are adding more functionalities into the app at this stage.</p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Competition Task Overview</span></h2>\n\n<p>The goal of this contest is to follow the provided storyboard and implement the welcome screens, tutorial screens, and card screens.</p>\n\n<h3><strong>Specific Requirements</strong></h3>\n\n<ul>\n\t<li>The Target platform is iOS 7, and only portrait orientation should be supported.</li>\n\t<li>Both 3.5 inch and 4 inch screens should be supported.</li>\n\t<li>The business logic should be implemented, unless the web services are not provided yet.</li>\n\t<li>All the screen transitions should be animated.</li>\n</ul>\n\n<p>The new storyboard can be downloaded from the contest forum. All&nbsp;the screens in the storyboard are in scope. Here are some special&nbsp;explanations to the new screens:</p>\n\n<h3><strong>Welcome Screen</strong></h3>\n\n<p><span style=\"font-size:14px\"><span>When the app is opened for the first time, the welcome screens should be shown.&nbsp;</span>00-Welcome1.png&nbsp;will be shown initially, and user can swipe left or right to change to other welcome screens. At any time, user should be able to tap the &quot;Sign In&quot; button to go to the login screen in the existing app.</span></p>\n\n<h3><strong>Tutorial Screen</strong></h3>\n\n<p>When the user logs in for the first time, the tutorial screens should be shown. The 01-tutorial.png or 01-tutorial-alt.png will be shown first, and if the user taps the screen anywhere except the &ldquo;X&rdquo;, then 01-tutorial2.png or 01-tutorial2-alt.png should be shown. The difference between xxx.png and xxx-alt.png is that xxx.png is the default and is shown if the user&#39;s profile image cannot be found. xxx-alt.png is shown if the user&#39;s profile image can be found. (Please note that you may not find 01-tutorial2-alt.png in the prototype, but it is easy to figure out how it looks like by comparing 01-tutorial.png and 01-tutorial-alt.png.) If the user taps &quot;X&quot; or anywhere in 01-tutorial2.png, the tutorial screen should be closed and the card screen should be shown.</p>\n\n<h3><strong>Card Screen</strong></h3>\n\n<p>The card screen will replace the existing home screen in the app. See 02-active-alt.png for an example of a card, and see 01-tutorial2.png for the descriptions of card statuses.&nbsp;</p>\n\n<p>The user has two possible roles: Employee and Visitor. All users should have a notification button at the top left corner of the card screen. When this button is tapped, the notification screen will be shown. In this contest, we don&#39;t have APIs to fetch notifications, so the list is always empty. In other words, just show 04-1.png or 04-1-alt.png, and hide&nbsp;04.png.&nbsp;</p>\n\n<p>Depending on the status, each card may have a delete button and/or a QR button. The delete button is shown when the card is inactive. The QR button should only be shown for visitors. When delete button is tapped, the delete screen (03.png or 03-alt.png) will be shown. When QR button is tapped, the QR screen (QR.png) will be shown. The QR image url is contained in the API response (See below).</p>\n\n<p>The &quot;Beacon In Range&quot; button should be shown for admin. When this button is tapped for the first time in the app, 07_4_tutorial.png should be shown. When tapping anywhere in the screen, it should dismiss and the radar screen should be shown.</p>\n\n<h3><strong>APIs</strong></h3>\n\n<p>1. To get the list of cards, use the &quot;/me/domains&quot; service. Each card represents a domain.&nbsp;</p>\n\n<p>2. Each card (domain) may have one or multiple access reservations (ARs). Each AR describes the status of a domain (card). To get the list of ARs, use the &quot;/accessReservations/now&quot; service. Here is a sample response:</p>\n\n<p>[{&quot;name&quot;:&quot;AccessReservation 209&quot;,&quot;id&quot;:209,&quot;owner_id&quot;:3,&quot;schedules&quot;:[{&quot;name&quot;:null,&quot;startDateTime&quot;:&quot;2013-11-25T09:00:00.000Z&quot;,&quot;endDateTime&quot;:&quot;2014-12-07T17:00:00.000Z&quot;,&quot;timezone&quot;:&quot;UTC&quot;,&quot;id&quot;:14}],&quot;tokens&quot;:[{&quot;data&quot;:&quot;e080966b04ffc01214274e32a735a1a46f15147371e30c487ac7d7f9b8250cca&quot;,&quot;tokenType&quot;:&quot;hex&quot;,&quot;imageUrl&quot;:&quot;http://s3.amazonaws.com/brivolabs-qrcodes/841791a3e6a91e55e073719ab992e1a9.png&quot;,&quot;id&quot;:196,&quot;accessreservation_id&quot;:209}]},{&quot;name&quot;:&quot;AccessReservation 251&quot;,&quot;id&quot;:251,&quot;owner_id&quot;:3,&quot;schedules&quot;:[{&quot;name&quot;:null,&quot;startDateTime&quot;:&quot;2013-11-25T09:00:00.000Z&quot;,&quot;endDateTime&quot;:&quot;2014-12-07T17:00:00.000Z&quot;,&quot;timezone&quot;:&quot;UTC&quot;,&quot;id&quot;:14}],&quot;tokens&quot;:[{&quot;data&quot;:&quot;fe9fe40c65a8f1d6cd7f89a7c88c4ef4a9c331043d69c4477d4868fcebabcaf7&quot;,&quot;tokenType&quot;:&quot;hex&quot;,&quot;imageUrl&quot;:&quot;http://s3.amazonaws.com/brivolabs-qrcodes/9efb82354b7ea31674d93d7e6f070662.png&quot;,&quot;id&quot;:238,&quot;accessreservation_id&quot;:251}]},{&quot;name&quot;:&quot;AccessReservation 272&quot;,&quot;id&quot;:272,&quot;owner_id&quot;:3,&quot;schedules&quot;:[{&quot;name&quot;:null,&quot;startDateTime&quot;:&quot;2013-11-25T09:00:00.000Z&quot;,&quot;endDateTime&quot;:&quot;2014-12-07T17:00:00.000Z&quot;,&quot;timezone&quot;:&quot;UTC&quot;,&quot;id&quot;:14}],&quot;tokens&quot;:[{&quot;data&quot;:&quot;cd8286b9ac9c7fcdd363f5f438a6bacbdbb96daadc72bdf41d74b1d46fd90d42&quot;,&quot;tokenType&quot;:&quot;hex&quot;,&quot;imageUrl&quot;:&quot;http://s3.amazonaws.com/brivolabs-qrcodes/f8c21ea89673b5767477b04276e2c772.png&quot;,&quot;id&quot;:260,&quot;accessreservation_id&quot;:272}]}]</p>\n\n<p>In the response, the first record is the most recent status. If the card has a QR button, use the imageUrl in the first record.</p>\n\n<p>3. Merge accounts. If the app is opened by custom url scheme, and the url contains a token. Then do the following:</p>\n\n<p>a. Check if the token exists in one of the ARs returned by /accessReservations/now. The &quot;data&quot; field represents the token.</p>\n\n<p>b. If the token doesn&#39;t exist, the app should attempt to merge the accounts. &nbsp;This is done with a PUT to the endpoint /domainAccounts/merge. Here is an example payload:</p>\n\n<p>{<br />\n&nbsp; &quot;token&quot;: &quot;1935454e1b52b7cb28a536b988ccfb172d5296648eb9c6635fc543e570c19d2f&quot;<br />\n}</p>\n\n<p>4. To find out the role of the user, use the &quot;/domainAccount/:domainAccountId/roles&quot; service. You will know whether the card should say &quot;Visitor&quot; or &quot;Employee&quot; based on the result. &nbsp;If &quot;super user&quot; is returned, then it will be an Employee if it is a &quot;user&quot; then they are a &quot;Visitor&quot;.</p>\n\n<p>5. The photo url and name of person can be obtained from /me</p>\n",
+  "digitalRunPoints": 450,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30042880",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2014-06-08T14:23:00.000Z",
+  "finalSubmissionGuidelines": "<p>1. Updated source code</p>\n\n<p>2. Deployment guide</p>\n",
+  "forumId": 23078,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=23078",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 18,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-19T23:04:00.000Z",
+      "actualStartTime": "2014-05-19T23:04:00.000Z",
+      "scheduledEndTime": "2014-05-19T23:05:00.000Z",
+      "actualendTime": "2014-05-19T23:05:00.000Z",
+      "_id": "58134f94550dfb3b52c3187f"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-19T23:05:00.000Z",
+      "actualStartTime": "2014-05-19T23:05:00.000Z",
+      "scheduledEndTime": "2014-05-20T02:08:00.000Z",
+      "actualendTime": "2014-05-20T02:08:00.000Z",
+      "_id": "58134f94550dfb3b52c3187e"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-20T02:08:00.000Z",
+      "actualStartTime": "2014-05-20T02:08:00.000Z",
+      "scheduledEndTime": "2014-05-22T02:08:00.000Z",
+      "actualendTime": "2014-05-22T02:08:00.000Z",
+      "_id": "58134f94550dfb3b52c3187d"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-20T02:13:00.000Z",
+      "actualStartTime": "2014-05-20T02:13:00.000Z",
+      "scheduledEndTime": "2014-05-26T02:08:00.000Z",
+      "actualendTime": "2014-05-26T02:08:00.000Z",
+      "_id": "58134f94550dfb3b52c3187c"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-26T02:08:00.000Z",
+      "actualStartTime": "2014-05-26T02:08:00.000Z",
+      "scheduledEndTime": "2014-05-26T11:20:00.000Z",
+      "actualendTime": "2014-05-26T11:20:00.000Z",
+      "_id": "58134f94550dfb3b52c3187b"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-26T11:20:00.000Z",
+      "actualStartTime": "2014-05-26T11:20:00.000Z",
+      "scheduledEndTime": "2014-05-28T08:22:00.000Z",
+      "actualendTime": "2014-05-28T08:22:00.000Z",
+      "_id": "58134f94550dfb3b52c3187a"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-28T08:22:00.000Z",
+      "actualStartTime": "2014-05-28T08:22:00.000Z",
+      "scheduledEndTime": "2014-05-29T08:22:00.000Z",
+      "actualendTime": "2014-05-29T08:22:00.000Z",
+      "_id": "58134f94550dfb3b52c31879"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-29T08:22:00.000Z",
+      "actualStartTime": "2014-05-29T08:22:00.000Z",
+      "scheduledEndTime": "2014-05-29T16:46:00.000Z",
+      "actualendTime": "2014-05-29T16:46:00.000Z",
+      "_id": "58134f94550dfb3b52c31878"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-29T16:46:00.000Z",
+      "actualStartTime": "2014-05-29T16:46:00.000Z",
+      "scheduledEndTime": "2014-05-29T17:01:00.000Z",
+      "actualendTime": "2014-05-29T17:01:00.000Z",
+      "_id": "58134f94550dfb3b52c31877"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-29T17:01:00.000Z",
+      "actualStartTime": "2014-05-29T17:01:00.000Z",
+      "scheduledEndTime": "2014-05-31T16:55:00.000Z",
+      "actualendTime": "2014-05-31T16:55:00.000Z",
+      "_id": "58134f94550dfb3b52c31876"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-31T16:55:00.000Z",
+      "actualStartTime": "2014-05-31T16:55:00.000Z",
+      "scheduledEndTime": "2014-06-01T04:25:00.000Z",
+      "actualendTime": "2014-06-01T04:25:00.000Z",
+      "_id": "58134f94550dfb3b52c31875"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-05T15:32:00.000Z",
+      "actualStartTime": "2014-06-05T15:32:00.000Z",
+      "scheduledEndTime": "2014-06-06T21:11:00.000Z",
+      "actualendTime": "2014-06-06T21:11:00.000Z",
+      "_id": "58134f94550dfb3b52c31874"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-01T04:25:00.000Z",
+      "actualStartTime": "2014-06-01T04:25:00.000Z",
+      "scheduledEndTime": "2014-06-02T05:16:00.000Z",
+      "actualendTime": "2014-06-02T05:16:00.000Z",
+      "_id": "58134f94550dfb3b52c31873"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-02T05:16:00.000Z",
+      "actualStartTime": "2014-06-02T05:16:00.000Z",
+      "scheduledEndTime": "2014-06-02T07:25:00.000Z",
+      "actualendTime": "2014-06-02T07:25:00.000Z",
+      "_id": "58134f94550dfb3b52c31872"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-02T07:25:00.000Z",
+      "actualStartTime": "2014-06-02T07:25:00.000Z",
+      "scheduledEndTime": "2014-06-04T11:29:00.000Z",
+      "actualendTime": "2014-06-04T11:29:00.000Z",
+      "_id": "58134f94550dfb3b52c31871"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-04T11:29:00.000Z",
+      "actualStartTime": "2014-06-04T11:29:00.000Z",
+      "scheduledEndTime": "2014-06-04T14:39:00.000Z",
+      "actualendTime": "2014-06-04T14:39:00.000Z",
+      "_id": "58134f94550dfb3b52c31870"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-04T14:39:00.000Z",
+      "actualStartTime": "2014-06-04T14:39:00.000Z",
+      "scheduledEndTime": "2014-06-05T09:25:00.000Z",
+      "actualendTime": "2014-06-05T09:25:00.000Z",
+      "_id": "58134f94550dfb3b52c3186f"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-05T09:25:00.000Z",
+      "actualStartTime": "2014-06-05T09:25:00.000Z",
+      "scheduledEndTime": "2014-06-05T15:32:00.000Z",
+      "actualendTime": "2014-06-05T15:32:00.000Z",
+      "_id": "58134f94550dfb3b52c3186e"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-06T21:12:00.000Z",
+      "actualStartTime": "2014-06-06T21:12:00.000Z",
+      "scheduledEndTime": "2014-06-07T07:58:00.000Z",
+      "actualendTime": "2014-06-07T07:58:00.000Z",
+      "_id": "58134f94550dfb3b52c3186d"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-07T07:58:00.000Z",
+      "actualStartTime": "2014-06-07T07:58:00.000Z",
+      "scheduledEndTime": "2014-06-07T12:21:00.000Z",
+      "actualendTime": "2014-06-07T12:21:00.000Z",
+      "_id": "58134f94550dfb3b52c3186c"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-07T12:22:00.000Z",
+      "actualStartTime": "2014-06-07T12:22:00.000Z",
+      "scheduledEndTime": "2014-06-08T14:23:00.000Z",
+      "actualendTime": "2014-06-08T14:23:00.000Z",
+      "_id": "58134f94550dfb3b52c3186b"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-08T14:23:00.000Z",
+      "actualStartTime": "2014-06-08T14:23:00.000Z",
+      "scheduledEndTime": "2014-06-08T14:48:00.000Z",
+      "actualendTime": "2014-06-08T14:48:00.000Z",
+      "_id": "58134f94550dfb3b52c3186a"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-08T14:48:00.000Z",
+      "actualStartTime": "2014-06-08T14:48:00.000Z",
+      "scheduledEndTime": "2014-06-13T14:48:00.000Z",
+      "actualendTime": "2014-06-13T14:48:00.000Z",
+      "_id": "58134f94550dfb3b52c31869"
+    }
+  ],
+  "platforms": [
+    "iOS",
+    "Brivo Labs"
+  ],
+  "postingDate": "2014-05-20T02:08:00.000Z",
+  "prize": [
+    1000,
+    500
+  ],
+  "projectId": 6903,
+  "registrants": [
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-20T02:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f94550dfb3b52c31868"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "6%",
+      "registrationDate": "2014-05-20T07:04:00.000Z",
+      "submissionDate": null,
+      "rating": "810",
+      "colorStyle": "color: #999999",
+      "_id": "58134f94550dfb3b52c31867"
+    },
+    {
+      "handle": "LieutenantRoger",
+      "reliability": "6%",
+      "registrationDate": "2014-05-20T07:27:00.000Z",
+      "submissionDate": null,
+      "rating": "804",
+      "colorStyle": "color: #999999",
+      "_id": "58134f94550dfb3b52c31866"
+    },
+    {
+      "handle": "charlie09",
+      "reliability": "1%",
+      "registrationDate": "2014-05-20T07:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f94550dfb3b52c31865"
+    },
+    {
+      "handle": "rh_abror",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-20T07:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f94550dfb3b52c31864"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-20T08:04:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58134f94550dfb3b52c31863"
+    },
+    {
+      "handle": "rakeshns_tc",
+      "reliability": "0%",
+      "registrationDate": "2014-05-20T14:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f94550dfb3b52c31862"
+    },
+    {
+      "handle": "michael_tang",
+      "reliability": "0%",
+      "registrationDate": "2014-05-20T14:50:00.000Z",
+      "submissionDate": null,
+      "rating": "497",
+      "colorStyle": "color: #999999",
+      "_id": "58134f94550dfb3b52c31861"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-20T15:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f94550dfb3b52c31860"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-20T17:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f94550dfb3b52c3185f"
+    },
+    {
+      "handle": "rajeshk87",
+      "reliability": "0%",
+      "registrationDate": "2014-05-20T18:42:00.000Z",
+      "submissionDate": null,
+      "rating": "600",
+      "colorStyle": "color: #999999",
+      "_id": "58134f94550dfb3b52c3185e"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-21T00:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f94550dfb3b52c3185d"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-21T04:48:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58134f94550dfb3b52c3185c"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-05-21T07:14:00.000Z",
+      "submissionDate": null,
+      "rating": "1135",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f94550dfb3b52c3185b"
+    },
+    {
+      "handle": "johnie_sheng",
+      "reliability": "0%",
+      "registrationDate": "2014-05-21T07:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f94550dfb3b52c3185a"
+    },
+    {
+      "handle": "namanhams",
+      "reliability": "93%",
+      "registrationDate": "2014-05-21T09:36:00.000Z",
+      "submissionDate": null,
+      "rating": "1411",
+      "colorStyle": "color: #6666FF",
+      "_id": "58134f94550dfb3b52c31859"
+    },
+    {
+      "handle": "vokie",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-21T09:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f94550dfb3b52c31858"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "13%",
+      "registrationDate": "2014-05-21T10:44:00.000Z",
+      "submissionDate": "2014-05-26T02:01:00.000Z",
+      "rating": "1107",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f94550dfb3b52c31857"
+    }
+  ],
+  "registrationEndDate": "2014-05-22T02:08:00.000Z",
+  "reliabilityBonus": 200,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-05-26T02:08:00.000Z",
+  "submissions": [
+    {
+      "handle": "muzehyun",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 87.61,
+      "finalScore": 87.8,
+      "points": 450,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-05-26T02:01:00.000Z",
+      "_id": "58134f94550dfb3b52c31880"
+    }
+  ],
+  "technology": [
+    "Xcode",
+    "iOS"
+  ]
+}

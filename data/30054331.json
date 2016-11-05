@@ -1,0 +1,581 @@
+{
+  "_id": 30054331,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:39:48.369Z",
+  "appealsEndDate": "2016-07-08T00:35:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Living Progress - World Wildlife Fund - Trading Data Comparison Web Application",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><strong><span style=\"color:#FF0000\">Problem</span></strong></h2>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">The world&rsquo;s forests, fisheries and wildlife are subject to many pressures, but illegal activities are especially damaging due to their scale and scope. Illegal fishing poses a serious threat to marine ecosystems, the sustainability of fisheries, coastal communities that depend on fisheries resources, global food security, and has ties to piracy and threatens maritime security. &nbsp;It is estimated that IUU fish comprise 31% of the global seafood catch. &nbsp;IUU fishing also hurts economies all around the world by reducing tax and government revenue, increasing costs for monitoring fisheries and depleting stocks available for legitimate fishermen. </span><u>WWF and TRAFFIC</u><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> have developed a methodology to identify products </span><u>in international trade that are suspected of having been illegally sourced,</u><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> by comparing </span><u>Customs</u><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> import and export data. For example: if Russia reports significantly less exports of king crab to South Korea than South Korea reports in imports of king crab from Russia, this suggests there may be some illegal trade occurring in king crab between the two countries. While the methodology for the comparative analysis exists, it is rarely used as it is </span><u>relatively</u><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> time-consuming to apply manually.</span><br />\n<br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14px\">This challenge is part of the&nbsp;</span><a href=\"http://blitz.topcoder.com/hpe-lpc_design/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); font-family: &quot;Lucida Grande&quot;, Helvetica, Arial, sans-serif; font-size: 12px; line-height: 18px; text-decoration: none;\"><u>HPE Living Progress Challenge Blitz Program</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14px\">&nbsp;(Secure top placements in the leaderboard to grab additional cash prizes)</span></p>\n\n<h3><strong><span style=\"color:#FF0000\">Trade Data Comparison Use Cases</span></strong></h3>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">In this challenge, we&rsquo;re going to build the foundational audit process to identify two basic scenarios using the Trade Data compiled by the UN that originates from country submissions that might indicate that illegal trade is going on. &nbsp;(It should be noted that these flags only indicate possible wrongdoing. &nbsp;There will be false positives, but we&rsquo;re hoping to provide customs officials, fisheries authorities and investigators and other interested parties direction for avenues for further analysis.)</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">1. Comparing imports and exports between trading partners. &nbsp;The application should examine the imports received for each reporting Country and compare those with the exports reported by the Partner. &nbsp;In order to do this you basically need to compare the results of two queries. &nbsp;Let&rsquo;s looks at a specific example. &nbsp;Let&rsquo;s say you want to compare imports in Trout (Commodity Code: 30211) reported by the US from the UK with exports of trout reported by the UK to the US. &nbsp;You would run the following queries on our database to compare them:</span></p>\n\n<p><strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Imports to the US</span></strong></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">select classification, year, tradeFlow, reporter, partner, commodity, netWeightKg, tradeValueUSD from Record where reporter = 842 and partner = 826 and tradeFlow = 1 and commodity = 30211</span></p>\n\n<p><strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Exports from the UK</span></strong></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">select classification, year, tradeFlow, reporter, partner, commodity, netWeightKg, tradeValueUSD from Record where reporter = 826 and partner = 842 and tradeFlow = 2 and commodity = 30211</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">The idea is to generate a table of data basically like so:</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"><img src=\"https://lh5.googleusercontent.com/TZDY6tla17rDT92GqOUo_WtAM3KjpfbIZLSqCKqPgBbb3DJaeHAoHd4bvnHIfaORv_7o_vpsM6qYUoP9AKrdbJxlRZ4rHa7OFhQ_rSxWA5LS1O3wRf-1hZs9kyaJMEsZxCoJzsel\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:172px; transform:rotate(0.00rad); width:624px\" /></span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">What we&rsquo;re really looking for here are instances where the the imports reported are greater than the exports reported like for line 12 shown above. &nbsp;</span><u>Note that the focus should be on comparing weight, rather than value. Value comparisons can also be useful but even where the weight match, the value are almost certain to differ as values on the export side are &lsquo;free on board&rsquo; whereas those on the import side almost always include insurance and freight, and are accordingly higher. </u><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">&nbsp;&nbsp;Now for Trout -- because this is often &ldquo;farm-raised&rdquo; this isn&rsquo;t such a concern but for fish like Tuna or Swordfish this is more serious. &nbsp;Another issue we&rsquo;ll need to deal with is missing data. &nbsp;Let&rsquo;s not report issues for years where the data for one of the trading partners in missing. &nbsp;&nbsp;Also we should highlight differences in weight (netWeightKg column) &nbsp;rather than using the tradeValue columns, as those value changes may reflect market fluctuations, not illegal activity. &nbsp;The system should add a record to the trading flow alert list (#1 below) where the import netWeightKg is 50% or more greater than the reported export weight during the same year and where the source field = &lsquo;Wild caught&rsquo;. &nbsp;Obviously this assumes that the weight figures are available for both the reporting country and the partner. Please make the level (the 50% value) configurable. </span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">2. &nbsp;We want to identify instances where changes in import or export volume for a particular commodity change by 200% or more. &nbsp;Please make the volume percentage change value configurable.</span></p>\n\n<h3><strong><span style=\"color:#FF0000\">Functional Requirements</span></strong></h3>\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">1. Trading Flow Alert List: &nbsp;The app should include a listing of possible trading flows which have either of the two highlighted issues. &nbsp;Users should be able to filter the possible trading flows by reporting country, partner country, commodity, and % difference in weight, netWeightKg, and tradeValue. &nbsp;&nbsp;Please allow users the ability to combine filters.</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">2. Trading Flow Detail Screen: Click on a trading flow should bring up a table of data similar to the one listed above. &nbsp;Rows which indicate one of the issues identified above should be highlighted.</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">3. Trading Flow Detail Screen: &nbsp;The trading flow detail screen should include a graph which shows the difference in netWeightKg between Import and Exports. &nbsp;Showing the differences over all the available years for a certain commodity is very helpful. &nbsp;This is a good example:<br />\n<img src=\"https://lh3.googleusercontent.com/C016vxrKQhY0h3GxcpYQxBaSdWUmAY7ZCtqjutOT9C5d8BKCMmkCgvhblJxHxThPNfsmWkZcbEPsJPeijqu8qVIYye6zyAdbMFwzBuI-71E69xJAOljo6TBRZ43cHOi-ID1F_cVC\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:353px; transform:rotate(0.00rad); width:609px\" /></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">4. Admin Screen: &nbsp;You&rsquo;ll need to provide a screen which provides configuration info for the Vertica database and initiates batch processing to identify records/trading flows where there might be an alert. &nbsp;You don&rsquo;t need to download/query for the entire TradeData database to enable the functionality listed above. &nbsp;Please provide the ability for your tool to process a subset of the records/trade flows in the Record table in addition to processing all the records.</span>\n\n<h3><strong><span style=\"color:#FF0000\">System Requirements</span></strong></h3>\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">1. The raw trading data provided by the UN is available here for analysis:</span><br />\n<span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Host: 54.149.189.221</span><br />\n<span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Port: 5433</span><br />\n<span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Database Name: TradeData</span><br />\n<span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Username: user1</span><br />\n<span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Password: pass1</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">2. Vertica ODBC drivers are available here: </span><u><a href=\"https://my.vertica.com/download/vertica/client-drivers/\" style=\"font-size: 13px; line-height: 1.6; text-decoration: none;\">https://my.vertica.com/download/vertica/client-drivers/</a></u><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">3. There are tables in database for commodities, countries (reporters and partners), and trade flows.</span><br />\n<img src=\"https://lh6.googleusercontent.com/V6VRPG40JjiTdnm8a0kpZsJfwEWazsKbufFeT-YfR6tBj3KpjpJ8iYc2MD3Y5-INNGIC3WKkvmQNcoOYeAZkUK4BbL2nteCNCfZCr3hY5u3iP5A_SXfYa_yjM39rUZZZPU2GoAcu\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:403px; transform:rotate(0.00rad); width:624px\" /><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">4. You&rsquo;ll need to write your alert records a local database. &nbsp;You may use MySQL, PostgreSQL, or the developer version of Microsoft SQL Server.</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">5. You should implement your &ldquo;Audit&rdquo; web application upon the Microsoft .NET stack: C#, &nbsp;ASP.NET .NET 4.5.1+</span>",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30054331",
+  "finalSubmissionGuidelines": "<h2><strong><span style=\"color:rgb(255, 0, 0)\">Submission Deliverables</span></strong><br />\n<span style=\"font-size:12px\">- Full code that covers all requirements</span><br />\n<span style=\"font-size:12px\">- A complete and detailed deployment document explaining how to deploy the application including configuration information.</span></h2>\n\n<h2><span style=\"color:#FF0000\"><strong>Final Submission</strong></span></h2>\n\n<p><span style=\"font-size:12px\">For each member, the final submission should be uploaded via the challenge detail page on <a href=\"http://www.topcoder.com\">topcoder.com</a>.</span></p>\n",
+  "forumId": 33175,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33175",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 49,
+  "numberOfSubmissions": 4,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-24T15:28:00.000Z",
+      "actualStartTime": "2016-06-24T15:28:00.000Z",
+      "scheduledEndTime": "2016-07-04T15:28:00.000Z",
+      "actualendTime": "2016-07-04T15:28:00.000Z",
+      "_id": "58135524550dfb3b52c4d583"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-24T15:33:00.000Z",
+      "actualStartTime": "2016-06-24T15:33:00.000Z",
+      "scheduledEndTime": "2016-07-04T15:28:00.000Z",
+      "actualendTime": "2016-07-04T15:28:00.000Z",
+      "_id": "58135524550dfb3b52c4d582"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-04T15:28:00.000Z",
+      "actualStartTime": "2016-07-04T15:28:00.000Z",
+      "scheduledEndTime": "2016-07-06T17:28:00.000Z",
+      "actualendTime": "2016-07-06T17:28:00.000Z",
+      "_id": "58135524550dfb3b52c4d581"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-06T17:28:00.000Z",
+      "actualStartTime": "2016-07-06T17:28:00.000Z",
+      "scheduledEndTime": "2016-07-07T17:28:00.000Z",
+      "actualendTime": "2016-07-07T17:28:00.000Z",
+      "_id": "58135524550dfb3b52c4d580"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-07T17:28:00.000Z",
+      "actualStartTime": "2016-07-07T17:28:00.000Z",
+      "scheduledEndTime": "2016-07-08T00:35:00.000Z",
+      "actualendTime": "2016-07-08T00:35:00.000Z",
+      "_id": "58135524550dfb3b52c4d57f"
+    }
+  ],
+  "platforms": [
+    "Microsoft Azure"
+  ],
+  "postingDate": "2016-06-24T15:28:00.000Z",
+  "prize": [
+    1500,
+    750
+  ],
+  "projectId": 9610,
+  "registrants": [
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-24T15:39:00.000Z",
+      "submissionDate": "2016-07-02T11:46:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d57e"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-24T16:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d57d"
+    },
+    {
+      "handle": "stevelvovo",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-24T16:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d57c"
+    },
+    {
+      "handle": "shashankreddyk",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-24T18:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d57b"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-24T18:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d57a"
+    },
+    {
+      "handle": "susiak",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-24T19:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d579"
+    },
+    {
+      "handle": "abhicloudstalk",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-24T23:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d578"
+    },
+    {
+      "handle": "smatsumoto",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-25T02:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d577"
+    },
+    {
+      "handle": "asteroidiv",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-25T04:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d576"
+    },
+    {
+      "handle": "Khadoos",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-25T05:45:00.000Z",
+      "submissionDate": "2016-07-04T14:51:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d575"
+    },
+    {
+      "handle": "net_buster",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-25T06:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d574"
+    },
+    {
+      "handle": "googlesmkm",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-25T07:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d573"
+    },
+    {
+      "handle": "Amith",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-25T07:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d572"
+    },
+    {
+      "handle": "moagi.anela",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-25T12:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d571"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-25T17:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d570"
+    },
+    {
+      "handle": "xiufei",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-27T11:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d56f"
+    },
+    {
+      "handle": "wsobolewski",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-26T03:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d56e"
+    },
+    {
+      "handle": "preynal",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-26T17:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d56d"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-27T01:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d56c"
+    },
+    {
+      "handle": "capn-ace",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-27T01:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d56b"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-27T02:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d56a"
+    },
+    {
+      "handle": "AlokDsingh",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-27T04:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d569"
+    },
+    {
+      "handle": "Setako",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-27T12:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d568"
+    },
+    {
+      "handle": "12311231",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-27T13:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d567"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-27T13:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d566"
+    },
+    {
+      "handle": "AtomskiMrav",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-27T18:53:00.000Z",
+      "submissionDate": "2016-07-03T17:20:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d565"
+    },
+    {
+      "handle": "JaydevMehta",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-27T21:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d564"
+    },
+    {
+      "handle": "kinfkong",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-27T22:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d563"
+    },
+    {
+      "handle": "veshu",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-28T02:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d562"
+    },
+    {
+      "handle": "ShindouHikaru",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-28T05:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d561"
+    },
+    {
+      "handle": "kondakovdmitry",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-28T05:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d560"
+    },
+    {
+      "handle": "St.Max",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-28T11:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d55f"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-28T14:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d55e"
+    },
+    {
+      "handle": "Urmass",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-28T15:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d55d"
+    },
+    {
+      "handle": "mbis",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-28T15:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d55c"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-28T20:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d55b"
+    },
+    {
+      "handle": "brandoncornel",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-29T12:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d55a"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-29T19:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d559"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-30T02:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d558"
+    },
+    {
+      "handle": "BebetterSun",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-30T03:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d557"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-30T04:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d556"
+    },
+    {
+      "handle": "kuchiki14",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-30T09:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d555"
+    },
+    {
+      "handle": "zaixiang",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-30T14:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d554"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-30T22:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d553"
+    },
+    {
+      "handle": "demo.b",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-01T01:00:00.000Z",
+      "submissionDate": "2016-07-04T13:24:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d552"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-01T17:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d551"
+    },
+    {
+      "handle": "Kabindas",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-02T17:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d550"
+    },
+    {
+      "handle": "mayank1892",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-02T18:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d54f"
+    },
+    {
+      "handle": "ivywu",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-04T06:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135524550dfb3b52c4d54e"
+    }
+  ],
+  "registrationEndDate": "2016-07-04T15:28:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-07-04T15:28:00.000Z",
+  "submissions": [
+    {
+      "handle": "Standlove",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 93.13,
+      "finalScore": 95.63,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-07-02T11:46:00.000Z",
+      "_id": "58135524550dfb3b52c4d587"
+    },
+    {
+      "handle": "Khadoos",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 86.25,
+      "finalScore": 87.5,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-07-04T14:51:00.000Z",
+      "_id": "58135524550dfb3b52c4d586"
+    },
+    {
+      "handle": "demo.b",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 71.25,
+      "finalScore": 72.5,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-07-04T13:24:00.000Z",
+      "_id": "58135524550dfb3b52c4d585"
+    },
+    {
+      "handle": "AtomskiMrav",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 56.88,
+      "finalScore": 56.88,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-07-03T17:20:00.000Z",
+      "_id": "58135524550dfb3b52c4d584"
+    }
+  ],
+  "technology": [
+    "ASP.NET",
+    "C#",
+    "JavaScript",
+    "Vertica"
+  ]
+}

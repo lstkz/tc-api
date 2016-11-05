@@ -1,0 +1,286 @@
+{
+  "_id": 30042538,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:07:36.951Z",
+  "appealsEndDate": "2014-05-17T00:56:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "TopCoder Competition Engine - Update DotNet TestProcess Code for x64 environment",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<p><span><span><span><span><span><span><span style=\"color:rgb(255, 0, 0); font-family:arial,helvetica,verdana,sans-serif\">Project Overview</span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span style=\"font-family:sans-serif,arial,verdana,trebuchet ms\">TopCoder Competition Engine is a system used for Single Round Matches (SRM) and Marathon Matches (MM). </span></span></span></span></span></span></span></p>\n\n<p>&nbsp;</p>\n\n<p><span><span><span><span><span><span><span style=\"color:rgb(255, 0, 0); font-size:13px\">Competition Task Overview</span></span></span></span></span></span></span></p>\n\n<h4><u>Current Situtation</u></h4>\n\n<p>Recently, we have updated our production environment to x64 OS, but there is a limitation for running .NET solutions (C# and VB.NET), as the</p>\n\n<pre>\n<span>TestProcess.exe and LongWrapper.exe</span></pre>\n\n<p><span><span><span><span><span><span><span style=\"font-family:sans-serif,arial,verdana,trebuchet ms\">used by windows processor are compiled with </span></span></span></span></span></span></span></p>\n\n<pre>\n<span>/platform:x86</span></pre>\n\n<p><span><span><span><span><span><span><span style=\"font-family:sans-serif,arial,verdana,trebuchet ms\">option, you can see </span></span></span></span></span></span></span><a href=\"https://github.com/cloudspokes/app/blob/master/build_csharp.xml\">https://github.com/cloudspokes/app/blob/master/build_csharp.xml</a>.</p>\n\n<pre>\n\n&nbsp;</pre>\n\n<div class=\"line\" id=\"LC15\">&nbsp;&nbsp;&nbsp;&nbsp;<span>&lt;target</span> <span>name=</span><span>&quot;build-csharp&quot;</span> <span>depends=</span><span>&quot;init-csharp&quot;</span> <span>description=</span><span>&quot;Builds CSharp test harness&quot;</span><span>&gt;</span></div>\n\n<div class=\"line\" id=\"LC16\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>&lt;dn:csc</span> <span>srcDir=</span><span>&quot;${csharp.main.dir}&quot;</span> <span>targetType=</span><span>&quot;exe&quot;</span> <span>mainClass=</span><span>&quot;TopCoder.Server.Controller.CTMain&quot;</span></div>\n\n<div class=\"line\" id=\"LC17\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>references=</span><span>&quot;${csharp.lib.dir}/Microsoft.VisualBasic.dll;${csharp.lib.dir}/TopCoder.Io.Serialization.BasicType.dll&quot;</span> <span>outputFile=</span><span>&quot;${build.dotNet}/DotNetCompilerTester.exe&quot;</span> <span>/&gt;</span></div>\n\n<div class=\"line\" id=\"LC18\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>&lt;!-- debuy=&quot;true&quot; can be added --&gt;</span></div>\n\n<div class=\"line\" id=\"LC19\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>&lt;dn:csc</span> <span>srcDir=</span><span>&quot;${csharp.main.dir}&quot;</span> <span style=\"color:#FF0000\">extraOptions=&quot;/platform:x86&quot; </span><span>targetType=</span><span>&quot;exe&quot;</span> <span>mainClass=</span><span>&quot;TopCoder.Internal.LongWrapper&quot;</span></div>\n\n<div class=\"line\" id=\"LC20\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>references=</span><span>&quot;${csharp.lib.dir}/Microsoft.VisualBasic.dll;${csharp.lib.dir}/TopCoder.Io.Serialization.BasicType.dll&quot;</span> <span>outputFile=</span><span>&quot;${build.dotNet}/LongWrapper.exe&quot;</span> <span>/&gt;</span></div>\n\n<div class=\"line\" id=\"LC21\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>&lt;dn:csc</span> <span>targetType=</span><span>&quot;library&quot;</span> <span>outputFile=</span><span>&quot;${build.dotNet}/RefDlls.dll&quot;</span> <span>references=</span><span>&quot;${csharp.lib.dir}/Microsoft.VisualBasic.dll;${csharp.lib.dir}/TopCoder.Io.Serialization.BasicType.dll&quot;</span><span>&gt;</span></div>\n\n<div class=\"line\" id=\"LC22\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>&lt;src</span> <span>dir=</span><span>&quot;${csharp.main.dir}&quot;</span> <span>includes=</span><span>&quot;TopCoder/Server/Compiler/RefDlls.cs&quot;</span><span>/&gt;</span></div>\n\n<div class=\"line\" id=\"LC23\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>&lt;/dn:csc&gt;</span></div>\n\n<div class=\"line\" id=\"LC24\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>&lt;dn:csc</span> <span>srcDir=</span><span>&quot;${csharp.main.dir}&quot;</span> <span>targetType=</span><span>&quot;exe&quot;</span> <span>mainClass=</span><span>&quot;TopCoder.Server.Compiler.AssemblyChecker&quot;</span></div>\n\n<div class=\"line\" id=\"LC25\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>references=</span><span>&quot;${csharp.lib.dir}/Microsoft.VisualBasic.dll;${csharp.lib.dir}/TopCoder.Io.Serialization.BasicType.dll&quot;</span> <span>outputFile=</span><span>&quot;${build.dotNet}/AssemblyChecker.exe&quot;</span> <span>/&gt;</span></div>\n\n<div class=\"line\" id=\"LC26\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>&lt;dn:csc</span> <span>srcDir=</span><span>&quot;${csharp.main.dir}&quot;</span> <span style=\"color:#FF0000\">extraOptions=&quot;/platform:x86&quot;</span> <span>targetType=</span><span>&quot;exe&quot;</span> <span>mainClass=</span><span>&quot;TopCoder.Server.Tester.NetTestProcess&quot;</span></div>\n\n<div class=\"line\" id=\"LC27\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>references=</span><span>&quot;${csharp.lib.dir}/Microsoft.VisualBasic.dll;${csharp.lib.dir}/TopCoder.Io.Serialization.BasicType.dll&quot;</span> <span>outputFile=</span><span>&quot;${build.dotNet}/TestProcess.exe&quot;</span> <span>/&gt;</span></div>\n\n<div class=\"line\" id=\"LC28\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>&lt;dn:csc</span> <span>srcDir=</span><span>&quot;${csharp.main.dir}&quot;</span> <span>targetType=</span><span>&quot;exe&quot;</span> <span>mainClass=</span><span>&quot;TopCoder.Server.Controller.CSharpService&quot;</span></div>\n\n<div class=\"line\" id=\"LC29\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>references=</span><span>&quot;${csharp.lib.dir}/Microsoft.VisualBasic.dll;${csharp.lib.dir}/TopCoder.Io.Serialization.BasicType.dll&quot;</span> <span>outputFile=</span><span>&quot;${build.dotNet}/CSharpService.exe&quot;</span> <span>/&gt;</span></div>\n\n<div class=\"line\" id=\"LC30\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>&lt;dn:csc</span> <span>srcDir=</span><span>&quot;${csharp.main.dir}&quot;</span> <span>targetType=</span><span>&quot;exe&quot;</span> <span>mainClass=</span><span>&quot;TopCoder.Server.Compiler.CSSecurityCheck&quot;</span></div>\n\n<div class=\"line\" id=\"LC31\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>references=</span><span>&quot;${csharp.lib.dir}/Microsoft.VisualBasic.dll;${csharp.lib.dir}/TopCoder.Io.Serialization.BasicType.dll&quot;</span> <span>outputFile=</span><span>&quot;${build.dotNet}/CSSecurityCheck.exe&quot;</span> <span>/&gt;</span></div>\n\n<div class=\"line\" id=\"LC33\">&nbsp;&nbsp;&nbsp;&nbsp;<span>&lt;/target&gt;</span></div>\n\n<div class=\"line\">&nbsp;</div>\n\n<div class=\"line\">This limits to use large memory, like big than 2GB.</div>\n\n<div class=\"line\">&nbsp;</div>\n\n<div class=\"line\"><u>Expectation Solution</u></div>\n\n<div class=\"line\">We&#39;d like to remove the extraOptions limit.</div>\n\n<div class=\"line\">&nbsp;</div>\n\n<div class=\"line\">So please look into the implementation of TestProcess, and make it properly work under x64 architecture environment.</div>\n\n<div class=\"line\">&nbsp;</div>\n\n<div class=\"line\">The related C# Code can be found at <a href=\"https://github.com/cloudspokes/app/tree/master/src/csharp\">https://github.com/cloudspokes/app/tree/master/src/csharp</a></div>\n\n<div class=\"line\">&nbsp;</div>\n\n<div class=\"line\">The Fix should be applied to SRM and MM problem.</div>\n\n<div class=\"line\">&nbsp;</div>\n\n<div class=\"line\">Please check the SRM Problem Guide and MM Problem Guide for reference.</div>\n\n<p><span><span><span><span><span><span><span><span><span><span style=\"color:#0000FF\">About Code Base</span></span></span></span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span>For the code under /home/apps/dev directory, some are hosted in internal svn repositories, some are hosted in private repositories in github.</span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span>You can check <a href=\"http://apps.topcoder.com/wiki/display/%7Efireice/Source+Code+Management+For+TopCoder+Competition+Engine\">Source Code Management For TopCoder Competition Engine - TopCoder Wiki</a></span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span>For SVN Access, please send request to support@topcoder.com, For github access, please post your github account in forum to ask PM to grant you access.</span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span style=\"color:#FF0000\">Arena VM Usage</span></span></span></span></span></p>\n\n<p><span><span><span><span>Before asking your own VM, you need to have a public key on your profile before asking for the VM.</span></span></span></span></p>\n\n<p><span><span><span><span>You can find more details on how to generate a key <span><a href=\"http://apps.topcoder.com/wiki/display/projects/Generate+SSH+Key\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/projects/Generate+SSH+Key</a></span> and how to connect using it <span><a href=\"http://apps.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key</a></span>.</span></span></span></span></p>\n\n<p><span><span><span><span>Please reference <span><a href=\"http://apps.topcoder.com/wiki/display/docs/Competition+Engine+VM+Setup\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/docs/Competition+Engine+VM+Setup</a></span> for general usage.</span></span></span></span></p>\n\n<p><span><span><span><span style=\"color:#FF0000\"><span>Previously, we have made several update for the Arena VM.&nbsp; So when the Arena VM allocated is available for you, there is a problem and a SRM contest already setup, you can reuse that for testing.</span></span></span></span></span></p>\n\n<p><span style=\"color:#FF0000\">Windows VM</span></p>\n\n<p>processor should be properly setup in Windows VM in order to reproduce the problem and verify your fix.</p>\n\n<p>a Windows VM will be provided to each competitor, and the login credential will be provided in forum.</p>\n</div>\n</div>\n</div>\n\n<p>&nbsp;</p>\n\n<div class=\"bottom_spec\">&nbsp;</div>\n",
+  "digitalRunPoints": 540,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30042538",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2014-05-17T13:15:00.000Z",
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<p><span><span><span><span><span><span><strong><span style=\"color:#FF0000\"><span>Submission Deliverables</span></span></strong></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span style=\"font-size:12px\">Below is an overview of the deliverables:</span></span></span></span></span></span></span></p>\n\n<ul>\n\t<li><span><span><span><span><span><span><span style=\"font-size:12px\">Code Changes for getting and displaying the used memory</span></span></span></span></span></span></span></li>\n\t<li><span><span><span><span><span><span><span style=\"font-size:12px\">Detail Deployment Guide describing your solution.</span></span></span></span></span></span></span></li>\n</ul>\n\n<p><span><span><span><span><span><span><span style=\"font-size:12px\"><span style=\"color:#FF0000\"><strong>Final Submission</strong></span></span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span style=\"font-size:12px\">For each member, the final submission should be uploaded to the Online Review Tool.</span></span></span></span></span></span></span></p>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n",
+  "forumId": 22830,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=22830",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 11,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-08T03:19:00.000Z",
+      "actualStartTime": "2014-05-08T03:19:00.000Z",
+      "scheduledEndTime": "2014-05-08T03:19:00.000Z",
+      "actualendTime": "2014-05-08T03:19:00.000Z",
+      "_id": "58133f88550dfb3b52bdeab8"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-08T03:20:00.000Z",
+      "actualStartTime": "2014-05-08T03:20:00.000Z",
+      "scheduledEndTime": "2014-05-08T05:36:00.000Z",
+      "actualendTime": "2014-05-08T05:36:00.000Z",
+      "_id": "58133f88550dfb3b52bdeab7"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-08T13:00:00.000Z",
+      "actualStartTime": "2014-05-08T13:00:00.000Z",
+      "scheduledEndTime": "2014-05-10T13:00:00.000Z",
+      "actualendTime": "2014-05-10T13:00:00.000Z",
+      "_id": "58133f88550dfb3b52bdeab6"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-08T13:05:00.000Z",
+      "actualStartTime": "2014-05-08T13:05:00.000Z",
+      "scheduledEndTime": "2014-05-13T13:00:00.000Z",
+      "actualendTime": "2014-05-13T13:00:00.000Z",
+      "_id": "58133f88550dfb3b52bdeab5"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-13T13:00:00.000Z",
+      "actualStartTime": "2014-05-13T13:00:00.000Z",
+      "scheduledEndTime": "2014-05-13T13:17:00.000Z",
+      "actualendTime": "2014-05-13T13:17:00.000Z",
+      "_id": "58133f88550dfb3b52bdeab4"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-13T13:17:00.000Z",
+      "actualStartTime": "2014-05-13T13:17:00.000Z",
+      "scheduledEndTime": "2014-05-15T12:12:00.000Z",
+      "actualendTime": "2014-05-15T12:12:00.000Z",
+      "_id": "58133f88550dfb3b52bdeab3"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-15T12:12:00.000Z",
+      "actualStartTime": "2014-05-15T12:12:00.000Z",
+      "scheduledEndTime": "2014-05-16T12:12:00.000Z",
+      "actualendTime": "2014-05-16T12:12:00.000Z",
+      "_id": "58133f88550dfb3b52bdeab2"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-16T12:12:00.000Z",
+      "actualStartTime": "2014-05-16T12:12:00.000Z",
+      "scheduledEndTime": "2014-05-17T00:56:00.000Z",
+      "actualendTime": "2014-05-17T00:56:00.000Z",
+      "_id": "58133f88550dfb3b52bdeab1"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-17T00:56:00.000Z",
+      "actualStartTime": "2014-05-17T00:56:00.000Z",
+      "scheduledEndTime": "2014-05-17T01:05:00.000Z",
+      "actualendTime": "2014-05-17T01:05:00.000Z",
+      "_id": "58133f88550dfb3b52bdeab0"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-17T01:05:00.000Z",
+      "actualStartTime": "2014-05-17T01:05:00.000Z",
+      "scheduledEndTime": "2014-05-17T13:15:00.000Z",
+      "actualendTime": "2014-05-17T13:15:00.000Z",
+      "_id": "58133f88550dfb3b52bdeaaf"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-17T13:15:00.000Z",
+      "actualStartTime": "2014-05-17T13:15:00.000Z",
+      "scheduledEndTime": "2014-05-17T13:46:00.000Z",
+      "actualendTime": "2014-05-17T13:46:00.000Z",
+      "_id": "58133f88550dfb3b52bdeaae"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-17T13:46:00.000Z",
+      "actualStartTime": "2014-05-17T13:46:00.000Z",
+      "scheduledEndTime": "2014-05-19T11:33:00.000Z",
+      "actualendTime": "2014-05-19T11:33:00.000Z",
+      "_id": "58133f88550dfb3b52bdeaad"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2014-05-08T13:00:00.000Z",
+  "prize": [
+    1200,
+    600
+  ],
+  "projectId": 4507,
+  "registrants": [
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-05-08T14:30:00.000Z",
+      "submissionDate": null,
+      "rating": "810",
+      "colorStyle": "color: #999999",
+      "_id": "58133f88550dfb3b52bdeaac"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-08T14:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f88550dfb3b52bdeaab"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2014-05-08T18:56:00.000Z",
+      "submissionDate": null,
+      "rating": "1373",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133f88550dfb3b52bdeaaa"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "33%",
+      "registrationDate": "2014-05-08T20:29:00.000Z",
+      "submissionDate": "2014-05-13T12:52:00.000Z",
+      "rating": "1363",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133f88550dfb3b52bdeaa9"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-05-09T00:51:00.000Z",
+      "submissionDate": null,
+      "rating": "1135",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f88550dfb3b52bdeaa8"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-09T04:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f88550dfb3b52bdeaa7"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "0%",
+      "registrationDate": "2014-05-09T12:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f88550dfb3b52bdeaa6"
+    },
+    {
+      "handle": "gondzo",
+      "reliability": "33%",
+      "registrationDate": "2014-05-09T18:20:00.000Z",
+      "submissionDate": null,
+      "rating": "779",
+      "colorStyle": "color: #999999",
+      "_id": "58133f88550dfb3b52bdeaa5"
+    },
+    {
+      "handle": "kanth_coder133",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-10T00:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f88550dfb3b52bdeaa4"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-10T08:44:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58133f88550dfb3b52bdeaa3"
+    },
+    {
+      "handle": "savon_cn",
+      "reliability": "100%",
+      "registrationDate": "2014-05-10T10:34:00.000Z",
+      "submissionDate": "2014-05-12T01:52:00.000Z",
+      "rating": "1514",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58133f88550dfb3b52bdeaa2"
+    }
+  ],
+  "registrationEndDate": "2014-05-10T13:00:00.000Z",
+  "reliabilityBonus": 240,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-05-13T13:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "savon_cn",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 94.99,
+      "finalScore": 98.59,
+      "points": 378,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-05-12T01:52:00.000Z",
+      "_id": "58133f88550dfb3b52bdeaba"
+    },
+    {
+      "handle": "dexy",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 88.47,
+      "finalScore": 92.05,
+      "points": 162,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-05-13T12:52:00.000Z",
+      "_id": "58133f88550dfb3b52bdeab9"
+    }
+  ],
+  "technology": [
+    ".NET",
+    "C#",
+    "Java"
+  ]
+}

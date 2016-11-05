@@ -1,0 +1,334 @@
+{
+  "_id": 30038744,
+  "_isComplete": true,
+  "__v": 2139,
+  "_lastUpdate": "2016-11-05T11:07:36.375Z",
+  "appealsEndDate": "2013-12-25T02:05:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Release Assembly - TopCoder NodeJS API Improvement - Contest Search API",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Cancelled - Zero Submissions",
+  "detailedRequirements": "<div class=\"previewMask\">\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Project Overview</span></span></h2>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">TopCoder and the TopCoder community have worked hard to get the platform to its currently level of maturity, but we&#39;re far from done. It&#39;s time to take the platform to the next level. TopCoder is going to start taking some steps to open up the platform API to the outside and community developers so they could incorporate it in their websites, applications or build their own applications (web, mobile or desktop).</span></p>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">The ultimate goal is to open up and build an &quot;API&quot; that is targeting all different type of audiences - Software and Studio Competitors, SRM/MM competitors, Copilots, Admins and TopCoder partners - each audience will have different interests and usages of the API, so it will be a huge project and we need to make sure that we are in the right direction from the beginning.</span></p>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Currently, we have built the first batch of APIs with functional tests. </span></p>\n\n<p>When testing and reviewing the contest searching APIs, we found many parts can be improved.</p>\n\n<p>We have done some initial research and coding, this contest is going to follow that to get contest searching APIs improved.</p>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Competition Task Overview</span></span></h2>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color:#FF0000;\"><span style=\"font-size: 12px;\"><img align=\"absmiddle\" alt=\"\" border=\"0\" height=\"16\" src=\"http://apps.topcoder.com/wiki/images/icons/emoticons/warning.gif\" width=\"16\" /> <strong>Please raise questions as quick as you can, I am familiar with related database and code base, I can provide as much support as I can.</strong></span></span></span></p>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color:#FF0000;\"><span style=\"font-size: 12px;\"><img align=\"absmiddle\" alt=\"\" border=\"0\" height=\"16\" src=\"http://apps.topcoder.com/wiki/images/icons/emoticons/warning.gif\" width=\"16\" /></span><strong>The updated code must still deploy and work on heroku - any submission which can&#39;t be deployed on heroku successfully will be failed in screening phase - primary reviewer must check this.</strong></span></span></p>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">The implementation will base on the node.js version of TC platform API - <span class=\"nobr\"><a href=\"https://github.com/cloudspokes/tc-api\" rel=\"nofollow\">https://github.com/cloudspokes/tc-api</a>.</span> <strong>Please follow the existing actionhero pattern for your development.</strong></span></p>\n\n<p>For this contest, you are expected to start your work based on <strong>fixsearching </strong>branch.</p>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Existing Problems</span></span></h3>\n\n<ul>\n\t<li>We have separate search queries for studio upcoming, studio active, studio open, studio past, software upcoming, software active, software open, software past. <span style=\"color:#FF0000;\">all of these can be one query</span></li>\n\t<li>parameters were not named consistently</li>\n</ul>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">How to Improve</span></span></h3>\n\n<p>You can see the relative changes we currently made by <a href=\"https://github.com/cloudspokes/tc-api/compare/fixsearching\">https://github.com/cloudspokes/tc-api/compare/fixsearching</a>.</p>\n\n<p>We have made changes to &quot;search_active_contest&quot; and &quot;search_active_contest_count&quot;.</p>\n\n<p>We have made comments in the SQL about what settings should change for the various permutations.</p>\n\n<p>Basically,</p>\n\n<ol>\n\t<li class=\"msg Nth\">using the &quot;search_active_contest&quot; as a base (on the fixsearching branch), create ONE query for searching both software and studio.\n\t<ul>\n\t\t<li class=\"msg Nth\">parameterize software vs studio vs both (already done)</li>\n\t\t<li class=\"msg Nth\">parameterize ACTIVE vs OPEN vs UPCOMING vs PAST</li>\n\t\t<li class=\"msg Nth\">Set &quot;OPEN&quot; to the default, not active, and fix active to mean all contests live in any phase</li>\n\t\t<li class=\"msg Nth\">OPEN means live contests where submission is not closed</li>\n\t</ul>\n\t</li>\n\t<li class=\"msg Nth\">remove all the old queries - &quot;get_studio_contests_open&quot; &quot;get_studio_contests_active&quot; &quot;search_past_contest&quot; etc\n\t<ul>\n\t\t<li class=\"msg Nth\">rename the one query to general &quot;search_software_studio&quot; (or something similar)</li>\n\t</ul>\n\t</li>\n\t<li class=\"msg Nth\">clean up all code. consolidate into small actions, as already partly done in contests.js</li>\n\t<li class=\"msg Nth\">fix and update tests, we need to follow the standard - <span class=\"css-truncate css-truncate-target\"><a class=\"js-directory-link\" href=\"https://github.com/cloudspokes/tc-api/blob/master/docs/Tests%20Creation%20Guide.docx\" id=\"a27028a2293e67cad481e88fad7bc18e-d4ffffe0ae5799ce363e89b27a50d54393e80be0\" title=\"Tests Creation Guide.docx\">Tests Creation Guide.docx</a></span></li>\n\t<li class=\"msg Nth\">work in &quot;fixsearching&quot; branch. merge in master before submitting.</li>\n\t<li class=\"msg Nth\">update the apiary.apib file to reflect the changes.</li>\n</ol>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Testing</span></span></h3>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"font-size:12px;\">The API Framework supports tests. </span>Use <a href=\"https://github.com/visionmedia/supertest\">supertest</a> with <a href=\"http://visionmedia.github.io/mocha/\">mocha</a>. Don&#39;t install mocha globally.</span></p>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color:#FF0000;\">you must use mocha BDD style (which is the default), within that, you can optionally use chai.</span></span></p>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Code Format</span></span></h3>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">All code must pass <a href=\"http://www.jslint.com/\">jslint</a>. You may use &quot;nomen: true&quot;.</span></p>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Winner Only</span></span></h3>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Winner will create pull request against the main github repo in final fix phase and help merge with master. <span style=\"color:#FF0000;\">The changed files should be unix style, you can use dos2unix command to convert it before commiting.</span></span></p>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Reviewer Responsiblities</span></span></h3>\n\n<p style=\"font-size: 13px; margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Reviewers need to write/update Supertest tests for the these APIs.</p>\n\n<p style=\"font-size: 13px; margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><strong style=\"padding: 0px; margin: 0px; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; line-height: 18px;\">Note: Tests must&nbsp;follow this standard - </strong><span class=\"css-truncate css-truncate-target\"><a class=\"js-directory-link\" href=\"https://github.com/cloudspokes/tc-api/blob/master/docs/Tests%20Creation%20Guide.docx\" id=\"a27028a2293e67cad481e88fad7bc18e-d4ffffe0ae5799ce363e89b27a50d54393e80be0\" title=\"Tests Creation Guide.docx\">Tests Creation Guide.docx</a></span></p>\n\n<p style=\"font-size: 13px; margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">There are three roles:</p>\n\n<ul style=\"font-size: 13px;\">\n\t<li style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Accuracy - Tests the implementation on the accuracy of the results when using the component.</li>\n\t<li style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Failure - Tests the implementation&#39;s ability to handle bad data and incorrect usage.</li>\n\t<li style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Security - Tests the oauth, sql inject and other security related requirements.</li>\n</ul>\n\n<p style=\"font-size: 13px; margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Reviewer could send preferred role by Contact Manager&nbsp;after system selected the reviwer.</p>\n\n<p style=\"font-size: 13px; margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Copilot will assign the role to reviewers if reviewer didn&#39;t send the preferred role information.</p>\n\n<p style=\"font-size: 13px; margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Reviewer must create pull request from GitHub for the tests.</p>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color:#FF0000;\">Virutal Machines (VMs)</span></span></h3>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">VM specific information is found here: <span class=\"nobr\"><a href=\"http://www.topcoder.com/wiki/display/docs/VM+Image+2.5\" rel=\"nofollow\">http://www.topcoder.com/wiki/display/docs/VM+Image+2.5</a></span></span></p>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Upon registration as a submitter or reviewer you will need to request a VM based on the TopCoder systems image. The VM will be active through aggregation review, after which it will be terminated except for the winner&#39;s and the reviewers&#39;. To request your image, please post in contest forum.</span></p>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Before requesting your VM, you need to ensure that you have an SSH key created and in your member profile. Instructions to do so are here: <span class=\"nobr\"><a href=\"http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key\" rel=\"nofollow\">http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key</a></span>, and instructions to connect afterwards are here: <span class=\"nobr\"><a href=\"http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key\" rel=\"nofollow\">http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key</a></span>.</span></p>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Please realize that VMs are currently issued manually. We make every attempt to issue the VM as soon as it is requested, however, there may be delays of up to 12 hours depending on time of day when you request. We encourage everyone to request a VM as soon as possible to minimize any such delays.</span></p>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Technology Overview</span></span></h2>\n\n<ul style=\"font-family: Arial, Helvetica, Verdana, sans-serif; font-size: 12px; line-height: 16px;\">\n\t<li><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">JavaScript</span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"nobr\"><a href=\"http://nodejs.org/\" rel=\"nofollow\">Node.js 0.10.x</a></span></span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><a href=\"https://github.com/evantahler/actionHero\">actionhero.js framework</a></span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><a href=\"https://github.com/visionmedia/supertest\">supertest</a></span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><a href=\"http://visionmedia.github.io/mocha/\">mocha</a></span></li>\n</ul>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Documentation Provided</span></span></h2>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Please check the deployment guide in codebase for reference.</span></p>\n</div>\n",
+  "digitalRunPoints": 360,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30038744",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2013-12-26T14:05:00.000Z",
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<p><span class=\"small_info_spec\" id=\"rswGuidelines\"><strong><span style=\"color:#FF0000;\"><span style=\"line-height: 1.6em;\">Submission Deliverables</span></span></strong></span></p>\n\n<p><span class=\"small_info_spec\" id=\"rswGuidelines\"><span style=\"font-size:12px;\">A complete list of deliverables can be viewed in the TopCoder Assembly competition Tutorial at: </span><a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a></span></p>\n\n<p><span class=\"small_info_spec\" id=\"rswGuidelines\"><span style=\"font-size:12px;\">Below is an overview of the deliverables:</span></span></p>\n\n<ul>\n\t<li><span class=\"small_info_spec\" id=\"rswGuidelines\">Source Code.</span></li>\n\t<li><span class=\"small_info_spec\" id=\"rswGuidelines\">Deployment guide to configure and verify the application.</span></li>\n</ul>\n\n<p><span class=\"small_info_spec\" id=\"rswGuidelines\"><strong><span style=\"color:#FF0000;\"><span style=\"line-height: 1.6em;\">Final Submission </span></span></strong></span></p>\n\n<p><span class=\"small_info_spec\" id=\"rswGuidelines\"><span style=\"font-size:12px;\">For each member, the final submission should be uploaded to the Online Review Tool.</span></span></p>\n</div>\n",
+  "forumId": 20777,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=20777",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 18,
+  "numberOfSubmissions": 0,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-18T13:11:00.000Z",
+      "actualStartTime": "2013-12-18T13:11:00.000Z",
+      "scheduledEndTime": "2013-12-18T13:11:00.000Z",
+      "actualendTime": "2013-12-18T13:11:00.000Z",
+      "_id": "581dbd78550dfb3b52be4e78"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-18T13:11:00.000Z",
+      "actualStartTime": "2013-12-18T13:11:00.000Z",
+      "scheduledEndTime": "2013-12-18T16:00:00.000Z",
+      "actualendTime": "2013-12-18T16:00:00.000Z",
+      "_id": "581dbd78550dfb3b52be4e77"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-19T02:00:00.000Z",
+      "actualStartTime": "2013-12-19T02:00:00.000Z",
+      "scheduledEndTime": "2013-12-21T02:00:00.000Z",
+      "actualendTime": "2013-12-21T02:00:00.000Z",
+      "_id": "581dbd78550dfb3b52be4e76"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-19T02:05:00.000Z",
+      "actualStartTime": "2013-12-19T02:05:00.000Z",
+      "scheduledEndTime": "2013-12-22T02:05:00.000Z",
+      "actualendTime": "2013-12-22T02:05:00.000Z",
+      "_id": "581dbd78550dfb3b52be4e75"
+    },
+    {
+      "type": "Screening",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-12-22T02:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-12-22T14:05:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd78550dfb3b52be4e74"
+    },
+    {
+      "type": "Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-12-22T14:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-12-23T14:05:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd78550dfb3b52be4e73"
+    },
+    {
+      "type": "Appeals",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-12-23T14:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-12-24T14:05:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd78550dfb3b52be4e72"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-12-24T14:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-12-25T02:05:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd78550dfb3b52be4e71"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-12-25T02:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-12-25T14:05:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd78550dfb3b52be4e70"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-12-25T14:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-12-26T14:05:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd78550dfb3b52be4e6f"
+    },
+    {
+      "type": "Final Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-12-26T14:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-12-27T02:05:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd78550dfb3b52be4e6e"
+    },
+    {
+      "type": "Approval",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-12-27T02:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-01-01T02:05:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd78550dfb3b52be4e6d"
+    },
+    {
+      "type": "Post-Mortem",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-22T02:05:00.000Z",
+      "actualStartTime": "2013-12-22T02:05:00.000Z",
+      "scheduledEndTime": "2013-12-23T02:05:00.000Z",
+      "actualendTime": "2013-12-23T02:05:00.000Z",
+      "_id": "581dbd78550dfb3b52be4e6c"
+    }
+  ],
+  "platforms": [
+    "Heroku",
+    "NodeJS"
+  ],
+  "postingDate": "2013-12-19T02:00:00.000Z",
+  "prize": [
+    800,
+    400
+  ],
+  "projectId": 6757,
+  "registrants": [
+    {
+      "handle": "dexy",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-19T11:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd78550dfb3b52be4e6b"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "6%",
+      "registrationDate": "2013-12-19T06:26:00.000Z",
+      "submissionDate": null,
+      "rating": "976",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbd78550dfb3b52be4e6a"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-19T09:03:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd78550dfb3b52be4e69"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "20%",
+      "registrationDate": "2013-12-19T09:52:00.000Z",
+      "submissionDate": null,
+      "rating": "829",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd78550dfb3b52be4e68"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "6%",
+      "registrationDate": "2013-12-19T10:41:00.000Z",
+      "submissionDate": null,
+      "rating": "1677",
+      "colorStyle": "color: #DDCC00",
+      "_id": "581dbd78550dfb3b52be4e67"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-19T11:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd78550dfb3b52be4e66"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "13%",
+      "registrationDate": "2013-12-19T12:09:00.000Z",
+      "submissionDate": null,
+      "rating": "631",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd78550dfb3b52be4e65"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-19T14:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd78550dfb3b52be4e64"
+    },
+    {
+      "handle": "sumpahpemuda",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-19T14:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd78550dfb3b52be4e63"
+    },
+    {
+      "handle": "saarixx",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-19T14:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd78550dfb3b52be4e62"
+    },
+    {
+      "handle": "kalc",
+      "reliability": "0%",
+      "registrationDate": "2013-12-19T14:30:00.000Z",
+      "submissionDate": null,
+      "rating": "1152",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbd78550dfb3b52be4e61"
+    },
+    {
+      "handle": "rajeshk87",
+      "reliability": "0%",
+      "registrationDate": "2013-12-19T14:51:00.000Z",
+      "submissionDate": null,
+      "rating": "600",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd78550dfb3b52be4e60"
+    },
+    {
+      "handle": "patka",
+      "reliability": "0%",
+      "registrationDate": "2013-12-19T15:16:00.000Z",
+      "submissionDate": null,
+      "rating": "566",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd78550dfb3b52be4e5f"
+    },
+    {
+      "handle": "LCxjtu",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-20T00:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd78550dfb3b52be4e5e"
+    },
+    {
+      "handle": "brain_cn",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-20T01:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd78550dfb3b52be4e5d"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "0%",
+      "registrationDate": "2013-12-20T14:56:00.000Z",
+      "submissionDate": null,
+      "rating": "997",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbd78550dfb3b52be4e5c"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-20T15:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd78550dfb3b52be4e5b"
+    },
+    {
+      "handle": "deepsolo9",
+      "reliability": "0%",
+      "registrationDate": "2013-12-20T15:31:00.000Z",
+      "submissionDate": null,
+      "rating": "1169",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbd78550dfb3b52be4e5a"
+    }
+  ],
+  "registrationEndDate": "2013-12-21T02:00:00.000Z",
+  "reliabilityBonus": 160,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2013-12-22T02:05:00.000Z",
+  "submissions": [],
+  "technology": [
+    "Node.js"
+  ]
+}

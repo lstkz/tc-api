@@ -1,0 +1,483 @@
+{
+  "_id": 30049344,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:08:02.467Z",
+  "appealsEndDate": "2015-03-25T16:32:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Chemical Database Viewing Tool Font end and Back End Integration",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><strong>Project Overview:</strong></p>\n\n<p>We&#39;re looking to provide a visualization tool for a database of chemical structures. The chemical structures will be referred to by name and by a chemical structure representation. The names will be text strings and the structures will be images that will be provided from the software. There will be a tree-like hierarchy of structures that are possible to view and the idea from the client is that they&#39;d like a way of filtering results from this tree to let them narrow the search space, along with providing search tools to narrow the view based on the text strings.</p>\n\n<p>In total there are currently only ~150 chemical structures to be viewed although they anticipate this number to grow over the next few years, possibly up to about a thousand in all so the solution should gracefully scale up to this size.</p>\n\n<p><strong>Challenge Overview:</strong></p>\n\n<p>In this challenge, we are expecting our competitors to integrate the front end code and back end code to complete the&nbsp;Chemical Database Viewing Tool.</p>\n\n<p>The front end challenge and back end challenge details page are:</p>\n\n<ul>\n\t<li>front end -&nbsp;<a href=\"http://www.topcoder.com/challenge-details/30048517/?type=develop&amp;noncache=true\">http://www.topcoder.com/challenge-details/30048517/?type=develop&amp;noncache=true</a></li>\n\t<li>back end -&nbsp;<a href=\"http://www.topcoder.com/challenge-details/30048053/?type=develop&amp;noncache=true\">http://www.topcoder.com/challenge-details/30048053/?type=develop&amp;noncache=true</a></li>\n</ul>\n\n<p>The front end codes and the back end codes are provided in the forum.</p>\n\n<p><strong>The challenge requirements:</strong></p>\n\n<ul>\n\t<li>\n\t<p><strong>Implement both 1) Tree View and 2) List View in the front end UI.</strong></p>\n\t</li>\n\t<li>\n\t<p><span style=\"color:rgb(255, 0, 0)\">Python 2.7, PyQt 4.11.3</span>&nbsp;and&nbsp;<span style=\"color:rgb(255, 0, 0)\">mysql 5.0+</span>&nbsp;is required in this challenge.</p>\n\t</li>\n\t<li>Competitors in this challenge are responsible for updating the back end code where necessary if need changes to fulfill the front end UI requirements.</li>\n\t<li>The back end database APIs (refer to apiwrapper.py) support the following use cases:\n\t<ul>\n\t\t<li>\n\t\t<p>View proteins :&nbsp;view_proteins(self, user_id)</p>\n\t\t</li>\n\t\t<li>\n\t\t<p>View Ligand :&nbsp;&nbsp;view_ligand(self, user_id)</p>\n\t\t</li>\n\t\t<li>\n\t\t<p>Download selected strucures:&nbsp;download_selected_structures(self, user_id, structure_id)</p>\n\t\t</li>\n\t\t<li>\n\t\t<p>Search substructures:&nbsp;search_substructures(self, substructure_string, user_id)</p>\n\t\t</li>\n\t\t<li>\n\t\t<p>Add commentary at ligand level :&nbsp;add_comment(self, comment_text, user_id, structure_id)</p>\n\n\t\t<ul>\n\t\t\t<li>\n\t\t\t<p>���Users who is using this viewing tool can add commentary</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>\n\t\t<p>���Search comment by ligand ID or by comment content:&nbsp;search_comment_by_structure_id(self, user_id, structure_id) &amp;&nbsp;search_comment_by_content(self, content, user_id)</p>\n\t\t</li>\n\t\t<li>\n\t\t<p>Edit comment &nbsp;/Delete comment:&nbsp;edit_comment_by_structure_id(self, new_content, user_id, structure_id &amp;&nbsp;delete_comment_by_structure_id(self, user_id, structure_id)</p>\n\t\t</li>\n\t\t<li>\n\t\t<p>���Logs all interaction</p>\n\n\t\t<ul>\n\t\t\t<li>\n\t\t\t<p>���Including who&#39;s viewing each structure, who is adding commentary, who clicked each protein, which structures are viewed and used, who&#39;s using the tool .etc</p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p>Logs all Mysql errors</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li>\n\t<p>������The back end database has setup some sample testing data, you can use them for testig in this assembly.</p>\n\t</li>\n\t<li>\n\t<p><span style=\"color:rgb(255, 0, 0)\"><strong>All screens in the DATA tab in front end UI are in scope of this challenge except explicity indicated below:&nbsp;</strong></span></p>\n\n\t<ul>\n\t\t<li>\n\t\t<p><span style=\"color:rgb(255, 0, 0)\"><strong>���</strong></span>The data being represented has 3 levels of hierarchy:</p>\n\n\t\t<p>1. &nbsp; &nbsp; The top level is &quot;TYPE&quot; and can currently be one of 3 values. This may expand in future but not by much. <span style=\"background-color:#FFFFE0\">Please add the a new column &quot;structure_type&quot; into table structures to store the type value.</span><br />\n\t\t2. &nbsp; &nbsp; The middle level is &quot;PROTEIN&quot; (as shown by the buttons in the current UI). There are currently ~7 but that could increase to 30+.<br />\n\t\t3. &nbsp; &nbsp; The bottom level is &quot;LIGAND&quot; (as shown in the data table in the current UI). There can be from 1 to hundreds here.</p>\n\n\t\t<p><span style=\"background-color:#FFFFE0\">Basically each type can have multiple proteins associated, and each protein can have multiple ligands in terms of a tree structure. The type, proteins and ligands are all stored in the flat table &quot;structures&quot;</span></p>\n\t\t</li>\n\t\t<li>\n\t\t<p>The following search should be implemented:</p>\n\n\t\t<ul>\n\t\t\t<li>\n\t\t\t<p>1) Search By Type</p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p>2) Search By Protein</p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p>3) Search By Variant</p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p>4) Search By Ligand</p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p>5) Search By Comment Content</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>\n\t\t<p>The sorting (ASC / DESC) by type, protein, Variant and Ligand should be implemented. <span style=\"background-color:#FFFFE0\">When performing the sorting the UI is not very responsivie, please improve the performance so the UI is not lagging when performing sorting and filter.</span></p>\n\t\t</li>\n\t\t<li>\n\t\t<p>Add comment should be implemented for Ligand.</p>\n\t\t</li>\n\t\t<li>\n\t\t<p>The comments and replies for each Ligand should be sorted by posting time in DESC order.</p>\n\t\t</li>\n\t\t<li>\n\t\t<p>Clicking each protein in the tree / list view will display a popup. The content in the text field should be read from <em>structures:protein_comment</em> column. Add a new blob column in the structures table called protein_image to hold the image data.</p>\n\t\t</li>\n\t\t<li>\n\t\t<p>For each ligand in the tree view or list view, the ligand description should be read from <em>structures:ligand_comment</em></p>\n\t\t</li>\n\t\t<li>\n\t\t<p>The <u>View Ligand Details with comments</u> should be implemented (click the information button or <u>read more</u>). For details, display</p>\n\n\t\t<ul>\n\t\t\t<li>\n\t\t\t<p>Type</p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p>Protein</p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p>Variant</p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p>All the comments sorting by posting date in DESC order.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>\n\t\t<p><span style=\"color:#FF0000\">The Download is out of the scope</span></p>\n\t\t</li>\n\t\t<li>\n\t\t<p><span style=\"color:#FF0000\">The Eye icon (Py feature) is out of the scope.</span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>To help competitors understand more about the Chemical Database Viewing Tool, we will also attach the storyboards of this tool.</p>\n\n<p>In this challenge, local mysql setup is required, we will not provide VMs for development.</p>\n\n<p><strong>Code Base:</strong></p>\n\n<p>The code base archive <strong>code_base.7z</strong> has been attached to the Documentation section in the challenge forum. It contains both front end and backend codes.</p>\n",
+  "digitalRunPoints": 540,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30049344",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2015-03-28T04:11:00.000Z",
+  "finalSubmissionGuidelines": "<ul>\n\t<li>The whole integrated application with all the source codes, configuration files and test files.</li>\n\t<li>The deployment guide with detailed verification steps.</li>\n</ul>\n",
+  "forumId": 28656,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=28656",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 33,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-17T07:53:00.000Z",
+      "actualStartTime": "2015-03-17T07:53:00.000Z",
+      "scheduledEndTime": "2015-03-17T07:56:00.000Z",
+      "actualendTime": "2015-03-17T07:56:00.000Z",
+      "_id": "58133fa2550dfb3b52bdfba4"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-17T07:56:00.000Z",
+      "actualStartTime": "2015-03-17T07:56:00.000Z",
+      "scheduledEndTime": "2015-03-17T10:49:00.000Z",
+      "actualendTime": "2015-03-17T10:49:00.000Z",
+      "_id": "58133fa2550dfb3b52bdfba3"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-17T13:01:00.000Z",
+      "actualStartTime": "2015-03-17T13:01:00.000Z",
+      "scheduledEndTime": "2015-03-19T13:02:00.000Z",
+      "actualendTime": "2015-03-19T13:02:00.000Z",
+      "_id": "58133fa2550dfb3b52bdfba2"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-17T13:06:00.000Z",
+      "actualStartTime": "2015-03-17T13:06:00.000Z",
+      "scheduledEndTime": "2015-03-22T13:02:00.000Z",
+      "actualendTime": "2015-03-22T13:02:00.000Z",
+      "_id": "58133fa2550dfb3b52bdfba1"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-22T13:03:00.000Z",
+      "actualStartTime": "2015-03-22T13:03:00.000Z",
+      "scheduledEndTime": "2015-03-23T08:36:00.000Z",
+      "actualendTime": "2015-03-23T08:36:00.000Z",
+      "_id": "58133fa2550dfb3b52bdfba0"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-23T08:36:00.000Z",
+      "actualStartTime": "2015-03-23T08:36:00.000Z",
+      "scheduledEndTime": "2015-03-25T08:24:00.000Z",
+      "actualendTime": "2015-03-25T08:24:00.000Z",
+      "_id": "58133fa2550dfb3b52bdfb9f"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-25T08:25:00.000Z",
+      "actualStartTime": "2015-03-25T08:25:00.000Z",
+      "scheduledEndTime": "2015-03-25T09:32:00.000Z",
+      "actualendTime": "2015-03-25T09:32:00.000Z",
+      "_id": "58133fa2550dfb3b52bdfb9e"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-25T09:32:00.000Z",
+      "actualStartTime": "2015-03-25T09:32:00.000Z",
+      "scheduledEndTime": "2015-03-25T16:32:00.000Z",
+      "actualendTime": "2015-03-25T16:32:00.000Z",
+      "_id": "58133fa2550dfb3b52bdfb9d"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-25T16:32:00.000Z",
+      "actualStartTime": "2015-03-25T16:32:00.000Z",
+      "scheduledEndTime": "2015-03-26T04:25:00.000Z",
+      "actualendTime": "2015-03-26T04:25:00.000Z",
+      "_id": "58133fa2550dfb3b52bdfb9c"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-26T04:25:00.000Z",
+      "actualStartTime": "2015-03-26T04:25:00.000Z",
+      "scheduledEndTime": "2015-03-28T04:11:00.000Z",
+      "actualendTime": "2015-03-28T04:11:00.000Z",
+      "_id": "58133fa2550dfb3b52bdfb9b"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-28T04:11:00.000Z",
+      "actualStartTime": "2015-03-28T04:11:00.000Z",
+      "scheduledEndTime": "2015-03-29T05:19:00.000Z",
+      "actualendTime": "2015-03-29T05:19:00.000Z",
+      "_id": "58133fa2550dfb3b52bdfb9a"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-29T05:19:00.000Z",
+      "actualStartTime": "2015-03-29T05:19:00.000Z",
+      "scheduledEndTime": "2015-04-03T05:20:00.000Z",
+      "actualendTime": "2015-04-03T05:20:00.000Z",
+      "_id": "58133fa2550dfb3b52bdfb99"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-03-17T13:01:00.000Z",
+  "prize": [
+    1200,
+    600
+  ],
+  "projectId": 8437,
+  "registrants": [
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2015-03-17T13:13:00.000Z",
+      "submissionDate": null,
+      "rating": "1019",
+      "colorStyle": "color: #00A900",
+      "_id": "58133fa2550dfb3b52bdfb98"
+    },
+    {
+      "handle": "OlinaRuan",
+      "reliability": "6%",
+      "registrationDate": "2015-03-17T13:38:00.000Z",
+      "submissionDate": null,
+      "rating": "1064",
+      "colorStyle": "color: #00A900",
+      "_id": "58133fa2550dfb3b52bdfb97"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-17T13:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa2550dfb3b52bdfb96"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-17T14:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa2550dfb3b52bdfb95"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "6%",
+      "registrationDate": "2015-03-17T14:56:00.000Z",
+      "submissionDate": null,
+      "rating": "868",
+      "colorStyle": "color: #999999",
+      "_id": "58133fa2550dfb3b52bdfb94"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-17T15:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa2550dfb3b52bdfb93"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-17T15:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa2550dfb3b52bdfb92"
+    },
+    {
+      "handle": "xiulin_li",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-17T15:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa2550dfb3b52bdfb91"
+    },
+    {
+      "handle": "gondzo",
+      "reliability": "13%",
+      "registrationDate": "2015-03-17T17:04:00.000Z",
+      "submissionDate": "2015-03-22T11:11:00.000Z",
+      "rating": "568",
+      "colorStyle": "color: #999999",
+      "_id": "58133fa2550dfb3b52bdfb90"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "6%",
+      "registrationDate": "2015-03-17T17:35:00.000Z",
+      "submissionDate": null,
+      "rating": "1387",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133fa2550dfb3b52bdfb8f"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-17T18:16:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58133fa2550dfb3b52bdfb8e"
+    },
+    {
+      "handle": "FArcellier",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-17T21:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa2550dfb3b52bdfb8d"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-18T00:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa2550dfb3b52bdfb8c"
+    },
+    {
+      "handle": "mauhur",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-18T03:32:00.000Z",
+      "submissionDate": null,
+      "rating": "377",
+      "colorStyle": "color: #999999",
+      "_id": "58133fa2550dfb3b52bdfb8b"
+    },
+    {
+      "handle": "I_Igor",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-18T07:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa2550dfb3b52bdfb8a"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-18T07:51:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58133fa2550dfb3b52bdfb89"
+    },
+    {
+      "handle": "sachith500",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-18T08:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa2550dfb3b52bdfb88"
+    },
+    {
+      "handle": "agus.mw",
+      "reliability": "6%",
+      "registrationDate": "2015-03-18T09:48:00.000Z",
+      "submissionDate": null,
+      "rating": "1099",
+      "colorStyle": "color: #00A900",
+      "_id": "58133fa2550dfb3b52bdfb87"
+    },
+    {
+      "handle": "freegod",
+      "reliability": "13%",
+      "registrationDate": "2015-03-18T14:30:00.000Z",
+      "submissionDate": null,
+      "rating": "1129",
+      "colorStyle": "color: #00A900",
+      "_id": "58133fa2550dfb3b52bdfb86"
+    },
+    {
+      "handle": "yogen",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-18T14:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa2550dfb3b52bdfb85"
+    },
+    {
+      "handle": "GFalcon",
+      "reliability": "6%",
+      "registrationDate": "2015-03-18T16:47:00.000Z",
+      "submissionDate": "2015-03-22T12:39:00.000Z",
+      "rating": "1482",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133fa2550dfb3b52bdfb84"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2015-03-18T17:05:00.000Z",
+      "submissionDate": null,
+      "rating": "672",
+      "colorStyle": "color: #999999",
+      "_id": "58133fa2550dfb3b52bdfb83"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-18T17:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa2550dfb3b52bdfb82"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-18T19:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa2550dfb3b52bdfb81"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2015-03-19T02:28:00.000Z",
+      "submissionDate": null,
+      "rating": "1055",
+      "colorStyle": "color: #00A900",
+      "_id": "58133fa2550dfb3b52bdfb80"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2015-03-19T05:41:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58133fa2550dfb3b52bdfb7f"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2015-03-19T08:21:00.000Z",
+      "submissionDate": null,
+      "rating": "267",
+      "colorStyle": "color: #999999",
+      "_id": "58133fa2550dfb3b52bdfb7e"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "20%",
+      "registrationDate": "2015-03-19T08:34:00.000Z",
+      "submissionDate": null,
+      "rating": "1739",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58133fa2550dfb3b52bdfb7d"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T09:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa2550dfb3b52bdfb7c"
+    },
+    {
+      "handle": "lnk.anton",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T10:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa2550dfb3b52bdfb7b"
+    },
+    {
+      "handle": "Wxalex98",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-19T11:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133fa2550dfb3b52bdfb7a"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "13%",
+      "registrationDate": "2015-03-19T12:02:00.000Z",
+      "submissionDate": null,
+      "rating": "1002",
+      "colorStyle": "color: #00A900",
+      "_id": "58133fa2550dfb3b52bdfb79"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "26%",
+      "registrationDate": "2015-03-19T12:43:00.000Z",
+      "submissionDate": null,
+      "rating": "1083",
+      "colorStyle": "color: #00A900",
+      "_id": "58133fa2550dfb3b52bdfb78"
+    }
+  ],
+  "registrationEndDate": "2015-03-19T13:02:00.000Z",
+  "reliabilityBonus": 240,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-03-22T13:02:00.000Z",
+  "submissions": [
+    {
+      "handle": "GFalcon",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 90.4,
+      "finalScore": 90.4,
+      "points": 378,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-03-22T12:39:00.000Z",
+      "_id": "58133fa2550dfb3b52bdfba6"
+    },
+    {
+      "handle": "gondzo",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 87.64,
+      "finalScore": 87.9,
+      "points": 162,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-03-22T11:11:00.000Z",
+      "_id": "58133fa2550dfb3b52bdfba5"
+    }
+  ],
+  "technology": [
+    "MySQL",
+    "Python"
+  ]
+}

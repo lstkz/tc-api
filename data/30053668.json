@@ -1,0 +1,217 @@
+{
+  "_id": 30053668,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:15:01.519Z",
+  "appealsEndDate": "2016-04-08T08:51:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "FinancialForce -Fix issue with Polymorphism in the SOQL peg.js parser",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2016-05-06T14:36:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -15111461,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">In the </span><a href=\"https://www.topcoder.com/challenge-details/30053338/?type=develop&amp;noncache=true\" style=\"text-decoration:none;\"><u>earlier challenge</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">, we built a SOQL parser using peg.js. While the winning submission did a great job, it has a major bug which we want to quickly address as part of this challenge. The current code is avialable on our <a href=\"https://gitlab.com/jdrew/financialforce_soql_pegjs_parser/\">Gitlab repo</a>&nbsp;(access request via the forums) and work off the&nbsp;</span></span><a href=\"https://gitlab.com/jdrew/financialforce_soql_pegjs_parser/tree/feature/polymorphism\"><span style=\"font-size:16px\">feature/polymorphism&nbsp;branch</span></a></p>\n\n<p>&nbsp;</p>\n\n<h3 dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(67, 67, 67); font-family:arial; font-size:18.6667px\">Requirements</span></span></h3>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><code><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">SELECT </span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">&nbsp;&nbsp;&nbsp;TYPEOF What</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHEN Account THEN Phone</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELSE Name</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">&nbsp;&nbsp;&nbsp;END</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">FROM Event</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">WHERE CreatedById IN</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">&nbsp;&nbsp;&nbsp;(SELECT CreatedById</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">&nbsp;&nbsp;&nbsp;FROM Case)</span></span></code></p>\n\n<p><br />\n&nbsp;</p>\n\n<p dir=\"ltr\"><strong><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Issue - Using TypeOf is not supported by the current parser. We need this fixed before continuing on with development of the parser.</span></span></strong></p>\n\n<p><br />\n&nbsp;</p>\n\n<p dir=\"ltr\"><code><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">TYPEOF isn&rsquo;t allowed in the SELECT clause of a semi-join query. You can use </span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">TYPEOF in the SELECT clause of an outer query that contains semi-join </span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Queries.</span></span></code></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">So this is not valid:</span></span></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><code><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">SELECT Name FROM Account</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">WHERE CreatedById IN</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">&nbsp;&nbsp;&nbsp;(SELECT </span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TYPEOF Owner</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHEN User THEN Id</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHEN Group THEN CreatedById</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;END</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">&nbsp;&nbsp;&nbsp;FROM CASE)</span></span></code></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Some resources to help you get started:</span></span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.6667px\">Peg.js documentation:&nbsp;</span><a href=\"http://pegjs.org/\" style=\"text-decoration: none; outline: 0px; cursor: pointer; color: rgb(0, 150, 255); transition: all 0.2s ease-in-out; -webkit-tap-highlight-color: transparent; word-wrap: break-word; background: 0px 0px;\"><u>http://pegjs.org/</u></a></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.6667px\">Jison to Peg:&nbsp;</span><a href=\"http://mockbrian.com/talk/peg-jison/#/\" style=\"text-decoration: none; outline: 0px; cursor: pointer; color: rgb(0, 150, 255); transition: all 0.2s ease-in-out; -webkit-tap-highlight-color: transparent; word-wrap: break-word; background: 0px 0px;\"><u>http://mockbrian.com/talk/peg-jison/#/</u></a></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.6667px\">Railroad diagram generator for peg files:&nbsp;</span><a href=\"http://dundalek.com/GrammKit/\" style=\"text-decoration: none; outline: 0px; cursor: pointer; color: rgb(0, 150, 255); transition: all 0.2s ease-in-out; -webkit-tap-highlight-color: transparent; word-wrap: break-word; background: 0px 0px;\"><u>http://dundalek.com/GrammKit/</u></a></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.6667px\">SOQL language reference:</span><a href=\"https://resources.docs.salesforce.com/sfdc/pdf/salesforce_soql_sosl.pdf\" style=\"text-decoration: none; outline: 0px; cursor: pointer; color: rgb(0, 150, 255); transition: all 0.2s ease-in-out; -webkit-tap-highlight-color: transparent; word-wrap: break-word; background: 0px 0px;\"><u>https://resources.docs.salesforce.com/sfdc/pdf/salesforce_soql_sosl.pdf</u></a></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.6667px\">Salesforce training - converting SQL to SOQL:</span><a href=\"https://www.youtube.com/watch?v=1_2SU2CWrKs\" style=\"text-decoration: none; outline: 0px; cursor: pointer; color: rgb(0, 150, 255); transition: all 0.2s ease-in-out; -webkit-tap-highlight-color: transparent; word-wrap: break-word; background: 0px 0px;\"><u>https://www.youtube.com/watch?v=1_2SU2CWrKs</u></a></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.6667px\">Learning Peg.js parsers:&nbsp;</span><a href=\"http://nathansuniversity.com/pegs.html\" style=\"text-decoration: none; outline: 0px; cursor: pointer; color: rgb(0, 150, 255); transition: all 0.2s ease-in-out; -webkit-tap-highlight-color: transparent; word-wrap: break-word; background: 0px 0px;\"><u>http://nathansuniversity.com/pegs.html</u></a></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.6667px\">Left recursion errors in Peg.js ( Note : recursion can always be replace with itteration):</span><a href=\"http://stackoverflow.com/questions/28129488/left-recursion-error-in-peg-js\" style=\"text-decoration: none; outline: 0px; cursor: pointer; color: rgb(0, 150, 255); transition: all 0.2s ease-in-out; -webkit-tap-highlight-color: transparent; word-wrap: break-word; background: 0px 0px;\"><u>http://stackoverflow.com/questions/28129488/left-recursion-error-in-peg-js</u></a></span></p>\n\t</li>\n</ul>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30053668",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<h3 dir=\"ltr\"><span style=\"background-color:transparent; color:rgb(67, 67, 67); font-family:arial; font-size:18.6667px\">Deliverables</span></h3>\n\n<p><span style=\"font-size:16px\"><span style=\"font-family:merriweather sans\">Any submissions which do not include any of the above artefacts will be outrightly rejected.</span></span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">Fix for parser.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">Tests to make sure that unsupported types are not processed.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">Updates for documentation/ railroad diagram.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">Please provide a demo video covering both a functional demo as well as code walkthrough of your parser implementation</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">Winner will be required to make a pull request to the mentioned branch</span></p>\n\t</li>\n</ul>\n",
+  "forumId": 32585,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=32585",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 14,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2016-04-06T14:36:00.000Z",
+      "actualStartTime": "2016-04-06T14:36:00.000Z",
+      "scheduledEndTime": "2016-05-06T14:36:00.000Z",
+      "actualendTime": null,
+      "_id": "58134145550dfb3b52be9b5f"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-07T03:16:00.000Z",
+      "actualStartTime": "2016-04-07T03:16:00.000Z",
+      "scheduledEndTime": "2016-04-08T08:51:00.000Z",
+      "actualendTime": "2016-04-08T08:51:00.000Z",
+      "_id": "58134145550dfb3b52be9b5e"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2016-04-06T14:41:00.000Z",
+      "actualStartTime": "2016-04-06T14:41:00.000Z",
+      "scheduledEndTime": "2016-05-06T14:41:00.000Z",
+      "actualendTime": null,
+      "_id": "58134145550dfb3b52be9b5d"
+    }
+  ],
+  "platforms": [
+    "FinancialForce"
+  ],
+  "postingDate": "2016-04-06T14:36:00.000Z",
+  "prize": [
+    100
+  ],
+  "projectId": 7252,
+  "registrants": [
+    {
+      "handle": "tobetheman",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-06T14:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134145550dfb3b52be9b5c"
+    },
+    {
+      "handle": "Ohanzee",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-06T14:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134145550dfb3b52be9b5b"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-06T16:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134145550dfb3b52be9b5a"
+    },
+    {
+      "handle": "phaniram",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-06T16:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134145550dfb3b52be9b59"
+    },
+    {
+      "handle": "Elpy",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-06T18:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134145550dfb3b52be9b58"
+    },
+    {
+      "handle": "zoologists",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-06T18:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134145550dfb3b52be9b57"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-06T21:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134145550dfb3b52be9b56"
+    },
+    {
+      "handle": "happyesthete",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-06T21:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134145550dfb3b52be9b55"
+    },
+    {
+      "handle": "edisonwu",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-07T01:21:00.000Z",
+      "submissionDate": "2016-04-07T03:15:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134145550dfb3b52be9b54"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-07T02:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134145550dfb3b52be9b53"
+    },
+    {
+      "handle": "nanirajesh.",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-07T03:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134145550dfb3b52be9b52"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-07T04:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134145550dfb3b52be9b51"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-07T14:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134145550dfb3b52be9b50"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-07T18:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134145550dfb3b52be9b4f"
+    }
+  ],
+  "registrationEndDate": "2016-05-06T14:36:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-05-06T14:41:00.000Z",
+  "submissions": [
+    {
+      "handle": "edisonwu",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-04-07T03:15:00.000Z",
+      "_id": "58134145550dfb3b52be9b60"
+    }
+  ],
+  "technology": [
+    "JavaScript",
+    "Salesforce"
+  ]
+}

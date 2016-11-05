@@ -1,0 +1,403 @@
+{
+  "_id": 30054057,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:07:39.848Z",
+  "appealsEndDate": "2016-05-17T18:49:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "HP Product Inventory - Scaling the Application",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p>Congratulations Topcoders, the HP Product Inventory application has been a big hit. Now HP would like to be able to expand the application to pull down more products from more sites. However, before we can expand the scope of the application, we need to do a little housekeeping. Our crawler and product extraction applications are basically set up to process one site, the HP US Web Store at <a href=\"http://www.hp.com\">www.hp.com</a>, but what we need to be able to do is process various web sites with the same code base.<br />\n<br />\nCurrently we have the following cron command which initiates our crawler each day:</p>\n\n<div style=\"margin-left:40px\"><span style=\"font-size:11px\"><span style=\"font-family:courier new,courier,monospace\">0 1 * * * /home/ubuntu/crawler/cron/crawler-job.sh 1&gt; /home/ubuntu/crawler/cron/log-crawler-job.out 2&gt; /home/ubuntu/crawler/cron/log-crawler-job.err</span></span></div>\n\n<p><br />\nHere is an excerpt from the crawler-job.sh file which executes our crawler:</p>\n\n<div style=\"margin-left:40px\"><span style=\"font-size:11px\"><span style=\"font-family:courier new,courier,monospace\"><span style=\"color:#696969\"># Launch crawler</span><br />\necho &quot;[INFO $(date +%Y-%m-%d_%T)] Start Java crawler&quot;<br />\ncd /home/ubuntu/crawler<br />\njava -cp ./dist/lib/Crawler.jar:./config crawler.BasicCrawlController -intermediateDataFolder ./intermediateData -webPagesFolder ./data -dynamic<br />\njavaExitCode=$?<br />\necho &quot;[INFO $(date +%Y-%m-%d_%T)] Java exit code: $javaExitCode&quot;</span></span></div>\n\n<p><br />\nThis is reasonably straightforward. But what we need to do now is put a site parameter into our cronjobs, scripts and our configuration files. We&rsquo;re not just running one crawler, we are going to be running several of them. When the crawler outputs data, it needs to write data to the &quot;./store.hp.com/intermediateData&quot; and &quot;./store.hp.com/data&quot; directories rather than just &quot;./intermediateData&quot; and &quot;./data&quot; directories. I believe we should update our cron command to include a new site parameter and also the path to a new config directory for each target site.<br />\n<br />\nHere is the current set up:</p>\n\n<div style=\"margin-left:40px\">/home/ubuntu<br />\n/home/ubuntu/crawler<br />\n/home/ubuntu/crawler/config &nbsp;- contains a crawler.properties file specific to store.hp.com<br />\n/home/ubuntu/crawler/cron - contains the scripts&nbsp;<br />\n/home/ubuntu/crawler/data - the output directory for the web pages<br />\n/home/ubuntu/crawler/intermediateData - binary files which support crawling<br />\n/home/ubuntu/crawler/logs - daily log files for the crawling process<br />\n/home/ubuntu/crawler/temp - temp files which support error handling</div>\n\n<p><br />\nThe new set up will look like the following:</p>\n\n<div style=\"margin-left:40px\">/home/ubuntu/crawler/hp.store.com/config<br />\n/home/ubuntu/crawler/hp.store.com/data<br />\n/home/ubuntu/crawler/hp.store.com/intermediateData<br />\n/home/ubuntu/crawler/hp.store.com/logs<br />\n/home/ubuntu/crawler/hp.store.com/temp</div>\n\n<p><br />\nWe&rsquo;ll need to do a similar process to support our product extraction tool:</p>\n\n<div style=\"margin-left:40px\">/home/ubuntu/hp_product_extract<br />\n/home/ubuntu/hp_product_extract/logs<br />\n/home/ubuntu/hp_product_extract/reports<br />\n/home/ubuntu/hp_product_extract/rules.json</div>\n\n<p><br />\nThe updated directory structure will look like the following:</p>\n\n<div style=\"margin-left:40px\">/home/ubuntu/hp_product_extract<br />\n/home/ubuntu/hp_product_extract/store.hp.com<br />\n/home/ubuntu/hp_product_extract/store.hp.com/logs<br />\n/home/ubuntu/hp_product_extract/store.hp.com/reports<br />\n/home/ubuntu/hp_product_extract/store.hp.com/rules.json</div>\n\n<p><br />\nThe deliverables for this challenge are to provide the required updates for all the following scripts to accommodate the new directory structure:</p>\n\n<div style=\"margin-left:40px\"><a href=\"https://github.com/cloudspokes/hp_product_crawler/blob/master/cron/crawler-job.sh\">https://github.com/cloudspokes/hp_product_crawler/blob/master/cron/crawler-job.sh</a><br />\n<a href=\"https://github.com/cloudspokes/hp_product_crawler/blob/master/cron/crawler-job-cleanup.sh\">https://github.com/cloudspokes/hp_product_crawler/blob/master/cron/crawler-job-cleanup.sh</a><br />\n<a href=\"https://github.com/cloudspokes/hp_product_crawler/blob/master/cron/product-extract-job.sh\">https://github.com/cloudspokes/hp_product_crawler/blob/master/cron/product-extract-job.sh</a><br />\n<a href=\"https://github.com/cloudspokes/hp_product_crawler/blob/master/cron/step2-crawler-job.sh\">https://github.com/cloudspokes/hp_product_crawler/blob/master/cron/step2-crawler-job.sh</a><br />\n<a href=\"https://github.com/cloudspokes/hp_product_crawler/blob/master/cron/step2-crawler-job-p2.sh\">https://github.com/cloudspokes/hp_product_crawler/blob/master/cron/step2-crawler-job-p2.sh</a></div>\n\n<p><br />\nPlease also provide a revised cron command. You can provide that in a text file with your submission (cron.txt).<br />\nThe &quot;store.hp.com&quot; value should be contained in a site variable in these scripts that can set to any arbitrary variable. Please don&rsquo;t hardcode the &quot;store.hp.com&quot; value.<br />\n<br />\n<strong>Vertica Setup</strong><br />\nYou can download a community edition of Vertica directly from HP: &nbsp;http://www.vertica.com/. &nbsp; You simply sign in for a free developer account. &nbsp; However, a direct Vertica installation requires a Unix/Linux server. &nbsp;The more straightforward way to standup Vertica is to use VMWare. &nbsp;VMWare also has free trials available. &nbsp;A server image can be found at my.vertica.com. &nbsp;But Topcoder is providing a recent disk image file for Vertica at the following link. &nbsp;This is a large download (~2 GB).<br />\n<br />\n<a href=\"https://drive.google.com/file/d/0ByjxTGykXQjAWkkwTWUzcXJucjQ/view?usp=sharing\">https://drive.google.com/file/d/0ByjxTGykXQjAWkkwTWUzcXJucjQ/view?usp=sharing</a><br />\n<br />\nJDBC Jar files for Vertica can be found here:<br />\n<br />\n<a href=\"http://www.vertica.com/resources/vertica-client-drivers/\">http://www.vertica.com/resources/vertica-client-drivers/</a><br />\n<br />\nIf you want to run the data extraction process locally, there is a video which describes the deployment process for the current application here: &nbsp;<a href=\"http://youtu.be/BbwsGE6D7aM\">http://youtu.be/BbwsGE6D7aM</a></p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30054057",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<p>1. You should use the existing code as a starting point for this challenge. The following GitHub repository is hosting the code for the challenge: <a href=\"https://github.com/cloudspokes/hp_product_crawler\">https://github.com/cloudspokes/hp_product_crawler</a>. Please request access to this repository in the forums.<br />\n2. You should also validate that the product extraction application works with your scripts. &nbsp; The Github repository for this application is: &nbsp;<a href=\"https://github.com/cloudspokes/hp_product_extract\">https://github.com/cloudspokes/hp_product_extract</a>. &nbsp; A single request is sufficient to gain access to both repositories.<br />\n3. After you get access to the repositories you should fork them.<br />\n4. The winning submission will be asked to submit a pull request to the repositories.<br />\n5. Please don&rsquo;t forget to submit a revised cron command with your submission in a cron.txt file</p>\n\n<p>Screen sharing video is not required for this application.</p>\n",
+  "forumId": 32945,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=32945",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 30,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-07T13:00:00.000Z",
+      "actualStartTime": "2016-05-07T13:00:00.000Z",
+      "scheduledEndTime": "2016-05-12T12:59:00.000Z",
+      "actualendTime": "2016-05-12T12:59:00.000Z",
+      "_id": "58133f8b550dfb3b52bdee8a"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-07T13:05:00.000Z",
+      "actualStartTime": "2016-05-07T13:05:00.000Z",
+      "scheduledEndTime": "2016-05-12T12:59:00.000Z",
+      "actualendTime": "2016-05-12T12:59:00.000Z",
+      "_id": "58133f8b550dfb3b52bdee89"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-12T13:00:00.000Z",
+      "actualStartTime": "2016-05-12T13:00:00.000Z",
+      "scheduledEndTime": "2016-05-16T09:38:00.000Z",
+      "actualendTime": "2016-05-16T09:38:00.000Z",
+      "_id": "58133f8b550dfb3b52bdee88"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-16T09:38:00.000Z",
+      "actualStartTime": "2016-05-16T09:38:00.000Z",
+      "scheduledEndTime": "2016-05-17T09:39:00.000Z",
+      "actualendTime": "2016-05-17T09:39:00.000Z",
+      "_id": "58133f8b550dfb3b52bdee87"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-17T09:39:00.000Z",
+      "actualStartTime": "2016-05-17T09:39:00.000Z",
+      "scheduledEndTime": "2016-05-17T18:49:00.000Z",
+      "actualendTime": "2016-05-17T18:49:00.000Z",
+      "_id": "58133f8b550dfb3b52bdee86"
+    }
+  ],
+  "platforms": [
+    "Linux"
+  ],
+  "postingDate": "2016-05-07T13:00:00.000Z",
+  "prize": [
+    1200,
+    600
+  ],
+  "projectId": 8980,
+  "registrants": [
+    {
+      "handle": "binit92",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T15:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee85"
+    },
+    {
+      "handle": "gondzo",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T13:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee84"
+    },
+    {
+      "handle": "solokop",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T13:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee83"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T14:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee82"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T14:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee81"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T15:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee80"
+    },
+    {
+      "handle": "phaniram",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T16:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee7f"
+    },
+    {
+      "handle": "cellkore",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T17:41:00.000Z",
+      "submissionDate": "2016-05-12T07:34:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee7e"
+    },
+    {
+      "handle": "net_buster",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T19:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee7d"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T20:08:00.000Z",
+      "submissionDate": "2016-05-12T09:32:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee7c"
+    },
+    {
+      "handle": "sfaxiano",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T20:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee7b"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-07T22:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee7a"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T09:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee79"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T13:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee78"
+    },
+    {
+      "handle": "ShindouHikaru",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T16:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee77"
+    },
+    {
+      "handle": "joemanto123",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T19:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee76"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T21:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee75"
+    },
+    {
+      "handle": "kinfkong",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-08T23:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee74"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T00:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee73"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T02:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee72"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T02:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee71"
+    },
+    {
+      "handle": "bharatcoder",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T05:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee70"
+    },
+    {
+      "handle": "parapluplu",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T09:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee6f"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T09:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee6e"
+    },
+    {
+      "handle": "Shugui",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T11:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee6d"
+    },
+    {
+      "handle": "prokal93",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T15:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee6c"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T17:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee6b"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T18:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee6a"
+    },
+    {
+      "handle": "cjalmeida",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-09T19:59:00.000Z",
+      "submissionDate": "2016-05-12T03:34:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee69"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-11T09:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f8b550dfb3b52bdee68"
+    }
+  ],
+  "registrationEndDate": "2016-05-12T12:59:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-05-12T12:59:00.000Z",
+  "submissions": [
+    {
+      "handle": "cjalmeida",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 96.88,
+      "finalScore": 97.5,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-05-12T03:34:00.000Z",
+      "_id": "58133f8b550dfb3b52bdee8d"
+    },
+    {
+      "handle": "cellkore",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 93.75,
+      "finalScore": 93.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-12T07:34:00.000Z",
+      "_id": "58133f8b550dfb3b52bdee8c"
+    },
+    {
+      "handle": "cam.ashwini",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 90,
+      "finalScore": 91.88,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-12T09:32:00.000Z",
+      "_id": "58133f8b550dfb3b52bdee8b"
+    }
+  ],
+  "technology": [
+    "Java",
+    "SQL",
+    "Vertica"
+  ]
+}

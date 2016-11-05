@@ -1,0 +1,407 @@
+{
+  "_id": 30049511,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:06:09.149Z",
+  "appealsEndDate": "2015-04-06T08:22:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "SunShot - PVimpact GreenButton Ruby  Development",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h1>Challenge Overview</h1>\n\n<p dir=\"ltr\">The <a href=\"http://www.greenbuttondata.org/\">Green Button</a> Standard is a secure way of transmitting energy usage information developed by the United States Department of Energy.</p>\n\n<p dir=\"ltr\">The goal of this challenge is to develop a Ruby based gem to allow the retrieval of Green Button XML formatted data, process the data, persist it in database and return data as Ruby objects.</p>\n\n<p dir=\"ltr\">This follows the path known as Green Button Connect in the Green Button <a href=\"http://www.greenbuttondata.org/developers/#examples\">Documentation</a>.</p>\n\n<h1 dir=\"ltr\">Challenge Requirements</h1>\n\n<p dir=\"ltr\">You are developing a Ruby based gem in this challenge that retrieves Retail Customer data using <a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/\">GreenButton RESTful API</a>.</p>\n\n<p dir=\"ltr\">Before getting started coding, you are encouraged to look at <a href=\"http://www.greenbuttondata.org/developers\">this page</a> that gives overview about GreenButton Concept, API and Entities.</p>\n\n<h4 dir=\"ltr\"><strong><u>Technology Stack</u></strong></h4>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Ruby on Rails 3.2</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Ruby 2.1.5</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Postgres 9.4</p>\n\t</li>\n</ul>\n\n<h4 dir=\"ltr\"><strong><u>General Notes</u></strong></h4>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">This version will only handle UsagePoints of service category (kind) = 0 (Electricity), if the downloaded data is not of type Electricity then return error to caller stating that we only support Electricity data in this version.</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">For more information about UsagePoints kinds, refer to this <a href=\"https://github.com/energyos/OpenESPI-Common-java/blob/master/etc/espiDerived.xsd#LC3027\">xsd</a> file (ServiceKind type), the file has rich documentation about the types in GreenButton.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">All dates are stored in UTC format in database.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">You can find details about Greenbutton model definition in this <a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/\">page</a>.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Logging of information/errors, and transactions should be handled properly.</p>\n\t</li>\n</ul>\n\n<h4 dir=\"ltr\"><strong><u>Demo Page</u></strong></h4>\n\n<p dir=\"ltr\">Create simple ruby on rails application that demonstrates the usage of the ruby gem, note the following :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">A text field for green button access token.</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Access to Green Button APIs requires an OAuth2 Access Token. Read more about <a href=\"http://www.greenbuttondata.org/espi/access_tokens/\">Access Tokens and the various Data Custodian Roles</a> we are only using access_token (individual retail customer access) in this challenge.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Green Button APIs are available in a Sandbox server, this server does not have a live OAuth 2.0 Server to issue access tokens, you will use <a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/\">predefined list of tokens</a> available in GreenButton Sandbox, mainly you are interested in access_token type tokens.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Add a panel for each method implemented in this challenge with fields needed as input arguments to the method.</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">It will have button to submit a request.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">It will have a text area to render response.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p dir=\"ltr\">Here is sample of page, with 15 minutes as interval is selected to be download :</p>\n\n<p dir=\"ltr\"><img src=\"https://lh4.googleusercontent.com/cLLM1ZkzicK7D_5lGvL7vARaymfchUmGxpAoebG11TxGUfshx81wa2Fuu1lNIOQA57ENiry4HfU4PynMbXmclhRoZHKIXP3k5mZ7XXscTnDgsHubKmEotMRJwHa-kC_IUNX9624\" /></p>\n\n<h4 dir=\"ltr\"><strong><u>Expected Gem Usage</u></strong></h4>\n\n<p dir=\"ltr\">The gem should have a single module GreenButton, sample usage would look like this :</p>\n\n<p dir=\"ltr\"><em>require &lsquo;greenbutton&rsquo;</em></p>\n\n<p dir=\"ltr\"><em>gb = GreenButton.download_data(access_token, resource_uri,.. some other parameters .. )</em></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong>access_tken</strong> represents retail customer OAuth 2.0 access_token</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong>resource_uri</strong>&nbsp;is the retailCustomer resourceURI (i.e. <a href=\"https://services.greenbuttondata.org/DataCustodian/espi/1_1/resource/Batch/Subscription/5\">https://services.greenbuttondata.org/DataCustodian/espi/1_1/resource/Batch/Subscription/5</a>)</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\">The returned result represents the wrapped greenbutton XML object with all related information downloaded in the XML file..</p>\n\n<p dir=\"ltr\"><strong><u>Model Definition</u></strong></p>\n\n<p dir=\"ltr\">In the challenge we are persisting all data we retrieve from Green Button XML in the same structure.</p>\n\n<p dir=\"ltr\">Following are the ruby models definition (it will also have corresponding table in Postgres with same naming convention)</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">gb_usage_point</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">id (parsed from rel=&quot;self&quot; link)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">kind (parsed from &lt;espi:kind&gt;0&lt;/espi:kind&gt; - electricity for now)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">subscription_id (parsed from the passed in resourceUri)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">meter_reading (represents associated meter_reading object)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">local_time_parameters (represents associated local_time_parameters object)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">electricty_power_usage_summary (represents associated electricty_power_usage_summary object)</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">gb_meter_reading</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">reading_type_id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">accumulation_behaviour</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">commodity</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">currency</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">data_qualifier</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">flow_direction</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">interval_length</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">kind</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">phase</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">power_of_ten_multiplier</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">time_attribute</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">uom</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">gb_local_time_parameters</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">dst_end_rule</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">dst_offset</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">dst_start_rule</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">tz_offset</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">gb_electricty_power_usage_summary</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">duration</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">start_time</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">bill_last_period</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">bill_to_date</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">cost_additional_last_period</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">currency</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">overall_consumption_last_period_power_of_ten_multiplier</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">overall_consumption_last_period_uom</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">overall_consumption_last_period_value</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">current_billing_period_overall_consumption_power_of_ten_multiplier</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">current_billing_period_overall_consumption_uom</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">current_billing_period_overall_consumption_timestamp</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">current_billing_period_overall_consumption_value</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">quality_of_reading</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">status_time_stamp</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">gb_interval_block</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">start_time</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">end_time</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">usage_point_id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">readings (represents array of interval_block_reading entities)</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">gb_interval_block_reading</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">aggregation_type (enum: default, 15_min, 1_d, 1_m)</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">the default value is the interval length in the returned XML by GreenButton API.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">cost</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">start_time</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">value</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p dir=\"ltr\">Note that all IDs fields are parsed from rel=&rdquo;self&rdquo; link the xml data.</p>\n\n<p dir=\"ltr\"><strong><u>Parsing the XML response</u></strong></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The parsing is the major requirement in this challenge, this <a href=\"https://github.com/cew821/greenbutton\">greenbutton ruby library</a> can be reused in this challenge, or you can find it helpful to understand parsing the returned XML. Also (check next point ..)</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">It is also Ok to use an open source gem library to map between XML and ruby objects, there are number of gem libraries, <a href=\"https://github.com/apotonick/representable\">representable</a> is an option.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">You can refer to the <a href=\"https://services.greenbuttondata.org/\">sandbox website</a> and login :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Use alan/koala to login</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Navigate to UsagePoints <a href=\"https://services.greenbuttondata.org/DataCustodian/RetailCustomer/1/UsagePoint/1/show\">page</a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Alan authorized this third party app to access monthly consumption, click on the Monthly Electricity Consumption link to navigate to the Interval Blocks of the usage points.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">The code that is displaying the screen you show is in Github:<a href=\"https://github.com/energyos/OpenESPI-DataCustodian-java\">https://github.com/energyos/OpenESPI-DataCustodian-java</a> ,<br />\n\t\tThis is a java MVC implementation in the Spring framework.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">The particular controller that is displaying the usage point is: <a href=\"https://github.com/energyos/OpenESPI-DataCustodian-java/blob/master/src/main/java/org/energyos/espi/datacustodian/web/customer/UsagePointController.java\">https://github.com/energyos/OpenESPI-DataCustodian-java/blob/master/src/main/java/org/energyos/espi/datacustodian/web/customer/UsagePointController.java</a> and the associated .jsp is: <a href=\"https://github.com/energyos/OpenESPI-DataCustodian-java/blob/master/src/main/webapp/WEB-INF/jsp/customer/usagepoints/index.jsp\">https://github.com/energyos/OpenESPI-DataCustodian-java/blob/master/src/main/webapp/WEB-INF/jsp/customer/usagepoints/index.jsp</a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">If you are familiar with java you can read and understand how it parses data and pass it to frontend.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">But it is not really required. We are just trying to simplify the efforts for you to get started! :)</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p><strong><u><span>The GreenButton Wrapper Module</span></u></strong></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Define the module with name : GreenButton it exposes the following functions</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">download_data</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">This function downloads customer data from GreenButton</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">This function will have the following parameters :</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">access_token : represents the retail customer access token</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">resource_uri : represents the retail customer resourceURI</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">interval_start_time (optional) : represents the start date to retrieve data. corresponds to published-min in the API endpoint query string parameter.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">interval_end_time (optional) : represents the end date to retrieve data. corresponds to published-max in the API endpoint query string parameter.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">aggregation_type (optional) represents the target interval length reading to convert the data readings to. it is optional, the allowed values are (15 minutes, 1 day, 1 month), can be enum.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">parameters should be validated against their proper types.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">The method will call the GreenButton API using the passed <a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/#!/Batch/connectMyDataFeed_get_2\">resourceURI</a> and pass accessToken in header &lsquo;Authorization&rsquo;. and set the optional intervals if present.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">The XML response from API call will be passed to target Parser based on the service category (kind), we only support Electricity in this challenge.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Build &nbsp;a Parser to handle parsing the returned XML. The referenced gem ruby library above should be helpful.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">If aggregation_type is present :</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Calculate the target number of distinct interval block readings, i.e. say we have interval data blocks from 12:00:00 AM 3-15-2015 to 12:00:00 AM 3-18-2015, &nbsp;15 minutes is the target aggregation type, then the number of interval blocks readings is ( 4 readings/hr x 24 hrs x 3d) = &nbsp;288.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">If target aggregation type (i.e. 15 minutes) is less than the returned interval length (i.e. 1 hour) then an algorithm should be dividing into the target interval aggregation type (i.e. for each hour it will be divided into 4 interval 15 minutes interval : start time, cost, and value should be calculated).</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">If target aggregation type (i.e. 1 hour) is greater than the returned interval length (i.e. 15 minutes) then an algorithm should do aggregation (i.e. we need four 15-minutes interval readings to calculate the 1 hour reading interval : start time, cost, and value should be calculated).</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Update the associated interval_block_readings to reference the new calculated interval_block_readings objects.</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">the interval_block_reading#aggregation_type will be equal to the aggregation_type parameter.</p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Update gb_meter_reading#interval_length to reflect the new interval length (the aggregation type).</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Store the data into database and return it.</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">If there are already records for the returned data, then perform update database operation.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">The response will be array of gb_usage_points.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">retrieve_data</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">This function retrieves the persisted green button data, applies some processing to it based on aggregation type, and returns it.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">The parameters are :</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">subscription_id represents the retail customer subscription id, corresponds to gb_usage_point#subscription_id field</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">aggregation_type (optional) represents the target interval length reading. it is optional, the allowed values are (15 minutes, 1 day, 1 month), can be enum. If not passed, then it should beh the interval length of the returned readings.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">interval_start_time (optional) : represents the start date used to search interval block data.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">interval_end_time (optional) : represents the end date to search interval block data.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">This method will execute the following logic :</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Parameters should be validated against their proper types.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Retrieve all data of the given aggregation_type and subscrpition_id where interval_start_time &lt;= interval_block(s) start/end &lt;= interval_end_time.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Return the array of gb_usage_point objects.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><u><strong>Data Validation</strong></u></p>\n\n<p dir=\"ltr\">As part of the data aggregation process check for zero/null/NaN/absent values in the data and filter them, and update corresponding interval_block_reading to store NULL for all cost/value fields, and add new flag attribute (isMissing) and set it to true.</p>\n\n<h4 dir=\"ltr\"><u><strong>Aggregation Algorithm</strong></u></h4>\n\n<p dir=\"ltr\">Please note that GreenButton supports following interval lengths (durations): <a href=\"https://github.com/energyos/OpenESPI-Common-java/blob/master/etc/espiDerived.xsd#L3098-L3354\">https://github.com/energyos/OpenESPI-Common-java/blob/master/etc/espiDerived.xsd#L3098-L3354</a></p>\n\n<p dir=\"ltr\">So your algorithm should consider these intervals only. If duration is not among these durations documented in the XSD file, then return error.</p>\n\n<h4 dir=\"ltr\"><u><strong>Ruby API Client Framework</strong></u></h4>\n\n<p dir=\"ltr\">You will use <a href=\"https://github.com/lostisland/faraday\">Faraday</a> to communicate with the GreenButton API.</p>\n\n<h4 dir=\"ltr\"><u><strong>Abstracting</strong></u></h4>\n\n<p dir=\"ltr\">Please make sure to create mixin to include the common code/functionality.</p>\n\n<h4 dir=\"ltr\"><u><strong>Setting Up the Gem</strong></u></h4>\n\n<p dir=\"ltr\">Use <a href=\"http://bundler.io/\">Bundler</a> to take care of gem dependencies.</p>\n\n<p dir=\"ltr\">A standard folder structure would look like this :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Gemfile</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">LICENSE.txt</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">README.md</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Rakefile</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">greenbutton.gemspec</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">lib</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">greenbutton</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">version.rb</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">&lt;class-name&gt;.rb</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">model</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">&lt;model-name&gt;.rb</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">greenbutton.rb (the module entry point)</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h4 dir=\"ltr\"><u><strong>Writing Tests</strong></u></h4>\n\n<p dir=\"ltr\">All of your code should be test covered (<a href=\"http://rspec.info/\">RSpec</a> preferred).</p>\n\n<p dir=\"ltr\">As mentioned above, you can use the Sandbox or host the sample data to test your solution.</p>\n\n<p dir=\"ltr\">If you see any problem with sandbox stopped behaving normally, post in challenge forums, and we will reset it (Sandbox).</p>\n\n<p dir=\"ltr\">Also since the module accepts the API endpoint to be executed as input parameter, you can use sample data (check References section below) instead of hitting the sandbox directly.</p>\n\n<h4 dir=\"ltr\"><strong><u>Documentation</u></strong></h4>\n\n<p dir=\"ltr\">Because other programmers will be working with your code, and incorporating it into their projects, all functions must be documented in detail in the code (<a href=\"http://tomdoc.org/\">TomDoc</a> preferred - In order to generate HTML properly you will need to use<a href=\"https://github.com/rubyworks/yard-tomdoc\"> Yard TomDoc</a>).</p>\n\n<h4 dir=\"ltr\"><strong><u>Coding Standard</u></strong></h4>\n\n<p dir=\"ltr\">Follows coding standards listed here:</p>\n\n<p dir=\"ltr\"><a href=\"https://github.com/copycopter/style-guide\">https://github.com/copycopter/style-guide</a></p>\n\n<h4 dir=\"ltr\"><strong><u>Readme</u></strong></h4>\n\n<p dir=\"ltr\">Provide a detailed readme file using Markdown language with following information :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Overview</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Setup Prerequisites</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">How to install</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Usage Example</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">How to run Demo and Verify results</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Reference to GreenButton API Documentation</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Reference this Ruby Gem Documentation</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Any details about any limitations of your solution.</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\">Please note, we&#39;re judging this competition not just on the code, but also on the quality of the documentation, test coverage, and ease of use.</p>\n\n<h4 dir=\"ltr\"><strong><u>References</u></strong></h4>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><a href=\"http://www.greenbuttondata.org/espi/access_tokens/\">http://www.greenbuttondata.org/espi/access_tokens/</a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/\">http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/</a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><a href=\"http://www.greenbuttondata.org/build/\">http://www.greenbuttondata.org/build/</a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/\">energyos.github.io/OpenESPI-GreenButton-API-Documentation/</a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Green Button API test access tokens and sandbox: <a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/\">http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/</a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Sample data:</p>\n\n\t<p>&nbsp;</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Generic:<a href=\"http://services.greenbuttondata.org/sample-data.html\"> http://services.greenbuttondata.org/sample-data.html</a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Pacific Gas &amp; Electric:<a href=\"http://energy.gov/downloads/green-button-sample-data-pge\"> http://energy.gov/downloads/green-button-sample-data-pge</a> use file:</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><a href=\"http://energy.gov/sites/prod/files/pge_electric_interval_data_2011-03-06_to_2012-04-06%20E1%20Residential%20Large%20Usage.xml_1.zip\">pge_electric_interval_data_2011-03-06_to_2012-04-06 E1 Residential Large Usage.xml_1.zip</a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span>&nbsp;</span><span>San Diego Gas &amp; Electric:</span> <a href=\"http://www.sdge.com/sites/default/files/documents/SDGEElectricIntervalDataFeb12011toJan312012.xml?nid=2945\" style=\"line-height: 1.6;\">http://www.sdge.com/sites/default/files/documents/SDGEElectricIntervalDataFeb12011toJan312012.xml?nid=294</a></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n",
+  "digitalRunPoints": 675,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30049511",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2015-04-07T14:37:00.000Z",
+  "finalSubmissionGuidelines": "<h1 dir=\"ltr\">Deliverable</h1>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">All source code files and scripts that address the challenge requirement.</p>\n\t</li>\n\t<li dir=\"ltr\">Detailed readme file as clarified above.</li>\n</ul>\n",
+  "forumId": 28736,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=28736",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 22,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-28T21:06:00.000Z",
+      "actualStartTime": "2015-03-28T21:06:00.000Z",
+      "scheduledEndTime": "2015-03-28T21:08:00.000Z",
+      "actualendTime": "2015-03-28T21:08:00.000Z",
+      "_id": "58132311550dfb3b52b3c982"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-28T21:08:00.000Z",
+      "actualStartTime": "2015-03-28T21:08:00.000Z",
+      "scheduledEndTime": "2015-03-28T21:59:00.000Z",
+      "actualendTime": "2015-03-28T21:59:00.000Z",
+      "_id": "58132311550dfb3b52b3c981"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-29T03:59:00.000Z",
+      "actualStartTime": "2015-03-29T03:59:00.000Z",
+      "scheduledEndTime": "2015-03-31T04:00:00.000Z",
+      "actualendTime": "2015-03-31T04:00:00.000Z",
+      "_id": "58132311550dfb3b52b3c980"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-29T04:04:00.000Z",
+      "actualStartTime": "2015-03-29T04:04:00.000Z",
+      "scheduledEndTime": "2015-04-03T04:04:00.000Z",
+      "actualendTime": "2015-04-03T04:04:00.000Z",
+      "_id": "58132311550dfb3b52b3c97f"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-03T04:04:00.000Z",
+      "actualStartTime": "2015-04-03T04:04:00.000Z",
+      "scheduledEndTime": "2015-04-03T14:13:00.000Z",
+      "actualendTime": "2015-04-03T14:13:00.000Z",
+      "_id": "58132311550dfb3b52b3c97e"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-03T14:13:00.000Z",
+      "actualStartTime": "2015-04-03T14:13:00.000Z",
+      "scheduledEndTime": "2015-04-05T06:57:00.000Z",
+      "actualendTime": "2015-04-05T06:57:00.000Z",
+      "_id": "58132311550dfb3b52b3c97d"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-05T06:57:00.000Z",
+      "actualStartTime": "2015-04-05T06:57:00.000Z",
+      "scheduledEndTime": "2015-04-06T06:57:00.000Z",
+      "actualendTime": "2015-04-06T06:57:00.000Z",
+      "_id": "58132311550dfb3b52b3c97c"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-06T06:57:00.000Z",
+      "actualStartTime": "2015-04-06T06:57:00.000Z",
+      "scheduledEndTime": "2015-04-06T08:22:00.000Z",
+      "actualendTime": "2015-04-06T08:22:00.000Z",
+      "_id": "58132311550dfb3b52b3c97b"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-06T08:22:00.000Z",
+      "actualStartTime": "2015-04-06T08:22:00.000Z",
+      "scheduledEndTime": "2015-04-06T08:32:00.000Z",
+      "actualendTime": "2015-04-06T08:32:00.000Z",
+      "_id": "58132311550dfb3b52b3c97a"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-06T08:32:00.000Z",
+      "actualStartTime": "2015-04-06T08:32:00.000Z",
+      "scheduledEndTime": "2015-04-07T04:26:00.000Z",
+      "actualendTime": "2015-04-07T04:26:00.000Z",
+      "_id": "58132311550dfb3b52b3c979"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-07T04:26:00.000Z",
+      "actualStartTime": "2015-04-07T04:26:00.000Z",
+      "scheduledEndTime": "2015-04-07T09:39:00.000Z",
+      "actualendTime": "2015-04-07T09:39:00.000Z",
+      "_id": "58132311550dfb3b52b3c978"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-07T20:09:00.000Z",
+      "actualStartTime": "2015-04-07T20:09:00.000Z",
+      "scheduledEndTime": "2015-04-12T20:10:00.000Z",
+      "actualendTime": "2015-04-12T20:10:00.000Z",
+      "_id": "58132311550dfb3b52b3c977"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-07T09:39:00.000Z",
+      "actualStartTime": "2015-04-07T09:39:00.000Z",
+      "scheduledEndTime": "2015-04-07T14:37:00.000Z",
+      "actualendTime": "2015-04-07T14:37:00.000Z",
+      "_id": "58132311550dfb3b52b3c976"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-07T14:37:00.000Z",
+      "actualStartTime": "2015-04-07T14:37:00.000Z",
+      "scheduledEndTime": "2015-04-07T20:09:00.000Z",
+      "actualendTime": "2015-04-07T20:09:00.000Z",
+      "_id": "58132311550dfb3b52b3c975"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-03-29T03:59:00.000Z",
+  "prize": [
+    1500,
+    750
+  ],
+  "projectId": 8535,
+  "registrants": [
+    {
+      "handle": "albertwang",
+      "reliability": "80%",
+      "registrationDate": "2015-03-29T04:02:00.000Z",
+      "submissionDate": "2015-04-03T03:54:00.000Z",
+      "rating": "1631",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58132311550dfb3b52b3c974"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "20%",
+      "registrationDate": "2015-03-29T05:02:00.000Z",
+      "submissionDate": null,
+      "rating": "1155",
+      "colorStyle": "color: #00A900",
+      "_id": "58132311550dfb3b52b3c973"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "33%",
+      "registrationDate": "2015-03-29T07:11:00.000Z",
+      "submissionDate": null,
+      "rating": "1005",
+      "colorStyle": "color: #00A900",
+      "_id": "58132311550dfb3b52b3c972"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-29T07:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132311550dfb3b52b3c971"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-29T08:32:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58132311550dfb3b52b3c970"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "6%",
+      "registrationDate": "2015-03-29T10:43:00.000Z",
+      "submissionDate": null,
+      "rating": "1019",
+      "colorStyle": "color: #00A900",
+      "_id": "58132311550dfb3b52b3c96f"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "60%",
+      "registrationDate": "2015-03-29T10:54:00.000Z",
+      "submissionDate": "2015-04-03T03:59:00.000Z",
+      "rating": "1038",
+      "colorStyle": "color: #00A900",
+      "_id": "58132311550dfb3b52b3c96e"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-29T10:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132311550dfb3b52b3c96d"
+    },
+    {
+      "handle": "MonicaMuranyi",
+      "reliability": "100%",
+      "registrationDate": "2015-03-29T14:51:00.000Z",
+      "submissionDate": null,
+      "rating": "1575",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58132311550dfb3b52b3c96c"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-29T16:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132311550dfb3b52b3c96b"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-29T17:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132311550dfb3b52b3c96a"
+    },
+    {
+      "handle": "arshadasif0312",
+      "reliability": "16%",
+      "registrationDate": "2015-03-30T07:49:00.000Z",
+      "submissionDate": null,
+      "rating": "572",
+      "colorStyle": "color: #999999",
+      "_id": "58132311550dfb3b52b3c969"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "20%",
+      "registrationDate": "2015-03-30T08:59:00.000Z",
+      "submissionDate": null,
+      "rating": "1739",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58132311550dfb3b52b3c968"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-30T09:48:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58132311550dfb3b52b3c967"
+    },
+    {
+      "handle": "chok68",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-30T09:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132311550dfb3b52b3c966"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2015-03-30T12:12:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58132311550dfb3b52b3c965"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-30T12:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132311550dfb3b52b3c964"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2015-03-30T15:27:00.000Z",
+      "submissionDate": null,
+      "rating": "282",
+      "colorStyle": "color: #999999",
+      "_id": "58132311550dfb3b52b3c963"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-30T15:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132311550dfb3b52b3c962"
+    },
+    {
+      "handle": "mo.sehsah",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-30T16:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132311550dfb3b52b3c961"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "26%",
+      "registrationDate": "2015-03-30T23:30:00.000Z",
+      "submissionDate": null,
+      "rating": "1258",
+      "colorStyle": "color: #6666FF",
+      "_id": "58132311550dfb3b52b3c960"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-31T02:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132311550dfb3b52b3c95f"
+    }
+  ],
+  "registrationEndDate": "2015-03-31T04:00:00.000Z",
+  "reliabilityBonus": 300,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-04-03T04:04:00.000Z",
+  "submissions": [
+    {
+      "handle": "albertwang",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 91.62,
+      "finalScore": 97.21,
+      "points": 472.49999999999994,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-04-03T03:54:00.000Z",
+      "_id": "58132311550dfb3b52b3c984"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 71.62,
+      "finalScore": 71.62,
+      "points": 202.5,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-04-03T03:59:00.000Z",
+      "_id": "58132311550dfb3b52b3c983"
+    }
+  ],
+  "technology": [
+    "API",
+    "HTML",
+    "PostgreSQL",
+    "REST",
+    "Ruby",
+    "Ruby on Rails",
+    "SQL"
+  ]
+}

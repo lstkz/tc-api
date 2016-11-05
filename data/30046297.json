@@ -1,0 +1,236 @@
+{
+  "_id": 30046297,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T09:54:04.383Z",
+  "appealsEndDate": "2014-10-16T07:40:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "[serenity] Discussion Directive Part I",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><em>This challenge is part of Project SERENITY: a refresh of the topcoder challenge lifecycle. There are many challenges before it and will be many after it but you should be able to clone this repo: https://github.com/topcoderinc/serenity-core, grok the README and be up to speed in a few minutes.&nbsp;</em></p>\n\n<p>The goal of this challenge is to build a simple discussion directive. &nbsp; &nbsp;In a parallel initiative we have been building out the discussion service and we will give examples of how to use this service to GET and POST discussions and their messages. &nbsp; In simplest terms a user should be able to post a comment, reply to a comment and show the entire thread. &nbsp; &nbsp;The &lsquo;discussion&rsquo; service will be able to be attached to any object in our app by simply passing two parameters to the directive. &nbsp; The first parameter is the &nbsp;<span style=\"font-family:courier new,courier,monospace\">remoteObjectName</span> (example: &nbsp;&lsquo;Challenge&rsquo; or &lsquo;Scorecard&rsquo; ) and the second is the <span style=\"font-family:courier new,courier,monospace\">remoteObjectId</span> which is simply the id of the object in question.&nbsp;</p>\n\n<p>The Message is a child of the object of the Discussion. &nbsp;It contains the discussionId, MessageId, parentMessageId, and content. &nbsp; &nbsp;If the parentMessageId is Null then the message is the root message: i.e. a question, and if the parentMessageId is not null it is a reply (i.e. an answer)</p>\n\n<p>We have a working discussion service hosted here: &nbsp;http://lc1-discussion-service.herokuapp.com/ &nbsp;and you can see the swagger docs by adding docs to the path (http://lc1-discussion-service.herokuapp.com/docs/) . &nbsp; Since this discussion &nbsp;service is still in development &nbsp;you can not query by remoteObjectName and remoteObjectId. &nbsp;That feature is being added in <a href=\"http://www.topcoder.com/challenge-details/30046289/\">this</a>&nbsp;challenge. &nbsp;The result of that query will return a discussionId so for this challenge you will fake this first query call to always return a hardcoded discussionId. &nbsp;&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p><strong>Setup Steps.</strong><br />\n1. &nbsp;First download the core app repo (link at the top of the challenge) and install it. &nbsp; See the readme for details.<br />\n2. &nbsp;Next get the postman file from the discussion repo (https://raw.githubusercontent.com/topcoderinc/serenity-discussions-api/master/docs/discussion.POSTMAN.json) and POST a discussion use your handle (to avoid collisions) as the remoteObjectName and &nbsp;any value for the remoteObjectId &nbsp; . &nbsp;Make note of the discussionId returned in the post since you will use that in your mock service call.<br />\n3. &nbsp;Next create a couple of messages (parent and children) under your discussion from the postman file.<br />\n4. &nbsp;Now you are ready to start the challenge.</p>\n\n<p><strong>Requirements</strong></p>\n\n<p>1. &nbsp;Create a discussion directive (tc-discussion) that takes two parameters: <span style=\"font-family:courier new,courier,monospace\">remoteObjectName, remoteObjectId</span><br />\n2. &nbsp;Create a http service that calls the discussion endpoint but ignores the parameters from the directive and always uses the discussionId you created in setup step #2. &nbsp; Your http call to get the messages should look something like this: <span style=\"font-family:courier new,courier,monospace\">http://lc1-discussion-service.herokuapp.com/discussions/1/messages</span> except replace the 1 with your discussionId.<br />\n3. &nbsp;Use the mockup found in the forums as a template for your directive. &nbsp; With the following cavets.<br />\n&nbsp; &nbsp; 3.1 &nbsp;Assume that the posts are immutable (for now) and the remove the Delete | Edit links have been omitted<br />\n&nbsp; &nbsp; 3.2. &nbsp;The first message should never have a parentId but all other messages should reference the first message as their parentId. &nbsp; The service has been designed for a classic nested approach however we are experimenting with this flat model but we still want to respect the nested nature (1 level) until we we get user feedback.<br />\n&nbsp; &nbsp; 3.3. &nbsp;The createdBy field is hardcoded to _indy but assume it is the actual owner of the message. &nbsp;(the api will take care of inserting the actual owner.<br />\n4. &nbsp;Add a placeholder for the avatar image</p>\n\n<p>5. &nbsp;The messages should be sorted by createdAt DESC<br />\n6. &nbsp;Add your directive to the challenge detail page<br />\n<strong>7. Bonus</strong>: &nbsp; A Discussion object may or may not exist yet for a challenge. &nbsp;This would be determined by the &lsquo;faked&rsquo; query call with <span style=\"font-family:courier new,courier,monospace\">remoteObjectName</span> and <span style=\"font-family:courier new,courier,monospace\">remoteObjectId</span>. &nbsp;Since you will be hardcoding the discussion id you may assume it already exists however additional feature points will be granted if you choose to add a second service http POST call for a condition where the Discussion has not be created. &nbsp;This should happen on the enter key for the quick reply: First call creates the discussion and returns the discussionId to which a subsequent message POST uses that discussionId</p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30046297",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalSubmissionGuidelines": "<p>1. &nbsp; Submit your complete source file zipped, be sure to include the entire root directory including you the .git dir&nbsp;<br />\n2. &nbsp; A quick video or your solution in action and a code walk thru would be nice.<br />\n3. &nbsp; Create docs/tc-discussion-directive.md document that describes how to use your directive anywhere in the app. &nbsp; Also discuss how you used the fake mock call so we have documentation on how it needs to change. &nbsp;Also include a manisfest of the files you modified and added.</p>\n",
+  "forumId": 25970,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=25970",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 14,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-07T21:16:00.000Z",
+      "actualStartTime": "2014-10-07T21:16:00.000Z",
+      "scheduledEndTime": "2014-10-14T17:16:00.000Z",
+      "actualendTime": "2014-10-14T17:16:00.000Z",
+      "_id": "5813203c550dfb3b52b29bf4"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-07T21:21:00.000Z",
+      "actualStartTime": "2014-10-07T21:21:00.000Z",
+      "scheduledEndTime": "2014-10-14T17:16:00.000Z",
+      "actualendTime": "2014-10-14T17:16:00.000Z",
+      "_id": "5813203c550dfb3b52b29bf3"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-14T17:16:00.000Z",
+      "actualStartTime": "2014-10-14T17:16:00.000Z",
+      "scheduledEndTime": "2014-10-15T20:45:00.000Z",
+      "actualendTime": "2014-10-15T20:45:00.000Z",
+      "_id": "5813203c550dfb3b52b29bf2"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-15T20:45:00.000Z",
+      "actualStartTime": "2014-10-15T20:45:00.000Z",
+      "scheduledEndTime": "2014-10-16T02:39:00.000Z",
+      "actualendTime": "2014-10-16T02:39:00.000Z",
+      "_id": "5813203c550dfb3b52b29bf1"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-16T02:39:00.000Z",
+      "actualStartTime": "2014-10-16T02:39:00.000Z",
+      "scheduledEndTime": "2014-10-16T07:40:00.000Z",
+      "actualendTime": "2014-10-16T07:40:00.000Z",
+      "_id": "5813203c550dfb3b52b29bf0"
+    }
+  ],
+  "platforms": [
+    "NodeJS"
+  ],
+  "postingDate": "2014-10-07T21:16:00.000Z",
+  "prize": [
+    750,
+    300,
+    100
+  ],
+  "projectId": 7971,
+  "registrants": [
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-08T02:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203c550dfb3b52b29bef"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-08T04:35:00.000Z",
+      "submissionDate": "2014-10-14T05:59:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203c550dfb3b52b29bee"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-08T07:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203c550dfb3b52b29bed"
+    },
+    {
+      "handle": "gmagniez",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-08T08:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203c550dfb3b52b29bec"
+    },
+    {
+      "handle": "smart_raghavan",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-08T13:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203c550dfb3b52b29beb"
+    },
+    {
+      "handle": "getaasciesh",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-08T16:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203c550dfb3b52b29bea"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-09T02:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203c550dfb3b52b29be9"
+    },
+    {
+      "handle": "hnuljy",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-10T02:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203c550dfb3b52b29be8"
+    },
+    {
+      "handle": "mohitjee15",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-09T17:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203c550dfb3b52b29be7"
+    },
+    {
+      "handle": "iCare",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-09T18:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203c550dfb3b52b29be6"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-10T01:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203c550dfb3b52b29be5"
+    },
+    {
+      "handle": "NoRKin",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-12T02:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203c550dfb3b52b29be4"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-12T08:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203c550dfb3b52b29be3"
+    },
+    {
+      "handle": "spanhawk",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-14T06:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203c550dfb3b52b29be2"
+    }
+  ],
+  "registrationEndDate": "2014-10-14T17:16:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2014-10-14T17:16:00.000Z",
+  "submissions": [
+    {
+      "handle": "peakpado",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 91.25,
+      "finalScore": 91.25,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-10-14T05:59:00.000Z",
+      "_id": "5813203c550dfb3b52b29bf5"
+    }
+  ],
+  "technology": [
+    "Angular.js"
+  ]
+}

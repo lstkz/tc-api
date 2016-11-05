@@ -1,0 +1,218 @@
+{
+  "_id": 30045431,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T09:54:40.551Z",
+  "appealsEndDate": "2014-09-04T12:47:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "[serenity] Basic Requirements Model and View",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p>This challenge is part of Project SERENITY: a refresh of the topcoder challenge lifecycle. There are many challenges before it and will be many after it but you should be able to clone this repo: <a href=\"https://github.com/topcoderinc/serenity-core\">https://github.com/topcoderinc/serenity-core</a>, grok the README and be up to speed in a few minutes. &nbsp; This project pulls heavily from the MEAN.io stack but with PostgreSQL support.</p>\n\n<p>Now that we have the challenge object and the prizes are being added in this challenge: <a href=\"http://www.topcoder.com/challenge-details/30045350/?type=develop\">&nbsp;[serenity] Challenge Prize Model and View .</a> &nbsp; We are ready to add our first iteration of of the requirements. &nbsp; This Architecture challenge <a href=\"http://www.topcoder.com/challenge-details/30045046/?type=develop\">Serenity - Madison Data Model in PostgreSQL</a> talks about the long term plan of the Madison (the dynamic scorecard) and storing a cataloging requirements. &nbsp;Also for your reference I have included both submissions from this challenge in the forums for some light reading.</p>\n\n<p>But for this one we just need to be able to create one or more requirements and associate them to the &nbsp;challenge. &nbsp; We don&rsquo;t care about generating the scorecard or cataloging the requirements for public or private use at this point. &nbsp; Just simple create requirements and add tags.</p>\n\n<p>Both of the Data model submissions propose that we store the tags in a separate table but we would like to store them in array on the requirement table.</p>\n\n<p>Here is the sample ddl for the requirement &nbsp;table you may choose to use:</p>\n\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width:500px\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td>\n\t\t\t<p><em><span style=\"font-size:10px\"><span style=\"font-family:courier new,courier,monospace\">CREATE TYPE requirement_neccesity AS ENUM (<br />\n\t\t\t&nbsp; &nbsp; &#39;Must&#39;,<br />\n\t\t\t&nbsp; &nbsp; &#39;Should&#39;,<br />\n\t\t\t&nbsp; &nbsp; &#39;Nice&#39;,<br />\n\t\t\t&nbsp; &nbsp; &#39;Optional&#39;<br />\n\t\t\t);</span></span></em></p>\n\n\t\t\t<p><br />\n\t\t\t<em><span style=\"font-size:10px\"><span style=\"font-family:courier new,courier,monospace\">CREATE TYPE requirement_type AS ENUM (<br />\n\t\t\t&nbsp; &nbsp; &#39;Functional&#39;,<br />\n\t\t\t&nbsp; &nbsp; &#39;Technical&#39;,<br />\n\t\t\t&nbsp; &nbsp; &#39;Informational&#39;,<br />\n\t\t\t&nbsp; &nbsp; &#39;Other&#39;<br />\n\t\t\t);</span></span></em></p>\n\n\t\t\t<p><em><span style=\"font-size:10px\"><span style=\"font-family:courier new,courier,monospace\">CREATE TABLE requirement (<br />\n\t\t\t&nbsp; &nbsp; requirement_id bigserial NOT NULL,<br />\n\t\t\t&nbsp; &nbsp; type requirement_type NOT NULL,<br />\n\t\t\t&nbsp; &nbsp; body text NOT NULL,<br />\n\t\t\t&nbsp; &nbsp; score_min smallint NOT NULL,<br />\n\t\t\t&nbsp; &nbsp; score_max smallint NOT NULL,<br />\n\t\t\t&nbsp; &nbsp; created_by_user_id bigint NOT NULL,<br />\n\t\t\t&nbsp; &nbsp; is_private bit(1) DEFAULT (1)::bit(1) NOT NULL,<br />\n\t\t\t&nbsp; &nbsp; difficulty smallint,<br />\n\t\t\t&nbsp; &nbsp; tags text[],<br />\n\t\t\t&nbsp; &nbsp; necessity requirement_neccesity,<br />\n\t\t\t&nbsp; &nbsp; textsearchable_body tsvector,<br />\n\t\t\t&nbsp; &nbsp; is_in_library bit(1) DEFAULT (0)::bit(1) NOT NULL,<br />\n\t\t\t&nbsp; &nbsp; weight numeric(5,3) DEFAULT 1 NOT NULL</span><br />\n\t\t\t);</span></em></p>\n\t\t\t</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\"><strong>Functional Requirements:</strong></span><br />\n1. &nbsp; From the challenge partial view.html create a new section called Add Requirements with a plus sign.<br />\n2. &nbsp;By clicking the plus, &nbsp;a new form row is added and the user is allowed to add a new requirement<br />\n3. user can add one or more tags for that requirement.<br />\n4. Do your best to create a logic UI for the requirement builder however we have a design challenge for this UX so don&rsquo;t fuss too much.</p>\n\n<p><strong><span style=\"font-size:14px\">Technical Requirements:</span></strong><br />\n1. &nbsp;When the new requirement is added to the challenge the following minimum fields must be mapped to the form, &nbsp;the rest are optional: &nbsp; type, body, tags, score_min, score_max, created_by_user_id (should be inheirted from the $scope.Global - logged in user), and challengeId.&nbsp;<br />\n2. &nbsp;Type (Functional, Technical, Information) should be a radio button with default value informational.<br />\n3. &nbsp;You must not use any high level database (postgres) feature. &nbsp;Assume that this is a separate service decoupled from the challenge service and &nbsp;challenge and requirement may actualy reside on different databases.</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30045431",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalSubmissionGuidelines": "<p>1. Please provide a alter table script to add your new tables to the existing &nbsp;schema<br />\n2. Please provide a quick video highlighting your solution in action, If English is not your first language feel free to annotate your video with text.<br />\n3. Provide your code in a single zip file.<br />\n4. You do not need to deploy to Heroku but are welcome to.</p>\n",
+  "forumId": 25207,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=25207",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 12,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-27T17:21:00.000Z",
+      "actualStartTime": "2014-08-27T17:21:00.000Z",
+      "scheduledEndTime": "2014-09-01T19:20:00.000Z",
+      "actualendTime": "2014-09-01T19:20:00.000Z",
+      "_id": "58132060550dfb3b52b2bbfc"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-27T17:26:00.000Z",
+      "actualStartTime": "2014-08-27T17:26:00.000Z",
+      "scheduledEndTime": "2014-09-01T19:20:00.000Z",
+      "actualendTime": "2014-09-01T19:20:00.000Z",
+      "_id": "58132060550dfb3b52b2bbfb"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-01T19:20:00.000Z",
+      "actualStartTime": "2014-09-01T19:20:00.000Z",
+      "scheduledEndTime": "2014-09-03T02:53:00.000Z",
+      "actualendTime": "2014-09-03T02:53:00.000Z",
+      "_id": "58132060550dfb3b52b2bbfa"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-03T02:53:00.000Z",
+      "actualStartTime": "2014-09-03T02:53:00.000Z",
+      "scheduledEndTime": "2014-09-04T02:53:00.000Z",
+      "actualendTime": "2014-09-04T02:53:00.000Z",
+      "_id": "58132060550dfb3b52b2bbf9"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-04T02:53:00.000Z",
+      "actualStartTime": "2014-09-04T02:53:00.000Z",
+      "scheduledEndTime": "2014-09-04T12:47:00.000Z",
+      "actualendTime": "2014-09-04T12:47:00.000Z",
+      "_id": "58132060550dfb3b52b2bbf8"
+    }
+  ],
+  "platforms": [
+    "NodeJS"
+  ],
+  "postingDate": "2014-08-27T17:21:00.000Z",
+  "prize": [
+    650,
+    420
+  ],
+  "projectId": 7971,
+  "registrants": [
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-27T19:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132060550dfb3b52b2bbf7"
+    },
+    {
+      "handle": "BharathMG",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-27T21:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132060550dfb3b52b2bbf6"
+    },
+    {
+      "handle": "lovefreya",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-28T01:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132060550dfb3b52b2bbf5"
+    },
+    {
+      "handle": "sanathe06",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-28T05:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132060550dfb3b52b2bbf4"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-28T06:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132060550dfb3b52b2bbf3"
+    },
+    {
+      "handle": "iCare",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-28T11:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132060550dfb3b52b2bbf2"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-29T00:37:00.000Z",
+      "submissionDate": "2014-08-31T18:56:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132060550dfb3b52b2bbf1"
+    },
+    {
+      "handle": "billthu",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-29T03:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132060550dfb3b52b2bbf0"
+    },
+    {
+      "handle": "ericcartman",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-29T05:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132060550dfb3b52b2bbef"
+    },
+    {
+      "handle": "NoRKin",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-29T06:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132060550dfb3b52b2bbee"
+    },
+    {
+      "handle": "dineshm",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-29T18:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132060550dfb3b52b2bbed"
+    },
+    {
+      "handle": "e06widu",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-31T07:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132060550dfb3b52b2bbec"
+    }
+  ],
+  "registrationEndDate": "2014-09-01T19:20:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2014-09-01T19:20:00.000Z",
+  "submissions": [
+    {
+      "handle": "peakpado",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 92.5,
+      "finalScore": 92.5,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-08-31T18:56:00.000Z",
+      "_id": "58132060550dfb3b52b2bbfd"
+    }
+  ],
+  "technology": [
+    "Angular.js",
+    "PostgreSQL"
+  ]
+}

@@ -1,0 +1,283 @@
+{
+  "_id": 30053398,
+  "_isComplete": true,
+  "__v": 2547,
+  "_lastUpdate": "2016-11-05T11:06:12.913Z",
+  "appealsEndDate": "2016-03-31T04:00:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "CredentialME Front End Integration 2",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Cancelled - Zero Submissions",
+  "detailedRequirements": "<p><strong><span style=\"color:#FF0000\">Challenge Overview</span></strong></p>\n\n<p>An Open Badge is a digital representation of a skill or achievement. Each badge awarded to an earner comprises a digital image file and some metadata. The metadata describes what the badge represents, the identity of the earner and validation by the issuing organization.<br />\nThe CredentialME App will allow you to search, earn, manage and share, digital badges and credentials for skills and achievements. In other words, CredentialME is a badge wallet, where you can see and manage your badges.&nbsp; For this first release, we will accept badges from Acclaim and Credly.<br />\nFor more about open badges, please refer to https://github.com/mozilla/openbadges-backpack/wiki</p>\n\n<p>In this challenge, we will implement more features with updated design.</p>\n\n<p><strong><span style=\"color:#FF0000\">Task Overview</span></strong></p>\n\n<p>This is last integration challenge of CredentialME, we will complete all the features involved, and please ask questions in forum as early as possible, any assumption without confirmation in forum may not be accepted.</p>\n\n<p>for Acclaim, we access https://sandbox.youracclaim.com in dev phase and https://www.youracclaim.com in product phase, please make it configurable(ACCLAIM_URL) in both frontend and backend</p>\n\n<p>some notices about implementation (all the screens are in scope)<br />\n1) Grant Access (1c_grant_access.png)<br />\nthe requirement is a bit different here, check the original UI prototype, replace Mozilla with Credly, put Acclaim in the left and Credly in the right<br />\nAcclaim logo: https://drive.google.com/file/d/0B36cYQCNeYwPOEdPVmx3M3V0ZGs/view?usp=sharing<br />\nCredly logo: https://drive.google.com/file/d/0B36cYQCNeYwPckRMd0F5MnowWVE/view?usp=sharing<br />\n&quot;Grant Access&quot;(Acclaim): access &quot;POST /api/v1/acclaim/signIn&quot;, fetch the URL in the response body and open it, if the user email is not the same as user&#39;s IBM ID, show popup message &quot;user email is not the same&quot;, after sign in we need to do sync user badges(AcclaimService#syncUserBadges, if the badge has recommendation badges, please sync them too, update Badge#recommendations to be array of Object Ids of recommendation Badge)<br />\n&quot;Sign Up to Acclaim&quot;(Acclaim): open ACCLAIM_URL/users/sign_up when finished, return back to the app<br />\n&quot;Grant Access&quot;(Credly): we could use custom UI here(1f_access_login.png), access &quot;POST /api/v1/credly/signIn&quot;<br />\n&quot;Sign Up to Credly&quot;: we could use custom UI here(1d_Sign Up.png, check https://developers.credly.com/api/user-management &quot;POST authenticate/register&quot;, is_organization is 0), please add new backend API /api/v1/credly/signUp</p>\n\n<p>2) Claim<br />\nIt means to accept pending badges.<br />\nadd new backend API &quot;POST /api/vi/badge/:id/accept&quot; to accept, :id is the ObjectId of BadgeAssertion, we already implemented AcclaimService#accept to accept acclaim badges, please add similar method for CredlyService(please also refer to https://developers.credly.com/api/credit &quot;PUT /member_badges/:id&quot;<br />\nhandle the cases if the user skips grant access of Acclaim or Credly or both, popup message sample &quot;Access of Acclaim is not granted&quot; or &quot;Access of Credly is not granted&quot;.</p>\n\n<p>3) update stream screen (2a_steams.png)<br />\n1&gt; Greater badges you can earn<br />\nThese badges are recommendation badges(BadgeAssertion#recommendations), we need to display them in the stream screen for badge the user has earned, so please update BadgeAssertionService#stream in backend too.<br />\n2&gt; Users like you have earned these badges<br />\n#TODO pending<br />\n3&gt; display new badges (take &quot;HTML/CSS Badge certification now available&quot; for example)<br />\nupdate BadgeAssertionService#stream<br />\nplease query Badge the user has not earned too<br />\nas stream is ordered by time, to make it uniform, please add a new field &quot;created_at&quot;, for BadgeAssertion it is value of &quot;issuedOn&quot;, for Badge it is the creation time<br />\nmore detail, for Acclaim, it is badge_template&#39;s &quot;created_at&quot;(update AcclaimService#_createOrUpdateBadge), for Credly badge, it is badge&#39;s &quot;created_at&quot;(update CredlyService#sync),<br />\nwhat to do when &quot;earn now&quot; is clicled? if Badge#criteria(which is url about how to earn it) is not empty, please open it, otherwise display Badge#criteriaContent with a new page(there is a back button in left of the header)</p>\n\n<p>4) show comments of badge<br />\ncheck &quot;2c_comment to other user-1.png&quot; and &quot;2c_comment to other user-2.png&quot;, the work flow is different from current app, that is, it will show comments in a separate screen<br />\nthere are also &quot;like&quot; and &quot;favorite&quot; features in this screen.</p>\n\n<p>5) notifications<br />\nwe need to show notification for pending badges(BadgeAssertion#pending == true), please add a new field BadgeAssertion#skip which will be &quot;true&quot; if the user doesn&#39;t accept it but doesn&#39;t want to see it in notifications any more.<br />\nadd new API &quot;GET /api/v1/profile/:id/notificationsNum&quot; which will return the num of pending badges(BadgeAssertion#pending == true and BadgeAssertion#skip != true)<br />\nfor the client, it will query the num of pending badges each time &quot;Stream&quot;/&quot;My Badges&quot;/&quot;My Profile&quot;/&quot;Favorite Badges&quot; is open, then update the num in notification icon<br />\nplease update current impl of ProfileService#getNotifications too<br />\nadd new API &quot;POST /api/v1/badge/:id/skip&quot; to skip notification (update BadgeAssertion#skip to be true) for pending badges, :id is the ObjectId of BadgeAssertion<br />\ncheck the menu, there is a new entry for &quot;notifications&quot; too(2e_menu.png)</p>\n\n<p>6) public or unpublic<br />\nupdate sync, for Acclaim badge, it is badge&#39;s &quot;public&quot;(update AcclaimService#_createOrUpdateBadge), for Credly badge, it is member_badge&#39;s &quot;is_visible&quot;(update CredlyService#sync),<br />\nupdate BadgeAssertionService#public/unpublic, current impl only updates the published field in BadgeAssertion, what&#39;s more, we need to call &quot;PUT `/oauth/v1/users/self/badges/&lt;badge_id&gt;`&quot; (https://www.youracclaim.com/docs/oauth#update-one-of-the-user&#39;s-public-badges) for acclaim, and &quot;POST `/member_badges/:id`&quot;(https://developers.credly.com/api/credit), and we could add such implenmentations in AcclaimService#publish and CredlyService#publish<br />\nthere is a lock icon(take 3a_my_badges.png for example) if BadgeAssertion#published is false</p>\n\n<p>7) badge detail<br />\n1&gt; Greater badges(4c_my_badge_details.png, refer to 3.1)<br />\n2&gt; Users earned this also earn (4d_my_badge_details.png) to improve performance for query, add a new field &quot;othersEarn&quot; of Badge to store badge ids.<br />\nduring sync, when user has been issued a new badge, for other badges the user has earned, add the id of new badge to the &quot;othersEarn&quot; of other badges if not exists</p>\n\n<p>8) share badges via email<br />\nSharing badge will be a configured message with link to Acclaim/Credly for that badge<span>, please make the mail subject and content templates configurable.</span></p>\n\n<p>9) share APP via emails<br />\n<span>sharing app will be a configured message with links to the catalog, please make the mail subject and content templates configurable.</span></p>\n\n<p><strong><span style=\"color:#FF0000\">Documents Provided</span></strong><br />\n1.<br />\n&nbsp;&nbsp; <a href=\"http://www.topcoder.com/challenge-details/30051998/?type=develop&amp;noncache=true\">Spec </a>of integration 1 challenge<br />\n&nbsp;&nbsp; <a href=\"http://www.topcoder.com/challenge-details/30052789/?type=develop&amp;noncache=true\">Spec </a>of Acclaim F2F<br />\n&nbsp;&nbsp; <a href=\"http://www.topcoder.com/challenge-details/30052465/?type=develop&amp;noncache=true\">Spec </a>of Credly F2F<br />\n&nbsp;&nbsp; <a href=\"http://www.topcoder.com/challenge-details/30052749/?type=design&amp;noncache=true\">Spec </a>of screen design update F2F<br />\n&nbsp;&nbsp; <a href=\"http://www.topcoder.com/challenge-details/30051993/?type=design&amp;noncache=true\">Spec </a>of design challenge<br />\n2.UI prototype and Screen Design Update<br />\n3.Backend code<br />\n4.Frontend code</p>\n\n<p><span style=\"color:#FF0000\"><strong>Technical Requirement</strong></span><br />\nThe app should work under both iOS and Android.</p>\n\n<p><strong><span style=\"color:#FF0000\">Technical Stack</span></strong></p>\n\n<p>- Bluemix<br />\n- NodeJS<br />\n- Cloudant<br />\n- Ionic<br />\n- Cordova<br />\n- AngularJS</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30053398",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<ul>\n\t<li><span>Updated Backend(Nodejs app code) that could be deployed to Bluemix.</span></li>\n\t<li><span>Updated REST API doc.</span></li>\n\t<li><span>Updated Frontend APP source code.</span></li>\n\t<li><span>A complete and detailed deployment documented explaining how to deploy and verify the app including configuration information(demo video is not in scope).</span></li>\n</ul>\n",
+  "forumId": 31098,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=31098",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 20,
+  "numberOfSubmissions": 0,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-21T16:00:00.000Z",
+      "actualStartTime": "2016-03-21T16:00:00.000Z",
+      "scheduledEndTime": "2016-03-26T16:00:00.000Z",
+      "actualendTime": "2016-03-26T16:00:00.000Z",
+      "_id": "581dbd24550dfb3b52be3443"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-21T16:06:00.000Z",
+      "actualStartTime": "2016-03-21T16:06:00.000Z",
+      "scheduledEndTime": "2016-03-27T16:00:00.000Z",
+      "actualendTime": "2016-03-27T16:00:00.000Z",
+      "_id": "581dbd24550dfb3b52be3442"
+    },
+    {
+      "type": "Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2016-03-27T16:00:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2016-03-29T16:00:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd24550dfb3b52be3441"
+    },
+    {
+      "type": "Appeals",
+      "status": "Scheduled",
+      "scheduledStartTime": "2016-03-29T16:00:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2016-03-30T16:00:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd24550dfb3b52be3440"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2016-03-30T16:00:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2016-03-31T04:00:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd24550dfb3b52be343f"
+    }
+  ],
+  "platforms": [
+    "NodeJS",
+    "iOS",
+    "Android",
+    "IBM Bluemix"
+  ],
+  "postingDate": "2016-03-21T16:00:00.000Z",
+  "prize": [
+    1200,
+    600
+  ],
+  "projectId": 9237,
+  "registrants": [
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-23T23:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be343e"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-24T14:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be343d"
+    },
+    {
+      "handle": "mehblahwhatever",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-25T05:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be343c"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-22T03:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be343b"
+    },
+    {
+      "handle": "ananthhh",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-21T16:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be343a"
+    },
+    {
+      "handle": "ptarunn",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-21T17:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3439"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-21T21:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3438"
+    },
+    {
+      "handle": "kbentoumi",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-22T00:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3437"
+    },
+    {
+      "handle": "Amith",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-22T01:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3436"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-22T01:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3435"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-22T02:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3434"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-22T03:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3433"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-22T04:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3432"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-22T06:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3431"
+    },
+    {
+      "handle": "fish00",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-22T07:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3430"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-22T07:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be342f"
+    },
+    {
+      "handle": "xiufei",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-23T08:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be342e"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-23T09:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be342d"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-23T14:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be342c"
+    },
+    {
+      "handle": "tomit",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-26T05:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be342b"
+    }
+  ],
+  "registrationEndDate": "2016-03-26T16:00:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-03-27T16:00:00.000Z",
+  "submissions": [],
+  "technology": [
+    "HTML",
+    "JavaScript",
+    "Node.js",
+    "Other"
+  ]
+}

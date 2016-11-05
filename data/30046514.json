@@ -1,0 +1,264 @@
+{
+  "_id": 30046514,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:13:49.946Z",
+  "appealsEndDate": "2014-10-23T12:17:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Fast 96hrs!!! Module Assembly - Arena VM Initialization Script Update",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<p><span><span><span><span><span><span><span><span><span><span style=\"color:rgb(255, 0, 0); font-family:arial,helvetica,verdana,sans-serif\">Project Overview</span></span></span></span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span><span><span><span style=\"font-family:sans-serif,arial,verdana,trebuchet ms\">TopCoder Competition Engine is a system used for Single Round Matches (SRM) and Marathon Matches (MM). </span></span></span></span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span><span><span><span style=\"font-family:sans-serif,arial,verdana,trebuchet ms\">Currently, Arena VM</span></span></span></span></span></span></span></span></span></span> is heavily used to challenges related to TopCoder Competiton Engine.</p>\n\n<p>but it is painful to maintain it and update if we need to install new softwares, because it can only be handled by internally.</p>\n\n<p>For this series of challenges, we&#39;d like to use the power of community to help with maintain and improve it.</p>\n\n<p><span><span><span><span><span><span><span><span><span><span style=\"color:rgb(255, 0, 0); font-size:13px\">Competition Task Overview</span></span></span></span></span></span></span></span></span></span></p>\n\n<p>The purpose of this challenge is to do some initial steps, so we can involve the community to help maintain it more easily.</p>\n\n<p>Previously, it is not easily, we normally test the new steps, and commit into the <a href=\"https://coder.topcoder.com/internal/vm-setup/trunk\">vm_setup</a> svn, then launch a new VM to verify.</p>\n\n<p>For the challenge, we&#39;d like to create some clean utilities, so we can repeat some init steps in the same VM easily.</p>\n\n<p><u>About Current VM Setup Scripts</u></p>\n\n<p>For this challenge, every competitor will be grant root access to the Arena VM, so you can find the vm setup scripts at home directory of <u>root </u>user.</p>\n\n<p>Following is the general description from my understanding.</p>\n\n<ul>\n\t<li>/root/hook-script.sh - this is the hook script that will be called after the Arena VM allocated, it will retrieve the <u>main-vm-script.sh</u> to start the vm initialization.</li>\n\t<li>/root/main-vm-script.sh - the main vm initialization script for setting up TC VMs, not just the Arena VM, the INIT_TYPE will determine the scope for initialization, for this challenge, you just need to focus on <strong>INIT_TYPE = arena</strong></li>\n\t<li>/root/startup-tmp - the directory contains the shell scripts checkout by main-vm-scripts.sh.</li>\n\t<li>/root/startup-tmp/common-init.sh - this inits the common setup like softwares.</li>\n\t<li>/root/startup-tmp/db-init.sh - this inits the informix database and mysql database.</li>\n\t<li>/root/startup-tmp/arena_init_script.sh - this sets up all related staff for arena (topcoder competitition engine) and start service.</li>\n\t<li>/root/startup-tmp/api-init.sh - this sets up the TC API under api account.</li>\n</ul>\n\n<p><u>Challenge Scope</u></p>\n\n<p>For this challenge, we&#39;d like to do some exploration.</p>\n\n<ol>\n\t<li>We&#39;d like to explore the possibility to run the <u>arena_init_script.sh</u> repeatly, one thing we can think about is to create a <u>clean_arena_init.sh</u> file, which will rollback the setup of arena_init_scripts.sh.</li>\n\t<li>for arena_init_scripts.sh, please check if some setup can be moved to somewhere else.</li>\n\t<li>for main-vm-scripts.sh, there are a lot of environment variables, see <strong>Set Variables</strong> section, and each if block. We&#39;d like to clean it up by duplication. and create a separate set-env-variables.sh, which can be used to init before calling arena_init_scripts.sh</li>\n</ol>\n\n<p><u>Verification</u></p>\n\n<p>in order to verify the repeatly running the <u>arena_init_scripts.sh</u>, you are expected to follow the SRM Problem Guide to verify the make sure the functionality and services provided by TopCoder Competiton Engine is still working properly.</p>\n<span><span><span><span><span><span><span><span style=\"color:#FF0000\">Arena VM Usage</span></span></span></span></span></span></span></span>\n\n<p><span><span><span><span><span><span><span>Before asking your own VM, you need to have a public key on your profile before asking for the VM.</span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span>You can find more details on how to generate a key <span><a href=\"http://apps.topcoder.com/wiki/display/projects/Generate+SSH+Key\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/projects/Generate+SSH+Key</a></span> and how to connect using it <span><a href=\"http://apps.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key</a></span>.</span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span>Please reference <span><a href=\"http://apps.topcoder.com/wiki/display/docs/Competition+Engine+VM+Setup\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/docs/Competition+Engine+VM+Setup</a></span> for general usage.</span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span style=\"color:#FF0000\"><span>Previously, we have made several update for the Arena VM.&nbsp; So when the Arena VM allocated is available for you, there is a problem and a SRM contest already setup, you can reuse that for testing.</span></span></span></span></span></span></span></span></p>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n",
+  "digitalRunPoints": 225,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30046514",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2014-10-24T16:08:00.000Z",
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<h2><span><span><span><span><span><span><span><span><span><span><span><span style=\"color:#FF0000\">Submission Deliverables</span></span></span></span></span></span></span></span></span></span></span></span></h2>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span style=\"font-size:12px\">Below is an overview of the deliverables:</span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<ul>\n\t<li><span><span><span>new/changed files</span></span></span></li>\n\t<li><span><span><span>Detail Guide to run the scripts.</span></span></span></li>\n\t<li><span><span><span>Working VM environment for verification.</span></span></span></li>\n</ul>\n\n<h2><span><span><span><span><span><span><span><span><span><span><span><span style=\"color:#FF0000\">Final Submission</span></span></span></span></span></span></span></span></span></span></span></span></h2>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span style=\"font-size:12px\">For each member, the final submission should be uploaded to the Online Review Tool.</span></span></span></span></span></span></span></span></span></span></span></span></p>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n",
+  "forumId": 26121,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=26121",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 8,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-16T03:55:00.000Z",
+      "actualStartTime": "2014-10-16T03:55:00.000Z",
+      "scheduledEndTime": "2014-10-16T03:57:00.000Z",
+      "actualendTime": "2014-10-16T03:57:00.000Z",
+      "_id": "581340fd550dfb3b52be7bc7"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-16T03:57:00.000Z",
+      "actualStartTime": "2014-10-16T03:57:00.000Z",
+      "scheduledEndTime": "2014-10-16T05:31:00.000Z",
+      "actualendTime": "2014-10-16T05:31:00.000Z",
+      "_id": "581340fd550dfb3b52be7bc6"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-16T13:00:00.000Z",
+      "actualStartTime": "2014-10-16T13:00:00.000Z",
+      "scheduledEndTime": "2014-10-18T13:00:00.000Z",
+      "actualendTime": "2014-10-18T13:00:00.000Z",
+      "_id": "581340fd550dfb3b52be7bc5"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-16T13:06:00.000Z",
+      "actualStartTime": "2014-10-16T13:06:00.000Z",
+      "scheduledEndTime": "2014-10-20T13:01:00.000Z",
+      "actualendTime": "2014-10-20T13:01:00.000Z",
+      "_id": "581340fd550dfb3b52be7bc4"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-20T13:01:00.000Z",
+      "actualStartTime": "2014-10-20T13:01:00.000Z",
+      "scheduledEndTime": "2014-10-20T13:41:00.000Z",
+      "actualendTime": "2014-10-20T13:41:00.000Z",
+      "_id": "581340fd550dfb3b52be7bc3"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-20T13:41:00.000Z",
+      "actualStartTime": "2014-10-20T13:41:00.000Z",
+      "scheduledEndTime": "2014-10-22T22:19:00.000Z",
+      "actualendTime": "2014-10-22T22:19:00.000Z",
+      "_id": "581340fd550dfb3b52be7bc2"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-22T22:19:00.000Z",
+      "actualStartTime": "2014-10-22T22:19:00.000Z",
+      "scheduledEndTime": "2014-10-23T08:31:00.000Z",
+      "actualendTime": "2014-10-23T08:31:00.000Z",
+      "_id": "581340fd550dfb3b52be7bc1"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-23T08:31:00.000Z",
+      "actualStartTime": "2014-10-23T08:31:00.000Z",
+      "scheduledEndTime": "2014-10-23T12:17:00.000Z",
+      "actualendTime": "2014-10-23T12:17:00.000Z",
+      "_id": "581340fd550dfb3b52be7bc0"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-23T12:17:00.000Z",
+      "actualStartTime": "2014-10-23T12:17:00.000Z",
+      "scheduledEndTime": "2014-10-23T12:55:00.000Z",
+      "actualendTime": "2014-10-23T12:55:00.000Z",
+      "_id": "581340fd550dfb3b52be7bbf"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-23T12:55:00.000Z",
+      "actualStartTime": "2014-10-23T12:55:00.000Z",
+      "scheduledEndTime": "2014-10-24T12:07:00.000Z",
+      "actualendTime": "2014-10-24T12:07:00.000Z",
+      "_id": "581340fd550dfb3b52be7bbe"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-24T12:07:00.000Z",
+      "actualStartTime": "2014-10-24T12:07:00.000Z",
+      "scheduledEndTime": "2014-10-24T14:50:00.000Z",
+      "actualendTime": "2014-10-24T14:50:00.000Z",
+      "_id": "581340fd550dfb3b52be7bbd"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-24T16:19:00.000Z",
+      "actualStartTime": "2014-10-24T16:19:00.000Z",
+      "scheduledEndTime": "2014-10-29T00:56:00.000Z",
+      "actualendTime": "2014-10-29T00:56:00.000Z",
+      "_id": "581340fd550dfb3b52be7bbc"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-24T14:50:00.000Z",
+      "actualStartTime": "2014-10-24T14:50:00.000Z",
+      "scheduledEndTime": "2014-10-24T16:08:00.000Z",
+      "actualendTime": "2014-10-24T16:08:00.000Z",
+      "_id": "581340fd550dfb3b52be7bbb"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-24T16:08:00.000Z",
+      "actualStartTime": "2014-10-24T16:08:00.000Z",
+      "scheduledEndTime": "2014-10-24T16:19:00.000Z",
+      "actualendTime": "2014-10-24T16:19:00.000Z",
+      "_id": "581340fd550dfb3b52be7bba"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2014-10-16T13:00:00.000Z",
+  "prize": [
+    500,
+    250
+  ],
+  "projectId": 4507,
+  "registrants": [
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-10-16T13:35:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "581340fd550dfb3b52be7bb9"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-16T13:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340fd550dfb3b52be7bb8"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-17T00:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340fd550dfb3b52be7bb7"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "13%",
+      "registrationDate": "2014-10-17T05:54:00.000Z",
+      "submissionDate": null,
+      "rating": "580",
+      "colorStyle": "color: #999999",
+      "_id": "581340fd550dfb3b52be7bb6"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "33%",
+      "registrationDate": "2014-10-17T10:05:00.000Z",
+      "submissionDate": null,
+      "rating": "1756",
+      "colorStyle": "color: #DDCC00",
+      "_id": "581340fd550dfb3b52be7bb5"
+    },
+    {
+      "handle": "dualfitting",
+      "reliability": "40%",
+      "registrationDate": "2014-10-17T11:46:00.000Z",
+      "submissionDate": "2014-10-20T03:49:00.000Z",
+      "rating": "1323",
+      "colorStyle": "color: #6666FF",
+      "_id": "581340fd550dfb3b52be7bb4"
+    },
+    {
+      "handle": "OlinaRuan",
+      "reliability": "6%",
+      "registrationDate": "2014-10-18T01:07:00.000Z",
+      "submissionDate": null,
+      "rating": "1045",
+      "colorStyle": "color: #00A900",
+      "_id": "581340fd550dfb3b52be7bb3"
+    },
+    {
+      "handle": "Rhapsody0710",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-18T05:05:00.000Z",
+      "submissionDate": null,
+      "rating": "391",
+      "colorStyle": "color: #999999",
+      "_id": "581340fd550dfb3b52be7bb2"
+    }
+  ],
+  "registrationEndDate": "2014-10-18T13:00:00.000Z",
+  "reliabilityBonus": 100,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-10-20T13:01:00.000Z",
+  "submissions": [
+    {
+      "handle": "dualfitting",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 94.24,
+      "finalScore": 94.82,
+      "points": 225,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-10-20T03:49:00.000Z",
+      "_id": "581340fd550dfb3b52be7bc8"
+    }
+  ],
+  "technology": [
+    "Other"
+  ]
+}

@@ -1,0 +1,313 @@
+{
+  "_id": 30049797,
+  "_isComplete": true,
+  "__v": 2140,
+  "_lastUpdate": "2016-11-05T11:04:59.409Z",
+  "appealsEndDate": "2015-05-01T09:00:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Refining Android Acoustic Measurement Tool - Sarajevo Version",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Cancelled - Zero Submissions",
+  "detailedRequirements": "<p>Topcoder recently ran a challenge to create an <a href=\"http://www.topcoder.com/challenge-details/30049599/?type=develop&amp;noncache=true\" target=\"_blank\">Acoustic Measurement Tool</a> on the Android platform. &nbsp;We received two submissions but they each need refining. &nbsp;The core challenge of generating and determining measurements from the distance of the headphones is a significant one. &nbsp; Here are the changes we need to make in the application:</p>\n\n<p>1. &nbsp;Currently this app is only compatible with v.21 Android devices. &nbsp;We need to open that up. &nbsp;If possible, the application should support v.16-21 of the Android platforms Jelly Bean - Lollipop). &nbsp;There just aren&#39;t that many 5.x Android devices out there so this makes the application very difficult to test.<br />\n2. &nbsp;I don&#39;t believe the application currently contains a validation step to verify that the current calibrations have been effective.<br />\n3. &nbsp;Make adjustments as necessary to increase the accuracy of the application. &nbsp;If we can acheive +/- 1 cm accuracy I think this will be considered a success.<br />\n4. &nbsp;Fix issues with the start button as outlined here:</p>\n\n<p style=\"margin-left:40px\"><span style=\"font-size:8px\">Required &nbsp;After I click start I can not click next&nbsp;<br />\nit said wait to update when I debug the application<br />\nI can see<br />\nRecord item added<br />\nor<br />\n04-15 17:54:52.589 &nbsp; &nbsp;1924-1924/com.topcoder.measurementtool I/Timeline��� Timeline: Activity_idle id: android.os.BinderProxy@3dbdc6e7 time:4434791<br />\nin log cat<br />\nI also see such error<br />\n<span style=\"font-family:courier new,courier,monospace\">04-15 17:51:44.265 &nbsp; &nbsp;1924-1924/com.topcoder.measurementtool E/AudioTrack��� AudioTrack::set : Exit<br />\n04-15 17:56:53.096 &nbsp; &nbsp;1924-1924/com.topcoder.measurementtool E/AudioTrack��� AudioFlinger could not create track, status: -12<br />\n04-15 17:56:53.096 &nbsp; &nbsp;1924-1924/com.topcoder.measurementtool E/AudioTrack-JNI��� Error -12 initializing AudioTrack<br />\n04-15 17:56:53.096 &nbsp; &nbsp;1924-1924/com.topcoder.measurementtool E/android.media.AudioTrack��� Error code -20 when initializing AudioTrack.</span><br />\nor<br />\n<span style=\"font-family:courier new,courier,monospace\">04-15 17:56:53.096 &nbsp; &nbsp;1924-1924/? E/AndroidRuntime��� FATAL EXCEPTION: main<br />\n&nbsp; &nbsp; Process: com.topcoder.measurementtool, PID: 1924<br />\njava.lang.RuntimeException: Unable to start activity ComponentInfo{com.topcoder.measurementtool/com.topcoder.measurementtool.MainActivity}: java.lang.IllegalStateException: play() called on uninitialized AudioTrack</span></span></p>\n\n<p style=\"margin-left:40px\"><span style=\"font-size:8px\">I see another submission is working on my phone and he is using<br />\nMediaPlayer<br />\nalso I tried solution listed in here<br />\nhttp://stackoverflow.com/questions/7497598/uninitialized-audiotrack-exception-when-i-try-to-generate-tone-on-22nd-time<br />\nfor example add permission and not work<br />\n<span style=\"font-family:courier new,courier,monospace\">&lt;uses-permission android:name=&quot;android.permission.MODIFY_AUDIO_SETTINGS&quot;/&gt;</span></span></p>\n\n<p>5. &nbsp;Fix bug when changing from portrait to landscape mode. &nbsp;Stack trace follows:</p>\n\n<p><span style=\"font-size:8px\"><span style=\"font-family:courier new,courier,monospace\">&nbsp; java.lang.RuntimeException: Unable to start activity ComponentInfo{com.topcoder.measurementtool/com.topcoder.measurementtool.MainActivity}: java.lang.IllegalStateException: play() called on uninitialized AudioTrack.<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2298)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2358)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at android.app.ActivityThread.handleRelaunchActivity(ActivityThread.java:3910)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at android.app.ActivityThread.access$900(ActivityThread.java:144)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1284)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at android.os.Handler.dispatchMessage(Handler.java:102)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at android.os.Looper.loop(Looper.java:135)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at android.app.ActivityThread.main(ActivityThread.java:5219)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at java.lang.reflect.Method.invoke(Native Method)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at java.lang.reflect.Method.invoke(Method.java:372)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:904)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:699)<br />\n&nbsp; &nbsp; Caused by: java.lang.IllegalStateException: play() called on uninitialized AudioTrack.<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at android.media.AudioTrack.play(AudioTrack.java:1141)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at com.topcoder.measurementtool.MainActivity.onCreate(MainActivity.java:175)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at android.app.Activity.performCreate(Activity.java:5937)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1105)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2251)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2358)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at android.app.ActivityThread.handleRelaunchActivity(ActivityThread.java:3910)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at android.app.ActivityThread.access$900(ActivityThread.java:144)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1284)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at android.os.Handler.dispatchMessage(Handler.java:102)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at android.os.Looper.loop(Looper.java:135)</span></span><br />\n<span style=\"font-size:8px\"><span style=\"font-family:courier new,courier,monospace\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at android.app.ActivityThread.main(ActivityThread.java:5219)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at java.lang.reflect.Method.invoke(Native Method)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at java.lang.reflect.Method.invoke(Method.java:372)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:904)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:699)</span></span></p>\n\n<p>6. &nbsp;Make sure users can navigate to either calibration mode or measurement mode after the application starts.<br />\n7. &nbsp;The application should play a sound when the user hits the Start button in Calibration mode.<br />\n8. &nbsp;Users should be able to input temperature value as this effects the speed of sound.<br />\n9. &nbsp;Update field names in our layouts to more meaningful names t1, t2 isn&#39;t very descriptive:</p>\n\n<p><span style=\"font-family:courier new,courier,monospace\"><span style=\"font-size:8px\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; android:id=&quot;@+id/t1&quot;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; android:layout_width=&quot;wrap_content&quot;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; android:layout_height=&quot;wrap_content&quot;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; android:text=&quot;Please put the headphones at distance &quot;/&gt;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;TextView<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; android:id=&quot;@+id/t2&quot;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; android:layout_toRightOf=&quot;@id/t1&quot;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; android:textStyle=&quot;bold&quot;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; android:layout_width=&quot;wrap_content&quot;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; android:layout_height=&quot;wrap_content&quot;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; android:text=&quot;0.0&quot;/&gt;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;TextView<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; android:layout_toRightOf=&quot;@id/t2&quot;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; android:layout_width=&quot;wrap_content&quot;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; android:layout_height=&quot;wrap_content&quot;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; android:layout_marginLeft=&quot;10dp&quot;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; android:text=&quot;cm&quot;/&gt;</span></span></p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30049797",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalSubmissionGuidelines": "<ul>\n\t<li>Please submit an .apk file along with your complete Android Studio and Eclipse project with your code.&nbsp; Please include all necessary libraries and dependencies to build and run your project.&nbsp; Include gradle files, ant build.xml files or maven pom files etc&hellip;</li>\n\t<li>Your submission should be functional/compatible on Android v.16 (Jelly Bean) through the current version.</li>\n\t<li>You should use the attached code as a starting point for your development efforts.</li>\n\t<li>Please submit written documentation for your submission</li>\n\t<li>Please submit a video with a screenshare of your application in action</li>\n\t<li>Please check the forums for possible updates. &nbsp;This is an unusual application and there could be changes/refinements in requirements as we learn more about this problem.</li>\n</ul>\n",
+  "forumId": 29042,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=29042",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 24,
+  "numberOfSubmissions": 0,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-22T00:01:00.000Z",
+      "actualStartTime": "2015-04-22T00:01:00.000Z",
+      "scheduledEndTime": "2015-04-26T21:01:00.000Z",
+      "actualendTime": "2015-04-26T21:01:00.000Z",
+      "_id": "581dbcdb550dfb3b52be222e"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-22T00:06:00.000Z",
+      "actualStartTime": "2015-04-22T00:06:00.000Z",
+      "scheduledEndTime": "2015-04-26T21:01:00.000Z",
+      "actualendTime": "2015-04-26T21:01:00.000Z",
+      "_id": "581dbcdb550dfb3b52be222d"
+    },
+    {
+      "type": "Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2015-04-26T21:01:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2015-04-29T21:00:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbcdb550dfb3b52be222c"
+    },
+    {
+      "type": "Appeals",
+      "status": "Scheduled",
+      "scheduledStartTime": "2015-04-29T21:00:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2015-04-30T21:00:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbcdb550dfb3b52be222b"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2015-04-30T21:00:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2015-05-01T09:00:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbcdb550dfb3b52be222a"
+    }
+  ],
+  "platforms": [
+    "Android"
+  ],
+  "postingDate": "2015-04-22T00:01:00.000Z",
+  "prize": [
+    1500,
+    750
+  ],
+  "projectId": 8658,
+  "registrants": [
+    {
+      "handle": "xin135",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-22T01:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be2229"
+    },
+    {
+      "handle": "cloudybay",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-22T01:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be2228"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-22T01:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be2227"
+    },
+    {
+      "handle": "dianluxiaozi",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-22T02:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be2226"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-22T03:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be2225"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-22T04:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be2224"
+    },
+    {
+      "handle": "Safadurimo",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-22T08:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be2223"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-22T08:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be2222"
+    },
+    {
+      "handle": "gondzo",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-22T08:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be2221"
+    },
+    {
+      "handle": "faeton",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-22T10:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be2220"
+    },
+    {
+      "handle": "serfire",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-22T10:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be221f"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-22T11:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be221e"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-22T15:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be221d"
+    },
+    {
+      "handle": "soaboz",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-22T23:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be221c"
+    },
+    {
+      "handle": "michael_tang",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-23T10:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be221b"
+    },
+    {
+      "handle": "jasonworg",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-24T04:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be221a"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-23T16:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be2219"
+    },
+    {
+      "handle": "sanathe06",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-25T04:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be2218"
+    },
+    {
+      "handle": "_dp_singh",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-25T10:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be2217"
+    },
+    {
+      "handle": "gfhuertac",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-25T11:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be2216"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-25T16:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be2215"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-26T06:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be2214"
+    },
+    {
+      "handle": "mac007",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-26T10:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be2213"
+    },
+    {
+      "handle": "soe",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-26T15:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbcdb550dfb3b52be2212"
+    }
+  ],
+  "registrationEndDate": "2015-04-26T21:01:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-04-26T21:01:00.000Z",
+  "submissions": [],
+  "technology": [
+    "Java"
+  ]
+}

@@ -1,0 +1,307 @@
+{
+  "_id": 30042128,
+  "_isComplete": true,
+  "__v": 2365,
+  "_lastUpdate": "2016-11-05T11:07:30.820Z",
+  "appealsEndDate": "2014-10-12T03:45:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "HDF5 Input and Output Implementation for NEMOH",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2014-10-09T03:46:00.000Z",
+  "currentPhaseName": "Post-Mortem",
+  "currentPhaseRemainingTime": -65517606,
+  "currentStatus": "Cancelled - Requirements Infeasible",
+  "detailedRequirements": "<p>We have improved the Nemoh <a href=\"https://github.com/lawsonro3/Nemoh\">https://github.com/lawsonro3/Nemoh</a> - A frequency-domain potential flow hydrodynamics code developed by &Eacute;cole Centrale de Nantes that has recently been released under the Apache 2.0 license.</p>\n\n<p><strong>In this challenge, we have several objectives to be achieved:</strong></p>\n\n<ul>\n\t<li><strong>The 1st objective is to simplify I/O and make Nemoh more robust with respect to future developments</strong>. The actual model for input parameters is to use a bunch of ASCII files. 4 files are needed to run Nemoh. Concerning the output and intermediate computations, there is also numerous text files that are written in different directories and in a format that is not always suitable for later use of results in Matlab. We can count 6 files created by the preprocessor, 7 files created by the solver and 2 other files are for the moment written by the postprocessor. This is a lot... Beside that, file path delimiters are hard coded and tailored for Windows, making the code not portable\n\n\t<ul>\n\t\t<li><strong>We will apply <a href=\"http://www.hdfgroup.org/HDF5/\">HDF5</a> for input and output of Nemoh.</strong> Here is a short HDF5 Python implementation youtube video:&nbsp;<a href=\"https://www.youtube.com/watch?v=hnhN2_TpY8g\">https://www.youtube.com/watch?v=hnhN2_TpY8g</a></li>\n\t\t<li>The idea behind HDF5 is that it behaves just like a filesystem embedded in a single binary file. The hierarchical structure of the data model associated to HDF5 make it usable to organize heterogeneous data in a single file. There is three main kind of objects in HDF5 : groups, datasets and attributes. Groups are similar to directories and permit to store together arbitrary number of other groups or datasets that are similar to files. Datasets can store arrays of arbitrary dimension and data type. With that two objects, we can easily arrange our input parameters inside an &#39;input&#39; group and store datasets inside subgroups for better clarity. Finally, both of groups and datasets can handle an attribute. This special object can handle metadata. It is usable to store information about the object it is attached. By doing so, we can for example document datasets on unit used, nature of the data... It makes an HDF5 file self-descriptive. Virtually no need to consult the documentation to know what we are dealing with. Beside that, Hdfview is a software developed by the Hdfgroup. It allows to open an HDF5 file, visualize its hierarchical structure, datasets, plot some graphs with data for result preview, modify input data, visualize attributes .</li>\n\t</ul>\n\t</li>\n\t<li><strong>The 2nd objective is more update the structure of Nemoh and the way I/O are managed in the code.</strong> We would like only the expensive parts of the code to be kept in Fortran and that code should only do computations, not I/O. One great thing would be to wrap these computation kernels with Python. Python is easy and really quick to implement and modify (no need to compile, it is interpreted). Python would be in charge of all the I/O, and of the application management, acting as a glue between computation components.\n\t<ul>\n\t\t<li><strong>To the same extent, preprocessing and postprocessing module would be re-written in Python in order to make the code more flexible for future enhancements</strong>.</li>\n\t\t<li>Besides that, a set of python functions could be written to allow extraction and conversion of result data for use in visualization softwares, numerical computing environment or other specialized &nbsp;: Paraview, Tecplot, Matlab, Python itself, Orcaflex, etc...</li>\n\t\t<li>The Fortran code would be compiled into python modules (basically shared libraries) using f2py. Doing this way, Nemoh would just become a python module and its subroutines would be callable from python. It would make it easier to integrate Nemoh in other larger piece of software if needed.</li>\n\t\t<li>Python has a great module called h5py which permits to use manage I/O in Python. This is a nice module as it make it easy to use HDF5. One good reference for using h5py is the book of Andrew Colette : &quot;Python and HDF5&quot; from O&#39;Reilly. We also welcome the other suggestions and ideas.</li>\n\t</ul>\n\t</li>\n\t<li>Regarding the output data from Nemoh, the good practice is not to dissociate output data from input data that have been used in order to always keep track of the whole informations about a computation. Nemoh would then output its results in a &#39;result&#39; group located at the same level as the &#39;input&#39; group. Other subgroups could be used for example to store apart intermediate results that could be erased after the solver has been run (data quickly reproducible from the preprocessor for example).</li>\n</ul>\n",
+  "digitalRunPoints": 810,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30042128",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2014-10-13T15:45:00.000Z",
+  "finalSubmissionGuidelines": "<p>Submission:</p>\n\n<ul>\n\t<li>The source code</li>\n\t<li>A detailed deployment guide with all deployment steps and all verifications (using&nbsp;HDFView&nbsp;to verify the input and output HDF5 structures is required).</li>\n</ul>\n",
+  "forumId": 22525,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=22525",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 15,
+  "numberOfSubmissions": 0,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-02T01:19:00.000Z",
+      "actualStartTime": "2014-10-02T01:19:00.000Z",
+      "scheduledEndTime": "2014-10-02T01:20:00.000Z",
+      "actualendTime": "2014-10-02T01:20:00.000Z",
+      "_id": "581dbd72550dfb3b52be4731"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-02T01:20:00.000Z",
+      "actualStartTime": "2014-10-02T01:20:00.000Z",
+      "scheduledEndTime": "2014-10-02T03:43:00.000Z",
+      "actualendTime": "2014-10-02T03:43:00.000Z",
+      "_id": "581dbd72550dfb3b52be4730"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-02T03:43:00.000Z",
+      "actualStartTime": "2014-10-02T03:43:00.000Z",
+      "scheduledEndTime": "2014-10-04T03:44:00.000Z",
+      "actualendTime": "2014-10-04T03:44:00.000Z",
+      "_id": "581dbd72550dfb3b52be472f"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-02T03:49:00.000Z",
+      "actualStartTime": "2014-10-02T03:49:00.000Z",
+      "scheduledEndTime": "2014-10-08T03:45:00.000Z",
+      "actualendTime": "2014-10-08T03:45:00.000Z",
+      "_id": "581dbd72550dfb3b52be472e"
+    },
+    {
+      "type": "Screening",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-10-08T03:45:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-10-08T15:45:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd72550dfb3b52be472d"
+    },
+    {
+      "type": "Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-10-08T15:45:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-10-10T15:45:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd72550dfb3b52be472c"
+    },
+    {
+      "type": "Appeals",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-10-10T15:45:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-10-11T15:45:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd72550dfb3b52be472b"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-10-11T15:45:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-10-12T03:45:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd72550dfb3b52be472a"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-10-12T03:45:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-10-12T15:45:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd72550dfb3b52be4729"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-10-12T15:45:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-10-13T15:45:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd72550dfb3b52be4728"
+    },
+    {
+      "type": "Final Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-10-13T15:45:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-10-14T03:45:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd72550dfb3b52be4727"
+    },
+    {
+      "type": "Approval",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-10-14T03:45:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-10-19T03:45:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd72550dfb3b52be4726"
+    },
+    {
+      "type": "Post-Mortem",
+      "status": "Open",
+      "scheduledStartTime": "2014-10-08T03:46:00.000Z",
+      "actualStartTime": "2014-10-08T03:46:00.000Z",
+      "scheduledEndTime": "2014-10-09T03:46:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd72550dfb3b52be4725"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2014-10-02T03:43:00.000Z",
+  "prize": [
+    1800,
+    900
+  ],
+  "projectId": 6795,
+  "registrants": [
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-02T05:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd72550dfb3b52be4724"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-02T03:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd72550dfb3b52be4723"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "0%",
+      "registrationDate": "2014-10-02T06:17:00.000Z",
+      "submissionDate": null,
+      "rating": "787",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd72550dfb3b52be4722"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2014-10-02T10:04:00.000Z",
+      "submissionDate": null,
+      "rating": "1088",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbd72550dfb3b52be4721"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "0%",
+      "registrationDate": "2014-10-02T11:34:00.000Z",
+      "submissionDate": null,
+      "rating": "1447",
+      "colorStyle": "color: #6666FF",
+      "_id": "581dbd72550dfb3b52be4720"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-02T16:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd72550dfb3b52be471f"
+    },
+    {
+      "handle": "thomasjpfan",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-02T16:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd72550dfb3b52be471e"
+    },
+    {
+      "handle": "iCare",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-02T19:06:00.000Z",
+      "submissionDate": null,
+      "rating": "568",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd72550dfb3b52be471d"
+    },
+    {
+      "handle": "mauhur",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-03T01:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd72550dfb3b52be471c"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-10-03T02:13:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd72550dfb3b52be471b"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-10-03T02:17:00.000Z",
+      "submissionDate": null,
+      "rating": "1031",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbd72550dfb3b52be471a"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-03T09:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd72550dfb3b52be4719"
+    },
+    {
+      "handle": "esteer",
+      "reliability": "30%",
+      "registrationDate": "2014-10-03T15:54:00.000Z",
+      "submissionDate": null,
+      "rating": "1156",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbd72550dfb3b52be4718"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "20%",
+      "registrationDate": "2014-10-04T01:10:00.000Z",
+      "submissionDate": null,
+      "rating": "1114",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbd72550dfb3b52be4717"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2014-10-04T03:43:00.000Z",
+      "submissionDate": null,
+      "rating": "585",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd72550dfb3b52be4716"
+    }
+  ],
+  "registrationEndDate": "2014-10-04T03:44:00.000Z",
+  "reliabilityBonus": 360,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-10-08T03:45:00.000Z",
+  "submissions": [],
+  "technology": [
+    "Fortran",
+    "Python"
+  ]
+}

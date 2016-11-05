@@ -1,0 +1,383 @@
+{
+  "_id": 30039098,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T23:14:08.409Z",
+  "appealsEndDate": "2014-01-28T09:50:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Asset Search Service Amazon CloudSearch Filters and Sorting PoC Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2 style=\"padding: 0px; margin: 0px; line-height: normal; font-weight: bold; font-family: Arial, Helvetica, Verdana, sans-serif;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">Project Overview</span></h2>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">We currently have an&nbsp;Asset Library, which is a repository of reusable code components that we leverage for the delivery of cloud-based solutions for our consulting customers.&nbsp;It&#39;s a JQuery app that&nbsp;runs on AWS and accesses a database that&#39;s on Salesforce. Our users are exclusively in Salesforce, so the UI is iframed into a Visualforce page (and the users can access the data in Salesforce using the native Salesforce UI as well). The application is an &quot;Asset Search&quot;, that&#39;s basically a custom search against the Asset object in Salesforce (see screenshot in forum).</span></p>\n\n<h2 style=\"padding: 0px; margin: 0px; line-height: normal; font-family: Arial, Helvetica, Verdana, sans-serif; font-weight: bold;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">Competition Task Overview</span></h2>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"padding: 0px; margin: 0px;\">We want to&nbsp;</span><span style=\"padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">replace the internal, home-grown search implementation with a much higher-quality, existing cloud-based REST search API. &nbsp;Previously we build a PoC using&nbsp;Amazon CloudSearch (see </span><a href=\"http://www.topcoder.com/challenge-details/30038825\">http://www.topcoder.com/challenge-details/30038825</a>)<span style=\"padding: 0px; margin: 0px; font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">&nbsp;and it worked very well and covered exactly what we expected, but now we want to make some more enhancements to this PoC.</span></p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">The following requirements must be implemented by this challenge:</p>\n\n<ul>\n\t<li style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Add filtering to the Asset Search. Similar to the screenshots we&nbsp;provided (in <em><u>PreviousDocuments.zip</u></em>), but more generic and comprehensive. It should be a generic, configurable filter that could add any of the Asset fields that have a fixed set of values (services practice, type, subtype, release stage, platform, etc.). What we mean by this is we don&#39;t just want hardcoded filters, we&#39;d like a generic filtering component that can be told which fields to show, and it shows those. Similar to filters on Amazon&#39;s search (<a href=\"http://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&amp;field-keywords=tents\">http://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&amp;field-keywords=tents</a>) or REI&#39;s search (<a href=\"http://www.rei.com/search?query=tents\">http://www.rei.com/search?query=tents</a>). <span style=\"background-color:#FFFF00;\">UI is not particularly important, but should be usable to do the filtering.</span></li>\n\t<li style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Expand the indexing to also index Asset Collections. We&#39;ll provide a new unmanaged package that includes Asset Collections, but they basically just aggregate Assets, and have a few metadata fields that should be indexed. There&#39;s a many-to-many junction object between them (called Assets in Collection).</li>\n\t<li style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Expand search to also show results for Asset Collections. Add a second sub-tab for Asset Collections - a single search runs against both Assets and Asset Collections, and shows the results on the 2 sub-tabs.&nbsp;</li>\n\t<li style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Add filtering to the Asset Collection tab just like the Asset tab. <span style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16.799999237060547px;\">Should be able to use the same generic filter code as the Assets subtab, but applied to the Asset Collections fields.</span></li>\n\t<li style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Provide a control on the Assets and Asset Collections subtabs to sort the results on that tab. Sort options are Newest (based on Creation Date of the record in Salesforce) and Alphabetical (based on the Name field of Asset or Asset Collection)</li>\n</ul>\n\n<p>The storyboard (<u><em>asset collection search and filtering for tc.pdf</em></u>) can be found in contest forum, it shows one search with 2 tabs of results, plus the idea for filtering and sorting.</p>\n\n<p>The UI is just to show the features; you don&#39;t need to follow it, except that the separation of Assets and Asset Collections into separate result sets and filters is important. You should start with the code from the past contest (<u><em>PoC.zip</em></u>), and use that for search results.</p>\n\n<p>Here&#39;s an unmanaged package that includes Assets (as in last contest) and Asset Collections - <a href=\"https://login.salesforce.com/packaging/installPackage.apexp?p0=04t90000000AfaP\">https://login.salesforce.com/packaging/installPackage.apexp?p0=04t90000000AfaP</a></p>\n\n<p>The same data load file will continue to work for Assets. <span style=\"background-color:#FFFF00;\">We don&#39;t have a data load file for Asset Collections, but they&#39;re very easy to create in Salesforce and this is a required deliverable in your submission.</span></p>\n\n<h2 style=\"padding: 0px; margin: 0px; line-height: normal; font-family: Arial, Helvetica, Verdana, sans-serif; font-weight: bold;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">Technology Overview</span></h2>\n\n<ul style=\"margin: 0px; line-height: 16px; font-family: Arial, Helvetica, Verdana, sans-serif; padding-top: 6px !important; padding-right: 0px !important; padding-bottom: 6px !important;\">\n\t<li style=\"padding: 0px; margin: 0px;\">Amazon CloudSearch</li>\n\t<li style=\"padding: 0px; margin: 0px;\"><span style=\"padding: 0px; margin: 0px;\">Salesforce</span></li>\n\t<li style=\"padding: 0px; margin: 0px;\">JQuery / Bootstrap / AngularJS</li>\n</ul>\n\n<h2 style=\"padding: 0px; margin: 0px; line-height: normal; font-family: Arial, Helvetica, Verdana, sans-serif; font-weight: bold;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\">Documentation Provided</span></h2>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; line-height: 16px; font-family: Arial, Helvetica, Verdana, sans-serif;\">Register to see attachments in the forum.</p>\n",
+  "digitalRunPoints": 630,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30039098",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2014-01-28T11:48:00.000Z",
+  "finalSubmissionGuidelines": "<h2 style=\"padding: 0px; margin: 0px; font-family: Arial, Helvetica, sans-serif; line-height: normal;\"><strong style=\"padding: 0px; margin: 0px;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\"><span style=\"padding: 0px; margin: 0px; line-height: 1.6em;\">Submission Deliverables</span></span></strong></h2>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"padding: 0px; margin: 0px;\">A complete list of deliverables can be viewed in the TopCoder Assembly competition Tutorial at:&nbsp;<a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\" style=\"padding: 0px; margin: 0px; color: rgb(51, 51, 51);\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials&nbsp;</a></span></p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"padding: 0px; margin: 0px;\">Below is an overview of the deliverables:</span></p>\n\n<ul style=\"margin: 0px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; padding-top: 6px !important; padding-right: 0px !important; padding-bottom: 6px !important;\">\n\t<li style=\"padding: 0px; margin: 0px;\"><span style=\"padding: 0px; margin: 0px;\">Fully Implemented PoC&nbsp;that covers all requirements (old requriements must not be broken).</span></li>\n\t<li style=\"padding: 0px; margin: 0px;\"><span style=\"padding: 0px; margin: 0px;\">Salesforce / AWS development guidelines must be followed, for example: Salesforce requirest at least 75% test coverage in order to deploy to production code.</span></li>\n\t<li style=\"padding: 0px; margin: 0px;\"><span style=\"padding: 0px; margin: 0px;\">A complete and detailed deployment documented explaining how to deploy the application including configuration information.</span></li>\n\t<li style=\"padding: 0px; margin: 0px;\"><span style=\"padding: 0px; margin: 0px;\">The build script(s) to build/deploy the application (if applicable).</span></li>\n\t<li style=\"padding: 0px; margin: 0px;\"><span style=\"padding: 0px; margin: 0px;\">Test data to run/verify your submission.</span></li>\n</ul>\n\n<h2 style=\"padding: 0px; margin: 0px; font-family: Arial, Helvetica, sans-serif; line-height: normal;\"><span style=\"padding: 0px; margin: 0px; color: rgb(255, 0, 0);\"><strong style=\"padding: 0px; margin: 0px;\">Final Submission</strong></span></h2>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"padding: 0px; margin: 0px;\">For each member, the final submission should be uploaded to the Online Review Tool.</span></p>\n",
+  "forumId": 20997,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=20997",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 23,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-01-20T02:19:00.000Z",
+      "actualStartTime": "2014-01-20T02:19:00.000Z",
+      "scheduledEndTime": "2014-01-20T02:20:00.000Z",
+      "actualendTime": "2014-01-20T02:20:00.000Z",
+      "_id": "5813dbc0550dfb3b52ea723e"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-01-20T02:20:00.000Z",
+      "actualStartTime": "2014-01-20T02:20:00.000Z",
+      "scheduledEndTime": "2014-01-20T04:18:00.000Z",
+      "actualendTime": "2014-01-20T04:18:00.000Z",
+      "_id": "5813dbc0550dfb3b52ea723d"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-01-20T14:00:00.000Z",
+      "actualStartTime": "2014-01-20T14:00:00.000Z",
+      "scheduledEndTime": "2014-01-22T14:00:00.000Z",
+      "actualendTime": "2014-01-22T14:00:00.000Z",
+      "_id": "5813dbc0550dfb3b52ea723c"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-01-20T14:05:00.000Z",
+      "actualStartTime": "2014-01-20T14:05:00.000Z",
+      "scheduledEndTime": "2014-01-25T14:05:00.000Z",
+      "actualendTime": "2014-01-25T14:05:00.000Z",
+      "_id": "5813dbc0550dfb3b52ea723b"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-01-25T14:05:00.000Z",
+      "actualStartTime": "2014-01-25T14:05:00.000Z",
+      "scheduledEndTime": "2014-01-25T17:07:00.000Z",
+      "actualendTime": "2014-01-25T17:07:00.000Z",
+      "_id": "5813dbc0550dfb3b52ea723a"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-01-25T17:07:00.000Z",
+      "actualStartTime": "2014-01-25T17:07:00.000Z",
+      "scheduledEndTime": "2014-01-27T16:19:00.000Z",
+      "actualendTime": "2014-01-27T16:19:00.000Z",
+      "_id": "5813dbc0550dfb3b52ea7239"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-01-27T16:19:00.000Z",
+      "actualStartTime": "2014-01-27T16:19:00.000Z",
+      "scheduledEndTime": "2014-01-27T16:38:00.000Z",
+      "actualendTime": "2014-01-27T16:38:00.000Z",
+      "_id": "5813dbc0550dfb3b52ea7238"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-01-27T16:38:00.000Z",
+      "actualStartTime": "2014-01-27T16:38:00.000Z",
+      "scheduledEndTime": "2014-01-28T09:50:00.000Z",
+      "actualendTime": "2014-01-28T09:50:00.000Z",
+      "_id": "5813dbc0550dfb3b52ea7237"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-01-28T09:50:00.000Z",
+      "actualStartTime": "2014-01-28T09:50:00.000Z",
+      "scheduledEndTime": "2014-01-28T10:13:00.000Z",
+      "actualendTime": "2014-01-28T10:13:00.000Z",
+      "_id": "5813dbc0550dfb3b52ea7236"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-01-28T10:13:00.000Z",
+      "actualStartTime": "2014-01-28T10:13:00.000Z",
+      "scheduledEndTime": "2014-01-28T11:48:00.000Z",
+      "actualendTime": "2014-01-28T11:48:00.000Z",
+      "_id": "5813dbc0550dfb3b52ea7235"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-01-28T11:48:00.000Z",
+      "actualStartTime": "2014-01-28T11:48:00.000Z",
+      "scheduledEndTime": "2014-01-28T14:00:00.000Z",
+      "actualendTime": "2014-01-28T14:00:00.000Z",
+      "_id": "5813dbc0550dfb3b52ea7234"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-01-28T14:00:00.000Z",
+      "actualStartTime": "2014-01-28T14:00:00.000Z",
+      "scheduledEndTime": "2014-02-06T04:37:00.000Z",
+      "actualendTime": "2014-02-06T04:37:00.000Z",
+      "_id": "5813dbc0550dfb3b52ea7233"
+    }
+  ],
+  "platforms": [
+    "Salesforce.com",
+    "AWS"
+  ],
+  "postingDate": "2014-01-20T14:00:00.000Z",
+  "prize": [
+    1400,
+    700
+  ],
+  "projectId": 7169,
+  "registrants": [
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "60%",
+      "registrationDate": "2014-01-20T14:00:00.000Z",
+      "submissionDate": null,
+      "rating": "819",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbc0550dfb3b52ea7232"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-01-20T14:08:00.000Z",
+      "submissionDate": null,
+      "rating": "715",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbc0550dfb3b52ea7231"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "6%",
+      "registrationDate": "2014-01-20T14:19:00.000Z",
+      "submissionDate": null,
+      "rating": "1667",
+      "colorStyle": "color: #DDCC00",
+      "_id": "5813dbc0550dfb3b52ea7230"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-20T14:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbc0550dfb3b52ea722f"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-20T14:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbc0550dfb3b52ea722e"
+    },
+    {
+      "handle": "albertwang",
+      "reliability": "66%",
+      "registrationDate": "2014-01-20T14:45:00.000Z",
+      "submissionDate": "2014-01-25T11:13:00.000Z",
+      "rating": "1584",
+      "colorStyle": "color: #DDCC00",
+      "_id": "5813dbc0550dfb3b52ea722d"
+    },
+    {
+      "handle": "jianhe25",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-20T15:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbc0550dfb3b52ea722c"
+    },
+    {
+      "handle": "countcain",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-20T16:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbc0550dfb3b52ea722b"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2014-01-20T16:10:00.000Z",
+      "submissionDate": null,
+      "rating": "1515",
+      "colorStyle": "color: #DDCC00",
+      "_id": "5813dbc0550dfb3b52ea722a"
+    },
+    {
+      "handle": "iCare",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-20T22:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbc0550dfb3b52ea7229"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "0%",
+      "registrationDate": "2014-01-20T23:52:00.000Z",
+      "submissionDate": null,
+      "rating": "997",
+      "colorStyle": "color: #00A900",
+      "_id": "5813dbc0550dfb3b52ea7228"
+    },
+    {
+      "handle": "evilkyro1965",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-21T01:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbc0550dfb3b52ea7227"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-21T01:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbc0550dfb3b52ea7226"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "13%",
+      "registrationDate": "2014-01-21T18:10:00.000Z",
+      "submissionDate": null,
+      "rating": "1045",
+      "colorStyle": "color: #00A900",
+      "_id": "5813dbc0550dfb3b52ea7225"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-22T07:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbc0550dfb3b52ea7224"
+    },
+    {
+      "handle": "sweetu",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-22T08:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbc0550dfb3b52ea7223"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-22T09:42:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbc0550dfb3b52ea7222"
+    },
+    {
+      "handle": "gangparia",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-22T10:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbc0550dfb3b52ea7221"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2014-01-22T10:18:00.000Z",
+      "submissionDate": null,
+      "rating": "1027",
+      "colorStyle": "color: #00A900",
+      "_id": "5813dbc0550dfb3b52ea7220"
+    },
+    {
+      "handle": "a4339410",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-20T18:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbc0550dfb3b52ea721f"
+    },
+    {
+      "handle": "esteer",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-21T12:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbc0550dfb3b52ea721e"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "0%",
+      "registrationDate": "2014-01-21T22:44:00.000Z",
+      "submissionDate": null,
+      "rating": "58",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbc0550dfb3b52ea721d"
+    },
+    {
+      "handle": "ManYang",
+      "reliability": "n/a",
+      "registrationDate": "2014-01-22T01:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbc0550dfb3b52ea721c"
+    }
+  ],
+  "registrationEndDate": "2014-01-22T14:00:00.000Z",
+  "reliabilityBonus": 280,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-01-25T14:05:00.000Z",
+  "submissions": [
+    {
+      "handle": "albertwang",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 94.75,
+      "finalScore": 99.82,
+      "points": 630,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-01-25T11:13:00.000Z",
+      "_id": "5813dbc0550dfb3b52ea723f"
+    }
+  ],
+  "technology": [
+    "HTML",
+    "JavaScript"
+  ]
+}

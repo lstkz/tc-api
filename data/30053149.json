@@ -1,0 +1,428 @@
+{
+  "_id": 30053149,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:07:31.731Z",
+  "appealsEndDate": "2016-03-10T02:39:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Create Challenge Log Table And Triggers",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><strong><span style=\"color:#0000FF\">Background</span></strong></h2>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\"><span style=\"font-size:12.8px\">TopCoder wants to use </span><a href=\"https://www.elastic.co\" style=\"font-size: 12.8px;\">ElasticSearch</a><span style=\"font-size:12.8px\"> to power new challenge search functionality we are building, which means we need to index challenges into </span><span style=\"font-size:12.8px\">www.elastic.co</span><span style=\"font-size:12.8px\">. We plan to use </span><a href=\"https://www.elastic.co/products/logstash\" style=\"font-size: 12.8px;\">Logstash</a><span style=\"font-size:12.8px\"> to do that.</span></div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\"><a href=\"https://www.elastic.co/products/logstash\" style=\"font-family: arial, sans-serif; widows: 1;\">Logstash</a> will poll Informix on regular intervals (something between 1 and 5 minutes), and every time a challenge is inserted, updated or deleted, we need to insert, update, or delete that information from/to the ElasticSearch index.</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">Our data structure in ElasticSearch goes beyond the challenge data (project and project info tables), it includes phases, members with their respective roles (submitter, observer, copilot, reviewer, etc.), prizes, etc.</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">For instance, a challenge object will have an array that represents the list of members who are registered for the challenge. When an insertion happens in the <u>resource</u> table for that challenge, we need to add that user as a resource to the member list in the challenge record in ElasticSearch. If a member is unregistered for a challenge, we need to remove that entry.</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">Handling deletes is also challenging, since the deleted record simply doesn&#39;t exist in the source database anymore.</div>\n\n<h3><strong><span style=\"color:#0000FF\">Scope</span></strong></h3>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">To handle all of this we&#39;d like to have a new table called <u>project_event_log</u>&nbsp;in <u>tcs_catalog</u> database with the following structure:</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">PROJECT_ID: Long PK referencing project.project_id</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">OPERATION: String representing the operation that is being performed on the challenge: INSERT, UPDATE, or DELETE</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">DATE: date / time at which the operation happened</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">SOURCE: String with the name of the source table in which the change happened, this could be the resource table in case of a new person registering for a challenge, the project_info table in case the challenge name changed, phase in case the phase changed from submission to review etc.</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">Please define the&nbsp;<u>project_event_log</u> table properly, then<span style=\"font-size:12.8px\">&nbsp;add triggers to the <u>project_info</u>, <u>project</u>, <u>project_phase</u>, </span><u>resource</u><span style=\"color:rgb(34, 34, 34); font-family:arial,sans-serif\">,&nbsp;</span><span style=\"font-size:12.8px\"><u>prize</u>,&nbsp;<u>project_spec</u>, <u>project_studio_specification&nbsp;</u>on <strong>insert</strong>, <strong>update</strong>, and <strong>delete</strong> to populate a record in the </span><u>project_event_log</u><span style=\"font-size:12.8px\"> table for each operation that happens.</span></div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">Ideally, please use a stored procedure to centralize common functionality and make the triggers simpler.</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\"><u>How to Change</u></div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">The changes should be applied on&nbsp;<u>https://coder.topcoder.com/internal/database/scripts/trunk (Please just use the revision provided in VM or Docker).</u></div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\"><u>How to Test</u></div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">Competitors are expected to use the Informix Docker to make the changes and test your solutions. You are expected to provide all the test data and steps to make sure all the triggers are working properly</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\"><u>How to use Informix Docker</u></div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">\n<div style=\"padding: 0px; margin: 0px; color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">We have a Docker image with informix installed, you can use that for testing purpose. Please use the following steps after you installed the Docker Tools.</div>\n\n<ol>\n\t<li>docker run -it -P 2020:2020 mdesiderio/arena:informix bash</li>\n\t<li>Inside the container, switch to informix user: sudo su - informix</li>\n\t<li>in the informix user&#39;s home folder, run the start-informix.sh script</li>\n\t<li>you can now use dbaccess to use informix.</li>\n</ol>\n\n<div style=\"padding: 0px; margin: 0px; color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">You can also connect to informix using localhost:2020</div>\n\n<div style=\"padding: 0px; margin: 0px; color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">&nbsp;</div>\n\n<div style=\"padding: 0px; margin: 0px; color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal; widows: 1;\">The password for the informix user is 1nf0rm1x</div>\n</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30053149",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalFixEndDate": "2016-03-10T15:38:00.000Z",
+  "finalSubmissionGuidelines": "<ul>\n\t<li>Update the files for scripts SVN</li>\n\t<li>Verification Documentation</li>\n</ul>\n",
+  "forumId": 32137,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=32137",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 27,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-02T01:31:00.000Z",
+      "actualStartTime": "2016-03-02T01:31:00.000Z",
+      "scheduledEndTime": "2016-03-02T01:31:00.000Z",
+      "actualendTime": "2016-03-02T01:31:00.000Z",
+      "_id": "58133f83550dfb3b52bde4e4"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-02T01:31:00.000Z",
+      "actualStartTime": "2016-03-02T01:31:00.000Z",
+      "scheduledEndTime": "2016-03-02T04:29:00.000Z",
+      "actualendTime": "2016-03-02T04:29:00.000Z",
+      "_id": "58133f83550dfb3b52bde4e3"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-02T04:29:00.000Z",
+      "actualStartTime": "2016-03-02T04:29:00.000Z",
+      "scheduledEndTime": "2016-03-04T04:29:00.000Z",
+      "actualendTime": "2016-03-04T04:29:00.000Z",
+      "_id": "58133f83550dfb3b52bde4e2"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-02T04:34:00.000Z",
+      "actualStartTime": "2016-03-02T04:34:00.000Z",
+      "scheduledEndTime": "2016-03-07T04:29:00.000Z",
+      "actualendTime": "2016-03-07T04:29:00.000Z",
+      "_id": "58133f83550dfb3b52bde4e1"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-07T04:29:00.000Z",
+      "actualStartTime": "2016-03-07T04:29:00.000Z",
+      "scheduledEndTime": "2016-03-07T13:07:00.000Z",
+      "actualendTime": "2016-03-07T13:07:00.000Z",
+      "_id": "58133f83550dfb3b52bde4e0"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-07T13:07:00.000Z",
+      "actualStartTime": "2016-03-07T13:07:00.000Z",
+      "scheduledEndTime": "2016-03-09T12:05:00.000Z",
+      "actualendTime": "2016-03-09T12:05:00.000Z",
+      "_id": "58133f83550dfb3b52bde4df"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-09T12:05:00.000Z",
+      "actualStartTime": "2016-03-09T12:05:00.000Z",
+      "scheduledEndTime": "2016-03-09T14:37:00.000Z",
+      "actualendTime": "2016-03-09T14:37:00.000Z",
+      "_id": "58133f83550dfb3b52bde4de"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-09T14:37:00.000Z",
+      "actualStartTime": "2016-03-09T14:37:00.000Z",
+      "scheduledEndTime": "2016-03-10T02:39:00.000Z",
+      "actualendTime": "2016-03-10T02:39:00.000Z",
+      "_id": "58133f83550dfb3b52bde4dd"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-10T02:39:00.000Z",
+      "actualStartTime": "2016-03-10T02:39:00.000Z",
+      "scheduledEndTime": "2016-03-10T07:35:00.000Z",
+      "actualendTime": "2016-03-10T07:35:00.000Z",
+      "_id": "58133f83550dfb3b52bde4dc"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-10T07:35:00.000Z",
+      "actualStartTime": "2016-03-10T07:35:00.000Z",
+      "scheduledEndTime": "2016-03-10T15:38:00.000Z",
+      "actualendTime": "2016-03-10T15:38:00.000Z",
+      "_id": "58133f83550dfb3b52bde4db"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-10T15:38:00.000Z",
+      "actualStartTime": "2016-03-10T15:38:00.000Z",
+      "scheduledEndTime": "2016-03-10T17:23:00.000Z",
+      "actualendTime": "2016-03-10T17:23:00.000Z",
+      "_id": "58133f83550dfb3b52bde4da"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-10T17:23:00.000Z",
+      "actualStartTime": "2016-03-10T17:23:00.000Z",
+      "scheduledEndTime": "2016-03-15T15:16:00.000Z",
+      "actualendTime": "2016-03-15T15:16:00.000Z",
+      "_id": "58133f83550dfb3b52bde4d9"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-03-02T04:29:00.000Z",
+  "prize": [
+    1000,
+    500
+  ],
+  "projectId": 9480,
+  "registrants": [
+    {
+      "handle": "deedee",
+      "reliability": "0%",
+      "registrationDate": "2016-03-02T05:23:00.000Z",
+      "submissionDate": null,
+      "rating": "929",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f83550dfb3b52bde4d8"
+    },
+    {
+      "handle": "monark-123",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-02T05:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f83550dfb3b52bde4d7"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "0%",
+      "registrationDate": "2016-03-02T05:46:00.000Z",
+      "submissionDate": null,
+      "rating": "1032",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f83550dfb3b52bde4d6"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "6%",
+      "registrationDate": "2016-03-02T07:44:00.000Z",
+      "submissionDate": null,
+      "rating": "1286",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133f83550dfb3b52bde4d5"
+    },
+    {
+      "handle": "gondzo",
+      "reliability": "20%",
+      "registrationDate": "2016-03-02T07:47:00.000Z",
+      "submissionDate": null,
+      "rating": "901",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f83550dfb3b52bde4d4"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-02T10:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f83550dfb3b52bde4d3"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-02T10:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f83550dfb3b52bde4d2"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-02T10:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f83550dfb3b52bde4d1"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-02T12:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f83550dfb3b52bde4d0"
+    },
+    {
+      "handle": "invader_eki",
+      "reliability": "50%",
+      "registrationDate": "2016-03-02T12:24:00.000Z",
+      "submissionDate": null,
+      "rating": "1089",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f83550dfb3b52bde4cf"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "0%",
+      "registrationDate": "2016-03-02T12:54:00.000Z",
+      "submissionDate": null,
+      "rating": "618",
+      "colorStyle": "color: #999999",
+      "_id": "58133f83550dfb3b52bde4ce"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-02T14:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f83550dfb3b52bde4cd"
+    },
+    {
+      "handle": "republic82",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-02T18:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f83550dfb3b52bde4cc"
+    },
+    {
+      "handle": "skys02",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-02T23:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f83550dfb3b52bde4cb"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-03T00:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f83550dfb3b52bde4ca"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "6%",
+      "registrationDate": "2016-03-03T01:28:00.000Z",
+      "submissionDate": null,
+      "rating": "1045",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f83550dfb3b52bde4c9"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-03T04:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f83550dfb3b52bde4c8"
+    },
+    {
+      "handle": "thinkinjava",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-03T06:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f83550dfb3b52bde4c7"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "0%",
+      "registrationDate": "2016-03-03T08:15:00.000Z",
+      "submissionDate": null,
+      "rating": "1391",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133f83550dfb3b52bde4c6"
+    },
+    {
+      "handle": "dani_petruzalek",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-03T11:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f83550dfb3b52bde4c5"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "28%",
+      "registrationDate": "2016-03-03T11:57:00.000Z",
+      "submissionDate": "2016-03-06T11:56:00.000Z",
+      "rating": "1075",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f83550dfb3b52bde4c4"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "6%",
+      "registrationDate": "2016-03-03T12:46:00.000Z",
+      "submissionDate": null,
+      "rating": "1044",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f83550dfb3b52bde4c3"
+    },
+    {
+      "handle": "dualfitting",
+      "reliability": "86%",
+      "registrationDate": "2016-03-03T14:15:00.000Z",
+      "submissionDate": "2016-03-06T18:28:00.000Z",
+      "rating": "1709",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58133f83550dfb3b52bde4c2"
+    },
+    {
+      "handle": "isv",
+      "reliability": "13%",
+      "registrationDate": "2016-03-03T18:14:00.000Z",
+      "submissionDate": null,
+      "rating": "1061",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f83550dfb3b52bde4c1"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-03T20:08:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58133f83550dfb3b52bde4c0"
+    },
+    {
+      "handle": "Colinh84",
+      "reliability": "0%",
+      "registrationDate": "2016-03-03T21:06:00.000Z",
+      "submissionDate": null,
+      "rating": "1815",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58133f83550dfb3b52bde4bf"
+    },
+    {
+      "handle": "ShindouHikaru",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-03T21:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f83550dfb3b52bde4be"
+    }
+  ],
+  "registrationEndDate": "2016-03-04T04:29:00.000Z",
+  "reliabilityBonus": 200,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2016-03-07T04:29:00.000Z",
+  "submissions": [
+    {
+      "handle": "dualfitting",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 99.31,
+      "finalScore": 99.64,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-03-06T18:28:00.000Z",
+      "_id": "58133f83550dfb3b52bde4e6"
+    },
+    {
+      "handle": "lanchongyizu",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 95.96,
+      "finalScore": 95.96,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-03-06T11:56:00.000Z",
+      "_id": "58133f83550dfb3b52bde4e5"
+    }
+  ],
+  "technology": [
+    "SQL"
+  ]
+}

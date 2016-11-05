@@ -1,0 +1,271 @@
+{
+  "_id": 30055487,
+  "_isComplete": true,
+  "__v": 480,
+  "_lastUpdate": "2016-11-05T11:07:38.726Z",
+  "appealsEndDate": "2016-11-05T16:33:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "SAS Data Preparation Tool - SAS Script Update F2F",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2016-12-03T16:52:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": 2436346,
+  "currentStatus": "Active",
+  "detailedRequirements": "<p><strong>Background</strong></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14.6667px\">The Bill &amp; Melinda Gates Foundation&rsquo;s (BMGF) Healthy Birth, Growth, and Development (HBGD) program addresses the dual problem of growth faltering/stunting and poor neurocognitive development, including contributing factors such as fetal growth restriction and preterm birth. The HBGD program is creating a unified strategy for integrated interventions to solve complex questions about (1) life cycle, (2) pathophysiology, (3) interventions, and (4) scaling intervention delivery. &nbsp;The Healthy Birth, Growth, and Development knowledge integration (HBGDki) Open Innovation platform was developed to mobilize the global &ldquo;unusual suspects&rdquo; data science community to better understand how to improve neurocognitive and physical health for children worldwide. The data science contests are aimed at developing predictive models and tools that quantify geographic, regional, cultural, socioeconomic, and nutritional trends that contribute to poor neurocognitive and physical growth outcomes in children. &nbsp;The tools and scripts developed by this challenge will support the data analysis efforts of the HBGDki Open Innovation initiative.</span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14.6667px\">In a previous </span><a href=\"http://www.topcoder.com/challenge-details/30055292/?type=develop&amp;noncache=true\" style=\"text-decoration:none;\"><u>challenge</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14.6667px\">, we developed as SAS script (Program.sas) which transforms two data input files (ex_01_subject.sas7bdat and ex_01_visit.sas7bdat) into 4 output files: &nbsp;SUBJ.sas7bdat, PARENTS.sas7bdat, SS.sas7bdat, and ANTHRO.sas7bdat.</span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14.6667px\">Now we have some adjustments that we need to make that Program.sas script.</span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><span style=\"background-color:transparent; font-size:14.6667px\">1. We need to implement a Code/Value transformation in the script for the SS.sas7bdat. &nbsp;&nbsp;&nbsp;</span><span style=\"font-size:14px\">&nbsp;&nbsp;&nbsp;A little background -- SAS analyst focused on medical research often have to generate &ldquo;code&rdquo; files from relational records. &nbsp;For example, let&rsquo;s say we have subject record with id 101, and family income of $1000, who lives in home with a dirt floor. &nbsp;This can be represented in a single row with columns of SubjectId, Family Income, and Floor Type. &nbsp;However, this could also be represented in code/value format in the following way with 2 rows instead of one:</span></span></span></p>\n\n<ol>\n</ol>\n\n<div style=\"margin-left:80px\"><span style=\"font-family:arial,helvetica,sans-serif\"><img src=\"https://lh5.googleusercontent.com/ArjFABC1H_M6ABy7jYwB4Ne9VG2BMYASLskHQfyQuVhBhZDjvboBq4kaFlHxErcD7-wmYmy3QI4w4FUKZDJOn4sxpCJIMQBcADQuHSd9kRWb71QfmHDrA9EQqRTW385tvACAEm26\" style=\"background-color:transparent; border:none; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px; height:137px; transform:rotate(0rad); width:624px\" /></span></div>\n\n<div>&nbsp;</div>\n\n<div><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><span style=\"background-color:transparent; font-size:14.6667px\">Our current Program.sas field is still writing the ss.sas7bdat output in more traditional form:</span><br />\n<span style=\"background-color:transparent; font-size:14.6667px\">SSSTRESN, SSSTRESC, and STUDYID</span></span></span></div>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><span style=\"background-color:transparent; font-size:14.6667px\">Let&rsquo;s add the following columns to the output:</span><br />\n<span style=\"background-color:transparent; font-size:14.6667px\">SUBJID, SSTESTCD, SSCAT</span></span></span></p>\n\n<div><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><span style=\"background-color:transparent; font-size:14.6667px\">For each subject id, our Program.sas field should write two rows into the ss.sas7bdat output. &nbsp;Here is the logic for populating the values in the first of the two rows:</span></span></span><br />\n&nbsp;</div>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><span style=\"background-color:transparent; font-size:14.6667px\">- STUDYID = &ldquo;Example 01&rdquo;</span></span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><span style=\"background-color:transparent; font-size:14.6667px\">- SUBJID = &nbsp;ex01_subj.SUBJECT</span></span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><span style=\"background-color:transparent; font-size:14.6667px\">- SSTESTCD = &ldquo;INCOME&rdquo;</span></span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><span style=\"background-color:transparent; font-size:14.6667px\">- SSCAT = &ldquo;INC&rdquo;</span></span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><span style=\"background-color:transparent; font-size:14.6667px\">- SSSTRESN = ex01_subj.INCOME</span></span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><span style=\"background-color:transparent; font-size:14.6667px\">- SSSTRESC = null</span></span></span></p>\n\n<ul>\n</ul>\n\n<div><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><span style=\"background-color:transparent; font-size:14.6667px\">Here is the logic for populating the values in the second of the two rows:</span></span></span></div>\n\n<div>&nbsp;</div>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><span style=\"background-color:transparent; font-size:14.6667px\">- STUDYID = &ldquo;Example 01&rdquo;</span></span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><span style=\"background-color:transparent; font-size:14.6667px\">- SUBJID = &nbsp;ex01_subj.SUBJECT</span></span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><span style=\"background-color:transparent; font-size:14.6667px\">- SSTESTCD = &ldquo;FLOOR&rdquo;</span></span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><span style=\"background-color:transparent; font-size:14.6667px\">- SSCAT = &ldquo;ENV&rdquo;</span></span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><span style=\"background-color:transparent; font-size:14.6667px\">- SSSTRESN = null</span></span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><span style=\"background-color:transparent; font-size:14.6667px\">- SSSTRESC = ex01_subj.FLOOR_TYPE</span></span></span></p>\n\n<ul>\n</ul>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><span style=\"background-color:transparent; font-size:14.6667px\">2. Our ANTHRO file contains a key based on SUBJID and AGEDAY. &nbsp;It turns out that we&rsquo;re supposed to sort the file by these entries but not exclude data based on unique SUBJID and AGEDAY combinations in the EX01_VISIT data. &nbsp;</span></span></span></p>\n\n<ol start=\"2\">\n</ol>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30055487",
+  "finalSubmissionGuidelines": "<span style=\"color:#000000\">1. &nbsp;Please base your submission on the current code base.<br />\n2. &nbsp;The data files and previously written code can be found in the Code Document forums attached to this challenge<br />\n3.&nbsp; SAS has a functional&nbsp;</span><a href=\"http://www.sas.com/en_us/software/university-edition.html\"><span style=\"color:#000000\">University Edition</span></a><span style=\"color:#000000\">&nbsp;which may be helpful for learning about SAS scripting. &nbsp;</span>",
+  "forumId": 34274,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=34274",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 22,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2016-11-03T16:52:00.000Z",
+      "actualStartTime": "2016-11-03T16:52:00.000Z",
+      "scheduledEndTime": "2016-12-03T16:52:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd7a550dfb3b52be519f"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Open",
+      "scheduledStartTime": "2016-11-04T16:33:00.000Z",
+      "actualStartTime": "2016-11-04T16:33:00.000Z",
+      "scheduledEndTime": "2016-11-05T16:33:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd7a550dfb3b52be519e"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2016-11-03T16:57:00.000Z",
+      "actualStartTime": "2016-11-03T16:57:00.000Z",
+      "scheduledEndTime": "2016-12-03T16:57:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd7a550dfb3b52be519d"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-11-03T16:52:00.000Z",
+  "prize": [
+    350
+  ],
+  "projectId": 10868,
+  "registrants": [
+    {
+      "handle": "Sharathkumar92",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-04T09:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be519c"
+    },
+    {
+      "handle": "Bende",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-03T20:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be519b"
+    },
+    {
+      "handle": "macs054",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-03T17:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be519a"
+    },
+    {
+      "handle": "Arif.Nyet",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-03T18:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be5199"
+    },
+    {
+      "handle": "akinwale",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-03T21:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be5198"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-03T21:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be5197"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-04T00:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be5196"
+    },
+    {
+      "handle": "dFault",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-04T04:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be5195"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-04T02:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be5194"
+    },
+    {
+      "handle": "danielbakyono",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-04T02:29:00.000Z",
+      "submissionDate": "2016-11-05T08:55:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be5193"
+    },
+    {
+      "handle": "mrdo_90",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-04T11:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be5192"
+    },
+    {
+      "handle": "gfhuertac",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-04T13:46:00.000Z",
+      "submissionDate": "2016-11-04T16:33:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be5191"
+    },
+    {
+      "handle": "nauhil",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-04T13:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be5190"
+    },
+    {
+      "handle": "yagna247",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-04T14:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be518f"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-04T15:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be518e"
+    },
+    {
+      "handle": "J.Bogusz",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-04T18:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be518d"
+    },
+    {
+      "handle": "AKRadouan",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-04T23:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be518c"
+    },
+    {
+      "handle": "pporcher",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-05T01:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be518b"
+    },
+    {
+      "handle": "steffenc",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-05T02:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be518a"
+    },
+    {
+      "handle": "ranitdas",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-05T05:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be5189"
+    },
+    {
+      "handle": "mayank_g",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-05T07:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be5188"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-05T07:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd7a550dfb3b52be5187"
+    }
+  ],
+  "registrationEndDate": "2016-12-03T16:52:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-12-03T16:57:00.000Z",
+  "submissions": [],
+  "technology": [
+    "Data Science"
+  ]
+}

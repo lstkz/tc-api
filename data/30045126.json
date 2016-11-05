@@ -1,0 +1,234 @@
+{
+  "_id": 30045126,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T11:00:13.873Z",
+  "appealsEndDate": "2014-08-24T15:45:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "NASA PDS API - LROC Update",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2014-09-16T13:01:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -66779873,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2>Project Overview</h2>\n\n<p>The Lunar Reconnaissance Orbiter (LRO) is returning a large amount of high resolution images. Although these raw images are accessible via NASA&rsquo;s Planetary Data System (PDS) and the Lunar Mapping and Modeling Portal (LMMP), additional processing is required to transform these raw images to geo-referenced and mosaicked images that can be displayed in <a href=\"http://pub.lmmp.nasa.gov/LMMPUI/LMMP_CLIENT/LMMP.html#\">LMMP</a>&nbsp; as rich visualization layers which are highly valuable for future mission planning and development.</p>\n\n<p>We have <a href=\"http://community.topcoder.com/tc?module=ProjectDetail&amp;pj=30039535\">recently updated PDS API</a> to import LROC datasets and raw images to be used by LMMP API to search datasets and return raw images to be procesed.</p>\n\n<h2>Task Overview</h2>\n\n<p>We could not use PDS API during integration with LMMP API as it has problems with core requirement which is importing LROC images and datasets, we are fixing the API in this challenge.</p>\n\n<p>The problems we found in PDS API :</p>\n\n<ul>\n\t<li>The new logic to import LROC datasets are using invalid metadata labels that don&#39;t exist in dataset metadata.</li>\n\t<li>The process flow (seems to be) assume that we first need to download LROC images then import datasets. Due to invalid analysis of LROC dataset metadata, we don&#39;t seem to be able to get LROC images associated with dataset.</li>\n\t<li>LROC product types have two type of cameras : Wide Angle Camera (WAC), and Narrow Angle Camera (NAC), products can be either NAC or WAC, and cannot be processed on same fashion. Current implementation does not take this into consideration when importing products and searching it.</li>\n\t<li>Product types are not stored in db, and searching products will return results disregard of it&#39;s type - currently there is no way to distinguish between products.</li>\n</ul>\n\n<h2>Task Requirements</h2>\n\n<p>Here is the expected process of using the PDS API :</p>\n\n<ul>\n\t<li>Client will first download and import LROC datasets. You need to demonstrate that with at least one of LROC datasets.</li>\n\t<li>Client should allow to import different LROC product types. Pocessing single product type at a time.</li>\n\t<li>Final results will get us LROC tiff images stored on configured location, with images information stored in persistent, associated with dataset, and ready to be used in dataset searching.</li>\n</ul>\n\n<p>You need to fix the following :</p>\n\n<ul>\n\t<li>Fix LROC map image model to store product type, and camera type (WAC or NAC) information.</li>\n\t<li>Fix LROC importing to insert dataset_map_image record for each product, you can retrieve the dataset information by using &#39;p&#39; value in &#39;results&#39; parameter in the ODE API query. The returned dataset id will be equal to dataset.dataset_text_id field in PDS dataset table.</li>\n\t<li>Change dataset importing process, remove inserting to datase_map_image, and remove all invalid metadata that were added in the update but does not exist in dataset metadata (i.e. dataset_set_map_image), we won&#39;t detail the invalid metadata, you can figure it during testing the improt process.</li>\n\t<li>Fix dataset searching search criteria to include fields to specify product type and camera type. By default it should NAC camera type with product type = CDRNAC (or better if you make it configurable)</li>\n\t<li>In the VM you will use to develop the solution you are required to test using one of available datasets and product types to demonstrate you have successfully fixed the issue. Copilot will verify your solution in your VM before deploying to another VM.</li>\n\t<li>Update deployment document to include step by step guide to download dataset, import it, and to import LROC images, and searching it. Include validation screenshots as well.</li>\n\t<li>The ODE REST API to be used is v2.0.\n\t<ul>\n\t\t<li>Example of link you will use to download LROC products <a href=\"http://oderest.rsl.wustl.edu/live2/?query=products&amp;target=moon&amp;results=mbp&amp;ihid=lro&amp;iid=lroc&amp;pt=&lt;PT&gt;&amp;output=JSON\">http://oderest.rsl.wustl.edu/live2/?query=products&amp;target=moon&amp;results=mbp&amp;ihid=lro&amp;iid=lroc&amp;pt=&lt;PT&gt;&amp;output=JSON</a> (Change &lt;PT&gt; with proper product type value)</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h2>References</h2>\n\n<ul>\n\t<li>You can view available LROC product in this link <a href=\"http://ode.rsl.wustl.edu/moon/indexProductSearch.aspx\">http://ode.rsl.wustl.edu/moon/indexProductSearch.aspx</a></li>\n\t<li>List of LROC dataset and products are detailed here <a href=\"http://ode.rsl.wustl.edu/moon/pagehelp/quickstartguide/index.html?lroc.htm\">http://ode.rsl.wustl.edu/moon/pagehelp/quickstartguide/index.html?lroc.htm</a> search for product type with small set of products as the VM disk space is limited.</li>\n\t<li>ODE REST API V2.0 <a href=\"http://oderest.rsl.wustl.edu/ODE_REST%20_V2.0.pdf\">http://oderest.rsl.wustl.edu/ODE_REST%20_V2.0.pdf</a></li>\n</ul>\n\n<h2>Documentation</h2>\n\n<ul>\n\t<li>Attached PDS API Update source code in challenge forums.</li>\n\t<li>Attached PDS API Update Architecture in challenge forums (in case you wanted to check the original design).</li>\n</ul>\n\n<h2>SVN</h2>\n\n<p>Existing PDS API source code exist in SVN <a href=\"https://coder.topcoder.com/tcs/clients/ntl-pds/assets/assembly/pds_projects/\">https://coder.topcoder.com/tcs/clients/ntl-pds/assets/assembly/pds_projects/ </a>(under import_and_persistence folder), if you don&#39;t have access to SVN, then send email to support@topcoder.com to grant you access.</p>\n\n<h2>Virtual Machine</h2>\n\n<p>We will grant an Ubuntu Amazon EC2 VM upon requests on challenge forums.</p>\n\n<h2>Deliverables</h2>\n\n<ul>\n\t<li>Text file with notes to reviewer and IP of your VM.</li>\n\t<li>PDS API Update with changed/new files.</li>\n\t<li>Detailed deployment guide as outlined in requirements.</li>\n</ul>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30045126",
+  "finalSubmissionGuidelines": "<p>.</p>\n",
+  "forumId": 24943,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=24943",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 15,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2014-08-17T13:01:00.000Z",
+      "actualStartTime": "2014-08-17T13:01:00.000Z",
+      "scheduledEndTime": "2014-09-16T13:01:00.000Z",
+      "actualendTime": null,
+      "_id": "58132fbd550dfb3b52b8a79b"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-22T04:02:00.000Z",
+      "actualStartTime": "2014-08-22T04:02:00.000Z",
+      "scheduledEndTime": "2014-08-24T15:45:00.000Z",
+      "actualendTime": "2014-08-24T15:45:00.000Z",
+      "_id": "58132fbd550dfb3b52b8a79a"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2014-08-17T13:06:00.000Z",
+      "actualStartTime": "2014-08-17T13:06:00.000Z",
+      "scheduledEndTime": "2014-09-16T13:06:00.000Z",
+      "actualendTime": null,
+      "_id": "58132fbd550dfb3b52b8a799"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2014-08-17T13:01:00.000Z",
+  "prize": [
+    700
+  ],
+  "projectId": 7263,
+  "registrants": [
+    {
+      "handle": "nesso",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-17T15:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbd550dfb3b52b8a798"
+    },
+    {
+      "handle": "wizgen",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-17T13:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbd550dfb3b52b8a797"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-17T13:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbd550dfb3b52b8a796"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-17T14:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbd550dfb3b52b8a795"
+    },
+    {
+      "handle": "sabbirhs",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-17T16:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbd550dfb3b52b8a794"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-17T21:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbd550dfb3b52b8a793"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-18T01:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbd550dfb3b52b8a792"
+    },
+    {
+      "handle": "sandeept281",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-18T03:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbd550dfb3b52b8a791"
+    },
+    {
+      "handle": "schmoel",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-18T05:19:00.000Z",
+      "submissionDate": "2014-08-23T19:43:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbd550dfb3b52b8a790"
+    },
+    {
+      "handle": "firemanphil",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-18T08:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbd550dfb3b52b8a78f"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-18T12:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbd550dfb3b52b8a78e"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-18T12:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbd550dfb3b52b8a78d"
+    },
+    {
+      "handle": "abelli",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-18T16:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbd550dfb3b52b8a78c"
+    },
+    {
+      "handle": "AltPlus0160",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-19T00:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbd550dfb3b52b8a78b"
+    },
+    {
+      "handle": "07111994",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-19T08:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbd550dfb3b52b8a78a"
+    }
+  ],
+  "registrationEndDate": "2014-09-16T13:01:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": null,
+  "screeningScorecardId": null,
+  "submissionEndDate": "2014-09-16T13:06:00.000Z",
+  "submissions": [
+    {
+      "handle": "schmoel",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-08-22T04:01:00.000Z",
+      "_id": "58132fbd550dfb3b52b8a79d"
+    },
+    {
+      "handle": "schmoel",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-08-23T19:43:00.000Z",
+      "_id": "58132fbd550dfb3b52b8a79c"
+    }
+  ],
+  "technology": [
+    "API",
+    "Java",
+    "MySQL",
+    "Web Services"
+  ]
+}

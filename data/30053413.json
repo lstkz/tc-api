@@ -1,0 +1,153 @@
+{
+  "_id": 30053413,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:06:26.792Z",
+  "appealsEndDate": "2016-03-23T13:58:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Informix on Docker - myexport installation",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2016-04-21T18:17:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -16386486,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p>For this challenge you will simply finish the installation for myexport which include all the dependencies. &nbsp;The installation itself is completely done inside the Dockerfile.</p>\n\n<p><span>A few weeks ago we ran a challenge to identify a solution that would be able to export an Informix database without locking the tables and our community found a real gem called myexport. &nbsp; &nbsp;Myexport (</span>http://www.iiug.org/software/index_DBA.html)&nbsp;<span> is a utility created by the International Informix User Group that replaces the native dbexport. &nbsp; &nbsp;It does everything that dbexport does except does not lock the tables. &nbsp; Below you will find a dockerfile that builds and Topcoder Informix enviroment and you will see that I sucessfully installed myexport and moved the binaries over to&nbsp;</span>/opt/IBM/informix/bin. &nbsp; &nbsp;The only problem is that when I try to run it, &nbsp; it requires &quot;myschema&quot; &nbsp; after several hours I finally found myschema is part of &quot;utils2&quot;, which is also provided by the same organization. &nbsp; &nbsp;In the Dockerfile I get the utils2 package, gunzip it, &nbsp;run the unarchiver and then unarchive the source file but that is as far as I got. &nbsp; I next need to compile the binariy and install it. &nbsp; This is where you come in. &nbsp; &nbsp;I think this should be pretty easy since I already got gcc and make, but their could also be many more dependcies I have not uncovered yet.</p>\n\n<p>Here are the steps to sucess.</p>\n\n<ol>\n\t<li>Build the dockerfile &nbsp;as per step 0 in the instructions.&nbsp;</li>\n\t<li>Then run the container and figure out the steps to finish the instalation, &nbsp;the util2 directory is in the homedir for informix.</li>\n\t<li>Once you get the binary working ( &#39;myexport tcs_dw&#39; ) from inside the container, &nbsp;move those steps into the dockerfile itself.</li>\n</ol>\n\n<div class=\"code\" style=\"background:#eee;border:1px solid #ccc;padding:5px 10px;\">\n<p style=\"margin-left: 40px;\"><span style=\"font-family:courier new,courier,monospace\">###<br />\n# Topcoder Infromix enviroment for testing and Challenges<br />\n# Created on 3.1.6.2016 by kbowerma<br />\n# build with: &nbsp;docker build &nbsp;--rm=true -t spooner .<br />\n# run with: &nbsp;docker run -it --name run_spoon spooner /bin/bash<br />\n#<br />\n# 0. docker build --rm=true -t spooner .<br />\n#<br />\n# 1. The command to run this cotainer attached<br />\n#<br />\n# &nbsp; &nbsp; docker run -it --name run_spoon spooner<br />\n#<br />\n# 2. The command to run this container detached.<br />\n#<br />\n# &nbsp; &nbsp; docker run -itd --name run_spoon spooner<br />\n# &nbsp; &nbsp; Then:<br />\n# &nbsp; &nbsp; docker exec -it run_spoon bash</span></p>\n\n<p style=\"margin-left: 40px;\">&nbsp;</p>\n\n<p style=\"margin-left: 40px;\"><span style=\"font-family:courier new,courier,monospace\">FROM &nbsp;appiriodevops/informix:latest<br />\nMAINTAINER Kyle Bowerman &quot;kyle.bowerman@topcoder.com&quot;<br />\n&nbsp; #thanks to appbead submission 512661</span></p>\n\n<p style=\"margin-left: 40px;\"><span style=\"font-family:courier new,courier,monospace\">#Install deps tools<br />\n&nbsp; RUN yum clean all<br />\n&nbsp; RUN yum install -y net-tools<br />\n&nbsp; RUN yum install -y ksh<br />\n&nbsp; RUN yum install -y gcc<br />\n&nbsp; RUN yum install -y make</span></p>\n\n<p style=\"margin-left: 40px;\">&nbsp;</p>\n\n<p style=\"margin-left: 40px;\"><span style=\"font-family:courier new,courier,monospace\">#Install myexport<br />\n&nbsp; &nbsp;RUN cd /home/informix<br />\n&nbsp; &nbsp;RUN pwd<br />\n&nbsp; RUN mkdir /home/informix/myexport<br />\n&nbsp; RUN wget &nbsp;ftp://ftp.iiug.org/pub/informix/pub/myexport.shar.gz -O /home/informix/myexport/myexport.shar.gz<br />\n&nbsp; RUN gunzip /home/informix/myexport/myexport.shar.gz<br />\n&nbsp; RUN &nbsp;cd /home/informix/myexport &amp;&amp; sh /home/informix/myexport/myexport.shar<br />\n&nbsp; RUN chown -R informix:informix &nbsp;/home/informix/myexport<br />\n&nbsp; RUN chmod -R a+x /home/informix/myexport<br />\n&nbsp; RUN mv /home/informix/myexport/* /opt/IBM/informix/bin<br />\n&nbsp; RUN rmdir /home/informix/myexport</span></p>\n\n<p style=\"margin-left: 40px;\"><br />\n<span style=\"font-family:courier new,courier,monospace\">#Now get myschema<br />\n&nbsp; RUN mkdir /home/informix/utils2<br />\n&nbsp; WORKDIR /home/informix/utils2<br />\n&nbsp; RUN wget ftp://ftp.iiug.org/pub/informix/pub/utils2_ak.gz<br />\n&nbsp; RUN gunzip utils2_ak.gz<br />\n&nbsp; &nbsp;RUN ls -ltr<br />\n&nbsp; RUN &nbsp;echo n | sh utils2_ak<br />\n&nbsp; RUN ar -x myschema.source.ar</span></p>\n\n<p style=\"margin-left: 40px;\"><span style=\"font-family:courier new,courier,monospace\">#Make Infomix a sudoer (not needed for secton below be used for later installation )<br />\nRUN echo &#39;informix ALL=(ALL) NOPASSWD:ALL&#39; &gt;&gt; /etc/sudoers</span></p>\n\n<p style=\"margin-left: 40px;\"><span style=\"font-family:courier new,courier,monospace\"># start and Run informix<br />\n&nbsp; # set environment variables<br />\n&nbsp; ENV DB_LOCALE EN_US.UTF8<br />\n&nbsp; ENV CLIENT_LOCALE EN_US.UTF8<br />\n&nbsp; ENV INFORMIXDIR /opt/IBM/informix<br />\n&nbsp; ENV LD_LIBRARY_PATH $INFORMIXDIR/lib:/lib64:/usr/lib64:$LD_LIBRARY_PATH<br />\n&nbsp; ENV INFORMIXSERVER informixoltp_tcp<br />\n&nbsp; ENV ONCONFIG onconfig.informixoltp_tcp<br />\n&nbsp; ENV INFORMIXSQLHOSTS &quot;/opt/IBM/informix/etc/sqlhosts.informixoltp_tcp&quot;<br />\n&nbsp; ENV JAVA_HOME /usr/share/java<br />\n&nbsp; ENV ANT_HOME /usr/share/ant<br />\n&nbsp; ENV PATH $INFORMIXDIR/bin:$JAVA_HOME/bin:$PATH:$HOME/bin:$ANT_HOME/bin<br />\n&nbsp; WORKDIR /home/informix<br />\n&nbsp; USER informix</span></p>\n\n<p style=\"margin-left: 40px;\"><span style=\"font-family:courier new,courier,monospace\">&nbsp; # start informix, and KEEP PROCESS RUNNING<br />\n&nbsp; CMD oninit -y &amp;&amp; bash</span></p>\n</div>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30053413",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<p>A winning submission will be able to run &#39;myexport tcs_dw&#39; &nbsp;which should have the same output as &#39;dbexport tcs_dw&#39; &nbsp;from the running container (see Dockerfile) as the informix user.</p>\n\n<p>Please submit a dockerfile that will create the container that has a working copy of mydbexport</p>\n",
+  "forumId": 32375,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=32375",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 7,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2016-03-22T18:17:00.000Z",
+      "actualStartTime": "2016-03-22T18:17:00.000Z",
+      "scheduledEndTime": "2016-04-21T18:17:00.000Z",
+      "actualendTime": null,
+      "_id": "58132322550dfb3b52b3d4a3"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-22T20:50:00.000Z",
+      "actualStartTime": "2016-03-22T20:50:00.000Z",
+      "scheduledEndTime": "2016-03-23T13:58:00.000Z",
+      "actualendTime": "2016-03-23T13:58:00.000Z",
+      "_id": "58132322550dfb3b52b3d4a2"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2016-03-22T18:22:00.000Z",
+      "actualStartTime": "2016-03-22T18:22:00.000Z",
+      "scheduledEndTime": "2016-04-21T18:22:00.000Z",
+      "actualendTime": null,
+      "_id": "58132322550dfb3b52b3d4a1"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-03-22T18:17:00.000Z",
+  "prize": [
+    200
+  ],
+  "projectId": 9479,
+  "registrants": [
+    {
+      "handle": "ananthhh",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-22T18:31:00.000Z",
+      "submissionDate": "2016-03-22T20:49:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132322550dfb3b52b3d4a0"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-23T00:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132322550dfb3b52b3d49f"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-23T02:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132322550dfb3b52b3d49e"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-23T02:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132322550dfb3b52b3d49d"
+    },
+    {
+      "handle": "xiufei",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-23T08:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132322550dfb3b52b3d49c"
+    },
+    {
+      "handle": "appbead",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-23T10:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132322550dfb3b52b3d49b"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-23T12:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132322550dfb3b52b3d49a"
+    }
+  ],
+  "registrationEndDate": "2016-04-21T18:17:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-04-21T18:22:00.000Z",
+  "submissions": [
+    {
+      "handle": "ananthhh",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-03-22T20:49:00.000Z",
+      "_id": "58132322550dfb3b52b3d4a4"
+    }
+  ],
+  "technology": [
+    "Other"
+  ]
+}

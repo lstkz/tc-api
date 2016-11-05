@@ -1,0 +1,258 @@
+{
+  "_id": 30048379,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T09:55:20.770Z",
+  "appealsEndDate": "2015-01-17T02:12:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Salesforce to Github integration in NodeJS",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p>Appirio uses a Salesforce based system called CMC to manage epics, stories and issues. &nbsp;The Serenity project (new topcoder challegne engine) has been managing all of its tasks in Github (https://github.com/appirio-tech/lc1-project). &nbsp;This has made integration to our planning and QA process difficult for the rest of the team. &nbsp;We would like to continue to work individual issues in Github but also track progress in CMC.</p>\n\n<p>To accomplish this goal, we have decided to create stories and issues in CMC, then push relevant issues to Github.</p>\n\n<p>The flow of the app should work like this.</p>\n\n<ol>\n\t<li>Visit web page.</li>\n\t<li>Authenticate to Salesforce and Github</li>\n\t<li>Select which Github project to use</li>\n\t<li>Set filters for searching Salesforce objects (see below)</li>\n\t<li>Click search</li>\n\t<li>Shown a list of Salesforce objects from given criteria</li>\n\t<li>Select which objects to push to Github</li>\n\t<li>Click Push to Github\n\t<ol>\n\t\t<li>Update external id field in Salesforce (see below for field)</li>\n\t\t<li>See below for field mapping</li>\n\t</ol>\n\t</li>\n</ol>\n\n<h2>Custom Salesforce Objects</h2>\n\n<h3>Story</h3>\n\n<ul>\n\t<li>name:&nbsp;<span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">CMC_Story</span></li>\n\t<li>Fields:\n\t<ul>\n\t\t<li>External_Id__c: &nbsp;This will be the Github issue id. &nbsp;<strong>If this field is filled out, then it can not be pushed to Github again.</strong></li>\n\t\t<li><span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">Priority__c: a label in Github.</span>\n\t\t<ul>\n\t\t\t<li><span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">���Picklist field:</span>\n\t\t\t<ul>\n\t\t\t\t<li><span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">���P1</span></li>\n\t\t\t\t<li><span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">P2</span></li>\n\t\t\t\t<li><font color=\"#000000\" face=\"arial, helvetica, sans-serif\"><span style=\"font-size:12px; line-height:19.2000007629395px\">P3</span></font></li>\n\t\t\t\t<li><font color=\"#000000\" face=\"arial, helvetica, sans-serif\"><span style=\"font-size:12px; line-height:19.2000007629395px\">P4</span></font></li>\n\t\t\t\t<li><font color=\"#000000\" face=\"arial, helvetica, sans-serif\"><span style=\"font-size:12px; line-height:19.2000007629395px\">P5</span></font></li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Description__c: &nbsp;The body of the issue</li>\n\t\t<li><span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">Name: This is the Salesforce autonumber S-{0}. &nbsp;This would be pre-pended to the Github title.</span></li>\n\t\t<li><span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">Status__c: This is the status of the issue. &nbsp;<strong>This should be a filterable item.</strong></span>\n\t\t<ul>\n\t\t\t<li><span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">���Picklist field:</span>\n\t\t\t<ul>\n\t\t\t\t<li><span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">���</span>Requested<br />\n\t\t\t\tBacklog<br />\n\t\t\t\tPlanned<br />\n\t\t\t\tIn Progress<br />\n\t\t\t\tBlocked<br />\n\t\t\t\tReady for Tech Review<br />\n\t\t\t\tDev Complete<br />\n\t\t\t\tReady for QA<br />\n\t\t\t\tQA In Progress<br />\n\t\t\t\tQA Complete<br />\n\t\t\t\tReady for UAT<br />\n\t\t\t\tUAT Complete<br />\n\t\t\t\tComplete<br />\n\t\t\t\tCancelled</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li><span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">Story_Name__c: The title of the issues.</span></li>\n\t\t<li>Status_Notes__c:&nbsp;Text Area(255). &nbsp;<strong>Filter when it equals &quot;push to Github&quot;. &nbsp;Once the filed is pushed to Github, update this field with the link to the Github issue.</strong></li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3>Issue</h3>\n\n<ul>\n\t<li>name:&nbsp;<span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">CMC_Issue</span></li>\n\t<li>Fields\n\t<ul>\n\t\t<li>External_Id__c: &nbsp;This will be the Github issue id. &nbsp;<strong>If this field is filled out, then it can not be pushed to Github again.</strong></li>\n\t\t<li><span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">Priority__c: a label in Github.</span>\n\t\t<ul>\n\t\t\t<li><span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">���Picklist field:</span>\n\t\t\t<ul>\n\t\t\t\t<li><span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">���P1</span></li>\n\t\t\t\t<li><span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">P2</span></li>\n\t\t\t\t<li><span style=\"font-size:12px\">P3</span></li>\n\t\t\t\t<li><span style=\"font-size:12px\">P4</span></li>\n\t\t\t\t<li><span style=\"font-size:12px\">P5</span></li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Description__c: &nbsp;The body of the issue</li>\n\t\t<li><span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">Name: This is the salesforce autonumber I-{0}. &nbsp;This would be pre-pended to the github title.</span></li>\n\t\t<li><span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">Status__c: This is the status of the issue. &nbsp;<strong>This should be a filterable item.</strong></span>\n\t\t<ul>\n\t\t\t<li><span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">���Picklist field:</span>\n\t\t\t<ul>\n\t\t\t\t<li>New<br />\n\t\t\t\tBacklog<br />\n\t\t\t\tPlanned<br />\n\t\t\t\tIn Progress<br />\n\t\t\t\tBlocked<br />\n\t\t\t\tReady for Tech Review<br />\n\t\t\t\tDev Complete<br />\n\t\t\t\tReady for QA<br />\n\t\t\t\tQA In Progress<br />\n\t\t\t\tQA Complete<br />\n\t\t\t\tReady for UAT<br />\n\t\t\t\tUAT Complete<br />\n\t\t\t\tComplete<br />\n\t\t\t\tAs Designed<br />\n\t\t\t\tDuplicate<br />\n\t\t\t\tUnable to Reproduce<br />\n\t\t\t\tReopened</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li><span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:12px\">Story_Name__c: The title of the issues.</span></li>\n\t\t<li>Status_Notes__c:&nbsp;Text Area(255). &nbsp;<strong>Filter when it equals &quot;push to Github&quot;. &nbsp;Once the filed is pushed to Github, update this field with the link to the Github issue.</strong></li>\n\t</ul>\n\t</li>\n</ul>\n\n<h2>Requirements</h2>\n\n<ul>\n\t<li>The Body of the Github issue should be pre-pended with: &quot;<span>CMC: {Link to Salesforce object}&quot;</span></li>\n\t<li><span><span>Please make the application in NodeJS and AngularJS.</span></span></li>\n\t<li><span><span><span>Please make the application deployable to Heroku.</span></span></span></li>\n\t<li><span><span><span>Please provide documentation of all configuration</span></span></span></li>\n\t<li><span><span><span>Please provide documentation of setup and deployment</span></span></span></li>\n</ul>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30048379",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalSubmissionGuidelines": "<p>Please submit your code as a zip file. &nbsp;Please do not include the node_modules folder.</p>\n",
+  "forumId": 27721,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=27721",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 15,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-09T16:14:00.000Z",
+      "actualStartTime": "2015-01-09T16:14:00.000Z",
+      "scheduledEndTime": "2015-01-14T16:15:00.000Z",
+      "actualendTime": "2015-01-14T16:15:00.000Z",
+      "_id": "58132088550dfb3b52b2e0fc"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-09T16:20:00.000Z",
+      "actualStartTime": "2015-01-09T16:20:00.000Z",
+      "scheduledEndTime": "2015-01-14T16:15:00.000Z",
+      "actualendTime": "2015-01-14T16:15:00.000Z",
+      "_id": "58132088550dfb3b52b2e0fb"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-14T16:15:00.000Z",
+      "actualStartTime": "2015-01-14T16:15:00.000Z",
+      "scheduledEndTime": "2015-01-16T13:55:00.000Z",
+      "actualendTime": "2015-01-16T13:55:00.000Z",
+      "_id": "58132088550dfb3b52b2e0fa"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-16T13:55:00.000Z",
+      "actualStartTime": "2015-01-16T13:55:00.000Z",
+      "scheduledEndTime": "2015-01-16T17:08:00.000Z",
+      "actualendTime": "2015-01-16T17:08:00.000Z",
+      "_id": "58132088550dfb3b52b2e0f9"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-16T17:08:00.000Z",
+      "actualStartTime": "2015-01-16T17:08:00.000Z",
+      "scheduledEndTime": "2015-01-17T02:12:00.000Z",
+      "actualendTime": "2015-01-17T02:12:00.000Z",
+      "_id": "58132088550dfb3b52b2e0f8"
+    }
+  ],
+  "platforms": [
+    "Heroku",
+    "NodeJS"
+  ],
+  "postingDate": "2015-01-09T16:14:00.000Z",
+  "prize": [
+    450,
+    200
+  ],
+  "projectId": 7971,
+  "registrants": [
+    {
+      "handle": "gpbencke",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-09T16:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132088550dfb3b52b2e0f7"
+    },
+    {
+      "handle": "nitish1402",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-09T16:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132088550dfb3b52b2e0f6"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-09T17:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132088550dfb3b52b2e0f5"
+    },
+    {
+      "handle": "arpit2438735",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-10T07:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132088550dfb3b52b2e0f4"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-10T14:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132088550dfb3b52b2e0f3"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-10T11:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132088550dfb3b52b2e0f2"
+    },
+    {
+      "handle": "jorje.b",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-10T13:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132088550dfb3b52b2e0f1"
+    },
+    {
+      "handle": "greengeek7",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-10T22:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132088550dfb3b52b2e0f0"
+    },
+    {
+      "handle": "halbcoder",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-11T07:07:00.000Z",
+      "submissionDate": "2015-01-14T11:57:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132088550dfb3b52b2e0ef"
+    },
+    {
+      "handle": "rahuls91221",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-11T08:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132088550dfb3b52b2e0ee"
+    },
+    {
+      "handle": "Ninja91",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-11T12:00:00.000Z",
+      "submissionDate": "2015-01-14T07:12:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132088550dfb3b52b2e0ed"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-12T10:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132088550dfb3b52b2e0ec"
+    },
+    {
+      "handle": "mutaphore",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-13T02:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132088550dfb3b52b2e0eb"
+    },
+    {
+      "handle": "iCare",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-13T15:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132088550dfb3b52b2e0ea"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-14T07:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132088550dfb3b52b2e0e9"
+    }
+  ],
+  "registrationEndDate": "2015-01-14T16:15:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-01-14T16:15:00.000Z",
+  "submissions": [
+    {
+      "handle": "Ninja91",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 83.75,
+      "finalScore": 83.75,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-01-14T07:12:00.000Z",
+      "_id": "58132088550dfb3b52b2e0fe"
+    },
+    {
+      "handle": "halbcoder",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 80,
+      "finalScore": 80,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-01-14T11:57:00.000Z",
+      "_id": "58132088550dfb3b52b2e0fd"
+    }
+  ],
+  "technology": [
+    "Angular.js",
+    "Node.js",
+    "Salesforce"
+  ]
+}

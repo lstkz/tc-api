@@ -1,0 +1,488 @@
+{
+  "_id": 30046010,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T09:54:03.082Z",
+  "appealsEndDate": "2014-10-07T06:34:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Go Learning Challenge - Learn the basics No.4",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p>In this challenge we would like to try simple network programming. We believe it would be helpful for you to participate in real world challenges with Golang.</p>\n\n<p>This time we want you to develop function to solve the following problem and develop a simple server program to access it via TCP. The first and second person to submit a valid solution to satisfy the example cases win! Topcoder original t-shirts will be given to 3rd - 5th places.</p>\n\n<p>Please submit the following files.</p>\n\n<ul>\n\t<li>survey.go for the function</li>\n\t<li>glc4.go for the server</li>\n</ul>\n\n<p>This challenge is the last one for &lsquo;Learn the basics&rsquo; stage. We will launch the second stage &lsquo;&rsquo;Develop backend services with Golang&rdquo; next week. Stay tuned !</p>\n\n<p><u>We are also looking for reviewers for the second stage and upcoming real world challenges. Please contact us if you are interested.</u></p>\n\n<h1>Function</h1>\n\n<p>For this challenge, we use &lsquo;package&rsquo; feature of Golang. We would like to develop this function as a part of &lsquo;survey&rsquo; package.&nbsp;</p>\n\n<ul>\n\t<li>We call this function &lsquo;survey.CountBigShoppers(N int, s []int) &lsquo;</li>\n\t<li>We import this function with &lsquo;import (&ldquo;glc/survey&rdquo;)&rsquo;&nbsp;</li>\n\t<li>The directory structure is supposed to be &lsquo;$GOPATH/src/glc/survey/survey.go&rsquo;</li>\n</ul>\n\n<p>New to package? Check the <a href=\"https://golang.org/doc/code.html\" target=\"_blank\">tutorial</a></p>\n\n<h2>Problem Statement</h2>\n\n<p>A store sells M different items, conveniently numbered 0 through M-1. For a shopping survey you interviewed N customers. Each customer responded to the survey with a list of items they&#39;ve bought. Each customer bought at most one of each item. It is possible that some customers did not buy anything at all.</p>\n\n<p>After collecting the responses, you&#39;ve summed up the results and found that s[i] people have bought item i. Due to an unfortunate accident, you&#39;ve then lost the actual survey responses. All you have left are the values s[i] you computed.</p>\n\n<p>You are now supposed to report the number of big shoppers among the survey respondents. A big shopper is defined as a customer who has bought all M items. Of course, having lost the detailed responses, you might be unable to determine the actual number of big shoppers.</p>\n\n<p>You are given the int N and the []int s with M elements. Compute and return the smallest possible number of big shoppers.</p>\n\n<h2>Definition</h2>\n\n<ul>\n\t<li>File: survey.go</li>\n\t<li>Package: survey</li>\n\t<li>Function: CountBigShoppers</li>\n\t<li>Parameters: int, []int</li>\n\t<li>Returns: int</li>\n\t<li>Signature: func CountBigShoppers(N int, &nbsp;s []int) int</li>\n</ul>\n\n<h2>Constraints</h2>\n\n<ul>\n\t<li>N will be between 1 and 100, inclusive.</li>\n\t<li>s will contain between 1 and 100 elements, inclusive.</li>\n\t<li>Each element in s will be between 0 and N, inclusive.</li>\n</ul>\n\n<h2>Examples</h2>\n\n<p>0)</p>\n\n<ul>\n\t<li><span style=\"font-size:13px\">5</span></li>\n\t<li><span style=\"font-size:13px\">{3, 3}</span></li>\n\t<li><span style=\"font-size:13px\">Returns: 1</span></li>\n\t<li><span style=\"font-size:13px\">There are 5 customers and 2 items in the store. Each of the items was bought by three of the customers. Since there are five people and a total of six bought items, we must have at least one big shopper. And we can easily verify that there could have been exactly one big shopper and four other customers who have bought one item each.</span></li>\n</ul>\n\n<p>1)</p>\n\n<ul>\n\t<li>100</li>\n\t<li>{97}</li>\n\t<li>Returns: 97</li>\n</ul>\n\n<p>2)</p>\n\n<ul>\n\t<li>10</li>\n\t<li>{9, 9, 9, 9, 9}</li>\n\t<li>Returns: 5</li>\n</ul>\n\n<p>3)</p>\n\n<ul>\n\t<li>7</li>\n\t<li>{1, 2, 3}</li>\n\t<li>Returns: 0</li>\n</ul>\n\n<p>4)</p>\n\n<ul>\n\t<li>5</li>\n\t<li>{3, 3, 3}</li>\n\t<li>Returns: 0</li>\n</ul>\n\n<h1>Server Program</h1>\n\n<p>We would like to use survey.CountBigShoppers function via TCP so we will develop a simple server program with Golang. Check this <a href=\"http://golang.org/pkg/net/#pkg-examples\" target=\"_blank\">page</a>&nbsp;to know how to develop a server program with net package. You may find some useful articles on the Internet with &lsquo;Golang TCP simple&rsquo; keywords.&nbsp;</p>\n\n<h2>Definition</h2>\n\n<ul>\n\t<li>File: glc4.go</li>\n\t<li>Request: &lt;N&gt;#&lt;comma separated s values&gt;</li>\n\t<li>Listening Port: 8080</li>\n\t<li>Response: Number returned from survey.CountBigShoppers function</li>\n</ul>\n\n<h2>Notes</h2>\n\n<ul>\n\t<li>We don&rsquo;t have to think about validating request for this challenge</li>\n\t<li>Port 8080 is not mandatory. You can use other ports if you would like to</li>\n\t<li>Use &lsquo;goroutine&rsquo; to support multiple connections</li>\n</ul>\n\n<h2>Examples</h2>\n\n<p>&lsquo;nc&rsquo; command is convenient to test your server.&nbsp;</p>\n\n<p><span style=\"font-size:13px\">You can test your server with &#39;echo -n &lt;Request&gt; | nc localhost 8080&#39;</span></p>\n\n<p>0)</p>\n\n<ul>\n\t<li>Request : 5#3,3</li>\n\t<li>Command : echo -n &quot;5#3,3&quot; | nc localhost 8080</li>\n\t<li>Response : 1</li>\n</ul>\n\n<p>1)</p>\n\n<ul>\n\t<li>Request : 100#97</li>\n\t<li>Command : echo -n &quot;100#97&quot; | nc localhost 8080</li>\n\t<li>Response : 97</li>\n</ul>\n\n<p>2)</p>\n\n<ul>\n\t<li><span style=\"font-size:13px\">Request : 10#9,9,9,9,9</span></li>\n\t<li><span style=\"font-size:13px\">Command : echo -n &quot;10#9,9,9,9,9&quot; | nc localhost 8080</span></li>\n\t<li><span style=\"font-size:13px\">Response : 5</span></li>\n</ul>\n\n<p>3)</p>\n\n<ul>\n\t<li>Request : 7#1,2,3</li>\n\t<li>Command : echo -n &quot;7#1,2,3&quot; | nc localhost 8080</li>\n\t<li>Response : 0</li>\n</ul>\n\n<p>4)</p>\n\n<ul>\n\t<li><span style=\"font-size:13px\">Request : 5#3,3,3</span></li>\n\t<li><span style=\"font-size:13px\">Command : echo -n &quot;5#3,3,3&quot; | nc localhost 8080</span></li>\n\t<li><span style=\"font-size:13px\">Response : 0</span></li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30046010",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalSubmissionGuidelines": "<p>Please submit the following files.</p>\n\n<ul>\n\t<li>survey.go for the function</li>\n\t<li>glc4.go for the server</li>\n</ul>\n\n<p>The first and second person to submit a valid solution to satisfy the example cases win! Topcoder original t-shirts will be given to 3rd - 5th places.</p>\n\n<p>&nbsp;</p>\n",
+  "forumId": 25703,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=25703",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 25,
+  "numberOfSubmissions": 15,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-01T14:01:00.000Z",
+      "actualStartTime": "2014-10-01T14:01:00.000Z",
+      "scheduledEndTime": "2014-10-06T02:00:00.000Z",
+      "actualendTime": "2014-10-06T02:00:00.000Z",
+      "_id": "5813203b550dfb3b52b29a30"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-01T14:06:00.000Z",
+      "actualStartTime": "2014-10-01T14:06:00.000Z",
+      "scheduledEndTime": "2014-10-06T02:00:00.000Z",
+      "actualendTime": "2014-10-06T02:00:00.000Z",
+      "_id": "5813203b550dfb3b52b29a2f"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-06T02:00:00.000Z",
+      "actualStartTime": "2014-10-06T02:00:00.000Z",
+      "scheduledEndTime": "2014-10-06T06:19:00.000Z",
+      "actualendTime": "2014-10-06T06:19:00.000Z",
+      "_id": "5813203b550dfb3b52b29a2e"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-06T06:19:00.000Z",
+      "actualStartTime": "2014-10-06T06:19:00.000Z",
+      "scheduledEndTime": "2014-10-07T06:19:00.000Z",
+      "actualendTime": "2014-10-07T06:19:00.000Z",
+      "_id": "5813203b550dfb3b52b29a2d"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-07T06:19:00.000Z",
+      "actualStartTime": "2014-10-07T06:19:00.000Z",
+      "scheduledEndTime": "2014-10-07T06:34:00.000Z",
+      "actualendTime": "2014-10-07T06:34:00.000Z",
+      "_id": "5813203b550dfb3b52b29a2c"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2014-10-01T14:01:00.000Z",
+  "prize": [
+    150,
+    70
+  ],
+  "projectId": 8065,
+  "registrants": [
+    {
+      "handle": "chicapi",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-01T14:01:00.000Z",
+      "submissionDate": "2014-10-01T18:01:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a2b"
+    },
+    {
+      "handle": "partychen",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-01T14:11:00.000Z",
+      "submissionDate": "2014-10-02T01:19:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a2a"
+    },
+    {
+      "handle": "jthread",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-01T14:12:00.000Z",
+      "submissionDate": "2014-10-01T14:26:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a29"
+    },
+    {
+      "handle": "shirish_mishra",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-01T14:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a28"
+    },
+    {
+      "handle": "yosssi",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-01T14:24:00.000Z",
+      "submissionDate": "2014-10-01T14:24:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a27"
+    },
+    {
+      "handle": "alecn2002",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-01T14:29:00.000Z",
+      "submissionDate": "2014-10-01T14:59:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a26"
+    },
+    {
+      "handle": "padegal12",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-01T14:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a25"
+    },
+    {
+      "handle": "SPChoria",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-01T14:37:00.000Z",
+      "submissionDate": "2014-10-01T14:39:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a24"
+    },
+    {
+      "handle": "mewmew",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-01T14:38:00.000Z",
+      "submissionDate": "2014-10-01T14:39:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a23"
+    },
+    {
+      "handle": "Eeyore",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-01T14:42:00.000Z",
+      "submissionDate": "2014-10-01T15:40:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a22"
+    },
+    {
+      "handle": "quantumcoder",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-01T14:50:00.000Z",
+      "submissionDate": "2014-10-01T16:43:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a21"
+    },
+    {
+      "handle": "vlad_D",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-01T14:55:00.000Z",
+      "submissionDate": "2014-10-01T14:56:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a20"
+    },
+    {
+      "handle": "pirosl_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-01T17:28:00.000Z",
+      "submissionDate": "2014-10-03T18:34:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a1f"
+    },
+    {
+      "handle": "ahisham",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-01T21:44:00.000Z",
+      "submissionDate": "2014-10-01T21:46:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a1e"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-02T02:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a1d"
+    },
+    {
+      "handle": "jorje.b",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-02T04:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a1c"
+    },
+    {
+      "handle": "callmekatootie",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-02T06:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a1b"
+    },
+    {
+      "handle": "okuni",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-02T06:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a1a"
+    },
+    {
+      "handle": "dfn",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-02T06:39:00.000Z",
+      "submissionDate": "2014-10-02T06:39:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a19"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-02T07:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a18"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-02T14:48:00.000Z",
+      "submissionDate": "2014-10-02T16:02:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a17"
+    },
+    {
+      "handle": "LarsOp",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-02T19:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a16"
+    },
+    {
+      "handle": "nise_nabe",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-03T03:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a15"
+    },
+    {
+      "handle": "tanzaku",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-03T14:20:00.000Z",
+      "submissionDate": "2014-10-03T14:21:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a14"
+    },
+    {
+      "handle": "deskamess",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-03T20:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813203b550dfb3b52b29a13"
+    }
+  ],
+  "registrationEndDate": "2014-10-06T02:00:00.000Z",
+  "reviewScorecardId": 30001720,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2014-10-06T02:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "yosssi",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-10-01T14:24:00.000Z",
+      "_id": "5813203b550dfb3b52b29a3f"
+    },
+    {
+      "handle": "jthread",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-01T14:26:00.000Z",
+      "_id": "5813203b550dfb3b52b29a3e"
+    },
+    {
+      "handle": "mewmew",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-01T14:39:00.000Z",
+      "_id": "5813203b550dfb3b52b29a3d"
+    },
+    {
+      "handle": "vlad_D",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-01T14:56:00.000Z",
+      "_id": "5813203b550dfb3b52b29a3c"
+    },
+    {
+      "handle": "alecn2002",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-01T14:59:00.000Z",
+      "_id": "5813203b550dfb3b52b29a3b"
+    },
+    {
+      "handle": "Eeyore",
+      "placement": 6,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-01T15:40:00.000Z",
+      "_id": "5813203b550dfb3b52b29a3a"
+    },
+    {
+      "handle": "quantumcoder",
+      "placement": 7,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-01T16:43:00.000Z",
+      "_id": "5813203b550dfb3b52b29a39"
+    },
+    {
+      "handle": "chicapi",
+      "placement": 8,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-01T18:01:00.000Z",
+      "_id": "5813203b550dfb3b52b29a38"
+    },
+    {
+      "handle": "ahisham",
+      "placement": 9,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-01T21:46:00.000Z",
+      "_id": "5813203b550dfb3b52b29a37"
+    },
+    {
+      "handle": "partychen",
+      "placement": 10,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-02T01:19:00.000Z",
+      "_id": "5813203b550dfb3b52b29a36"
+    },
+    {
+      "handle": "dfn",
+      "placement": 11,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-02T06:39:00.000Z",
+      "_id": "5813203b550dfb3b52b29a35"
+    },
+    {
+      "handle": "muzehyun",
+      "placement": 12,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-02T16:02:00.000Z",
+      "_id": "5813203b550dfb3b52b29a34"
+    },
+    {
+      "handle": "tanzaku",
+      "placement": 13,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-03T14:21:00.000Z",
+      "_id": "5813203b550dfb3b52b29a33"
+    },
+    {
+      "handle": "pirosl_tc",
+      "placement": 14,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-03T18:34:00.000Z",
+      "_id": "5813203b550dfb3b52b29a32"
+    },
+    {
+      "handle": "SPChoria",
+      "placement": 15,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-10-01T14:39:00.000Z",
+      "_id": "5813203b550dfb3b52b29a31"
+    }
+  ],
+  "technology": [
+    "Go"
+  ]
+}

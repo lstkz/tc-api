@@ -1,7 +1,7 @@
 {
   "_id": 30047488,
   "_isComplete": true,
-  "__v": 1,
+  "__v": 0,
   "_lastUpdate": "2016-10-27T17:48:25.637Z",
   "appealsEndDate": "2014-12-09T13:36:00.000Z",
   "challengeCommunity": "develop",
@@ -15,11 +15,6 @@
   "detailedRequirements": "<div style=\"background:#eee;border:1px solid #ccc;padding:5px 10px;\">\n<h2>$500&nbsp;prize will be rewarded to you if you submit a passing review submission that did not place as 1st or 2nd place. Guranteed!</h2>\n\n<p>To get started :</p>\n\n<ul style=\"margin-left:10px\">\n\t<li>Setup environment following<a href=\"https://github.com/topcoderinc/csfv_frontend_module/wiki/Setup-Guide\" style=\"color: rgb(0, 0, 102);\">&nbsp;this github article&nbsp;</a>(you need permission to view it)</li>\n\t<li>Checkout csfv_frontend_module</li>\n\t<li>copy .env_sample to .env</li>\n\t<li>configure your hosts file to point csfv.com at 127.0.0.1</li>\n\t<li>run &#39;npm install&#39; - use latest stable nodejs version</li>\n\t<li>Make sure memcached, and mongo db are running.</li>\n\t<li>run &#39;node app.js&#39; or &#39;forever app.js&#39;</li>\n\t<li>You are ready go code!</li>\n</ul>\n</div>\n\n<h2><span><span><span><span>Project Overview</span></span></span></span></h2>\n\n<p><span>This project, the CSFV Community Gaming website project provides the web site infrastructure and integration of the games. This is also a web site that is available on the Internet, and also delivered in a form where the server and the games can be installed and used behind a firewall.</span></p>\n\n<h2><span>Challenge Task Overview</span></h2>\n\n<p>We are removing the wiki approval process, and remove the login requirement to enable users access view-only wiki pages.</p>\n\n<h3>Login Changes</h3>\n\n<ul>\n\t<li>The wiki controller require user to be authenticated to access any wiki page, this should be changed to allow users to access view-only pages, wiki listing page, wiki details page. We will keep login requirement for all actions and pages that will cause change to the wiki articles state in backend/database.\n\t<ul>\n\t\t<li>As an example of a change you will do :&nbsp;\n\t\t<ul>\n\t\t\t<li>In <a href=\"https://github.com/topcoderinc/csfv_wiki_module/blob/master/controllers/Wiki.js#L477\">csfv_wiki_module/Wiki.js#index</a> method, this method render the <a href=\"http://verigames.org/wiki\" target=\"_blank\">/wiki</a> page where you will have to login - if you are not - in order to view the page.</li>\n\t\t\t<li>The change will involve couple of things :&nbsp;\n\t\t\t<ul>\n\t\t\t\t<li>Remove <a href=\"https://github.com/topcoderinc/csfv_wiki_module/blob/master/controllers/Wiki.js#L479-L483\" target=\"_blank\">the code that</a> force viewer to be logged in.</li>\n\t\t\t\t<li>The<a href=\"https://github.com/topcoderinc/csfv_wiki_module/blob/master/controllers/Wiki.js#L487-L490\" target=\"_blank\"> code to retrieve user and set it in model</a> becomes optional for non logged in user.</li>\n\t\t\t\t<li>The <a href=\"https://github.com/topcoderinc/csfv_wiki_module/blob/master/controllers/Wiki.js#L527-L537\" target=\"_blank\">retrieval of favorite pages and wiki space</a> becomes optional for non logged in user.</li>\n\t\t\t\t<li>You might also need to make some other changes so the code won&#39;t break when you try to view /wiki page.</li>\n\t\t\t\t<li>You will also might need to make changes to the /wiki view file so that favorites don&#39;t expect favorite always because it is optional now. The same thing for model.username or model.user .. etc.</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>The changes in the example above is also applying to the following routes :&nbsp;\n\t\t<ul>\n\t\t\t<li><span style=\"line-height:1.6\">&#39;GET /wiki&#39;: &#39;Wiki#index&#39;</span></li>\n\t\t\t<li><span>&#39;GET /wiki/sp/:spaceKey&#39;: &#39;Wiki#showSpace&#39;</span></li>\n\t\t\t<li><span>&#39;GET /wiki/sp/:spaceKey/ti/:title&#39;: &#39;Wiki#showPage&#39;</span></li>\n\t\t\t<li><span>&#39;GET /wiki/permission&#39;: &#39;Wiki#requestPermission&#39;</span></li>\n\t\t\t<li><span>&#39;GET /wiki/sp/:spaceKey/print/:title&#39;: &#39;Wiki#printPage&#39;</span></li>\n\t\t\t<li><span>&#39;GET /wiki/search&#39;: &#39;Wiki#searchPages&#39;</span></li>\n\t\t\t<li><span>&#39;GET /wiki/tags/show/:id&#39;: &#39;Wiki#showWikiTag&#39;</span></li>\n\t\t\t<li><span>&#39;POST /wiki/generatepdf&#39;: &#39;Wiki#exportWikiPage&#39;</span></li>\n\t\t\t<li><span>&#39;GET /wiki/labels&#39;: &#39;Wiki#suggestLabels&#39;</span></li>\n\t\t\t<li><span>&#39;GET /wiki/attachments/:id&#39;: &#39;Wiki#getAttachment&#39;</span></li>\n\t\t\t<li><span>&#39;GET /wiki/sp/:spaceKey/ti/:title/allAttachments&#39;: &#39;Wiki#getAllAttachments&#39;</span></li>\n\t\t\t<li><span>&#39;GET /wiki/sp/:spaceKey/ti/:title/history&#39;: &#39;Wiki#showEditHistory&#39;</span></li>\n\t\t\t<li>You need to cleanup the code by reviewing the views, js script, css that is not needed anymore.</li>\n\t\t\t<li>If there is other readonly pages that can be changed to public, you can post in forums to get confirmation from Copilot.</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3>Approval Process Removal</h3>\n\n<ul>\n\t<li>We have a process in the CSFV Wiki that force all created/updated wiki articles to go into an approval process. We are removing this step so that any published article will be available on the website without any approval step.</li>\n\t<li>We have two models in existing flow :&nbsp;\n\t<ul>\n\t\t<li><a href=\"https://github.com/topcoderinc/csfv_wiki_module/blob/master/models/WikiPage.js\">WikiPage</a> - this holds the article information/content after being approved.</li>\n\t\t<li><a href=\"https://github.com/topcoderinc/csfv_wiki_module/blob/master/models/WikiPageUpdateRequest.js\">WikiPageUpdateRequest</a> - this holds draft articles and pending articles including accepted, and rejected articles.</li>\n\t</ul>\n\t</li>\n\t<li>You will remove WIkiPageUpdateRequest model in this challenge :\n\t<ul>\n\t\t<li>Creating and Updating wiki articles to be published will be directly stored in WikiPage.</li>\n\t\t<li>Draft articles will now be stored in WikiPage instead of WikiPageUpdatedRequest.</li>\n\t\t<li>You need to update WikiPage to include a new field &#39;status&#39; to store the status of the article : we support PUBLISHED and DRAFT statuses</li>\n\t</ul>\n\t</li>\n\t<li>In csfv_frontend_module you will focus on create/edit page to verify your changes, it is the page that we use to create, update and safe draft articles.</li>\n\t<li>In backend you need to change the <a href=\"https://github.com/topcoderinc/csfv_wiki_module/blob/master/controllers/Wiki.js#L1118\">SubmitUpdateRequest</a>&nbsp;be become SavePage, it is less confusing when we change the name. The wiki service should be updated as well.\n\t<ul>\n\t\t<li>You will remove all logic that use WikiPageUpdateRequest and &#39;PENDING&#39; logic in wiki service and controller.</li>\n\t\t<li>Move the logic to create/update wikiPage from <a href=\"https://github.com/topcoderinc/csfv_wiki_module/blob/master/services/wikiservice.js#L1673-L1740\">processUpdateRequest</a>&nbsp;to SavePage. You need to change the logic to store &#39;status&#39; field to support saving draft articles.</li>\n\t</ul>\n\t</li>\n\t<li>Update all retrieval Wiki controller methods and services methods to exclude status = DRAFT for pages that are not supposed to view draft pages.\n\t<ul>\n\t\t<li>User can view drafts in &#39;My Space&#39; page under &#39;My Drafts&#39; tab. The backend controller of this page should retrieve from WikiPage where status = DRAFT.</li>\n\t</ul>\n\t</li>\n\t<li>Cleanup the code in controller/services/model/helpers to remove all code related to WikiPageUpateRequest processing/manipulating.</li>\n\t<li>You probably might need to perform changes to frontend javascript/views to work with the new changes.</li>\n</ul>\n\n<h3>Test Scenario</h3>\n\n<ul>\n\t<li>Attached Wiki Test Scenarios in forums challenge. You need to update it to match the new changes.</li>\n</ul>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Github Repo</span></h2>\n\n<h2><span style=\"font-size:13px\">API exists in private repositories,</span><span style=\"font-size:13px\">&nbsp;request access in challenge forums if you don&#39;t have it already.</span></h2>\n\n<ul>\n\t<li><a href=\"https://github.com/topcoderinc/csfv_frontend_module\">https://github.com/topcoderinc/csfv_frontend_module</a></li>\n\t<li><a href=\"https://github.com/topcoderinc/csfv_wiki_module\">https://github.com/topcoderinc/csfv_wiki_module</a></li>\n</ul>\n\n<p>You can also search the repository for other CSFV dependencies as well.</p>\n",
   "digitalRunPoints": 630,
   "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30047488",
-  "event": {
-    "id": 3442,
-    "description": "2015 topcoder Open",
-    "shortDescription": "tco15"
-  },
   "finalFixEndDate": "2014-12-09T16:31:00.000Z",
   "finalSubmissionGuidelines": "<div class=\"previewMask\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif; line-height: normal; font-size: 12px !important;\">\n<h2><span><span><strong><span style=\"color:rgb(255, 0, 0)\">Submission Deliverables</span></strong></span></span></h2>\n\n<p><span><span>Below is an overview of the deliverables:</span></span></p>\n\n<ul>\n\t<li><span>Git patch of the changes of each repository changed.</span></li>\n\t<li><span>Text file with notes to reviewer about deployment.</span></li>\n\t<li><span>Updated Test Scenarios.</span>&nbsp;</li>\n</ul>\n\n<h2><span><span><span style=\"color:rgb(255, 0, 0)\"><strong>Final Submission</strong></span></span></span></h2>\n\n<p><span><span>For each member, the final submission should be uploaded via the challenge detail page on&nbsp;<a href=\"http://www.topcoder.com/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">topcoder.com</a>.</span></span></p>\n\n<div>&nbsp;</div>\n</div>\n\n<p>&nbsp;</p>\n",
   "forumId": 26939,
@@ -28,6 +23,38 @@
   "numberOfCheckpointsPrizes": 0,
   "numberOfRegistrants": 23,
   "numberOfSubmissions": 2,
+  "postingDate": "2014-11-30T21:53:00.000Z",
+  "projectId": 5104,
+  "registrationEndDate": "2014-12-02T21:53:00.000Z",
+  "reliabilityBonus": 280,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-12-05T21:53:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 98.46,
+      "finalScore": 98.72,
+      "points": 441,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-12-05T12:20:00.000Z",
+      "_id": "58123de90659262e95e006a3"
+    },
+    {
+      "handle": "gjw99",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 86.47,
+      "finalScore": 86.47,
+      "points": 189,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-12-05T13:10:00.000Z",
+      "_id": "58123de90659262e95e006a2"
+    }
+  ],
   "phases": [
     {
       "type": "Specification Submission",
@@ -138,15 +165,6 @@
       "_id": "58123de90659262e95e00696"
     }
   ],
-  "platforms": [
-    "Other"
-  ],
-  "postingDate": "2014-11-30T21:53:00.000Z",
-  "prize": [
-    1400,
-    700
-  ],
-  "projectId": 5104,
   "registrants": [
     {
       "handle": "alfiya_Zi",
@@ -356,35 +374,14 @@
       "_id": "58123de90659262e95e0067f"
     }
   ],
-  "registrationEndDate": "2014-12-02T21:53:00.000Z",
-  "reliabilityBonus": 280,
-  "reviewScorecardId": 30001470,
-  "reviewType": "COMMUNITY",
-  "screeningScorecardId": 30000412,
-  "submissionEndDate": "2014-12-05T21:53:00.000Z",
-  "submissions": [
-    {
-      "handle": "Sky_",
-      "placement": 1,
-      "screeningScore": 100,
-      "initialScore": 98.46,
-      "finalScore": 98.72,
-      "points": 441,
-      "submissionStatus": "Active",
-      "submissionDate": "2014-12-05T12:20:00.000Z",
-      "_id": "58123de90659262e95e006a3"
-    },
-    {
-      "handle": "gjw99",
-      "placement": 2,
-      "screeningScore": 100,
-      "initialScore": 86.47,
-      "finalScore": 86.47,
-      "points": 189,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2014-12-05T13:10:00.000Z",
-      "_id": "58123de90659262e95e006a2"
-    }
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "prize": [
+    1400,
+    700
   ],
   "technology": [
     "CSS",
@@ -392,5 +389,8 @@
     "JavaScript",
     "MongoDB",
     "Node.js"
+  ],
+  "platforms": [
+    "Other"
   ]
 }

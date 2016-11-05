@@ -1,0 +1,372 @@
+{
+  "_id": 30053732,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:59:54.199Z",
+  "appealsEndDate": "2016-04-19T12:17:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Lets App - iOS AWS Lambda Integration Part 2 F2F Challenge",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2016-05-10T10:58:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -14774433,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\">Let&#39;s App is a mobile social network app to help users connect with friends and plan on site activities.</p>\n\n<p dir=\"ltr\">The goal of this challenge is to integrate the provided iOS XCode project with backend (Amazon Mobile Hub) to implement the Contacts screen and syncing users functionality.</p>\n\n<h1 dir=\"ltr\">Challenge Requirements</h1>\n\n<h3 dir=\"ltr\">Amazon Mobile Hub iOS SDK</h3>\n\n<p dir=\"ltr\">Amazon Mobile Hub SDK already integrated with the current XCode project, we have the signup and signin flows integrated.</p>\n\n<p dir=\"ltr\">If you are facing a problem with current SDK or when making calls to AWS Lambda function, please post in forums, it might be AWS configuration issue.</p>\n\n<h3 dir=\"ltr\"><u>Features To Integrate</u></h3>\n\n<p dir=\"ltr\">The scope will integrate following features :</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Syncing contacts (from phone, google, and facebook) with the application backend.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Caching feature.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Integrate Contacts screen.</p>\n\t</li>\n</ol>\n\n<h3 dir=\"ltr\"><u>Integration Requirements</u></h3>\n\n<p dir=\"ltr\">When user login we make call to User_getUserProfile, this function returns the user information, it will include the facebook/google access tokens to be used for syncing users.</p>\n\n<p dir=\"ltr\">Right after user login/signup and app has access to any of phone/fb/google, the app should pull friends from backend to cache it in app, and also run a daily job to sync the app contacts with the app backend users.</p>\n\n<p dir=\"ltr\">The syncing feature so that we update user contacts list to find who became an app user and connect them together. The app has the following/follower concept, so app users can follow each other.</p>\n\n<p dir=\"ltr\">We also think caching contacts/friends will make the app performance faster, but we welcome your suggestions and best practices for this.</p>\n\n<p dir=\"ltr\">The current FB/Google apps are configured to allow accessing friends/contacts. If you cannot get access to them please post in forums and copilot will help fixing it.</p>\n\n<p dir=\"ltr\"><u><strong>The Contacts and Friends Concept</strong></u></p>\n\n<p dir=\"ltr\">App users - just like any other social network or messaging app - have a contact screen that list their app friends and contacts (contacts are non app users).</p>\n\n<p dir=\"ltr\">This contacts/friends list will be used in the app when user create an Activity and add invitees.</p>\n\n<p dir=\"ltr\">So in this challenge you are required to come up with a solution that fit the requirements for that screen.</p>\n\n<p dir=\"ltr\">This is the Contacts screen <a href=\"https://invis.io/FX6U02XMP\">https://invis.io/FX6U02XMP</a></p>\n\n<p dir=\"ltr\">In Contacts screen user can do the following :</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">View app users friends - a user friend is someone in my contact and is an app user, or someone I am following in the app.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">View Contacts - this is list of non app users pulled from facebook, google, or phone contacts.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Groups, app users and contacts can be grouped into one or more group. It is used to simplify the UX for app user when trying to invite people to activity.</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Users will remain in the top level in contacts screen, but also can be in one or more groups.</p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Follow users</p>\n\t</li>\n</ol>\n\n<p dir=\"ltr\">Note that :</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Contacts (non app users) list are not stored in the app backend (database)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Groups are stored in the app backend (in database) - but it will not include contacts as we don&rsquo;t store them in the cloud, so we need to maintain a cached version to keep contacts in the correct group.</p>\n\t</li>\n</ol>\n\n<p dir=\"ltr\"><strong><u>What you will address in this challenge</u></strong></p>\n\n<p dir=\"ltr\">With the above clarification, you will need to come up with a solution that :</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Load friends from backend and cache it in contacts list.</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">When user login or signup we need to pull user friends and cache it.</p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Sync contacts (phone/fb/google) with backend and cache it in contacts list in daily basis.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Implement Contacts Screen</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">View users and contacts.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Manage groups</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Follow users</p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">No duplicate entries in the list of app users or contacts, i.e. a phone contact might have an email that is similar is associated with a google contact. Both contacts should be merged into one contact.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The cache functionality should support future integration work (i.e. unfollow/follow/block user should reflect immediately in the cached list, so a proper interface should be introduced so it can be used when integrating future friendship features).</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Note that pagination should be taken into account when implementing the integration, i.e. FB api will return paginated friend list if there are lots of friends, same for google, and same thing for AWS backend we developed.</p>\n\t</li>\n</ol>\n\n<p dir=\"ltr\"><u><strong>AWS Lambda Functions</strong></u></p>\n\n<p dir=\"ltr\">You have the following functions to use in your solution, if you need any fixes in these function or how it provide data, please post in forums and copilot will help you :</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Use_GetUserFriends</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">This function return list of user friends, the relationship can be that logged in user is a follower of the friend, or pending an approval from friend, or none (none mean it is a contact that was synced with app backend but no follow request was made).</p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">User_SyncContacts</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">This function allows you to upload contacts list to sync it with app backend users, the response will be list of user friends that were found and matching some of the uploaded contacts, and a contacts list that is the contacts that don&rsquo;t exist as app users.</p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">User_ManageGroups</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">This function used to manipulate groups, to create a group, update it or delete it.</p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">User_ManageUserFriendGroup</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">This function add or remove users to/from a group.</p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">User_ManageFriendship</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">This function used to follow/unfollow/block users.</p>\n\t\t</li>\n\t</ol>\n\t</li>\n</ol>\n\n<p dir=\"ltr\">Note that we think it is good approach that calls to backend should be async, user should not wait for a call to finish unless it is required to perform follow up interaction with the app, the data can be cached, so user can see it while call is done async (with ability to show popup error if something wrong happened).</p>\n\n<h3 dir=\"ltr\">Postman File</h3>\n\n<p dir=\"ltr\">Attached in the challenge forums postman file that you can use in postman app to test the lambda functions, see sample calls and responses <a href=\"https://www.getpostman.com/\">https://www.getpostman.com/</a></p>\n\n<p dir=\"ltr\">The URL you will use to test the calls is <a href=\"http://54.164.65.111:3500\">http://54.164.65.111:3500</a></p>\n\n<p dir=\"ltr\">For FB and Google access tokens we create demo page to get them &nbsp;<a href=\"http://54.164.65.111:5000\">http://54.164.65.111:5000</a> (this is only needed when you test the backend via postman, you will use the FB/Google iOS SDK to get these tokens if user signup using these social networks)</p>\n\n<p dir=\"ltr\">The function&#39;s name in postman is in format /User/{function_name}, the AWS lambda function format is User_{function_name} so when you invoke function make sure to follow the format User_{function_name}.</p>\n\n<h1 dir=\"ltr\">Deliverable</h1>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Git patch file of the changes you made to the XCode project.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Deployment guide and verification document.</p>\n\t</li>\n</ol>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30053732",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<p>.</p>\n",
+  "forumId": 32642,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=32642",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 29,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2016-04-10T10:58:00.000Z",
+      "actualStartTime": "2016-04-10T10:58:00.000Z",
+      "scheduledEndTime": "2016-05-10T10:58:00.000Z",
+      "actualendTime": null,
+      "_id": "58132faa550dfb3b52b89ecd"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-13T18:08:00.000Z",
+      "actualStartTime": "2016-04-13T18:08:00.000Z",
+      "scheduledEndTime": "2016-04-14T23:10:00.000Z",
+      "actualendTime": "2016-04-14T23:10:00.000Z",
+      "_id": "58132faa550dfb3b52b89ecc"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2016-04-10T11:03:00.000Z",
+      "actualStartTime": "2016-04-10T11:03:00.000Z",
+      "scheduledEndTime": "2016-05-10T11:03:00.000Z",
+      "actualendTime": null,
+      "_id": "58132faa550dfb3b52b89ecb"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-16T09:02:00.000Z",
+      "actualStartTime": "2016-04-16T09:02:00.000Z",
+      "scheduledEndTime": "2016-04-19T12:17:00.000Z",
+      "actualendTime": "2016-04-19T12:17:00.000Z",
+      "_id": "58132faa550dfb3b52b89eca"
+    }
+  ],
+  "platforms": [
+    "AWS",
+    "iOS"
+  ],
+  "postingDate": "2016-04-10T10:58:00.000Z",
+  "prize": [
+    500
+  ],
+  "projectId": 9372,
+  "registrants": [
+    {
+      "handle": "darcwader",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-10T13:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89ec9"
+    },
+    {
+      "handle": "weilan",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-10T14:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89ec8"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-10T16:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89ec7"
+    },
+    {
+      "handle": "seriyvolk83",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-10T18:11:00.000Z",
+      "submissionDate": "2016-04-16T09:01:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89ec6"
+    },
+    {
+      "handle": "Ganaa.TSe",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-10T22:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89ec5"
+    },
+    {
+      "handle": "lakshmiv",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-10T22:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89ec4"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-11T00:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89ec3"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-11T01:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89ec2"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-11T01:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89ec1"
+    },
+    {
+      "handle": "JinkProject",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-11T02:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89ec0"
+    },
+    {
+      "handle": "albet.januar",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-11T02:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89ebf"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-11T06:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89ebe"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-11T06:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89ebd"
+    },
+    {
+      "handle": "lnk.anton",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-11T07:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89ebc"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-11T07:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89ebb"
+    },
+    {
+      "handle": "phonechen",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-11T14:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89eba"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-11T17:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89eb9"
+    },
+    {
+      "handle": "morehappiness",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-11T23:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89eb8"
+    },
+    {
+      "handle": "alokkulkarni",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-12T04:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89eb7"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-12T09:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89eb6"
+    },
+    {
+      "handle": "jana_rajendran",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T07:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89eb5"
+    },
+    {
+      "handle": "vitocorleone201",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T20:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89eb4"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T12:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89eb3"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-14T03:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89eb2"
+    },
+    {
+      "handle": "CrazyCoderLZB",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-14T17:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89eb1"
+    },
+    {
+      "handle": "jackyzhangjb",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-15T04:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89eb0"
+    },
+    {
+      "handle": "bgshih",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-15T10:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89eaf"
+    },
+    {
+      "handle": "Devilsxangel",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-18T10:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89eae"
+    },
+    {
+      "handle": "XinScirpt",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-19T08:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132faa550dfb3b52b89ead"
+    }
+  ],
+  "registrationEndDate": "2016-05-10T10:58:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-05-10T11:03:00.000Z",
+  "submissions": [
+    {
+      "handle": "seriyvolk83",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-04-13T18:08:00.000Z",
+      "_id": "58132faa550dfb3b52b89ecf"
+    },
+    {
+      "handle": "seriyvolk83",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-04-16T09:01:00.000Z",
+      "_id": "58132faa550dfb3b52b89ece"
+    }
+  ],
+  "technology": [
+    "iOS"
+  ]
+}

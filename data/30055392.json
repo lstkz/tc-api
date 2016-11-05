@@ -1,0 +1,538 @@
+{
+  "_id": 30055392,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:05:53.458Z",
+  "appealsEndDate": "2016-10-11T06:00:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Cardinal Health - NPWT Rentals - Web Services Integration [REPOST]",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><strong>INTRODUCTION</strong></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0)\">This is the fourth in a series of challenges to rebuild ITI Order, the company&rsquo;s primary internal and customer facing application. &nbsp;In this challenge we&rsquo;ll be integrating the development web services with the completed HTML prototype.</span></span></span></p>\n\n<p><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><strong>REQUIREMENTS</strong></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0)\">The HTML prototype is currently displaying mock data contained in JSON files based on the final designs. For this challenge you will be replacing all mock data and mock functionality with calls to the web services.</span></span></span></p>\n\n<p><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Your submission should rely on and be fully functional with the web services. &nbsp;This includes:</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0)\">-- User authentication with proper roles</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0)\">-- Viewing and interacting with all data on dashboards</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0)\">-- Filters for dashboard data</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0)\">-- Creation/editing of assets, shipments, inventory requests, etc.</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0)\">-- Lookups for all dropdown fields</span></span></span></p>\n\n<p><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">All documentation describing the services and endpoints is located in the Architecture folder in the </span><a href=\"https://gitlab.com/cardinal-health/NPWT-Rentals-Resources\" style=\"text-decoration:none;\"><u>NPWT-Resources repository</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">. Web services source, documentation and Postman collection for example calls are located in the </span><a href=\"https://gitlab.com/cardinal-health/NPWT-Services/tree/develop\" style=\"text-decoration:none;\"><u>NPWT-Services repository</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">.</span></span></span></p>\n\n<p><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Base endpoint URL is </span><u><a href=\"http://topcoder.work:8090\" style=\"text-decoration:none;\">http://topcoder.work:8090</a></u></span></span></p>\n\n<p><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">The base endpoint URL should be configurable for deployment to different environments. &nbsp;Your submission <em><strong>MUST</strong></em> work with these services.</span></span></span></p>\n<span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">You may use 3rd party libraries for implementation as long as their licenses allow doing so.<br />\n<br />\nIn addition to the above requirements, please see the forums for an additional set of changes (Asset Mgmt - Prototype - Fix requests.docx) that need to be implemented for this challenge. &nbsp;As this is a repost there are also many discussions regarding proper implementations already in the forums. &nbsp;Please read them carefully.</span><br />\n<br />\n<span style=\"color:#000000\"><em><strong>Additional Information</strong></em><br />\nIt is important to clarify expected behavior of the system depending on user role and assigned geographic location. For this business&rsquo; operations, there is a single central warehouse which functions as the hub for all shipments to/from other territories. Additionally, there are a number of Field Service Reps and Account Managers who work remotely in &ldquo;Territories&rdquo; around the country. Therefore, the concept of an &ldquo;Inbound&rdquo; or an &ldquo;Outbound&rdquo; shipment is contextual, depending on whether the logged-in user is assigned to the central warehouse or if they work remotely in a territory.<br />\n<br />\n-- Users should only see the dashboards corresponding with their assigned role (see &ldquo;user_role&rdquo; table for a mapping of user IDs to role IDs &ndash; available roles are warehouse, operations, field service rep, and account manager &ndash; The Field Rep Dashboard will be shared by both field service reps and account managers).&nbsp;<br />\n-- For the Warehouse Dashboard<br />\n&nbsp;&nbsp; &nbsp;-- Only users assigned the warehouse role should have access<br />\n&nbsp;&nbsp; &nbsp;-- The &ldquo;INBOUND&rdquo; view should show all in-transit shipments destined for the central warehouse<br />\n&nbsp;&nbsp; &nbsp;-- The &ldquo;OUTBOUND&rdquo; view should show only shipments originating from the central warehouse<br />\n&nbsp;&nbsp; &nbsp;-- The &ldquo;PENDING REQUESTS&rdquo; view should show all open requests, regardless of location<br />\n&nbsp;&nbsp; &nbsp;-- The &ldquo;IN-HOUSE&rdquo; view should show all assets that are in-stock in the central warehouse<br />\n-- For users who are assigned as a Field Service Rep or an Account Manager for a region (see the &ldquo;territory&rdquo; table for assignments)<br />\n&nbsp;&nbsp; &nbsp;-- Users assigned the field service rep or account manager role should have access<br />\n&nbsp;&nbsp; &nbsp;-- Views should function similarly to the warehouse dashboard. &ldquo;INBOUND&rdquo; and &ldquo;OUTBOUND&rdquo; should show only assets going to or from the user&rsquo;s assigned territory/territories<br />\n&nbsp;&nbsp; &nbsp;-- &ldquo;IN-STOCK&rdquo; should show only assets in stock in the user&rsquo;s assigned territory/territories<br />\n&nbsp;&nbsp; &nbsp;-- &ldquo;PENDING REQUESTS&rdquo; should only show open requests for the user&rsquo;s assigned territory/territories<br />\n<br />\n<em>Cardinal Health will retain full rights to all completed submissions for this challenge.</em></span></span></span>",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30055392",
+  "event": {
+    "id": 3447,
+    "description": "2017 TopCoder(R) Open",
+    "shortDescription": "tco17"
+  },
+  "finalSubmissionGuidelines": "<p><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">-- See the challenge forums for details on adding yourself to the </span><u><a href=\"https://gitlab.com/groups/cardinal-health\" style=\"text-decoration:none;\">Cardinal Health GitLab group</a></u></span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- Fork the </span><a href=\"https://gitlab.com/cardinal-health/NPWT\" style=\"font-family: arial, helvetica, sans-serif; font-size: 14px; text-decoration: none;\"><u>NPWT repository</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\"> and use the </span><a href=\"https://gitlab.com/cardinal-health/NPWT/tree/tc_1\" style=\"font-family: arial, helvetica, sans-serif; font-size: 14px; text-decoration: none;\"><u>tc_1 branch</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\"> for the basis of development</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- Add </span><a href=\"https://gitlab.com/u/harrywynn\" style=\"font-family: arial, helvetica, sans-serif; font-size: 14px; text-decoration: none;\"><u>harrywynn</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\"> as a member of your forked repository with Reporter access</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- Use the web services for creating user accounts and data during development</span></p>\n",
+  "forumId": 33974,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33974",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 47,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-10-03T20:00:00.000Z",
+      "actualStartTime": "2016-10-03T20:00:00.000Z",
+      "scheduledEndTime": "2016-10-08T20:00:00.000Z",
+      "actualendTime": "2016-10-08T20:00:00.000Z",
+      "_id": "58132301550dfb3b52b3ae38"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-10-03T20:06:00.000Z",
+      "actualStartTime": "2016-10-03T20:06:00.000Z",
+      "scheduledEndTime": "2016-10-08T20:00:00.000Z",
+      "actualendTime": "2016-10-08T20:00:00.000Z",
+      "_id": "58132301550dfb3b52b3ae37"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-10-08T20:00:00.000Z",
+      "actualStartTime": "2016-10-08T20:00:00.000Z",
+      "scheduledEndTime": "2016-10-10T12:52:00.000Z",
+      "actualendTime": "2016-10-10T12:52:00.000Z",
+      "_id": "58132301550dfb3b52b3ae36"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-10-10T12:52:00.000Z",
+      "actualStartTime": "2016-10-10T12:52:00.000Z",
+      "scheduledEndTime": "2016-10-10T21:18:00.000Z",
+      "actualendTime": "2016-10-10T21:18:00.000Z",
+      "_id": "58132301550dfb3b52b3ae35"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-10-10T21:18:00.000Z",
+      "actualStartTime": "2016-10-10T21:18:00.000Z",
+      "scheduledEndTime": "2016-10-11T06:00:00.000Z",
+      "actualendTime": "2016-10-11T06:00:00.000Z",
+      "_id": "58132301550dfb3b52b3ae34"
+    }
+  ],
+  "platforms": [
+    "HTML"
+  ],
+  "postingDate": "2016-10-03T20:00:00.000Z",
+  "prize": [
+    850,
+    500
+  ],
+  "projectId": 10144,
+  "registrants": [
+    {
+      "handle": "hellhound1988",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-03T23:20:00.000Z",
+      "submissionDate": "2016-10-08T09:25:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae33"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-03T20:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae32"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-03T20:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae31"
+    },
+    {
+      "handle": "isv",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-03T21:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae30"
+    },
+    {
+      "handle": "code56Life",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-03T22:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae2f"
+    },
+    {
+      "handle": "sfaxiano",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-03T22:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae2e"
+    },
+    {
+      "handle": "vmudimu",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-03T23:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae2d"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-03T23:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae2c"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-03T23:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae2b"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T00:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae2a"
+    },
+    {
+      "handle": "bannie2492",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T00:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae29"
+    },
+    {
+      "handle": "republic82",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T00:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae28"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T01:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae27"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T02:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae26"
+    },
+    {
+      "handle": "g.prog",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T02:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae25"
+    },
+    {
+      "handle": "jorje.b",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T03:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae24"
+    },
+    {
+      "handle": "lov0372349",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T04:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae23"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T04:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae22"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T05:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae21"
+    },
+    {
+      "handle": "narasimha.dvnr",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T05:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae20"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T05:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae1f"
+    },
+    {
+      "handle": "Razmita",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T06:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae1e"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T06:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae1d"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T07:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae1c"
+    },
+    {
+      "handle": "ananthhh",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T07:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae1b"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T08:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae1a"
+    },
+    {
+      "handle": "LynforeverSue",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T11:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae19"
+    },
+    {
+      "handle": "moagi.anela",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T12:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae18"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T12:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae17"
+    },
+    {
+      "handle": "sabbirhs",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T12:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae16"
+    },
+    {
+      "handle": "winterflame",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T14:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae15"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T13:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae14"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T14:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae13"
+    },
+    {
+      "handle": "avbngera",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T15:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae12"
+    },
+    {
+      "handle": "solokop",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T16:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae11"
+    },
+    {
+      "handle": "rtty",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-04T19:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae10"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-05T02:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae0f"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-05T02:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae0e"
+    },
+    {
+      "handle": "tuanpm89",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-05T02:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae0d"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-05T10:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae0c"
+    },
+    {
+      "handle": "TopG",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-05T21:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae0b"
+    },
+    {
+      "handle": "xjcarrillox",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-06T02:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae0a"
+    },
+    {
+      "handle": "anosama",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-06T03:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae09"
+    },
+    {
+      "handle": "cairi",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-06T04:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae08"
+    },
+    {
+      "handle": "paulswebe",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-06T07:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae07"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-07T16:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae06"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-08T15:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132301550dfb3b52b3ae05"
+    }
+  ],
+  "registrationEndDate": "2016-10-08T20:00:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-10-08T20:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "hellhound1988",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 81.88,
+      "finalScore": 85.63,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-10-08T09:25:00.000Z",
+      "_id": "58132301550dfb3b52b3ae39"
+    }
+  ],
+  "technology": [
+    "AJAX",
+    "Angular.js",
+    "Bootstrap",
+    "HTML",
+    "HTML5",
+    "JavaScript",
+    "Twitter Bootstrap"
+  ]
+}

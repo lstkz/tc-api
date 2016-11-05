@@ -1,0 +1,789 @@
+{
+  "_id": 30051786,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:41:53.532Z",
+  "appealsEndDate": "2015-11-10T15:29:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "WS1 Quota - Prototype iOS Mobile App [Swiftoberfest] [Swift/iOS Ready] Bagasse 1",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<div class=\"previewMask\">\n<p dir=\"ltr\"><span><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"color:rgb(0, 0, 0)\"><strong>INTRODUCTION</strong></span></span></span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"color:rgb(0, 0, 0)\"><span style=\"background-color:transparent\">This is one of several challenges to build a mobile app for communicating with the REST services built out in the previous Baton Rouge challenges. In this challenge we&#39;ll be focusing on Setting up moble app project and implementing the app Login screen using Authorization REST service and parsing JSON responses to get API Key from successful authorization call.</span></span></span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent\">All submitters passing review on this developer challenge will also earn the Swift/iOS Ready Show Your Skills badge at the completion of the challenge. Ordinarily, this badge can only be earned by passing one of the peer-reviewed Show Your Skills challenges. During Swiftoberfest, certain challenges have been identified as [Swift/iOS Ready] which let you earn your badge while competing in real-world challenges, too!</span></span></span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"color:rgb(0, 0, 0)\"><span style=\"background-color:transparent\">The framework built in this challenge will be used as the basis for building out communications with the remaining services. &nbsp;The framework should be built using Swift 2 and Xcode 7. It should include the following classes/functionality:</span></span></span></span></span></p>\n\n<p><span><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"color:rgb(0, 0, 0)\"><strong>DETAILED REQUIREMENTS</strong></span></span></span></span></p>\n\n<p><span><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"color:rgb(0, 0, 0)\"><strong><span style=\"background-color:transparent\">REST Singleton</span></strong></span></span></span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"color:rgb(0, 0, 0)\"><span style=\"background-color:transparent\">Create a REST singleton class for communicating with the services. The singleton should use </span>NSURLSession<span style=\"background-color:transparent\"> and its delegate methods to do service requests. &nbsp;Network connectivity should be checked before attempting any network communications. &nbsp;Any errors should be handled with Swift 2 Error handling do/try/catch.</span></span></span></span></span></p>\n\n<ul dir=\"ltr\">\n\t<li><span><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"background-color:transparent\"><span style=\"color:rgb(0, 0, 0)\">Use shared REST API available Base URL:&nbsp;</span><a href=\"https://alma-grower.herokuapp.com/aps/1.0\"><span style=\"color:rgb(0, 0, 255)\">https://</span></a></span></span></span></span><a href=\"https://alma-grower.herokuapp.com/aps/1.0\"><span><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"background-color:transparent\"><span style=\"color:rgb(0, 0, 255)\">alma-grower.herokuapp.com/aps/1.0</span></span></span></span></span></a></li>\n\t<li><span><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"color:rgb(0, 0, 0)\"><span style=\"background-color:transparent\">The singleton should have the following methods:</span></span></span></span></span></li>\n\t<li><span><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:rgb(0, 0, 0)\">func requestAuthorizationWithEmail(email: NSString, andPin pin: NSString, withDelegate&nbsp;</span><span style=\"color:rgb(0, 0, 0)\">delegate: RESTDelegate</span><span style=\"color:rgb(0, 0, 0)\">)</span></span></span></span></li>\n\t<li><span><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"color:rgb(0, 0, 0)\"><span style=\"background-color:transparent\">This method will do a PUT to /</span></span></span></span></span><span><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"color:rgb(0, 0, 0)\"><span style=\"background-color:transparent\">alma-grower.herokuapp.com/aps/1.0/authorize to request an API KEY. It will perform delegate callbacks on success or failure of the call.</span></span></span></span></span></li>\n</ul>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"color:rgb(0, 0, 0)\"><strong><span style=\"background-color:transparent\">RESTDelegate Protocol</span></strong></span></span></span></span></p>\n\n<ul dir=\"ltr\">\n\t<li><span><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"color:rgb(0, 0, 0)\"><span style=\"background-color:transparent\">The RESTDelegate protocol should implement the following authorization methods:</span></span></span></span></span></li>\n\t<li><span><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"color:rgb(0, 0, 0)\">func authorizationPassedWithKey(key: NSString)</span></span></span></span></li>\n\t<li><span><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"color:rgb(0, 0, 0)\"><span style=\"background-color:transparent\">Successful requests will call this delegate method and return the APSKEY value.</span></span></span></span></span></li>\n\t<li><span><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"color:rgb(0, 0, 0)\">func authorizationFailedWithError(error: NSError)</span></span></span></span></li>\n\t<li><span><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"color:rgb(0, 0, 0)\"><span style=\"background-color:transparent\">Failed requests will call this delegate method and return an error object with details.</span></span></span></span></span></li>\n</ul>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"color:rgb(0, 0, 0)\"><span style=\"background-color:transparent\">Sample curl command to call authorization API to get API KEY: </span></span></span></span></span><em>curl --request PUT --header &quot;Content-Type: application/x-www-form-urlencoded&quot; --data-binary &quot;username=user%40email.com&amp;password=pass1234&quot; &#39;https://alma-grower.herokuapp.com/aps/1.0/authorize&#39;</em></p>\n\n<p dir=\"ltr\">Here is backup REST URL: <em><span style=\"background-color:rgb(255, 255, 255); color:rgb(63, 63, 68); font-family:benton-sans,helvetica neue,helvetica,arial,sans-serif; font-size:14px\">https://alma-grower-dev1.herokuapp.com</span></em></p>\n\n<p dir=\"ltr\">In the case when this REST API URL not available in some regions (IP blocking etc) we included the Node.js api server code with this challenge resources. It is simple to deploy on Heroku or other platform to ahve your own REST service to develop.</p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong><span style=\"color:rgb(0, 0, 0)\">Mobile App Requirements</span></strong></span></span></p>\n\n<ul dir=\"ltr\">\n\t<li><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:rgb(0, 0, 0)\">Create Swift project as initial setup for this challenge, other challenges will be using this as starting point to extend functionality</span></span></span></li>\n\t<li><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:rgb(0, 0, 0)\">Create Initial Login screen based on given design with changes outlined below</span></span></span></li>\n\t<li><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:rgb(0, 0, 0)\">User login call Authorization API to authenticate user and get API KEY</span></span></span></li>\n\t<li><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:rgb(0, 0, 0)\">Store API Key for this app on device to use with all REST calls (keychain or other methods are acceptable)</span></span></span></li>\n\t<li><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:rgb(0, 0, 0)\">Impement methods to get API KEY for setting up REST calls to other methods (Query APIs will become available in chahllenges)</span></span></span></li>\n</ul>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong><span style=\"color:rgb(0, 0, 0)\">Login Screen Updates</span></strong></span></span></p>\n\n<p><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:rgb(0, 0, 0)\"><strong>0) Login</strong> (0.1 Login.png)<br />\n- Remove Plant Quality Control and replace with Alma Growers App<br />\n- Set background image on this page using photo login_background.png<br />\n- Remove &ldquo;Remember me&rdquo;<br />\n- Remove &ldquo;Forget Password?&rdquo; and instead show Contact XYZ@alma.com for Support (No Self registration or password changes available for this app)</span></span></span></p>\n\n<p dir=\"ltr\">&nbsp;</p>\n</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30051786",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<p><span><span style=\"color:rgb(0, 0, 0)\"><strong><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\">SUBMISSION GUIDELINES</span></span></strong></span></span></p>\n\n<ul>\n\t<li><span><span style=\"color:rgb(0, 0, 0)\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\">Swift 2<span style=\"background-color:transparent\"> Xcode 7 project with well commented code</span></span></span></span></span></li>\n\t<li><span><span style=\"color:rgb(0, 0, 0)\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"background-color:transparent\">Target devices: iPhone 6, 6S, 6 Plus and iPhone 5/S</span></span></span></span></span></li>\n\t<li><span><span style=\"color:rgb(0, 0, 0)\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"background-color:transparent\">Code&nbsp;must compile against iOS SDK 9.0 with a minimal deployment target of iOS 8.0</span></span></span></span></span></li>\n\t<li><span><span style=\"color:rgb(0, 0, 0)\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"background-color:transparent\">Upload&nbsp;all source projects as a zip</span></span></span></span></span></li>\n\t<li><span><span style=\"color:rgb(0, 0, 0)\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"background-color:transparent\">Provide a video overview of your submission</span></span></span></span></span></li>\n</ul>\n\n<p><span><span style=\"color:rgb(0, 0, 0)\"><strong><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\">SETUP</span></span></strong></span></span></p>\n\n<ul>\n\t<li><span><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"color:rgb(0, 0, 0)\">Send&nbsp;<span style=\"background-color:transparent\">an email to </span></span><a href=\"mailto:igor@appirio.com?subject=Project%20Almasato&amp;body=Hi!%20%0APlease%20add%20me%20to%20Project%20Almasato.%20My%20GitLab%20handle%20is%3A%20\" style=\"text-decoration: none;\"><span style=\"color:rgb(0, 0, 255)\"><u>takumi3t9</u></span></a><span style=\"color:rgb(0, 0, 0)\"><span style=\"background-color:transparent\"> and request to be added to the GitLabs Project Almasato team if you&rsquo;re not already a member. &nbsp;Once added to the team&nbsp;</span></span><a href=\"https://gitlab.com/Almasato/Bagasse\" style=\"text-decoration: none;\"><span style=\"color:rgb(0, 0, 255)\"><u>fork the repository</u></span></a><span style=\"color:rgb(0, 0, 0)\"><span style=\"background-color:transparent\">&nbsp;and make a merge request targeting&nbsp;</span></span><a href=\"https://gitlab.com/Almasato/Bagasse/tree/Bagasse1\" style=\"text-decoration: none;\"><span style=\"color:rgb(0, 0, 255)\"><u>this branch</u></span></a><span style=\"color:rgb(0, 0, 0)\"><span style=\"background-color:transparent\">&nbsp;once the submission phase has completed.</span></span></span></span></span></li>\n\t<li><span><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"font-size:14px\"><span style=\"color:rgb(0, 0, 0)\"><span style=\"background-color:transparent\">Base&nbsp;URL for API calls is&nbsp;</span></span><a href=\"https://alma-grower.herokuapp.com/aps/1.0\"><u><span style=\"color:rgb(0, 0, 255)\">https://alma-grower.herokuapp.com/aps/1.0/</span></u></a></span></span></span></li>\n</ul>\n</div>\n",
+  "forumId": 30894,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=30894",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 52,
+  "numberOfSubmissions": 20,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-27T16:26:00.000Z",
+      "actualStartTime": "2015-10-27T16:26:00.000Z",
+      "scheduledEndTime": "2015-11-04T04:24:00.000Z",
+      "actualendTime": "2015-11-04T04:24:00.000Z",
+      "_id": "581355a1550dfb3b52c4f614"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-27T16:31:00.000Z",
+      "actualStartTime": "2015-10-27T16:31:00.000Z",
+      "scheduledEndTime": "2015-11-04T04:24:00.000Z",
+      "actualendTime": "2015-11-04T04:24:00.000Z",
+      "_id": "581355a1550dfb3b52c4f613"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-04T04:24:00.000Z",
+      "actualStartTime": "2015-11-04T04:24:00.000Z",
+      "scheduledEndTime": "2015-11-09T14:06:00.000Z",
+      "actualendTime": "2015-11-09T14:06:00.000Z",
+      "_id": "581355a1550dfb3b52c4f612"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-09T14:06:00.000Z",
+      "actualStartTime": "2015-11-09T14:06:00.000Z",
+      "scheduledEndTime": "2015-11-10T14:06:00.000Z",
+      "actualendTime": "2015-11-10T14:06:00.000Z",
+      "_id": "581355a1550dfb3b52c4f611"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-10T14:06:00.000Z",
+      "actualStartTime": "2015-11-10T14:06:00.000Z",
+      "scheduledEndTime": "2015-11-10T15:29:00.000Z",
+      "actualendTime": "2015-11-10T15:29:00.000Z",
+      "_id": "581355a1550dfb3b52c4f610"
+    }
+  ],
+  "platforms": [
+    "Mobile",
+    "iOS"
+  ],
+  "postingDate": "2015-10-27T16:26:00.000Z",
+  "prize": [
+    800,
+    400
+  ],
+  "projectId": 9223,
+  "registrants": [
+    {
+      "handle": "SLX",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T03:31:00.000Z",
+      "submissionDate": "2015-11-04T00:07:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f60f"
+    },
+    {
+      "handle": "rckw",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T02:37:00.000Z",
+      "submissionDate": "2015-11-03T18:02:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f60e"
+    },
+    {
+      "handle": "charlie09",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-27T17:41:00.000Z",
+      "submissionDate": "2015-11-03T23:32:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f60d"
+    },
+    {
+      "handle": "Vit_Delit",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-27T17:54:00.000Z",
+      "submissionDate": "2015-11-04T00:00:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f60c"
+    },
+    {
+      "handle": "pvmagacho",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-27T18:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f60b"
+    },
+    {
+      "handle": "seriyvolk83",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-27T20:24:00.000Z",
+      "submissionDate": "2015-11-04T01:04:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f60a"
+    },
+    {
+      "handle": "dcrobert22",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T00:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f609"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T00:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f608"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T00:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f607"
+    },
+    {
+      "handle": "JinkProject",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T01:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f606"
+    },
+    {
+      "handle": "NancyLiWin",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T01:29:00.000Z",
+      "submissionDate": "2015-11-03T11:24:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f605"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T04:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f604"
+    },
+    {
+      "handle": "lowell",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T04:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f603"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T05:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f602"
+    },
+    {
+      "handle": "phonechen",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T05:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f601"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T06:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f600"
+    },
+    {
+      "handle": "bonton",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T08:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5ff"
+    },
+    {
+      "handle": "mohanwidu",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T10:01:00.000Z",
+      "submissionDate": "2015-11-03T19:04:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5fe"
+    },
+    {
+      "handle": "molmedo",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T10:19:00.000Z",
+      "submissionDate": "2015-11-02T21:52:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5fd"
+    },
+    {
+      "handle": "ylem_cb",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T10:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5fc"
+    },
+    {
+      "handle": "ybkr007",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T11:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5fb"
+    },
+    {
+      "handle": "N1k1tung",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T11:40:00.000Z",
+      "submissionDate": "2015-11-03T22:23:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5fa"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T13:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5f9"
+    },
+    {
+      "handle": "nskostas",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T13:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5f8"
+    },
+    {
+      "handle": "mike.chow",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T15:51:00.000Z",
+      "submissionDate": "2015-11-03T18:01:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5f7"
+    },
+    {
+      "handle": "floriankrueger",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T17:40:00.000Z",
+      "submissionDate": "2015-11-03T21:47:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5f6"
+    },
+    {
+      "handle": "ragingprodigy",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T21:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5f5"
+    },
+    {
+      "handle": "sfaxiano",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-29T01:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5f4"
+    },
+    {
+      "handle": "thomasjpfan",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-29T04:13:00.000Z",
+      "submissionDate": "2015-11-04T04:19:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5f3"
+    },
+    {
+      "handle": "herodolphin",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-29T07:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5f2"
+    },
+    {
+      "handle": "rezaqt",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-29T08:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5f1"
+    },
+    {
+      "handle": "nobleSimplicity",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-29T08:46:00.000Z",
+      "submissionDate": "2015-11-04T04:21:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5f0"
+    },
+    {
+      "handle": "andrestevex",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-29T10:07:00.000Z",
+      "submissionDate": "2015-10-29T13:26:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5ef"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-29T13:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5ee"
+    },
+    {
+      "handle": "michael_tang",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-29T13:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5ed"
+    },
+    {
+      "handle": "_piter",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-29T14:38:00.000Z",
+      "submissionDate": "2015-11-03T23:14:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5ec"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-29T15:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5eb"
+    },
+    {
+      "handle": "zackva",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-30T03:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5ea"
+    },
+    {
+      "handle": "mcekr",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-30T09:02:00.000Z",
+      "submissionDate": "2015-11-03T23:19:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5e9"
+    },
+    {
+      "handle": "hash3r",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-30T12:32:00.000Z",
+      "submissionDate": "2015-11-03T13:51:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5e8"
+    },
+    {
+      "handle": "Ganaa.TSe",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-30T18:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5e7"
+    },
+    {
+      "handle": "Philip.Moniaga",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-31T04:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5e6"
+    },
+    {
+      "handle": "ranjueshwar",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-31T13:24:00.000Z",
+      "submissionDate": "2015-11-04T01:00:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5e5"
+    },
+    {
+      "handle": "phendych",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-01T05:15:00.000Z",
+      "submissionDate": "2015-11-02T10:32:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5e4"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-01T08:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5e3"
+    },
+    {
+      "handle": "deadBee",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-01T13:07:00.000Z",
+      "submissionDate": "2015-11-03T22:58:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5e2"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-01T14:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5e1"
+    },
+    {
+      "handle": "chengweichi",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-01T15:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5e0"
+    },
+    {
+      "handle": "jesuscastaneda",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-02T07:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5df"
+    },
+    {
+      "handle": "bhagvank",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-02T16:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5de"
+    },
+    {
+      "handle": "DHEERAJSONI",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-03T09:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5dd"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-03T16:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355a1550dfb3b52c4f5dc"
+    }
+  ],
+  "registrationEndDate": "2015-11-04T04:24:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-11-04T04:24:00.000Z",
+  "submissions": [
+    {
+      "handle": "rckw",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 96.25,
+      "finalScore": 98.75,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-11-03T18:02:00.000Z",
+      "_id": "581355a1550dfb3b52c4f628"
+    },
+    {
+      "handle": "charlie09",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 96.25,
+      "finalScore": 98.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-03T23:32:00.000Z",
+      "_id": "581355a1550dfb3b52c4f627"
+    },
+    {
+      "handle": "seriyvolk83",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 96.25,
+      "finalScore": 98.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-04T01:04:00.000Z",
+      "_id": "581355a1550dfb3b52c4f626"
+    },
+    {
+      "handle": "N1k1tung",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 93.75,
+      "finalScore": 96.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-03T22:23:00.000Z",
+      "_id": "581355a1550dfb3b52c4f625"
+    },
+    {
+      "handle": "NancyLiWin",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 93.75,
+      "finalScore": 93.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-03T11:24:00.000Z",
+      "_id": "581355a1550dfb3b52c4f624"
+    },
+    {
+      "handle": "ranjueshwar",
+      "placement": 6,
+      "screeningScore": null,
+      "initialScore": 93.75,
+      "finalScore": 93.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-04T01:00:00.000Z",
+      "_id": "581355a1550dfb3b52c4f623"
+    },
+    {
+      "handle": "thomasjpfan",
+      "placement": 7,
+      "screeningScore": null,
+      "initialScore": 91.25,
+      "finalScore": 91.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-04T04:19:00.000Z",
+      "_id": "581355a1550dfb3b52c4f622"
+    },
+    {
+      "handle": "mike.chow",
+      "placement": 8,
+      "screeningScore": null,
+      "initialScore": 86.25,
+      "finalScore": 88.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-03T18:01:00.000Z",
+      "_id": "581355a1550dfb3b52c4f621"
+    },
+    {
+      "handle": "floriankrueger",
+      "placement": 9,
+      "screeningScore": null,
+      "initialScore": 86.25,
+      "finalScore": 88.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-03T21:47:00.000Z",
+      "_id": "581355a1550dfb3b52c4f620"
+    },
+    {
+      "handle": "SLX",
+      "placement": 10,
+      "screeningScore": null,
+      "initialScore": 83.75,
+      "finalScore": 88.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-04T00:07:00.000Z",
+      "_id": "581355a1550dfb3b52c4f61f"
+    },
+    {
+      "handle": "hash3r",
+      "placement": 11,
+      "screeningScore": null,
+      "initialScore": 83.75,
+      "finalScore": 86.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-03T13:51:00.000Z",
+      "_id": "581355a1550dfb3b52c4f61e"
+    },
+    {
+      "handle": "mohanwidu",
+      "placement": 12,
+      "screeningScore": null,
+      "initialScore": 83.75,
+      "finalScore": 86.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-03T19:04:00.000Z",
+      "_id": "581355a1550dfb3b52c4f61d"
+    },
+    {
+      "handle": "deadBee",
+      "placement": 13,
+      "screeningScore": null,
+      "initialScore": 86.25,
+      "finalScore": 86.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-03T22:58:00.000Z",
+      "_id": "581355a1550dfb3b52c4f61c"
+    },
+    {
+      "handle": "_piter",
+      "placement": 14,
+      "screeningScore": null,
+      "initialScore": 86.25,
+      "finalScore": 86.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-03T23:14:00.000Z",
+      "_id": "581355a1550dfb3b52c4f61b"
+    },
+    {
+      "handle": "nobleSimplicity",
+      "placement": 15,
+      "screeningScore": null,
+      "initialScore": 86.25,
+      "finalScore": 86.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-04T04:21:00.000Z",
+      "_id": "581355a1550dfb3b52c4f61a"
+    },
+    {
+      "handle": "andrestevex",
+      "placement": 16,
+      "screeningScore": null,
+      "initialScore": 83.75,
+      "finalScore": 83.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-10-29T13:26:00.000Z",
+      "_id": "581355a1550dfb3b52c4f619"
+    },
+    {
+      "handle": "mcekr",
+      "placement": 17,
+      "screeningScore": null,
+      "initialScore": 83.75,
+      "finalScore": 83.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-03T23:19:00.000Z",
+      "_id": "581355a1550dfb3b52c4f618"
+    },
+    {
+      "handle": "phendych",
+      "placement": 18,
+      "screeningScore": null,
+      "initialScore": 81.25,
+      "finalScore": 81.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-02T10:32:00.000Z",
+      "_id": "581355a1550dfb3b52c4f617"
+    },
+    {
+      "handle": "Vit_Delit",
+      "placement": 19,
+      "screeningScore": null,
+      "initialScore": 81.25,
+      "finalScore": 81.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-11-04T00:00:00.000Z",
+      "_id": "581355a1550dfb3b52c4f616"
+    },
+    {
+      "handle": "molmedo",
+      "placement": 20,
+      "screeningScore": null,
+      "initialScore": 78.75,
+      "finalScore": 78.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-11-02T21:52:00.000Z",
+      "_id": "581355a1550dfb3b52c4f615"
+    }
+  ],
+  "technology": [
+    "REST",
+    "Swift",
+    "iOS"
+  ]
+}

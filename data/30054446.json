@@ -1,0 +1,622 @@
+{
+  "_id": 30054446,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:15:07.999Z",
+  "appealsEndDate": "2016-06-13T02:38:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "96h Web Traffic Filter Challenge",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><strong>Overview</strong></p>\n\n<p><span style=\"font-family:arial; font-size:14.6667px\">Create an application that will process the output from the Web Traffic Scan Challenge and identify REST-based API endpoints. &nbsp;The goal of this application is to separate standard web traffic from REST-based API web traffic, discard the standard traffic, then create a summarized report of the REST-based traffic. &nbsp;This application consumes input in the form of CSV and creates output in plain text. &nbsp;</span></p>\n\n<p><span style=\"font-family:arial; font-size:14.6667px\">The algorithm used to determine REST-based API traffic is to be determined by the challenge submitter. &nbsp;</span></p>\n\n<p><strong>Interface</strong></p>\n\n<p><span style=\"font-family:arial; font-size:14.6667px\">The application should be command line based. &nbsp;It should take a single CSV file as input (generated using the provided solution from the previous challenge) and create a single TXT file as output. &nbsp;The output file should be UTF-8 and use Windows line endings. &nbsp;</span></p>\n\n<p><span style=\"font-family:arial; font-size:14.6667px\">The challenge submitter is responsible for creating their own CSV file for development and testing. &nbsp;This file should have a mix of normal web traffic and REST-based API traffic. &nbsp;</span></p>\n\n<p><span style=\"font-family:arial; font-size:14.6667px\">The CSV file will have a header row and contain the following fields:<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">Client IP<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">Server IP<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">Authorization<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">Request Content-Type<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">Request Content-Length<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">Request Host<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">Request Date<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">User-Agent<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">Content-Encoding<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">Response Content-Type<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">Response Content-Length<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">Response Date<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">Server<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">Status<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">Server Port<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">HTTP Method<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">HTTP Path<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">Request Body (truncated - up to 24 characters)<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">Response Body (truncated - up to 24 characters)<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">Encrypted (true if the TCP connection was encrypted, false if otherwise)<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">Certificate common name (for encrypted connections)<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">Certificate organization (for encrypted connections)</span><br />\n<span style=\"font-size:14.6667px\">- Certificate issuer (for encrypted connections)<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">Certificate Expiration Date (for encrypted connections)</span></p>\n\n<p><span style=\"font-family:arial; font-size:14.6667px\">The TXT output file should have the following format:</span></p>\n\n<p><span style=\"font-family:arial; font-size:14.6667px\">Host (or Server IP address for those any API endpoints for which a Host header was not specified)</span></p>\n\n<p><span style=\"font-family:courier new; font-size:12px\">Host / Server IP 1 (use Server IP if no hostname can be determined)<br />\n&nbsp;&nbsp;&nbsp;</span><span style=\"font-family:courier new; font-size:12px\">Certificate common name (for encrypted connections)<br />\n&nbsp;&nbsp; &nbsp; &nbsp;</span><span style=\"font-family:courier new; font-size:12px\">Certificate organization (for encrypted connections)<br />\n&nbsp;&nbsp; &nbsp; &nbsp;</span><span style=\"font-family:courier new; font-size:12px\">Certificate issuer (for encrypted connections)<br />\n&nbsp;&nbsp; &nbsp; &nbsp;</span><span style=\"font-family:courier new; font-size:12px\">Certificate Expiration Date (for encrypted connections)</span></p>\n\n<p><span style=\"font-family:courier new; font-size:12px\">&nbsp; &nbsp; &nbsp; HTTP Path and Port #1<br />\n&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span><span style=\"font-family:courier new; font-size:12px\">Encrypted (true or false)<br />\n&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span><span style=\"font-family:courier new; font-size:12px\">Response Content-Type (list of MIME types used at this API endpoint)<br />\n&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span><span style=\"font-family:courier new; font-size:12px\">Request Content-Types: (if applicable like in POST and PUTs)<br />\n&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span><span style=\"font-family:courier new; font-size:12px\">HTTP Methods used: (list of HTTP methods used at this API endpoint)<br />\n&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span><span style=\"font-family:courier new; font-size:12px\">Authorization Method: (Basic, Bearer, No Authentication, or Other)</span></p>\n\n<p><span style=\"font-family:courier new; font-size:12px\">&nbsp; &nbsp; &nbsp; HTTP Path and Port #2<br />\n&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span><span style=\"font-family:courier new; font-size:12px\">Encrypted (true or false)<br />\n&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span><span style=\"font-family:courier new; font-size:12px\">Response Content-Type (list of MIME types used at this API endpoint)&nbsp;<br />\n&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span><span style=\"font-family:courier new; font-size:12px\">Request Content-Types: (if applicable like in POST and PUTs)<br />\n&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span><span style=\"font-family:courier new; font-size:12px\">HTTP Methods used: (list of HTTP methods used at this API endpoint)&nbsp;<br />\n&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span><span style=\"font-family:courier new; font-size:12px\">Authorization Method: (Basic, Bearer, No Authentication, or Other)</span></p>\n\n<p><span style=\"font-family:courier new; font-size:12px\">Host / Server IP 2</span><br />\n<span style=\"font-family:courier new; font-size:12px\">&nbsp; &nbsp;&nbsp;</span><span style=\"font-family:courier new; font-size:12px\">...<br />\n<br />\n&nbsp;&nbsp; &nbsp;</span><span style=\"font-family:courier new; font-size:12px\">HTTP Path and Port #1</span><br />\n<span style=\"font-family:courier new; font-size:12px\">&nbsp; &nbsp;&nbsp;</span><span style=\"font-family:courier new; font-size:12px\">&nbsp;&nbsp; &nbsp;</span><span style=\"font-family:courier new; font-size:12px\">...</span></p>\n\n<p><span style=\"font-family:courier new; font-size:12px\">&nbsp; &nbsp; HTTP Path and Port #2</span><br />\n<span style=\"font-family:courier new; font-size:12px\">&nbsp; &nbsp;&nbsp;</span><span style=\"font-family:courier new; font-size:12px\">&nbsp;&nbsp; &nbsp;</span><span style=\"font-family:courier new; font-size:12px\">...</span></p>\n\n<div><span style=\"font-family:courier new; font-size:12px\">Host / Server IP N<br />\n&nbsp;&nbsp; &nbsp;</span><span style=\"font-family:courier new; font-size:12px\">...</span></div>\n\n<p><span style=\"font-family:courier new; font-size:12px\">&nbsp; &nbsp;&nbsp;</span><span style=\"font-family:courier new; font-size:12px\">HTTP Path and Port #1</span><br />\n<span style=\"font-family:courier new; font-size:12px\">&nbsp; &nbsp;&nbsp;</span><span style=\"font-family:courier new; font-size:12px\">&nbsp;&nbsp; &nbsp;</span><span style=\"font-family:courier new; font-size:12px\">...</span></p>\n\n<p><span style=\"font-family:courier new; font-size:12px\">HTTP Path and Port #2</span><br />\n<span style=\"font-family:courier new; font-size:12px\">&nbsp; &nbsp;&nbsp;</span><span style=\"font-family:courier new; font-size:12px\">&nbsp;&nbsp; &nbsp;</span><span style=\"font-family:courier new; font-size:12px\">...</span></p>\n\n<div><strong>Grouping and redundancy. &nbsp;</strong></div>\n\n<p><span style=\"font-family:arial; font-size:14.6667px\">The information in the output file should be grouped by Host / Server IP and certificate information. &nbsp;For example, if there are 100 API endpoints found at google.com, using certificates with the same name, organization, issuer, and expiration date, the application should list only one google.com host. &nbsp;However, if other hostnames are used (like m.google.com) or if additional certificates are found in use by the same host, you should start a new Host / Server IP grouping.</span></p>\n\n<p><span style=\"font-family:arial; font-size:14.6667px\">The application should also remove redundant information from the output. &nbsp;For example, if a given API endpoint is called 100 times, for the same host, with the same certificate information, then it should only be listed in the output one time. &nbsp;</span></p>\n\n<p><strong>System Requirements</strong></p>\n\n<p><span style=\"font-family:arial; font-size:14.6667px\">The application must run on Windows. &nbsp;Mac OS X support is optional.</span></p>\n\n<p><strong>Documentation</strong></p>\n<span style=\"font-family:arial; font-size:14.6667px\">Include a README file with installation and configuration instructions</span>",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30054446",
+  "finalSubmissionGuidelines": "<p><strong>Deliverables<br />\n-&nbsp;</strong><span style=\"font-size:14.6667px\">All source code to implement the requirements.<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">A sample CSV input file. &nbsp;Please ensure no sensitive information is in this file. &nbsp;<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">A sample TXT output file. &nbsp;Please ensure no sensitive information is in this file. &nbsp;<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">README file containing installation and configuration documentation.<br />\n-&nbsp;</span><span style=\"font-size:14.6667px\">Verification document containing steps to verify your solution.</span></p>\n",
+  "forumId": 33278,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33278",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 49,
+  "numberOfSubmissions": 8,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-03T13:01:00.000Z",
+      "actualStartTime": "2016-06-03T13:01:00.000Z",
+      "scheduledEndTime": "2016-06-08T13:01:00.000Z",
+      "actualendTime": "2016-06-08T13:01:00.000Z",
+      "_id": "5813414c550dfb3b52bea257"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-03T13:07:00.000Z",
+      "actualStartTime": "2016-06-03T13:07:00.000Z",
+      "scheduledEndTime": "2016-06-08T13:03:00.000Z",
+      "actualendTime": "2016-06-08T13:03:00.000Z",
+      "_id": "5813414c550dfb3b52bea256"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-08T13:03:00.000Z",
+      "actualStartTime": "2016-06-08T13:03:00.000Z",
+      "scheduledEndTime": "2016-06-11T17:56:00.000Z",
+      "actualendTime": "2016-06-11T17:56:00.000Z",
+      "_id": "5813414c550dfb3b52bea255"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-11T17:56:00.000Z",
+      "actualStartTime": "2016-06-11T17:56:00.000Z",
+      "scheduledEndTime": "2016-06-12T17:56:00.000Z",
+      "actualendTime": "2016-06-12T17:56:00.000Z",
+      "_id": "5813414c550dfb3b52bea254"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-12T17:56:00.000Z",
+      "actualStartTime": "2016-06-12T17:56:00.000Z",
+      "scheduledEndTime": "2016-06-13T02:38:00.000Z",
+      "actualendTime": "2016-06-13T02:38:00.000Z",
+      "_id": "5813414c550dfb3b52bea253"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-06-03T13:01:00.000Z",
+  "prize": [
+    1000,
+    500
+  ],
+  "projectId": 9626,
+  "registrants": [
+    {
+      "handle": "ahams2k",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-04T03:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea252"
+    },
+    {
+      "handle": "utkarshkukreti",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T13:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea251"
+    },
+    {
+      "handle": "chicapi",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T13:15:00.000Z",
+      "submissionDate": "2016-06-08T12:59:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea250"
+    },
+    {
+      "handle": "Ksys",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T14:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea24f"
+    },
+    {
+      "handle": "tinermk",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T14:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea24e"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T14:13:00.000Z",
+      "submissionDate": "2016-06-08T12:59:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea24d"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T15:01:00.000Z",
+      "submissionDate": "2016-06-07T11:53:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea24c"
+    },
+    {
+      "handle": "jackchongs",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T15:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea24b"
+    },
+    {
+      "handle": "bandishankar",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T16:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea24a"
+    },
+    {
+      "handle": "hc668",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T16:21:00.000Z",
+      "submissionDate": "2016-06-08T05:24:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea249"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T18:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea248"
+    },
+    {
+      "handle": "ecavalier313",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T19:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea247"
+    },
+    {
+      "handle": "thkang91",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T19:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea246"
+    },
+    {
+      "handle": "gvir",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T19:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea245"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T23:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea244"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-04T01:28:00.000Z",
+      "submissionDate": "2016-06-08T03:24:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea243"
+    },
+    {
+      "handle": "zaixiang",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-04T01:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea242"
+    },
+    {
+      "handle": "smatsumoto",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-04T01:55:00.000Z",
+      "submissionDate": "2016-06-07T12:37:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea241"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-04T03:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea240"
+    },
+    {
+      "handle": "dushcoder",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-04T05:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea23f"
+    },
+    {
+      "handle": "k64_cc",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-04T08:15:00.000Z",
+      "submissionDate": "2016-06-08T10:22:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea23e"
+    },
+    {
+      "handle": "orirmi",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-04T13:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea23d"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-04T15:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea23c"
+    },
+    {
+      "handle": "ptarunn",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-04T16:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea23b"
+    },
+    {
+      "handle": "rixiac",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-04T17:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea23a"
+    },
+    {
+      "handle": "Urmass",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-04T21:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea239"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-05T00:47:00.000Z",
+      "submissionDate": "2016-06-08T10:00:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea238"
+    },
+    {
+      "handle": "asteroidiv",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-05T04:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea237"
+    },
+    {
+      "handle": "twds",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-05T04:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea236"
+    },
+    {
+      "handle": "XinScirpt",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-05T08:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea235"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-05T10:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea234"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-05T10:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea233"
+    },
+    {
+      "handle": "siddnitr1",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-05T12:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea232"
+    },
+    {
+      "handle": "khareldilip",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-05T18:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea231"
+    },
+    {
+      "handle": "yun.516",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-06T04:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea230"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-06T07:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea22f"
+    },
+    {
+      "handle": "leapltw",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-06T08:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea22e"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-06T08:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea22d"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-06T10:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea22c"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-06T13:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea22b"
+    },
+    {
+      "handle": "jorje.b",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-06T14:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea22a"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-06T14:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea229"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-06T17:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea228"
+    },
+    {
+      "handle": "poletaev",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-06T19:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea227"
+    },
+    {
+      "handle": "solokop",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-07T12:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea226"
+    },
+    {
+      "handle": "addleak",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-07T15:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea225"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-07T22:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea224"
+    },
+    {
+      "handle": "srtr",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-08T03:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea223"
+    },
+    {
+      "handle": "AtiaMars",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-08T09:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414c550dfb3b52bea222"
+    }
+  ],
+  "registrationEndDate": "2016-06-08T13:01:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-06-08T13:03:00.000Z",
+  "submissions": [
+    {
+      "handle": "Standlove",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 98.75,
+      "finalScore": 98.75,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-06-08T03:24:00.000Z",
+      "_id": "5813414c550dfb3b52bea25f"
+    },
+    {
+      "handle": "chicapi",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 93.13,
+      "finalScore": 98.13,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-06-08T12:59:00.000Z",
+      "_id": "5813414c550dfb3b52bea25e"
+    },
+    {
+      "handle": "fivestarwy",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 93.75,
+      "finalScore": 93.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-06-07T11:53:00.000Z",
+      "_id": "5813414c550dfb3b52bea25d"
+    },
+    {
+      "handle": "cam.ashwini",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 85.63,
+      "finalScore": 91.88,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-06-08T12:59:00.000Z",
+      "_id": "5813414c550dfb3b52bea25c"
+    },
+    {
+      "handle": "smatsumoto",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 90,
+      "finalScore": 90,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-06-07T12:37:00.000Z",
+      "_id": "5813414c550dfb3b52bea25b"
+    },
+    {
+      "handle": "stevenfrog",
+      "placement": 6,
+      "screeningScore": null,
+      "initialScore": 81.25,
+      "finalScore": 82.5,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-06-08T10:00:00.000Z",
+      "_id": "5813414c550dfb3b52bea25a"
+    },
+    {
+      "handle": "k64_cc",
+      "placement": 7,
+      "screeningScore": null,
+      "initialScore": 81.25,
+      "finalScore": 81.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-06-08T10:22:00.000Z",
+      "_id": "5813414c550dfb3b52bea259"
+    },
+    {
+      "handle": "hc668",
+      "placement": 8,
+      "screeningScore": null,
+      "initialScore": 70,
+      "finalScore": 70,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-06-08T05:24:00.000Z",
+      "_id": "5813414c550dfb3b52bea258"
+    }
+  ],
+  "technology": [
+    "Python"
+  ]
+}

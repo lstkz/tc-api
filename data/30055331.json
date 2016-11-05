@@ -1,0 +1,601 @@
+{
+  "_id": 30055331,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T09:53:25.155Z",
+  "appealsEndDate": "2016-10-01T20:09:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "GE Brilliant Career - Implement Activities of type Multi Options",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p>Welcome to GE Brilliant Career - Implement Activities of type Multi Options Contest. As part of this contest, you will implement the activities in our website.</p>\n&nbsp;\n\n<p><span style=\"color:#FF0000\">There will be 6+ contests in this project in the next 10 days. The only difference will be the activity types to work with. We have already launched three. Get on board before it&rsquo;s too late!</span></p>\n&nbsp;\n\n<p><strong>Project Overview</strong></p>\n\n<p>GE Brilliant Career Labs wants to build a website to help students navigate their way into a STEM career using multiple resources aggregated into one simple, information site. The first phase will build out the initial website, allowing students to register, gather information and fill out modules to help them develop their soft skills.</p>\n&nbsp;\n\n<p><strong>Project Details</strong></p>\n\n<p>We have 11 types / categories of activities in our app - short interactive pages that contain questions for the end user to answer. We, until now, built the prototype for these activities. However, we now need to actually implement these activities. With 11 types of activities, we have lots of questions to ask the end user.</p>\n&nbsp;\n\n<p>As part of this contest, you will be implementing the activities of the following type:</p>\n\n<p>- Multi Options (represented in the data as multi_option)</p>\n&nbsp;\n\n<p>We have lots of activities under this activity type. To be precise, we have the following (each activity falls under a module):</p>\n&nbsp;\n\n<p>Module 3 Activity 7</p>\n\n<p>Module 5 Activity 4</p>\n\n<p>Module 6 Activity 2</p>\n\n<p>Module 6 Activity 3</p>\n\n<p>Module 7 Activity 1</p>\n\n<p>Module 9 Activity 1</p>\n\n<p>Module 9 Activity 6</p>\n\n<p>Module 10 Activity 4</p>\n&nbsp;\n\n<p>You need to implement each activity in the app provided. Use the API service that we have created in the app for you to fetch the activity details and use the details to render the activity.</p>\n&nbsp;\n\n<p>Refer to the following pages in the UI prototype:</p>\n&nbsp;\n\n<p>Info: Essential_Skills_Activity_9_1.html</p>\n\n<p>Activity: Module3_Activity7.html</p>\n\n<p>Post Answer: Module3_Activity1.html</p>\n&nbsp;\n\n<p>Note that, for multi options, there is no dedicated info and post answer pages. You will be reusing the pages of other activity types. The info pages are the same for all activities (the content is different). For Post Answer page, in this case, we have reused the one from true_false activity type.</p>\n&nbsp;\n\n<p><span style=\"color:#FF0000\">The pages mentioned above are just prototype. You will make it fully functional using the activity details for the above mentioned activities. Each activity will have its own set of data which you need to read from the activity details.</span></p>\n&nbsp;\n\n<p>For this activity, kindly note the following:</p>\n\n<p>- Some questions may have correct answers, some may have more than one correct answers and some may not have any correct answer. In case of the latter, there is no right or wrong answer. The question is just taking user input.</p>\n\n<p>- Different questions have different ways of calculating the total points</p>\n\n<p>pointPerCorrectAnswer: Each question has a correct answer. Points are assigned only if the answer is correct. Determine the total points by multiplying the number of correct answers with the potentialPoints in the activity details returned by the API.</p>\n\n<p>- pointTotal: There are no right or wrong answers. Answer all questions to earn points. Total points earned is equal to potentialPoints in the activity details.</p>\n\n<p>- pointPerAnswer: Each question has the same set of answers. The point earned per question depends on the answer selected. Check the pointSystem to know which answer option is worth how many points. The total points earned is the sum of the points of individual answers.</p>\n\n<p>- All questions must be answered before the user can submit. DIsable the submit button until all questions have been answered.</p>\n\n<p>- Some questions allow only one answer to be selected. Some allow more than one. You can determine if the options are single select or multi select through the isMultiple attribute. False means only one answer can be selected at a time. True means more than one answer can be selected.</p>\n&nbsp;\n\n<p>Points to Note</p>\n\n<p>- Do not give much important to the module. It exists to identify which module the activity falls under. It is only needed to get the activity from the API</p>\n\n<p>- Do not depend on the activity id attribute in the activity details. It&rsquo;s just randomly assigned for now. The moduleId and the order attributes are important fields to identify the activity. &ldquo;order&rdquo; field is basically the activity number under that module</p>\n\n<p>- DO NOT create three separate routes or pages for the activity. There will be three screens per activity and you need to show / hide each screen using jQuery only.</p>\n\n<p>- Although the activity detail shows a time limit, in reality there is none. The timer at the top starts when the user starts an activity (when they click on Play in the Info screen) and stops when the submit their answers.</p>\n\n<p>- When the user starts an activity (that is, when the user clicks on Play button in the Info screen), mock an API call to the backend - something like POST /essential-skills/module/:moduleId/activity/:activityId/startActivity. There is no request body. The response will be 200 OK. On receiving this response, start the activity and show the Activity page for that activity type.</p>\n\n<p>- Submit button in the activity is only active when all the answers have been provided. See the points mentioned above to know when the activity is &ldquo;completed&rdquo;.</p>\n\n<p>- When the user submits an activity, stop the timer. Then make the HTTP request and pass the answer to the Web Server. Store the response in a variable / mock it in the Web Server. Ensure that this happens inside a service, as we will replace the code inside the service with an actual API call.</p>\n\n<p><span style=\"color:#FF0000\">- If the user has already completed an activity, then when the user tries to re-visit that activity, they should directly see the Post Answer screen with the earlier entered answers. To achieve this, when the activity URL is entered, before getting the activity details, check if the user has already completed the activity earlier through your mock API call. If yes, then display the results from the earlier activity. The user can still reset the activity from the Post answer screen page to run the activity once more.</span></p>\n\n<p>- Make sure to isolate your code as much as possible. We will be running contests simultaneously and thus, please do not make code changes where it is not necessary.</p>\n\n<p>- Organize the views well. Better to organize them under the src/views/activities folder inside another folder named after the activity type. You need to create the activities folder.</p>\n\n<p>- Organize the scripts well. Each activity type will have its own script so make sure that it can be easily located and maintained.</p>\n\n<p>- The current app will undergo many changes. We believe that it could do with some improvements. As much as possible, we will isolate the changes so that you can continue to work on the items in scope for this contest. The winner will be asked to help us merge their code.</p>\n\n<p>- We wish to again emphasize that this will not be a Single Page Application. You don&rsquo;t have to use Angularjs.</p>\n\n<p>- Use <a href=\"http://eslint.org/\">Eslint</a> for the backend and follow <a href=\"https://github.com/airbnb/javascript\">AirBnb&rsquo;s Javascript styleguide</a> by extending the linter configuration. Make sure that there are no errors. The eslint has already been set up for you. Simply run npm run lint to check for errors.</p>\n\n<p>- Use <a href=\"http://ejs.co/\">ejs</a> as your server side templating engine and render the HTML pages.</p>\n\n<div>&nbsp;</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30055331",
+  "finalSubmissionGuidelines": "Only submit the files that have changed. You can submit git patch too. If submitting files that have changed, ensure that you maintain the folder structure (provide the folder under which the files will exist and maintain the file and folder hierarchy).",
+  "forumId": 34109,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=34109",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 44,
+  "numberOfSubmissions": 10,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-24T11:00:00.000Z",
+      "actualStartTime": "2016-09-24T11:00:00.000Z",
+      "scheduledEndTime": "2016-09-27T11:00:00.000Z",
+      "actualendTime": "2016-09-27T11:00:00.000Z",
+      "_id": "58132015550dfb3b52b271a0"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-24T11:05:00.000Z",
+      "actualStartTime": "2016-09-24T11:05:00.000Z",
+      "scheduledEndTime": "2016-09-27T11:00:00.000Z",
+      "actualendTime": "2016-09-27T11:00:00.000Z",
+      "_id": "58132015550dfb3b52b2719f"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-27T11:00:00.000Z",
+      "actualStartTime": "2016-09-27T11:00:00.000Z",
+      "scheduledEndTime": "2016-09-30T13:42:00.000Z",
+      "actualendTime": "2016-09-30T13:42:00.000Z",
+      "_id": "58132015550dfb3b52b2719e"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-30T13:42:00.000Z",
+      "actualStartTime": "2016-09-30T13:42:00.000Z",
+      "scheduledEndTime": "2016-10-01T13:42:00.000Z",
+      "actualendTime": "2016-10-01T13:42:00.000Z",
+      "_id": "58132015550dfb3b52b2719d"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-10-01T13:42:00.000Z",
+      "actualStartTime": "2016-10-01T13:42:00.000Z",
+      "scheduledEndTime": "2016-10-01T20:09:00.000Z",
+      "actualendTime": "2016-10-01T20:09:00.000Z",
+      "_id": "58132015550dfb3b52b2719c"
+    }
+  ],
+  "platforms": [
+    "HTML"
+  ],
+  "postingDate": "2016-09-24T11:00:00.000Z",
+  "prize": [
+    1000,
+    500
+  ],
+  "projectId": 10343,
+  "registrants": [
+    {
+      "handle": "avbngera",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T15:00:00.000Z",
+      "submissionDate": "2016-09-27T10:46:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b2719b"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-25T09:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b2719a"
+    },
+    {
+      "handle": "birdofpreyru",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T12:08:00.000Z",
+      "submissionDate": "2016-09-25T21:35:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27199"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T11:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27198"
+    },
+    {
+      "handle": "thomaskranitsas",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T11:31:00.000Z",
+      "submissionDate": "2016-09-27T10:09:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27197"
+    },
+    {
+      "handle": "Arif.Nyet",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T11:39:00.000Z",
+      "submissionDate": "2016-09-26T22:46:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27196"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T11:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27195"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T11:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27194"
+    },
+    {
+      "handle": "vengeance_mj",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T12:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27193"
+    },
+    {
+      "handle": "yassine123",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T12:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27192"
+    },
+    {
+      "handle": "e06widu",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T14:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27191"
+    },
+    {
+      "handle": "hirosima",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T14:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27190"
+    },
+    {
+      "handle": "ouyangki",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T14:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b2718f"
+    },
+    {
+      "handle": "Muneem",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T15:53:00.000Z",
+      "submissionDate": "2016-09-27T06:21:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b2718e"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T15:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b2718d"
+    },
+    {
+      "handle": "wudi123",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T16:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b2718c"
+    },
+    {
+      "handle": "ian-sadovy",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T16:35:00.000Z",
+      "submissionDate": "2016-09-27T00:43:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b2718b"
+    },
+    {
+      "handle": "Colossalfy",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T18:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b2718a"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T19:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27189"
+    },
+    {
+      "handle": "XinScirpt",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T20:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27188"
+    },
+    {
+      "handle": "Colinh84",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T22:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27187"
+    },
+    {
+      "handle": "Savvas_cl",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T23:13:00.000Z",
+      "submissionDate": "2016-09-27T10:59:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27186"
+    },
+    {
+      "handle": "smatsumoto",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-24T23:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27185"
+    },
+    {
+      "handle": "code_now",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-25T00:21:00.000Z",
+      "submissionDate": "2016-09-27T06:21:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27184"
+    },
+    {
+      "handle": "billsedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-25T00:32:00.000Z",
+      "submissionDate": "2016-09-27T07:02:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27183"
+    },
+    {
+      "handle": "ngoctay",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-25T00:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27182"
+    },
+    {
+      "handle": "fish00",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-25T00:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27181"
+    },
+    {
+      "handle": "sgodwin424",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-25T01:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27180"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-25T01:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b2717f"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-25T01:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b2717e"
+    },
+    {
+      "handle": "pankyog",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-25T03:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b2717d"
+    },
+    {
+      "handle": "k16101997",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-25T04:12:00.000Z",
+      "submissionDate": "2016-09-26T11:17:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b2717c"
+    },
+    {
+      "handle": "r.nivedha1",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-25T05:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b2717b"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-25T05:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b2717a"
+    },
+    {
+      "handle": "rtty",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-25T07:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27179"
+    },
+    {
+      "handle": "persistnow",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-25T08:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27178"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-25T09:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27177"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-25T12:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27176"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-25T14:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27175"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-25T17:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27174"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-26T03:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27173"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-26T13:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27172"
+    },
+    {
+      "handle": "chrislee8",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-26T18:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27171"
+    },
+    {
+      "handle": "Manoj85",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-26T20:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132015550dfb3b52b27170"
+    }
+  ],
+  "registrationEndDate": "2016-09-27T11:00:00.000Z",
+  "reviewScorecardId": 30001971,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-09-27T11:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "billsedison",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 95.44,
+      "finalScore": 95.44,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-09-27T07:02:00.000Z",
+      "_id": "58132015550dfb3b52b271aa"
+    },
+    {
+      "handle": "ian-sadovy",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 93.94,
+      "finalScore": 93.94,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-09-27T00:43:00.000Z",
+      "_id": "58132015550dfb3b52b271a9"
+    },
+    {
+      "handle": "birdofpreyru",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 93.89,
+      "finalScore": 93.89,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-09-25T21:35:00.000Z",
+      "_id": "58132015550dfb3b52b271a8"
+    },
+    {
+      "handle": "avbngera",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 93.08,
+      "finalScore": 93.08,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-09-27T10:46:00.000Z",
+      "_id": "58132015550dfb3b52b271a7"
+    },
+    {
+      "handle": "thomaskranitsas",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 90.89,
+      "finalScore": 90.89,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-09-27T10:09:00.000Z",
+      "_id": "58132015550dfb3b52b271a6"
+    },
+    {
+      "handle": "Arif.Nyet",
+      "placement": 6,
+      "screeningScore": null,
+      "initialScore": 86.11,
+      "finalScore": 86.11,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-09-26T22:46:00.000Z",
+      "_id": "58132015550dfb3b52b271a5"
+    },
+    {
+      "handle": "Muneem",
+      "placement": 7,
+      "screeningScore": null,
+      "initialScore": 79.42,
+      "finalScore": 79.42,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-09-27T06:21:00.000Z",
+      "_id": "58132015550dfb3b52b271a4"
+    },
+    {
+      "handle": "Savvas_cl",
+      "placement": 8,
+      "screeningScore": null,
+      "initialScore": 36.92,
+      "finalScore": 70.14,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-09-27T10:59:00.000Z",
+      "_id": "58132015550dfb3b52b271a3"
+    },
+    {
+      "handle": "k16101997",
+      "placement": 9,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-09-26T11:17:00.000Z",
+      "_id": "58132015550dfb3b52b271a2"
+    },
+    {
+      "handle": "code_now",
+      "placement": 10,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-09-27T06:21:00.000Z",
+      "_id": "58132015550dfb3b52b271a1"
+    }
+  ],
+  "technology": [
+    "HTML5",
+    "Node.js",
+    "jQuery"
+  ]
+}

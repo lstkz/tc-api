@@ -1,0 +1,339 @@
+{
+  "_id": 30046949,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:14:45.319Z",
+  "appealsEndDate": "2014-11-26T05:06:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "New topcoder Community Site - Account Profile Builder",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><span>We need to recreate the account profile pages from </span><a href=\"https://coderbits.com\" style=\"line-height: 1.6;\">coderbits</a><span> on the topcoder member profile. This will be a simplified version of the page that is here:</span></p>\n\n<p><a href=\"https://coderbits.com/account/profile\" target=\"_blank\">https://coderbits.com/account/profile</a><br />\nThis will be <span style=\"background-color:#FFFF00\">a single page</span> angular app for /account on topcoder using pushstate for all paths, with the base path of <a href=\"http://www.topcoder.com/account\" target=\"_blank\">http://www.topcoder.com/account</a>.<br />\nThese page also should be completely in angular, written compliant to topcoder style (both code style as well as the style of the page, fonts, etc), with no reliance on the existing php other than <span>to include a wordpress template file with calls to get header and footer. Please be sure you examine the header and footer to avoid conflicting with the parent angular environment.</span><br />\nScreenshots, javascript and html file of current coderbits profile builder is attached in forum.</p>\n\n<p>The data on these pages will use the coderbits API, which has been updated to accept cross domain requests from *.topcoder.com. All of the endpoints used will require the tcjwt token to be included using Authorization: Bearer just like existing API calls.</p>\n\n<p><span>The submissions should include a configuration value in config.json that defines a coderbits instance to use (cbURL), similar to apiURL, lcURL, etc. The test server for this challenge is setup here:&nbsp;</span></p>\n\n<p>https://ec2-54-164-107-36.compute-1.amazonaws.com</p>\n\n<p>Be aware the cert is not valid and needs to be accepted in another tab in your browser before you can use it. This will not affect production since it will be set to https://coderbits.com in production, where the cert is valid.</p>\n\n<p>The following endpoints are available for use on coderbits: (Content-Type: application/json and vallid tcjwt is required!!!)</p>\n\n<p><span>/api/accounts (</span>https://ec2-54-164-107-36.compute-1.amazonaws.com/api/accounts?page_size=100)</p>\n\n<ul>\n\t<li><span>GET request will provide a list of all accounts that coderbits supports linking for (data for Profile Builder below). Optional query string parameters are id (to get a single account by its id), page, and page_size (to support paging). For this implementation, you may set page_size to 100 for the request to get all accounts.</span></li>\n</ul>\n\n<p>/api/externalaccount (https://ec2-54-164-107-36.compute-1.amazonaws.com/api/externalaccount?accountId=12&amp;username=thabo)</p>\n\n<ul>\n\t<li>GET request will indicate whether the characters the user has typed can be linked on that external account (checks to see if a link can be made). Requires two query string parameters, accountId and username, where accountId is the external account&#39;s id from /api/accounts, and the username is the username on that external service that the person is trying to link. A 404 means the account cannot be linked and a 204 means the link can be allowed.</li>\n</ul>\n\n<p><span>/api/integrations (</span>https://ec2-54-164-107-36.compute-1.amazonaws.com/api/integrations)</p>\n\n<ul>\n\t<li>GET request provides the total list of all sites that the user (defined by the included tcjwt) has integrated. For testing purposes, you can link (non oauth) users from each account on the existing profile builder to fill this out. Feel free to use any of the accounts linked here to test: https://coderbits.com/thabo</li>\n\t<li>GET with single id (/api/integrations/71) will provide the details for a single integration. This will help for oauth accounts when you are redirected back to the page and jsut need to check the integration status of a single external account.</li>\n\t<li>PUT with an id&nbsp;<span>(/api/integrations/71) and a username in the body will integrate the account. Remember the content type is json, so the data payload is a plain json string, so quotes are required, i.e. &#39;thabo&#39; or &quot;thabo&quot;</span></li>\n\t<li>DELETE with and id will remove the integration and delete the associated data (Unlink from the UI).</li>\n</ul>\n\n<p><span>/api/skillsknown (</span>https://ec2-54-164-107-36.compute-1.amazonaws.com/api/skillsknown)</p>\n\n<ul>\n\t<li>GET request provides all the skills known for the user based on their current integrations, as well as whether or not those skills have been hidden (data for Skill Hider below)</li>\n\t<li>DELETE with and id will set hidden to true, and recalculate what to show/hide on the profile as a result</li>\n\t<li>PUT with an id will unset hidden on a hidden skill. This can only be done for hidden skills, you cannot put a new skill this way.</li>\n</ul>\n\n<p><br />\n<br />\n<strong>Profile Builder Page</strong><br />\nOn this new page, topcoder member will be able to build profile page from external accounts (github, Bitbucket, etc).</p>\n\n<ol>\n\t<li>URL should be <a href=\"http://www.topcoder.com/account/integrations\" target=\"_blank\">http://www.topcoder.com/account/integrations</a></li>\n\t<li>Layout will be similar to <a href=\"https://coderbits.com/account/profile\">https://coderbits.com/account/profile</a>, but without sidebar. Header and footer follow the main www.topcoder.com site. Javascript and HTML of <a href=\"https://coderbits.com/account/profile\">https://coderbits.com/account/profile</a> is attached</li>\n\t<li>Please add &quot;Skills Found&quot; hyperlink to top of builder form. currently it is as &quot;Skill Identified&quot; on sidebar</li>\n\t<li>Tooltips next to account title should work as well as on coderbits page</li>\n\t<li>Remove topcoder integration form (first item), since this page will be integrated to topcoder wordpress theme</li>\n\t<li>Auto search should work as existing, please try to type &quot;jeresig&quot; into slideshare and ohloh or other non oauth calls, as they dont require oauth on a test account. If profile found, then &quot;Not Found&quot; Button will replaced with &quot;Link&quot; button. Please pay attention on button color change. This will be supported by the&nbsp;<span>/api/externalaccount call.</span></li>\n\t<li>For all non oauth calls and all other ajax calls, the angular services should use the coderbits API to link and unlink accounts on the page. This will be supported by the&nbsp;<span>/api/integrations call.</span></li>\n\t<li>For all oauth links, the challenge can allow the link to go to redirect coderbits to complete the oauth process and assume the oauth service on coderbits will redirect back to topcoder.com/account/profile?cb=servicename where servicename is the callback name in the #url the existing callbacks go to after the authorization is complete. For instance for geeklist, when the authorize button is hit, you can redirect the page to&nbsp;<span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:rgb(48, 57, 66)\">https://ec2-54-164-107-36.compute-1.amazonaws.com/auth?provider=Geeklist to complete the process</span></span></span><br />\n\tThe coderbits engine will still do the oauth process with the server and complete the integration, the page should recheck the status given by cb= and update accordingly by rechecking&nbsp;<span>/api/integrations/id</span></li>\n\t<li>Interim steps in the oauth process are required to select scope for bitbucket and github (https://ec2-54-164-107-36.compute-1.amazonaws.com/auth/githubpermission). This selection should be implemented as a showModal on the topcoder side before redirecting on to coderbits to complete the integration.</li>\n</ol>\n\n<p><br />\n<strong>Skill Hider Page</strong><br />\nThis page will be available (displayed by AJAX) by clicking &quot;Skills Found&quot; on profile builder page described above.</p>\n\n<ol>\n\t<li>URL should be : <a href=\"http://www.topcoder.com/account/integrations/hide\" target=\"_blank\">http://www.topcoder.com/account/integrations/hide</a></li>\n\t<li>Please add External Account link to get user back to profile builder</li>\n\t<li>All data on the page should be supported by the /api/skillsknown api call.</li>\n\t<li>Checking or unchecking &quot;Hide&quot; checkbox will update the status of skills know by calling DELETE or PUT on the&nbsp;<span>/api/skillsknown</span></li>\n\t<li>icon of integrated account should be displayed on &quot;accounts&quot; column. Accounts list is taken from https://coderbits.com/thabo.json fileld &quot;<span style=\"font-family:courier new,courier,monospace\">account</span>&quot;, where thabo is as example. Picture links are included and should be served from the configured cbURL.</li>\n</ol>\n\n<p><span><span><strong><span style=\"color:#008000\">Browsers Requirements : </span></strong><br />\n<span>- IE10<br />\n- IE11<br />\n- Latest Safari<br />\n- Latest Firefox<br />\n- Latest Chrome</span></span></span></p>\n\n<p><span><span style=\"color:#008000\"><strong>Deployment Guide</strong> :</span></span></p>\n\n<p><span><span>Local Setup : <a href=\"https://gitlab.com/topcoderinc/tc-site/blob/master/README.md#local-env-setup\">https://gitlab.com/topcoderinc/tc-site/blob/master/README.md#local-env-setup</a>, if want to disable local minification, please configure it on <a href=\"https://gitlab.com/topcoderinc/tc-site/blob/master/config.json#L9-10\">config.json</a></span></span></p>\n",
+  "digitalRunPoints": 540,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30046949",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2014-11-30T12:19:00.000Z",
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<ol>\n\t<li><span>Please submit only PATCH files, reference :<a href=\"https://gitlab.com/topcoderinc/tc-site#challenge-submission-and-review\">https://gitlab.com/topcoderinc/tc-site#challenge-submission-and-review</a></span></li>\n\t<li><span>Please also submit Deployment Guide file</span></li>\n\t<li>If additional / updates page on wp-admin is required, please provide them in TEXT file and explain it in your Deployment Guide</li>\n\t<li><span>Any new js or css file must be included in the registry. learn about this on </span><span style=\"background-color:#FFFF00\">script-register.json</span><span> file, and be sure it will be processed the Gruntfile.js as part of the build process. All tests must pass after the included files are minified.</span></li>\n\t<li><span>We will have winner to submit pull request once winner declared</span></li>\n</ol>\n</div>\n",
+  "forumId": 26481,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=26481",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 15,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-16T01:57:00.000Z",
+      "actualStartTime": "2014-11-16T01:57:00.000Z",
+      "scheduledEndTime": "2014-11-16T01:57:00.000Z",
+      "actualendTime": "2014-11-16T01:57:00.000Z",
+      "_id": "58134f45550dfb3b52c2dcee"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-16T01:57:00.000Z",
+      "actualStartTime": "2014-11-16T01:57:00.000Z",
+      "scheduledEndTime": "2014-11-16T09:46:00.000Z",
+      "actualendTime": "2014-11-16T09:46:00.000Z",
+      "_id": "58134f45550dfb3b52c2dced"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-16T09:46:00.000Z",
+      "actualStartTime": "2014-11-16T09:46:00.000Z",
+      "scheduledEndTime": "2014-11-18T09:46:00.000Z",
+      "actualendTime": "2014-11-18T09:46:00.000Z",
+      "_id": "58134f45550dfb3b52c2dcec"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-16T09:51:00.000Z",
+      "actualStartTime": "2014-11-16T09:51:00.000Z",
+      "scheduledEndTime": "2014-11-22T09:45:00.000Z",
+      "actualendTime": "2014-11-22T09:45:00.000Z",
+      "_id": "58134f45550dfb3b52c2dceb"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-22T09:45:00.000Z",
+      "actualStartTime": "2014-11-22T09:45:00.000Z",
+      "scheduledEndTime": "2014-11-22T19:33:00.000Z",
+      "actualendTime": "2014-11-22T19:33:00.000Z",
+      "_id": "58134f45550dfb3b52c2dcea"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-22T19:33:00.000Z",
+      "actualStartTime": "2014-11-22T19:33:00.000Z",
+      "scheduledEndTime": "2014-11-24T19:10:00.000Z",
+      "actualendTime": "2014-11-24T19:10:00.000Z",
+      "_id": "58134f45550dfb3b52c2dce9"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-24T19:10:00.000Z",
+      "actualStartTime": "2014-11-24T19:10:00.000Z",
+      "scheduledEndTime": "2014-11-25T19:10:00.000Z",
+      "actualendTime": "2014-11-25T19:10:00.000Z",
+      "_id": "58134f45550dfb3b52c2dce8"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-25T19:10:00.000Z",
+      "actualStartTime": "2014-11-25T19:10:00.000Z",
+      "scheduledEndTime": "2014-11-26T05:06:00.000Z",
+      "actualendTime": "2014-11-26T05:06:00.000Z",
+      "_id": "58134f45550dfb3b52c2dce7"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-26T05:07:00.000Z",
+      "actualStartTime": "2014-11-26T05:07:00.000Z",
+      "scheduledEndTime": "2014-11-26T11:54:00.000Z",
+      "actualendTime": "2014-11-26T11:54:00.000Z",
+      "_id": "58134f45550dfb3b52c2dce6"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-26T11:54:00.000Z",
+      "actualStartTime": "2014-11-26T11:54:00.000Z",
+      "scheduledEndTime": "2014-11-27T09:18:00.000Z",
+      "actualendTime": "2014-11-27T09:18:00.000Z",
+      "_id": "58134f45550dfb3b52c2dce5"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-27T09:18:00.000Z",
+      "actualStartTime": "2014-11-27T09:18:00.000Z",
+      "scheduledEndTime": "2014-11-27T18:54:00.000Z",
+      "actualendTime": "2014-11-27T18:54:00.000Z",
+      "_id": "58134f45550dfb3b52c2dce4"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-27T18:54:00.000Z",
+      "actualStartTime": "2014-11-27T18:54:00.000Z",
+      "scheduledEndTime": "2014-11-29T15:19:00.000Z",
+      "actualendTime": "2014-11-29T15:19:00.000Z",
+      "_id": "58134f45550dfb3b52c2dce3"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-29T15:20:00.000Z",
+      "actualStartTime": "2014-11-29T15:20:00.000Z",
+      "scheduledEndTime": "2014-11-30T12:19:00.000Z",
+      "actualendTime": "2014-11-30T12:19:00.000Z",
+      "_id": "58134f45550dfb3b52c2dce2"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-30T12:19:00.000Z",
+      "actualStartTime": "2014-11-30T12:19:00.000Z",
+      "scheduledEndTime": "2014-11-30T13:45:00.000Z",
+      "actualendTime": "2014-11-30T13:45:00.000Z",
+      "_id": "58134f45550dfb3b52c2dce1"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-30T13:47:00.000Z",
+      "actualStartTime": "2014-11-30T13:47:00.000Z",
+      "scheduledEndTime": "2014-12-05T13:47:00.000Z",
+      "actualendTime": "2014-12-05T13:47:00.000Z",
+      "_id": "58134f45550dfb3b52c2dce0"
+    }
+  ],
+  "platforms": [
+    "HTML",
+    "Wordpress"
+  ],
+  "postingDate": "2014-11-16T09:46:00.000Z",
+  "prize": [
+    1200,
+    600
+  ],
+  "projectId": 6753,
+  "registrants": [
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-16T10:52:00.000Z",
+      "submissionDate": null,
+      "rating": "717",
+      "colorStyle": "color: #999999",
+      "_id": "58134f45550dfb3b52c2dcdf"
+    },
+    {
+      "handle": "iCare",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-16T11:58:00.000Z",
+      "submissionDate": null,
+      "rating": "568",
+      "colorStyle": "color: #999999",
+      "_id": "58134f45550dfb3b52c2dcde"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2014-11-16T13:54:00.000Z",
+      "submissionDate": null,
+      "rating": "1088",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f45550dfb3b52c2dcdd"
+    },
+    {
+      "handle": "shubhendus",
+      "reliability": "100%",
+      "registrationDate": "2014-11-16T13:59:00.000Z",
+      "submissionDate": "2014-11-22T09:06:00.000Z",
+      "rating": "928",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f45550dfb3b52c2dcdc"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-16T14:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f45550dfb3b52c2dcdb"
+    },
+    {
+      "handle": "hyc",
+      "reliability": "50%",
+      "registrationDate": "2014-11-16T15:26:00.000Z",
+      "submissionDate": null,
+      "rating": "865",
+      "colorStyle": "color: #999999",
+      "_id": "58134f45550dfb3b52c2dcda"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "13%",
+      "registrationDate": "2014-11-16T16:17:00.000Z",
+      "submissionDate": null,
+      "rating": "890",
+      "colorStyle": "color: #999999",
+      "_id": "58134f45550dfb3b52c2dcd9"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-17T00:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f45550dfb3b52c2dcd8"
+    },
+    {
+      "handle": "sparemax",
+      "reliability": "60%",
+      "registrationDate": "2014-11-17T00:48:00.000Z",
+      "submissionDate": null,
+      "rating": "1847",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58134f45550dfb3b52c2dcd7"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-11-17T01:30:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58134f45550dfb3b52c2dcd6"
+    },
+    {
+      "handle": "ericcartman",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-17T10:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f45550dfb3b52c2dcd5"
+    },
+    {
+      "handle": "OlinaRuan",
+      "reliability": "0%",
+      "registrationDate": "2014-11-17T13:25:00.000Z",
+      "submissionDate": null,
+      "rating": "1045",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f45550dfb3b52c2dcd4"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2014-11-17T13:50:00.000Z",
+      "submissionDate": null,
+      "rating": "400",
+      "colorStyle": "color: #999999",
+      "_id": "58134f45550dfb3b52c2dcd3"
+    },
+    {
+      "handle": "gmagniez",
+      "reliability": "6%",
+      "registrationDate": "2014-11-17T15:12:00.000Z",
+      "submissionDate": null,
+      "rating": "797",
+      "colorStyle": "color: #999999",
+      "_id": "58134f45550dfb3b52c2dcd2"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "6%",
+      "registrationDate": "2014-11-17T17:18:00.000Z",
+      "submissionDate": null,
+      "rating": "1447",
+      "colorStyle": "color: #6666FF",
+      "_id": "58134f45550dfb3b52c2dcd1"
+    }
+  ],
+  "registrationEndDate": "2014-11-18T09:46:00.000Z",
+  "reliabilityBonus": 240,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-11-22T09:45:00.000Z",
+  "submissions": [
+    {
+      "handle": "shubhendus",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 89.68,
+      "finalScore": 89.68,
+      "points": 540,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-11-22T09:06:00.000Z",
+      "_id": "58134f45550dfb3b52c2dcef"
+    }
+  ],
+  "technology": [
+    ".NET",
+    "Angular.js",
+    "JavaScript"
+  ]
+}

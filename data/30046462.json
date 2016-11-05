@@ -1,0 +1,257 @@
+{
+  "_id": 30046462,
+  "_isComplete": true,
+  "__v": 2280,
+  "_lastUpdate": "2016-11-05T11:06:12.237Z",
+  "appealsEndDate": "2014-10-31T03:01:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Scale  Import-Export tool between MS Project and Salesforce-PSA Product",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Cancelled - Failed Review",
+  "detailedRequirements": "<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue; font-size:32px\">Scale</span><strong>&nbsp;</strong><span style=\"background-color:transparent; font-family:helvetica neue; font-size:32px\">the Import-Export tool between MS Project and Salesforce-PSA Product</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue; font-size:24px\">Summary :</span></span></p>\n\n<p dir=\"ltr\"><span><strong>We want to Scale the&nbsp;Import-Export tool to handle&nbsp;&nbsp;projects that have large number of tasks (&gt;1000) &nbsp;using SFDC Batch Processing.</strong></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue; font-size:24px\">Overview</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">The existing MS Project Import/Export Force.com app that has the ability to import from MS Project xml files into Salesforce.com objects (PSA App) and Export from Salesforce (PSA) to MSProject xml files.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">In this challenge, we are aiming at scaling the Import and exports to handle projects that have large number of tasks (&gt;1000)</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue; font-size:24px\">Challenge Requirements</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">The Focus of this challenge is to scale the current code for the following:</span></span></p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong><span><span style=\"background-color:transparent\">Import project xml that has &gt;1000 tasks</span></span></strong></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong><span><span style=\"background-color:transparent\">Export project to xml that has &gt;1000 tasks</span></span></strong></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong>Optimize the code to minimize memory and CPU usage</strong></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong>Show current status of import/export completed on the VF Page&nbsp;<span style=\"font-family:helvetica neue\">&nbsp;&ldquo;n out of N tasks imported/exported&rdquo;.</span></strong></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong><span><span style=\"background-color:transparent\">Add Descriptive Error Messages&nbsp;</span></span></strong></p>\n\t</li>\n</ol>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">To achieve these goals by following these one of the following Proposed solutuions:</span></span></p>\n\n<p dir=\"ltr\">a. Using Apex Batches</p>\n\n<p dir=\"ltr\">b. Alternate solution - Using action functions, Javascript and breaking processing into custom batches</p>\n\n<p dir=\"ltr\"><strong>Feel free to use any of the above mentioned solutions. Both are acceptable as long as it achives the desired Goals.</strong></p>\n\n<h2 dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">A. Using Apex Batches</span></span></h2>\n\n<p dir=\"ltr\"><span><strong>1. Optimize the code to minimize memory and CPU usage :&nbsp;</strong></span><span style=\"background-color:transparent; font-family:helvetica neue; line-height:1.6\">For example, &nbsp;In the current solution for export to XML, the XML is created using a Dom.document object. For adding each element&nbsp; in the xml, a addChildElement() method is being executed. When there are &gt;1000 Tasks, it causes CPU limit exception. This could be solved by creating parts of the xml using string manipulation instead. Specially those parts of XML that have constant values. another option would be to not use the Dom.document object at all and create the xml by using string concatenations only.</span></p>\n\n<p dir=\"ltr\"><span><strong>2. Move import and export to a Batch Process:</strong><span style=\"background-color:transparent; font-family:helvetica neue\">&nbsp;This would maximize scalability. Currently the Export process is done in a future method. this also makes it impossible to get the current status of the process. By using Batch process we would be able to read the status of the process periodically (using action poller) and update it on the UI. You should also set the value of a custom setting after every batch ends to get exact progress of the process. For example &ldquo;n out of N tasks imported(or exported)&rdquo;.</span></span></p>\n\n<p dir=\"ltr\"><span><strong>3. Break the processes into parts and call them sequentially.&nbsp;</strong></span><span style=\"background-color:transparent; font-family:helvetica neue; line-height:1.6\">The import process can be broken down into 3 different parts-</span></p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent\">Create Project</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent\">Create Tasks : This should be a Batch process &nbsp;and is started after the project is created successfully</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent\">Create assignments: This should be a batch process is started after the batch process for Tasks Completes.&nbsp;</span></span></p>\n\t</li>\n</ol>\n\n<h2 dir=\"ltr\"><span><span style=\"background-color:transparent\"><span><span style=\"background-color:transparent\">���B.&nbsp;</span></span></span>Alternate solution - Using action functions, Javascript and breaking processing into custom batches<span style=\"background-color:transparent\"><span><span style=\"background-color:transparent\">:</span></span></span></span></h2>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent\"><span><span style=\"background-color:transparent\">This is an alternate solution to the problem:</span></span></span></span></p>\n\n<p dir=\"ltr\"><strong style=\"line-height:1.6\">1. Optimize the code to minimize memory and CPU usage :&nbsp;</strong><span style=\"background-color:transparent; font-family:helvetica neue; line-height:1.6\">For example, &nbsp;In the current solution for export to XML, the XML is created using a Dom.document object. For adding each element&nbsp; in the xml, a addChildElement() method is being executed. When there are &gt;1000 Tasks, it causes CPU limit exception. This could be solved by creating parts of the xml using string manipulation instead. Specially those parts of XML that have constant values. another option would be to not use the Dom.document object at all and create the xml by using string concatenations only.</span></p>\n\n<p dir=\"ltr\"><strong>3. Break the processes into parts and call them sequentially.&nbsp;</strong><span style=\"background-color:transparent; font-family:helvetica neue\">The import process can be broken down into 3 different parts-</span></p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent\">Create Project</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent\">Create Tasks : This process is started after the project is created successfully</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent\">Create assignments: This process &nbsp;started after the batch process for Tasks Completes.&nbsp;</span></p>\n\t</li>\n</ol>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent\"><span><span style=\"background-color:transparent\">2. <strong>Break the process into batches without using Apex Batch : &nbsp;</strong>Add logic to create/export 200 tasks/assignments at a time. Use variables to keep track of last index of Task/assigment &nbsp;imported/exported.&nbsp;</span></span></span></span></p>\n\n<p dir=\"ltr\"><strong><span>3. Add Javascript functions to call the create task and create assignment functions: </span></strong><span>Use Action methods to call the methods &nbsp;to create/export &nbsp;tasks/assignments from the VF page in a action poller or using callbacks untill all the tasks/assignments are imported/exported</span></p>\n\n<p dir=\"ltr\"><strong><span>5. You should update the UI status after each batch run: </span></strong><span>Update a message on the vf page after each batch run. The message should say: </span><strong><span>&nbsp;</span><span style=\"font-family:helvetica neue\">&ldquo;n out of N tasks imported/exported&rdquo;.</span></strong></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span style=\"color:#FF0000\"><strong>*** Current working asset Source code and sample XML files will be provided in the forums.</strong></span></p>\n\n<p dir=\"ltr\"><span style=\"color:#FF0000\"><strong>***You will be provided with development orgs With PSA installed. Please ask for your dev orgs on the forum</strong></span></p>\n\n<p dir=\"ltr\"><span><strong>Validation Requirements</strong></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">Follow these simple steps to validate Import and exports:</span></span></p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent\">Import the provided XML into PSA. Open the PSA project in Gantt view. Also open the original project in MS Project and compare the Gantt charts,&nbsp;Task dates and order of tasks.&nbsp;</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent\">Export to xml the newly created PSA project in step1.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent\">Import the xml (from step 2 ) agian into new PSA project and compare its Gantt view&nbsp;&nbsp;Task dates and order of tasks&nbsp;with the Original Project.&nbsp;</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent\">Open the exported project xml&nbsp;(from step 2 ) into MS Project and compare Gantt view, Task dates and order of tasks</span></span></p>\n\t</li>\n</ol>\n\n<p dir=\"ltr\"><strong><span><em>NOTE: These are features in the existing Tool, and should be already working, you should be able to validate these to be working as designed.</em></span></strong></p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent\">During the import, when Creating Tasks from MSP (MSProject) into PSA, be able to manage hierarchical parent/child relationship of Project tasks (e.g. Dependent Task attributes).</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent\">Handle predecessors to /from MS Project when importing and exporting.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent\">Manage creating &ldquo;</span><strong>Resource Assignments</strong><span style=\"background-color:transparent\">&rdquo; to / from MS Project. In PSA, for each resource assigned to the task,&nbsp;</span><u>a &ldquo;Project Task Assignment&rdquo; related list entry must be created</u><span style=\"background-color:transparent\">.</span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">If the resource is a valid PSA resource (i.e. IsResource = Yes on the Contact record), add the resource as a lookup, if not, then just put the resource in as a text field under External Resource. (* To resolve a resource from MSProject in PSA, you will need to look them up by &ldquo;Firstname + lastname&rdquo; on the contact object, and if found look for &ldquo;pse__Is_Resource__c&rdquo; and &ldquo;pse__Is_Resource_Active__c&rdquo; checkboxes checked for this resource to be identified as a valid PSA resource.).</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">If any of the conditions are false (i.e. they are not found as a contact; they are a contact but are not a resource, they are a contact and are a resource, but are not active), we would just put their name into the &ldquo;pse__External_Resource__c&rdquo; text field on the Project Task Assignment as text.</span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ol>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\"><img alt=\"https://lh3.googleusercontent.com/M8w7pugljXtooeIl5Hlng2l9EWrUNxgT4kHBDhw-rEPbt4hrrNgTyQ_9xwRk8cQFaz_2Oo7mdLCHrzTJc3MW3yrSpWrKhfQp5TIdp5DG7na0GBJd88_jnp74k9-MymgAcA\" src=\"https://lh6.googleusercontent.com/MTm1TYmoiaVtyVEcwu_S8Xu7EmOiwi7MEnNVGJwOFd8NF-4tsmGdyrV0x3s66xHCIkTb0-gOMG6m-s1eOAffyuNB_D2xjXXsgmDQ7243UfbgheIe5xwteu07xA7uS0v5pHMvlWHeZUU\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:391px; transform:rotate(0.00rad); width:1348px\" /></span></span></p>\n\n<ol start=\"4\">\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent\">Current mapping in use when importing to PSA from MS Project xml file (Samples provided - one simple and one complex example to test with):</span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">Name = Name</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">pse__Points__c = Work</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">pse__Points_Baseline__c = Work</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">pse__Estimated_Hours__c = Work</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">pse__Start_Date_Time__c = Start</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">pse__End_Date_Time__c = Finish</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">pse__WBS_Element_Number__c = OutlineNumber</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">pse__External_Task_ID__c = UniqueID</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">pse__Description__c = Notes</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">if ActualWork &gt; 0 then</span></span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">pse__Started__c = true</span></span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">if PercentComplete = 100 then</span></span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">pse__Status__c = &ldquo;Complete&rdquo;</span></span></p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">if OutlineChildren.Count = 0 then</span></span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">pse__Completed__c = true</span></span></p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">Else</span></span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">pse__Status__c = &ldquo;Started&rdquo;</span></span></p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">If OutlineChildren.Count = 0 then</span></span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">pse__Points_Complete__c = ActualWork</span></span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">pse__Percent_Complete_Points__c = PercentComplete</span></span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ol>\n\n<p>&nbsp;</p>\n\n<ol start=\"5\">\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent\">Mappings when PSA exports a MS Project file:</span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">Name = Name</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">Start = pse__Start_Date_Time__c</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">Finish = pse__End_Date_Time__c</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">WBS = pse__WBS_Element_Number__c</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">Text21 = Id</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">Text22 = pse__Status__c</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">Notes = pse__Description__c</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">If OutlineChildren.Count = 0 then</span></span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">Work = pse__Points__c</span></span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">ActualWork = pse__Points_Complete__c</span></span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">PercentComplete = pse__Percent_Complete_Points__c</span></span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent\">Validating the final export functionality</span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">(1) Import provided sample XML</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">(2) Make a change to a task in PSA</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">(3) Add a new task in PSA</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">(4) View the Gantt in PSA</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">(5) Export the project to xml</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">(6) Import the xml that was just exported</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">(7) Compare the Gantt in (6) with the Gantt in (4)</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">----- Alternatively - Windows Users -----</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">if you are a Windows user and have MS-Project installed OR can use</span><a href=\"http://sourceforge.net/projects/openproj/postdownload?source=dlp\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; font-family:helvetica neue\">&nbsp;</span><u>OpenProject</u></a><span style=\"background-color:transparent; font-family:helvetica neue\">, You may compare the Gantt view snapshots of the original xml Project with the one Imported into PSA and again compare the Original with the one exported from PSA. All 3 should match. (i.e. Before PSA, Imported in PSA, exported from PSA)</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">----- Alternatively - Mac Users -----</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-family:helvetica neue\">if you are a Mac user and use&nbsp;</span><a href=\"http://www.projectwizards.net/en/download/\" style=\"text-decoration:none;\"><u>Merlin</u></a><span style=\"background-color:transparent; font-family:helvetica neue\">, You may compare the Gantt view snapshots of the original xml Project with the one Imported into PSA and again compare the Original with the one exported from PSA. All 3 should match. (i.e. Before PSA, Imported in PSA, exported from PSA)</span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ol>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><u>Note</u><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">:: In MS Project, a single task can have multiple resources.</span></span></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">One MSP Task with two (or more) resources would map over to one PSA Project Task with two (or more) project task assignments:</span></span></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\"><img alt=\"https://lh6.googleusercontent.com/uM9yAPDnoFmc5csj28eBg4CV6hxUQwxJB8ueoGtYvpSl5hH9ma3wTkatGFAIiEQ1-t4Xyw3Q_HndZkEsfCLqN-GL4mk-RKftwoLc3YHMYEOgg4UaDFGuF3hcDHGmoIXMAQ\" src=\"https://lh6.googleusercontent.com/yiKCBFW6kjdjWEc0HpMLyZXweSql5xk3KdSim22OrrwWUOruMKxbioH3oREgzkJvk6IEvzdMthbi-NrHvLRIBI0B7CF0Zk4QxRjgjDsaJG4DnMJHcfeIigefRVS5RkngSOs2qgQGG0M\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:591px; transform:rotate(0.00rad); width:1249px\" /></span></span></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\">{Already existing functionality} - A trigger in PSA concatenates all of the project task assignment (PTA) resource names together (separated by commas), and puts that in as the Task Resource assigned.</span></span></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial\"><img alt=\"https://lh3.googleusercontent.com/Dv2Q2k52cFtt0zkoCtPYbVaqlTBJWuQfo4fqxt64RndCCI6TlGdhqtqBW2Z4vCcXwPul14CTBiMBQiyZ9UFO4EaYdUTQSPtYCVePY8tbrqx_xfS8_VBO_f2tphePWMWVhw\" src=\"https://lh6.googleusercontent.com/Iz9kLq73269m7Qsw_RkSltbPc8L6uojdsiyutAreWh9d-GApqqZjrqesra5BBTx2FdQkmIkhAuZBrYfV7RSvXmDvNWOR9uWZDdB3jCvQZ2Bj2GjPGx5qcNFIPoLE1eGb64i7Ft8LjS8\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:580px; transform:rotate(0.00rad); width:1364px\" /></span></span></p>\n\n<p><br />\n&nbsp;</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30046462",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalSubmissionGuidelines": "<div class=\"previewMask\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif; line-height: normal; font-size: 12px !important;\">\n<h3 dir=\"ltr\"><span><span><strong>Submission Details</strong></span></span></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span><span>This Solution will be based on an existing asset, the objective is to build the enhancement as stated in the requirements and enhance the quality of this asset to Production quality, please maintain the sanity of your Submission code to production quality standards if not better.</span></span></span></p>\n\t</li>\n</ul>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span><span>Include all Code for the Salesforce metadata elements.</span></span></span></p>\n\t</li>\n</ul>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span><span>Demo should present the&nbsp;</span><u>application functionality end to end</u><span>&nbsp;and&nbsp;</span><u>overview of the&nbsp;</u><u>updated</u><u>&nbsp;code blocks / Code Walkthrough</u><span>.</span></span></span></p>\n\t</li>\n</ul>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span><span>Demo the Submission with :</span></span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span><span>Organized&nbsp;</span><u>Code walkthrough</u></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span><span>Demonstrating&nbsp;</span><u>the Import and Export functionality</u></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span><span>Demonstrating&nbsp;</span><u>all validations around existing functionality</u></span></span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span><span><span>Show&nbsp;</span><em>Import/Export Operations working</em><span>&nbsp;with the sample xml files provided.</span></span></span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span><span><span>Show&nbsp;</span><u>Error Msg reporting on Import/Export Operations</u></span></span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<ul>\n\t<li dir=\"ltr\"><span><span><span>A Final Documentation that Covers Deploy/Install, Configure for the solution.</span></span></span></li>\n</ul>\n</div>\n",
+  "forumId": 26087,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=26087",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 16,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-15T02:01:00.000Z",
+      "actualStartTime": "2014-10-15T02:01:00.000Z",
+      "scheduledEndTime": "2014-10-23T03:01:00.000Z",
+      "actualendTime": "2014-10-23T03:01:00.000Z",
+      "_id": "581dbd24550dfb3b52be334a"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-15T02:06:00.000Z",
+      "actualStartTime": "2014-10-15T02:06:00.000Z",
+      "scheduledEndTime": "2014-10-28T02:58:00.000Z",
+      "actualendTime": "2014-10-28T02:58:00.000Z",
+      "_id": "581dbd24550dfb3b52be3349"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-28T02:58:00.000Z",
+      "actualStartTime": "2014-10-28T02:58:00.000Z",
+      "scheduledEndTime": "2014-10-30T02:58:00.000Z",
+      "actualendTime": "2014-10-30T02:58:00.000Z",
+      "_id": "581dbd24550dfb3b52be3348"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-30T02:58:00.000Z",
+      "actualStartTime": "2014-10-30T02:58:00.000Z",
+      "scheduledEndTime": "2014-10-31T02:59:00.000Z",
+      "actualendTime": "2014-10-31T02:59:00.000Z",
+      "_id": "581dbd24550dfb3b52be3347"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-31T02:59:00.000Z",
+      "actualStartTime": "2014-10-31T02:59:00.000Z",
+      "scheduledEndTime": "2014-10-31T03:01:00.000Z",
+      "actualendTime": "2014-10-31T03:01:00.000Z",
+      "_id": "581dbd24550dfb3b52be3346"
+    }
+  ],
+  "platforms": [
+    "Salesforce.com",
+    "FinancialForce",
+    "Force.com"
+  ],
+  "postingDate": "2014-10-15T02:01:00.000Z",
+  "prize": [
+    750,
+    350
+  ],
+  "projectId": 7252,
+  "registrants": [
+    {
+      "handle": "nickforce",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-21T21:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3345"
+    },
+    {
+      "handle": "dvakulishin",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-22T09:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3344"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T04:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3343"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T09:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3342"
+    },
+    {
+      "handle": "sathishvenks",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T13:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3341"
+    },
+    {
+      "handle": "Armoury",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T14:03:00.000Z",
+      "submissionDate": "2014-10-28T02:54:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3340"
+    },
+    {
+      "handle": "jayjays",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T21:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be333f"
+    },
+    {
+      "handle": "salesforce_dev",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-15T22:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be333e"
+    },
+    {
+      "handle": "okuni",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-16T08:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be333d"
+    },
+    {
+      "handle": "chenab",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-16T17:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be333c"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-17T09:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be333b"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-17T18:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be333a"
+    },
+    {
+      "handle": "lakhan_prajapati",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-19T04:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3339"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-19T13:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3338"
+    },
+    {
+      "handle": "forcebiblelogic",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-19T19:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3337"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-21T10:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd24550dfb3b52be3336"
+    }
+  ],
+  "registrationEndDate": "2014-10-23T03:01:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2014-10-28T02:58:00.000Z",
+  "submissions": [
+    {
+      "handle": "Armoury",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 57.5,
+      "finalScore": 57.5,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-10-28T02:54:00.000Z",
+      "_id": "581dbd24550dfb3b52be334b"
+    }
+  ],
+  "technology": [
+    "Apex",
+    "Salesforce",
+    "Visualforce"
+  ]
+}

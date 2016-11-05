@@ -1,0 +1,327 @@
+{
+  "_id": 30041740,
+  "_isComplete": true,
+  "__v": 2151,
+  "_lastUpdate": "2016-11-05T11:06:13.314Z",
+  "appealsEndDate": "2014-09-09T23:08:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "NASA Astronaut Email -  Proxy DTN Integration Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Cancelled - Failed Review",
+  "detailedRequirements": "<p><span><span>NASA needs to integrate the ION Disruption Tolerant Networking (DTN) implementation of Bundle Protocol (BP) with Microsoft Outlook and Microsoft Exchange Server to support the transfer of astronaut email to/from the International Space Station (ISS).</span></span></p>\n\n<p><span><span>Microsoft Exchange Server currently supports RPC over HTTP(s) protocol (a.k.a. Outlook Anywhere -&nbsp; http://msdn.microsoft.com/en-us/library/cc243950.aspx). TopCoder will assemble an HTTP(s) proxy that will use DTN to transport the data to earth.</span></span></p>\n\n<p><span><span>This objective will be divided in 3 parts. This is the third part of the competition which is to divide the working HTTP(s) </span>proxy and Notification Manager Layer into <strong>two</strong> applications (<strong>space_ssl_proxy</strong> and <strong>ground_dtn_proxy</strong>). This competition will introduce DTN. The space and ground proxy will use </span><span>Delay&nbsp; Tolerant&nbsp; Payload&nbsp; Conditioning&nbsp; (DTPC)&nbsp; Protocol over Bundle Protocol to exchange information.</span></p>\n\n<p>The picture bellow illustrates the delivered SSL proxy from the second assembly. This assembly introduced some actions (C functions) named:</p>\n\n<ul>\n\t<li>int action_request_data(int, enum peer, struct chunk *);</li>\n\t<li>void action_request_close_conn(int, enum peer);</li>\n\t<li>void action_request_release_ctx(int);</li>\n</ul>\n\n<p>These functions were created to start the proxy decoupling so DTN could be integrated more smoothly.</p>\n\n<p><img alt=\"\" src=\"https://s3.amazonaws.com/romanotc/AE+arch-2.jpg\" /></p>\n\n<p>You can read about the second assembly in its <a href=\"http://www.topcoder.com/challenge-details/30041739/?type=develop&amp;noncache=true\" target=\"_blank\">contest detail page</a>.</p>\n\n<p>The image bellow shows the division of the current SSL Proxy into two applications.</p>\n\n<p><br />\n<img alt=\"\" src=\"http://romanotc.s3.amazonaws.com/proxy3.jpg\" /></p>\n\n<p>&nbsp;</p>\n\n<p>We tried this approach using an existing HTTP proxy (lighttpd). The source code is available and the DTN part of the code may be used with a few adjustments.</p>\n\n<p>The basic design is having the Space and Ground communicate with each other using DTN. A simple C struct can be used to hold the exchanged message:</p>\n\n<p><code>struct { int connection_id, int action_type, char data[DATA_SIZE] };</code></p>\n\n<p>There might be several action_types, it is up to the assembler to defined the actions needed, but there are three that we can foresee:</p>\n\n<ul>\n\t<li>OPEN_CONN: the space gateway indicates the ground gateway should establish a communication with the exchange server</li>\n\t<li>CLOSE_CONN: any party requests the peer to close its connection</li>\n\t<li>SEND_DATA: send the data read from the socket to the other side. Whenever a peer receives this message it will write it to the open socket.</li>\n</ul>\n\n<p>Since DTN is not real time and the information may be store to be send later, the peer that sends the message should not wait for a confirmation message. It can assume the delivery was successful.</p>\n\n<p>&nbsp;</p>\n\n<h3><span><span style=\"color:#FF0000\"><strong>The assembly is complete if one is able to send and receive emails through the proxy and the email is sent to ground using DTPC.</strong></span></span></h3>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": 675,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30041740",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2014-09-15T16:39:00.000Z",
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<div class=\"previewMask\">\n<p><span><span>A complete list of deliverables can be found in the TopCoder Assembly competition Tutorial at:</span></span></p>\n\n<h2><span><span><a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a><br />\n&nbsp;<br />\n<u>Deliverables</u></span></span></h2>\n\n<p><span><span>&nbsp;&nbsp;&nbsp; Source code and configuration files.<br />\n&nbsp;&nbsp;&nbsp; Deployment guide to configure and verify the application.</span></span></p>\n\n<h2><span><span>&nbsp;<br />\n<u>Technology overview</u></span></span></h2>\n\n<ul>\n\t<li><span><span>&nbsp;&nbsp;&nbsp; Linux (Redhat or Ubuntu)</span></span></li>\n\t<li><span><span>&nbsp;&nbsp;&nbsp; C</span></span></li>\n\t<li><span><span>&nbsp;&nbsp;&nbsp; </span>ION-DTN 3.2.0: <a href=\"http://sourceforge.net/projects/ion-dtn/\">http://sourceforge.net/projects/ion-dtn/</a></span></li>\n\t<li><span><span>&nbsp;&nbsp;&nbsp; HTTP 1.0/1.1</span></span></li>\n\t<li><span><span>&nbsp;&nbsp;&nbsp; Microsoft Outlook 2010</span></span></li>\n\t<li><span><span>&nbsp;&nbsp;&nbsp; Exchange Server 2010</span></span></li>\n\t<li><span><span>&nbsp;&nbsp;&nbsp; Outlook Anywhere (aka RPC over HTTP)</span></span></li>\n</ul>\n\n<h2><span><span>&nbsp;<br />\n<u>Development Environment</u></span></span></h2>\n\n<ul>\n\t<li><span><span>We can provide Amazon VMs with ION-DTN installed. Send request a VM by email to romanoTC: romanotc@copilots.topcoder.com.</span></span> We recommend using VM since deploying ION locally may take some time.</li>\n\t<li><span>Attached to this contest is the previous assembly code with deployment guide and <span>instructions on how to setup your Outlook client.</span></span></li>\n\t<li>Also attached is a previous assembly attempt to use DTN/DTPC with Lighttpd proxy. There is useful DTN code as well as configuration files.</li>\n</ul>\n</div>\n</div>\n",
+  "forumId": 22223,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=22223",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 14,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-18T14:07:00.000Z",
+      "actualStartTime": "2014-08-18T14:07:00.000Z",
+      "scheduledEndTime": "2014-08-18T14:08:00.000Z",
+      "actualendTime": "2014-08-18T14:08:00.000Z",
+      "_id": "581dbd25550dfb3b52be34d2"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-18T14:08:00.000Z",
+      "actualStartTime": "2014-08-18T14:08:00.000Z",
+      "scheduledEndTime": "2014-08-18T16:49:00.000Z",
+      "actualendTime": "2014-08-18T16:49:00.000Z",
+      "_id": "581dbd25550dfb3b52be34d1"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-18T20:10:00.000Z",
+      "actualStartTime": "2014-08-18T20:10:00.000Z",
+      "scheduledEndTime": "2014-08-20T20:10:00.000Z",
+      "actualendTime": "2014-08-20T20:10:00.000Z",
+      "_id": "581dbd25550dfb3b52be34d0"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-18T20:15:00.000Z",
+      "actualStartTime": "2014-08-18T20:15:00.000Z",
+      "scheduledEndTime": "2014-08-25T08:15:00.000Z",
+      "actualendTime": "2014-08-25T08:15:00.000Z",
+      "_id": "581dbd25550dfb3b52be34cf"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-25T08:15:00.000Z",
+      "actualStartTime": "2014-08-25T08:15:00.000Z",
+      "scheduledEndTime": "2014-08-25T16:19:00.000Z",
+      "actualendTime": "2014-08-25T16:19:00.000Z",
+      "_id": "581dbd25550dfb3b52be34ce"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-25T16:19:00.000Z",
+      "actualStartTime": "2014-08-25T16:19:00.000Z",
+      "scheduledEndTime": "2014-09-08T23:07:00.000Z",
+      "actualendTime": "2014-09-08T23:07:00.000Z",
+      "_id": "581dbd25550dfb3b52be34cd"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-08T23:07:00.000Z",
+      "actualStartTime": "2014-09-08T23:07:00.000Z",
+      "scheduledEndTime": "2014-09-09T23:07:00.000Z",
+      "actualendTime": "2014-09-09T23:07:00.000Z",
+      "_id": "581dbd25550dfb3b52be34cc"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-09T23:07:00.000Z",
+      "actualStartTime": "2014-09-09T23:07:00.000Z",
+      "scheduledEndTime": "2014-09-09T23:08:00.000Z",
+      "actualendTime": "2014-09-09T23:08:00.000Z",
+      "_id": "581dbd25550dfb3b52be34cb"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-09-09T23:08:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-09-10T11:08:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd25550dfb3b52be34ca"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-09-10T11:08:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-09-14T04:39:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd25550dfb3b52be34c9"
+    },
+    {
+      "type": "Final Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-09-14T04:39:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-09-14T16:39:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd25550dfb3b52be34c8"
+    },
+    {
+      "type": "Approval",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-09-16T04:39:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-09-21T04:39:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd25550dfb3b52be34c7"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-09-14T16:39:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-09-15T16:39:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd25550dfb3b52be34c6"
+    },
+    {
+      "type": "Final Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-09-15T16:39:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-09-16T04:39:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd25550dfb3b52be34c5"
+    },
+    {
+      "type": "Post-Mortem",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-09T23:09:00.000Z",
+      "actualStartTime": "2014-09-09T23:09:00.000Z",
+      "scheduledEndTime": "2014-09-10T23:09:00.000Z",
+      "actualendTime": "2014-09-10T23:09:00.000Z",
+      "_id": "581dbd25550dfb3b52be34c4"
+    }
+  ],
+  "platforms": [
+    "AWS"
+  ],
+  "postingDate": "2014-08-18T20:10:00.000Z",
+  "prize": [
+    1500,
+    750
+  ],
+  "projectId": 7519,
+  "registrants": [
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2014-08-18T22:24:00.000Z",
+      "submissionDate": null,
+      "rating": "1032",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbd25550dfb3b52be34c3"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-18T22:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd25550dfb3b52be34c2"
+    },
+    {
+      "handle": "seeef",
+      "reliability": "33%",
+      "registrationDate": "2014-08-18T23:50:00.000Z",
+      "submissionDate": "2014-08-25T07:50:00.000Z",
+      "rating": "1012",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbd25550dfb3b52be34c1"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-19T04:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd25550dfb3b52be34c0"
+    },
+    {
+      "handle": "rajeshk87",
+      "reliability": "0%",
+      "registrationDate": "2014-08-19T04:59:00.000Z",
+      "submissionDate": null,
+      "rating": "600",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd25550dfb3b52be34bf"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "0%",
+      "registrationDate": "2014-08-19T05:02:00.000Z",
+      "submissionDate": null,
+      "rating": "58",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd25550dfb3b52be34be"
+    },
+    {
+      "handle": "jol",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-19T08:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd25550dfb3b52be34bd"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2014-08-19T10:48:00.000Z",
+      "submissionDate": null,
+      "rating": "585",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd25550dfb3b52be34bc"
+    },
+    {
+      "handle": "herodolphin",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-19T11:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd25550dfb3b52be34bb"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-19T17:25:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd25550dfb3b52be34ba"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "13%",
+      "registrationDate": "2014-08-20T02:52:00.000Z",
+      "submissionDate": null,
+      "rating": "881",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd25550dfb3b52be34b9"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-20T07:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd25550dfb3b52be34b8"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-08-20T10:04:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd25550dfb3b52be34b7"
+    },
+    {
+      "handle": "rawuza",
+      "reliability": "26%",
+      "registrationDate": "2014-08-20T11:11:00.000Z",
+      "submissionDate": null,
+      "rating": "1017",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbd25550dfb3b52be34b6"
+    }
+  ],
+  "registrationEndDate": "2014-08-20T20:10:00.000Z",
+  "reliabilityBonus": 300,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-08-25T08:15:00.000Z",
+  "submissions": [
+    {
+      "handle": "seeef",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 66.48,
+      "finalScore": 66.48,
+      "points": 675,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-08-25T07:50:00.000Z",
+      "_id": "581dbd25550dfb3b52be34d3"
+    }
+  ],
+  "technology": [
+    "C"
+  ]
+}

@@ -1,0 +1,403 @@
+{
+  "_id": 30054599,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:37:08.300Z",
+  "appealsEndDate": "2016-06-28T00:56:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Topcoder Submission - Update Submission Status on Confirmation Page",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2016-07-22T08:00:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -8487348,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<div>We need to give users more visibility on the status of their submission as it is being processed, for that we need to add a status to the submission confirmation page, and update it as the submission status progresses:</div>\n\n<div><br />\nhttps://drive.google.com/file/d/0B7nDW7TyaKeeUEY2dDFDYTRQZjdhY1o4TE1ub0F0ZUxXMXRB/view?usp=sharing<br />\n&nbsp;</div>\n\n<div>Once we get to the state above (Finished), we need to start polling the submission API every 10 seconds (make this interval configurable), then depending on the submission status, we need to display:</div>\n\n<div>&nbsp;</div>\n\n<div>if &quot;PROCESS_PENDING&quot; display &quot;Submission waiting to be processed&quot;;</div>\n\n<div>if &quot;PROCESSING&quot; display &quot;Submission processing&quot;;</div>\n\n<div>if &quot;SUBMITTED&quot; display &quot;Submission processing completed successfully&quot;</div>\n\n<div>if &quot;ERROR&quot; display &quot;An error occurred processing your submission, please contact support&quot;<br />\n<br />\n<br />\n<u>About Dev Environment</u><br />\n<br />\nYou can follow&nbsp;<a href=\"https://github.com/appirio-tech/tc-common-tutorials/tree/master/submission-system\">https://github.com/appirio-tech/tc-common-tutorials/tree/master/submission-system</a> to setup the local environment for development.<br />\n<br />\n<u>appiriodevops/submissions:frontend-1.0</u> is the topcoder-app which you need to change with. you can found the building staff by&nbsp;https://github.com/appirio-tech/tc-common-tutorials/tree/master/submission-system/docker/frontend<br />\n<br />\nTo retrieve the submission status, The topcoder-app will call API -&nbsp;<strong>Retrieve specific submission [</strong>GET /submissions/{id}/]<br />\n<br />\nA sample response is like&nbsp;<br />\n<br />\n{<br />\n&nbsp; &nbsp; &quot;id&quot;: &quot;4000468d:14e74223312:-7fff&quot;,<br />\n&nbsp; &nbsp; &quot;result&quot;: {<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &quot;success&quot;: true,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &quot;status&quot;: 200,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &quot;metadata&quot;: null,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &quot;version&quot;: &quot;v3&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &quot;content&quot;: {<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;id&quot;: &quot;submission-uuid1&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;reference&quot;: {<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;type&quot;: &quot;CHALLENGE&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;id&quot;: &quot;12312&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;phaseType&quot;: &quot;SUBMISSION&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;phaseId&quot;: 123<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; },<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;status&quot;: &quot;PENDING&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;userId&quot;: 1231231,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;updatedAt&quot;: 1449581368,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;createdAt&quot;: 1449581368,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;createdBy&quot;: 12312,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;updatedBy&quot;: 12312,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;data&quot;: {<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;method&quot;: &quot;DESIGN_CHALLENGE_ZIP_FILE&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;submitterRank&quot;: 1,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;submitterComments&quot;: &quot;comments&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;fonts&quot;: [<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;name&quot;: &quot;blah&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;sourceUrl&quot;: &quot;blah&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;source&quot;: &quot;FONTS_DOT_COM&quot;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ],<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;stockArts&quot;: [<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;description&quot;: &quot;description&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;fileNumber&quot;: &quot;123&quot;,<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;sourceUrl&quot;: &quot;http://www.test.com&quot;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ] &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />\n&nbsp; &nbsp; &nbsp; &nbsp; }<br />\n&nbsp; &nbsp; }<br />\n} &nbsp; &nbsp;<br />\n<br />\n<br />\nSo you can&nbsp;<br />\n1. make changes to topcoder-app<br />\n2. rebuild the frontend-1.0 image<br />\n3. restart the whole system for testing</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30054599",
+  "finalSubmissionGuidelines": "1. Code Changes For topcoder-app<br />\n2. Screencast showing the new functionality",
+  "forumId": 33426,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33426",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 33,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2016-06-22T08:00:00.000Z",
+      "actualStartTime": "2016-06-22T08:00:00.000Z",
+      "scheduledEndTime": "2016-07-22T08:00:00.000Z",
+      "actualendTime": null,
+      "_id": "58135484550dfb3b52c49d15"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-25T05:56:00.000Z",
+      "actualStartTime": "2016-06-25T05:56:00.000Z",
+      "scheduledEndTime": "2016-06-28T00:48:00.000Z",
+      "actualendTime": "2016-06-28T00:48:00.000Z",
+      "_id": "58135484550dfb3b52c49d14"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2016-06-22T08:05:00.000Z",
+      "actualStartTime": "2016-06-22T08:05:00.000Z",
+      "scheduledEndTime": "2016-07-22T08:05:00.000Z",
+      "actualendTime": null,
+      "_id": "58135484550dfb3b52c49d13"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-28T00:48:00.000Z",
+      "actualStartTime": "2016-06-28T00:48:00.000Z",
+      "scheduledEndTime": "2016-06-28T00:56:00.000Z",
+      "actualendTime": "2016-06-28T00:56:00.000Z",
+      "_id": "58135484550dfb3b52c49d12"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-06-22T08:00:00.000Z",
+  "prize": [
+    200
+  ],
+  "projectId": 9582,
+  "registrants": [
+    {
+      "handle": "bannie2492",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T08:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d11"
+    },
+    {
+      "handle": "chengweichi",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T08:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d10"
+    },
+    {
+      "handle": "code_now",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T08:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d0f"
+    },
+    {
+      "handle": "persistnow",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T09:06:00.000Z",
+      "submissionDate": "2016-06-25T05:56:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d0e"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T10:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d0d"
+    },
+    {
+      "handle": "fazam",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T10:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d0c"
+    },
+    {
+      "handle": "ecavalier313",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T10:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d0b"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T14:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d0a"
+    },
+    {
+      "handle": "Ardit.Meti",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T15:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d09"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T16:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d08"
+    },
+    {
+      "handle": "XinScirpt",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T16:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d07"
+    },
+    {
+      "handle": "avbngera",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T16:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d06"
+    },
+    {
+      "handle": "erankitarora",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T19:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d05"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T19:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d04"
+    },
+    {
+      "handle": "tadityar",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-23T05:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d03"
+    },
+    {
+      "handle": "jackyzhangjb",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-23T06:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d02"
+    },
+    {
+      "handle": "BrainScorn",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-23T07:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d01"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-23T07:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49d00"
+    },
+    {
+      "handle": "cairi",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-23T13:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cff"
+    },
+    {
+      "handle": "bamunjal",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-23T17:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cfe"
+    },
+    {
+      "handle": "vimalbera92",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-24T05:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cfd"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-24T05:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cfc"
+    },
+    {
+      "handle": "gets0ul",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-24T10:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cfb"
+    },
+    {
+      "handle": "Jarnanchen",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-24T12:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cfa"
+    },
+    {
+      "handle": "ultral77",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-24T13:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cf9"
+    },
+    {
+      "handle": "jayanand4u",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-24T14:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cf8"
+    },
+    {
+      "handle": "rajram92",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-24T18:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cf7"
+    },
+    {
+      "handle": "lbotsch",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-24T21:22:00.000Z",
+      "submissionDate": "2016-06-25T20:37:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cf6"
+    },
+    {
+      "handle": "phaniram",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-25T00:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cf5"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-25T04:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cf4"
+    },
+    {
+      "handle": "szy2015",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-25T05:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cf3"
+    },
+    {
+      "handle": "e06widu",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-27T14:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cf2"
+    },
+    {
+      "handle": "earnaliving805",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-27T15:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135484550dfb3b52c49cf1"
+    }
+  ],
+  "registrationEndDate": "2016-07-22T08:00:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-07-22T08:05:00.000Z",
+  "submissions": [
+    {
+      "handle": "persistnow",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-06-25T05:56:00.000Z",
+      "_id": "58135484550dfb3b52c49d17"
+    },
+    {
+      "handle": "lbotsch",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-06-25T20:37:00.000Z",
+      "_id": "58135484550dfb3b52c49d16"
+    }
+  ],
+  "technology": [
+    "Docker",
+    "Node.js"
+  ]
+}

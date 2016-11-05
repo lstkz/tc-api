@@ -1,0 +1,317 @@
+{
+  "_id": 30047160,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T23:13:45.268Z",
+  "appealsEndDate": "2014-11-24T15:10:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Dynamic Tagging Component in Visualforce",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2014-12-12T14:00:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -59307144,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2 style=\"margin-left:0px; margin-right:0px\"><span style=\"font-size:13px\">We lauched &nbsp;a&nbsp;<a href=\"http://www.topcoder.com/challenge-details/30045686/?type=develop&amp;noncache=true\" style=\"text-decoration: none; color: rgb(255, 138, 0); outline: none; background: transparent;\">challenge</a>&nbsp;earlier on tagging and now we</span><span style=\"font-size:13px\">&nbsp;are in need of a&nbsp;generic component for tag any object.</span></h2>\n\n<p><u><span style=\"font-size:18px\"><span style=\"color:rgb(255, 0, 0)\">Use Case Details</span></span></u></p>\n\n<p>1. We have an existing functionality for tag an object, we want you to modify this functionality and make it generic for any sObject, so that user can use it for tag any object.Please watch this <a href=\"http://www.screencast.com/t/4tgYyiOj\">screencast</a>&nbsp;to understand existing functionality.</p>\n\n<p>2. As per current functionality we have a custom object Tag (CMC_Tag__c) for store data related to tag ( like tag name etc ).</p>\n\n<p>3. We have implemented tagging functionality on an custom object &ldquo;Issue(CMC_Issue__c)&rdquo;.</p>\n\n<p>4. We have a junction object called &ldquo;CMC_Issue_Tag_Assignment__c&rdquo; to store the relationship between &ldquo;Issue&rdquo; and &ldquo;Tag&rdquo;.</p>\n\n<p>5. Right now we have override &ldquo;Issue&rdquo; detail page with a custom VF page, custom VF page display issue fields from the field set.</p>\n\n<p>6. This VF page has an auto complete textbox that use to create tag, while typing on that text box if existing tag exists then user can choose that tag or can create a new tag, on save these tags copy into a textarea field ( Tags__c ) on issue object.</p>\n\n<p>7. On save an trigger executed on issue object and insert/update the relationship and upsert records into &ldquo;CMC_Issue_Tag_Assignment__c&rdquo; object.</p>\n\n<p>8.When any tag name updated then an trigger executed on Tag object and update the tags on related issues.</p>\n\n<p>9. On delete on any tag, trigger will delete the tag from the issue and also delete the record from the &ldquo;CMC_Issue_Tag_Assignment__c&rdquo;.</p>\n\n<p>10. If anyone delete the record from the &ldquo;CMC_Issue_Tag_Assignment__c&rdquo; object and that related tag is not associated with any other issue then we also delete the tag itself.</p>\n\n<p>11. We have &ldquo;Account Id&rdquo; field on &ldquo;Issue&rdquo; , &ldquo;Tag&rdquo; and &ldquo;Issue Tag Assignment&rdquo; objects, while retrieving tags for the issue we display on the tag that filtered by the matching account id. For more detail review the existing code.</p>\n\n<p>12. We need an generic functionality for tagging, we want a junction object that can store relationship for all object.</p>\n\n<p>13. As per our idea when anybody needs to create tagging for any new object he/she can create a lookup field on that junction object for that object, the field name should be same as the lookup field API name.</p>\n\n<p>14. We can identify this object in trigger and create record based on that in junction object.</p>\n\n<p>15. We need a generic component that we can add in a visual force page or any inline page, in which we can pass object API name and field api name. That component should allow to suggest existing tag as autocomplete, allow to create new tag and allow to save selected tags on the object.</p>\n\n<p>16. Component should be like this :</p>\n\n<p>&lt;c:ManageTag tagObject=&quot;MyObject__c&quot; filterByField=&quot;Account_Id__c&quot;&nbsp;<span>create_option=&quot;true&quot; &nbsp;create_option_text=&quot;Create new Tag&quot;&nbsp;</span>no_results_text=&quot;No results matched&quot;&nbsp;<span>availableTags=&quot;{!objIssue.Tags__c}&quot;</span>&nbsp;&gt;</p>\n\n<p>You can add&nbsp;additional parameters if needed.</p>\n\n<p>17.Instead of using&nbsp;<span>CMC_Issue_Tag_Assignment__c junction object create a new object CMC_Tags__c to store junction record.A text field on this object should indicate target sobject record id and a lookup field with Tag object(CMC_Tag__c) should be created to maintain relationship.Enhance trigger to work dynamically with any sobject and block duplicate junction record for same tag per sobject during update/insert.</span></p>\n\n<p>18.Existing source code is shared in &#39;Source Code&#39; thread.You should demo on &#39;<span style=\"color:rgb(34, 34, 34); font-family:trebuchet ms,sans-serif\">Epic&#39; object.</span></p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30047160",
+  "finalSubmissionGuidelines": "<p>1. Unit and System Testing. Unit tests, if any Apex Classes if must be developed as part of the challenge, above 90% coverage for all new classes written is required.</p>\n\n<p>2. Code Aesthetics. Code must be clean (no commented code fragments, unused variables etc), tidy (4 space indents) and well commented. Use of Contest/Challenge names in comments instead of developer names. Utilising good clear and purposeful naming for variables, classes etc. Employ the use of Constants or enumerations where ever required. API methods should reside in the Service layer and not in the controller.</p>\n\n<p>3. Data Volume - We need to make sure that the code built can process high volume of records.</p>\n\n<p>4. Scalability - This solution is the first in the series of many, so we would like you to ensure this is designed with scalability in mind. The Code needs to be readable and maintainable.</p>\n\n<p>5. Apex Code - Do not include any system.debug statements or any leftover code. Remove the variables that are not used. All the methods / variables defined, must be used somewhere in the code.</p>\n\n<p>6. Video and Src Package - Please provide a demo video along with src package containing all artefacts.(An eclipse zip folder is fine, we don&#39;t need &nbsp;an unmanaged package)</p>\n\n<p>7. Please complete all parts of requirements 1-17 before submitting the code.</p>\n\n<p>8. Submission should tested as per the following use cases :</p>\n\n<ol>\n\t<li>While tagging an object, when user start typing in tag textbox, existing tag display only for the matching filter field ( like Account_Id__c ).</li>\n\t<li>When we create new tag, tag should be save in tagging object ( like issue__c ), in the Tag__c object and relationship should be save in the junction object.</li>\n\t<li>When we delete any tag from the &quot;Tag&quot; object, that tag should be removed from the tagging object ( like issue__c ) and from the junction object.</li>\n\t<li>If we update any tag name in &quot;Tag&quot; object then tag should be updated in the tagging object ( like issue__c ).</li>\n\t<li>If we delete any record from the junction object and assoicated tag is not related to any other record then also remove the Tag object record and also remove the tag reference from the tagging object as well.</li>\n</ol>\n",
+  "forumId": 26638,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=26638",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 21,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2014-11-12T14:00:00.000Z",
+      "actualStartTime": "2014-11-12T14:00:00.000Z",
+      "scheduledEndTime": "2014-12-12T14:00:00.000Z",
+      "actualendTime": null,
+      "_id": "5813dba9550dfb3b52ea6189"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-15T12:57:00.000Z",
+      "actualStartTime": "2014-11-15T12:57:00.000Z",
+      "scheduledEndTime": "2014-11-17T21:12:00.000Z",
+      "actualendTime": "2014-11-17T21:12:00.000Z",
+      "_id": "5813dba9550dfb3b52ea6188"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2014-11-12T14:05:00.000Z",
+      "actualStartTime": "2014-11-12T14:05:00.000Z",
+      "scheduledEndTime": "2014-12-12T14:05:00.000Z",
+      "actualendTime": null,
+      "_id": "5813dba9550dfb3b52ea6187"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-18T17:39:00.000Z",
+      "actualStartTime": "2014-11-18T17:39:00.000Z",
+      "scheduledEndTime": "2014-11-19T18:28:00.000Z",
+      "actualendTime": "2014-11-19T18:28:00.000Z",
+      "_id": "5813dba9550dfb3b52ea6186"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-20T04:25:00.000Z",
+      "actualStartTime": "2014-11-20T04:25:00.000Z",
+      "scheduledEndTime": "2014-11-24T15:10:00.000Z",
+      "actualendTime": "2014-11-24T15:10:00.000Z",
+      "_id": "5813dba9550dfb3b52ea6185"
+    }
+  ],
+  "platforms": [
+    "Salesforce.com",
+    "Force.com"
+  ],
+  "postingDate": "2014-11-12T14:00:00.000Z",
+  "prize": [
+    750
+  ],
+  "projectId": 7169,
+  "registrants": [
+    {
+      "handle": "toninotrip",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-12T14:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba9550dfb3b52ea6184"
+    },
+    {
+      "handle": "devsfdctc",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-12T14:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba9550dfb3b52ea6183"
+    },
+    {
+      "handle": "shazzz",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-12T14:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba9550dfb3b52ea6182"
+    },
+    {
+      "handle": "forcedevp",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-12T14:26:00.000Z",
+      "submissionDate": "2014-11-20T04:24:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba9550dfb3b52ea6181"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-12T16:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba9550dfb3b52ea6180"
+    },
+    {
+      "handle": "codingzealot",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-12T16:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba9550dfb3b52ea617f"
+    },
+    {
+      "handle": "darkwater",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-12T19:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba9550dfb3b52ea617e"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-13T03:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba9550dfb3b52ea617d"
+    },
+    {
+      "handle": "saurabbhgupta",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-13T09:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba9550dfb3b52ea617c"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-13T12:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba9550dfb3b52ea617b"
+    },
+    {
+      "handle": "krishna_b",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-13T19:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba9550dfb3b52ea617a"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-13T21:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba9550dfb3b52ea6179"
+    },
+    {
+      "handle": "PokeCloude",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-14T02:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba9550dfb3b52ea6178"
+    },
+    {
+      "handle": "rahuls91221",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-14T13:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba9550dfb3b52ea6177"
+    },
+    {
+      "handle": "vivekgupta34",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-14T06:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba9550dfb3b52ea6176"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-15T02:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba9550dfb3b52ea6175"
+    },
+    {
+      "handle": "WeirdThinker15",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-15T04:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba9550dfb3b52ea6174"
+    },
+    {
+      "handle": "RasMisha",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-15T11:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba9550dfb3b52ea6173"
+    },
+    {
+      "handle": "m.wilson",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-16T02:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba9550dfb3b52ea6172"
+    },
+    {
+      "handle": "chandan.prusty",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-17T05:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba9550dfb3b52ea6171"
+    },
+    {
+      "handle": "ans.jain",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-20T16:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba9550dfb3b52ea6170"
+    }
+  ],
+  "registrationEndDate": "2014-12-12T14:00:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2014-12-12T14:05:00.000Z",
+  "submissions": [
+    {
+      "handle": "forcedevp",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-11-15T12:57:00.000Z",
+      "_id": "5813dba9550dfb3b52ea618c"
+    },
+    {
+      "handle": "forcedevp",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-11-18T17:39:00.000Z",
+      "_id": "5813dba9550dfb3b52ea618b"
+    },
+    {
+      "handle": "forcedevp",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-11-20T04:24:00.000Z",
+      "_id": "5813dba9550dfb3b52ea618a"
+    }
+  ],
+  "technology": [
+    "Apex",
+    "Salesforce",
+    "Visualforce"
+  ]
+}

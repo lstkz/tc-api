@@ -1,0 +1,348 @@
+{
+  "_id": 30046765,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:07:49.120Z",
+  "appealsEndDate": "2014-11-05T13:04:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Google Calendar Event Sync Chrome Extension Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p>We have previously launched a contest (http://community.topcoder.com/tc?module=ProjectDetail&amp;pj=30046527) to create a chrome extension to submit the Google Calendar Event data to a webservice. Now we want to make changes to the design.</p>\n\n<p>This Chrome Extension will be used by users to send Google Calendar events and extended details to a third party CRM system via a web service call. It will also capture additional metadata about an event and log it to the Calendar API using extendedProperties (private).</p>\n\n<p dir=\"ltr\">Here is detail of how the extension should be built:</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent\">Upon clicking on the extension&#39;s button in the browser taskbar, display a grid view of the user&rsquo;s calendar events. Calendar event information should be obtained using a the </span><a href=\"https://developers.google.com/google-apps/calendar/v3/sync\" style=\"text-decoration:none;\"><u>Google Calendar v3 API&rsquo;s synchronization capability</u></a><span style=\"background-color:transparent\">. Store the calendar details locally in Chrome local storage, and perform only incremental updates to pull changes.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent\">Provide the user with options to update the view of his/her calendar to display one day, four days, one week, or agenda.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent\">The user should be able to page forward and back in the calendar grid view, and there should be a &ldquo;Today&rdquo; button to return to the current date.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent\">If a user hovers over an event in the grid view, provide a dialog box allowing the user to submit / resubmit to CRM. This should only appear when the user running the tool is the event organizer. (It should <strong>not</strong> appear for events where the current user is an invited attendee.)</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent\">On any event which has been submitted to CRM, display an icon.</span></p>\n\n\t<ol>\n\t\t<li>\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent\">If the event has not changed since submission, show a checkmark.</span></p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent\">If the event has changed since submission, show a refresh icon.</span></p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent\">If the event has never been submitted, no icon should be shown.</span><br />\n\t\t<br />\n\t\t<span style=\"background-color:transparent\">Sample UI:</span><br />\n\t\t<span style=\"background-color:transparent\"><img src=\"https://lh4.googleusercontent.com/FMQGZXBKjxddIyoayHNqkpgq_1g9iEBglRH-D96It-mOZZioeittzffDzAQV_v0fsAp-5kG-vWbyG7-GBtJRgkSmuKGE5PMqoxpCd4DV6pE54DrIYT8_WvBhfnoJbnBBrg\" style=\"-webkit-transform:rotate(0rad); border:none; height:367px; transform:rotate(0rad); width:486px\" /></span></p>\n\t\t</li>\n\t</ol>\n\t</li>\n</ol>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><strong>CRM additional metadata prompt (during initial submission only):</strong></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent\">On initial submit of a calendar event to CRM, display a popup asking for three extended attributes. These are:</span><br />\n\t<span style=\"background-color:transparent\">CRM Category</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;This should be a picklist with a few options, as set in a config file.&nbsp;</span>The selection should default to the first value in the list (cannot be null / empty).<br />\n\t<span style=\"background-color:transparent\">Priority Service</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;This should be a picklist with a few options, as set in a config file.&nbsp;</span>The selection should default to the first value in the list (cannot be null / empty).<br />\n\t<span style=\"background-color:transparent\">Main Contact</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;This is based upon the attendee list of the event, detailed below.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent\">Main Contact picklist:</span><br />\n\t<span style=\"background-color:transparent\">There should be a &ldquo;home domain&rdquo; variable set within a config file. Only those event attendees with email addresses outside of &ldquo;home domain&rdquo; should be listed here.</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent\">If there are zero attendees outside of &ldquo;home domain&rdquo;, hide this field.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent\">If there is one attendee outside of &ldquo;home domain&rdquo;, display this field as read-only with that attendee pre-populated.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent\">If there are multiple attendees outside of &ldquo;home domain&rdquo;, display an editable picklist.</span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent\">Main Contact Example (assumes home domain is set to topcoder.com):</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent\">Event is owned by mary@topcoder.com, with an attendee of user@topcoder.com. Do not display this picklist.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent\">Event is owned by mary@topcoder.com, with attendees of user@topcoder.com and user1@domain1.com. This should display a read-only field with user1@domain1.com pre-populated.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent\">Event is owned by mary@topcoder.com, with attendees of user@topcoder.com, user1@domain1.com, and user2@domain2.com. This should dispaly a picklist prompting the user to choose either user1@domain1.com or user2@domain2.com. </span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><strong>Submit to CRM:</strong></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent\">Submit to CRM will POST a JSON message containing Event object (from the Calendar v3 API) and the CRM specific attributes. POST URL will be configured in the config file.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent\">The POST will return an activity ID upon successful submission.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent\">After successful submit, using the Google Calendar v3 API, save CRM information the event&rsquo;s extendedProperties.shared object. This should include all three CRM attributes and also the activity ID which is returned from the web service.</span></p>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><strong>Resubmit to CRM:</strong></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent\">Resubmit will POST a JSON message containing changed information in the Event object. The CRM attributes and activity ID will remain the same.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent\">If the user is currently editing the event (based upon current browser URL), wait until the URL changes and then POST the message.</span></p>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><strong>Additional requirements:</strong></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent\">This Extension may not scrap the DOM of a Google Calendar event in any way. You may use the event ID from the URL parameter and query Google Calendar v3 API for all additional details.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Use the Chrome.Identity API to provide OAuth authorization to the Google Calendar v3 API.</p>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": 450,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30046765",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2014-11-17T22:06:00.000Z",
+  "finalSubmissionGuidelines": "<p>Submission Deliverable</p>\n\n<p>* Updated Source Code</p>\n\n<p>* Deployment Guide with Detailed Verification Steps</p>\n",
+  "forumId": 26320,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=26320",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 15,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-28T00:40:00.000Z",
+      "actualStartTime": "2014-10-28T00:40:00.000Z",
+      "scheduledEndTime": "2014-10-28T00:41:00.000Z",
+      "actualendTime": "2014-10-28T00:41:00.000Z",
+      "_id": "58133f95550dfb3b52bdfb26"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-28T00:41:00.000Z",
+      "actualStartTime": "2014-10-28T00:41:00.000Z",
+      "scheduledEndTime": "2014-10-28T02:23:00.000Z",
+      "actualendTime": "2014-10-28T02:23:00.000Z",
+      "_id": "58133f95550dfb3b52bdfb25"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-28T02:42:00.000Z",
+      "actualStartTime": "2014-10-28T02:42:00.000Z",
+      "scheduledEndTime": "2014-10-30T02:42:00.000Z",
+      "actualendTime": "2014-10-30T02:42:00.000Z",
+      "_id": "58133f95550dfb3b52bdfb24"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-28T02:47:00.000Z",
+      "actualStartTime": "2014-10-28T02:47:00.000Z",
+      "scheduledEndTime": "2014-11-02T03:43:00.000Z",
+      "actualendTime": "2014-11-02T03:43:00.000Z",
+      "_id": "58133f95550dfb3b52bdfb23"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-02T03:43:00.000Z",
+      "actualStartTime": "2014-11-02T03:43:00.000Z",
+      "scheduledEndTime": "2014-11-02T13:46:00.000Z",
+      "actualendTime": "2014-11-02T13:46:00.000Z",
+      "_id": "58133f95550dfb3b52bdfb22"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-02T13:46:00.000Z",
+      "actualStartTime": "2014-11-02T13:46:00.000Z",
+      "scheduledEndTime": "2014-11-04T12:58:00.000Z",
+      "actualendTime": "2014-11-04T12:58:00.000Z",
+      "_id": "58133f95550dfb3b52bdfb21"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-04T12:59:00.000Z",
+      "actualStartTime": "2014-11-04T12:59:00.000Z",
+      "scheduledEndTime": "2014-11-05T12:59:00.000Z",
+      "actualendTime": "2014-11-05T12:59:00.000Z",
+      "_id": "58133f95550dfb3b52bdfb20"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-05T12:59:00.000Z",
+      "actualStartTime": "2014-11-05T12:59:00.000Z",
+      "scheduledEndTime": "2014-11-05T13:04:00.000Z",
+      "actualendTime": "2014-11-05T13:04:00.000Z",
+      "_id": "58133f95550dfb3b52bdfb1f"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-05T13:05:00.000Z",
+      "actualStartTime": "2014-11-05T13:05:00.000Z",
+      "scheduledEndTime": "2014-11-05T17:25:00.000Z",
+      "actualendTime": "2014-11-05T17:25:00.000Z",
+      "_id": "58133f95550dfb3b52bdfb1e"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-05T17:25:00.000Z",
+      "actualStartTime": "2014-11-05T17:25:00.000Z",
+      "scheduledEndTime": "2014-11-12T01:58:00.000Z",
+      "actualendTime": "2014-11-12T01:58:00.000Z",
+      "_id": "58133f95550dfb3b52bdfb1d"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-12T01:58:00.000Z",
+      "actualStartTime": "2014-11-12T01:58:00.000Z",
+      "scheduledEndTime": "2014-11-12T18:05:00.000Z",
+      "actualendTime": "2014-11-12T18:05:00.000Z",
+      "_id": "58133f95550dfb3b52bdfb1c"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-17T22:13:00.000Z",
+      "actualStartTime": "2014-11-17T22:13:00.000Z",
+      "scheduledEndTime": "2014-11-21T12:25:00.000Z",
+      "actualendTime": "2014-11-21T12:25:00.000Z",
+      "_id": "58133f95550dfb3b52bdfb1b"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-12T18:05:00.000Z",
+      "actualStartTime": "2014-11-12T18:05:00.000Z",
+      "scheduledEndTime": "2014-11-17T12:20:00.000Z",
+      "actualendTime": "2014-11-17T12:20:00.000Z",
+      "_id": "58133f95550dfb3b52bdfb1a"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-17T12:21:00.000Z",
+      "actualStartTime": "2014-11-17T12:21:00.000Z",
+      "scheduledEndTime": "2014-11-17T21:16:00.000Z",
+      "actualendTime": "2014-11-17T21:16:00.000Z",
+      "_id": "58133f95550dfb3b52bdfb19"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-17T21:16:00.000Z",
+      "actualStartTime": "2014-11-17T21:16:00.000Z",
+      "scheduledEndTime": "2014-11-17T22:06:00.000Z",
+      "actualendTime": "2014-11-17T22:06:00.000Z",
+      "_id": "58133f95550dfb3b52bdfb18"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-17T22:06:00.000Z",
+      "actualStartTime": "2014-11-17T22:06:00.000Z",
+      "scheduledEndTime": "2014-11-17T22:13:00.000Z",
+      "actualendTime": "2014-11-17T22:13:00.000Z",
+      "_id": "58133f95550dfb3b52bdfb17"
+    }
+  ],
+  "platforms": [
+    "Google"
+  ],
+  "postingDate": "2014-10-28T02:42:00.000Z",
+  "prize": [
+    1000,
+    500
+  ],
+  "projectId": 7854,
+  "registrants": [
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-28T03:15:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58133f95550dfb3b52bdfb16"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "0%",
+      "registrationDate": "2014-10-28T04:11:00.000Z",
+      "submissionDate": "2014-11-02T03:39:00.000Z",
+      "rating": "950",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f95550dfb3b52bdfb15"
+    },
+    {
+      "handle": "sabbirhs",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-28T06:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f95550dfb3b52bdfb14"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-28T06:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f95550dfb3b52bdfb13"
+    },
+    {
+      "handle": "bonton",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-28T07:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f95550dfb3b52bdfb12"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "0%",
+      "registrationDate": "2014-10-28T10:33:00.000Z",
+      "submissionDate": null,
+      "rating": "1447",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133f95550dfb3b52bdfb11"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-28T13:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f95550dfb3b52bdfb10"
+    },
+    {
+      "handle": "iCare",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-28T14:02:00.000Z",
+      "submissionDate": null,
+      "rating": "568",
+      "colorStyle": "color: #999999",
+      "_id": "58133f95550dfb3b52bdfb0f"
+    },
+    {
+      "handle": "smart_raghavan",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-28T15:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f95550dfb3b52bdfb0e"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-28T22:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f95550dfb3b52bdfb0d"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-10-29T12:03:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58133f95550dfb3b52bdfb0c"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2014-10-29T15:27:00.000Z",
+      "submissionDate": null,
+      "rating": "400",
+      "colorStyle": "color: #999999",
+      "_id": "58133f95550dfb3b52bdfb0b"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-29T16:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f95550dfb3b52bdfb0a"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-29T23:16:00.000Z",
+      "submissionDate": null,
+      "rating": "717",
+      "colorStyle": "color: #999999",
+      "_id": "58133f95550dfb3b52bdfb09"
+    },
+    {
+      "handle": "gondzo",
+      "reliability": "40%",
+      "registrationDate": "2014-10-30T00:49:00.000Z",
+      "submissionDate": null,
+      "rating": "666",
+      "colorStyle": "color: #999999",
+      "_id": "58133f95550dfb3b52bdfb08"
+    }
+  ],
+  "registrationEndDate": "2014-10-30T02:42:00.000Z",
+  "reliabilityBonus": 200,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-11-02T03:43:00.000Z",
+  "submissions": [
+    {
+      "handle": "ahmed.seddiq",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 87.78,
+      "finalScore": 87.78,
+      "points": 450,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-11-02T03:39:00.000Z",
+      "_id": "58133f95550dfb3b52bdfb27"
+    }
+  ],
+  "technology": [
+    "CSS",
+    "Google API",
+    "HTML",
+    "JavaScript"
+  ]
+}

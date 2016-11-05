@@ -1,0 +1,555 @@
+{
+  "_id": 30050386,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:42:11.641Z",
+  "appealsEndDate": "2015-06-09T06:34:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "DTN Neighbor Discovery - Port C Bloom Filter Library to Python",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2015-07-02T01:10:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -41862651,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h1><span><span>1.0. Project Overview</span></span></h1>\n\n<p><span><span>Welcome to the NASA Disruption Tolerant Networking (DTN) project. DTN is an approach to computer network architecture that seeks to address the technical issues in heterogeneous networks that may lack continuous network connectivity.</span></span></p>\n\n<p><span><span>Note that some literature may use the term Delay Tolerant Network which is also abbreviated as DTN - the two terms are used interchangeably.&nbsp;</span></span></p>\n\n<p><span><span>DTN is designed to provide reliable end-to-end delivery of information between nodes, and to do so in an environment that experiences frequent connectivity disruptions and topology changes. Such a capability will directly support human and robotic space exploration, as well as have wide applicability to land-mobile and airborne terrestrial communications.</span></span></p>\n\n<p><span><span><span><span><a href=\"http://apps.topcoder.com/wiki/display/docs/DTN+Security+Challenge+-+Full\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\" title=\"DTN Security Challenge - Full\">Learn more about DTN</a></span></span></span></span></p>\n\n<p><span>&nbsp;</span></p>\n\n<h1><span><span>2.0. Project Objectives</span></span></h1>\n\n<p><span><span>The goal of this project is fairly straightforward, to update an open source DTN implementation called DTN Interplanetary Overlay Network (<a href=\"http://sourceforge.net/projects/ion-dtn/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">DTN ION</a>) so that it includes&nbsp;IP Neighbor Discovery (<a href=\"https://tools.ietf.org/html/draft-irtf-dtnrg-ipnd-02\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">IPND</a>) functionality.&nbsp;</span></span></p>\n\n<p><span><span>IPND is a method for otherwise oblivious nodes to learn of the existence, availability, and addresses of other DTN participants. IPND both sends and listens for small IP UDP announcement beacons that are addressed to an IP unicast, multicast, or broadcast address to discover specified remote neighbors, or unspecified local neighbors in the network topology.</span></span></p>\n\n<p><span><span>Other DTN implementations, such as&nbsp;<a href=\"http://sourceforge.net/p/dtn/DTN2/ci/default/tree/README.IPND\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">DTN2</a>&nbsp;and&nbsp;<a href=\"http://trac.ibr.cs.tu-bs.de/project-cm-2012-ibrdtn\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">IBR</a>, already support IPND. This project will design and implement updates to the DTN ION code written in C to add neighbor discovery capabilities.</span></span></p>\n\n<p><span><span>Neighbor discovery is also needed to enable future dynamic routing capability for the ION DTN implementation.</span> </span></p>\n\n<p><span>&nbsp;</span></p>\n\n<h1><span><span>3.0. Challenge Details</span></span></h1>\n\n<h2>3.1. Overview</h2>\n\n<p>ION IPND currently uses a <em>slightly modified</em> version of the <a href=\"https://github.com/jvirkki/libbloom\">libbloom</a> bloom filter library in conjuction with the <em>MurmurHash2</em> hash algorithm to implement the Neighborhood Bloom Filter (<a href=\"https://tools.ietf.org/html/draft-irtf-dtnrg-ipnd-02#section-2.6.4\">NBF</a>) requirement of the IPND spec. We would like to use <a href=\"https://gitlab.com/sah2ed/pyipnd/tree/master\">PyIPND</a> to conduct interoperability tests of the NBF implementation in ION IPND but PyIPND&#39;s NBF implementation has some limitations and is therefore incompatible with ION IPND.</p>\n\n<p>PyIPND, which is a Python implementation of the IPND spec, currently uses a third-party bloom filter library called <a href=\"https://pypi.python.org/pypi/pybloom\">pybloom</a> which does not allow developers to select the hash algorithm to be used by the bloom filter. Being able to choose a bloom filter&#39;s hash algorithm(s) is an important functionality when using NBFs to determine whether a DTN link is bi-directional or not.</p>\n\n<p>The goal of the challenge is fairly simple: port the modified <em>libbloom</em> bloom filter library written in C to Python and write accuracy and failure tests that prove that your port is correct. The slightly modified version of <em>libbloom</em> has been attached to the challenge as libbloom.zip.</p>\n\n<h2>&nbsp;</h2>\n\n<h2>3.2. Task</h2>\n\n<p>1. The following values are currently used to initialize <em>libbloom</em> when used in C from ION IPND:</p>\n\n<pre>\n<em>/* NBF parameters */\n</em><span style=\"color:#808000\">#define </span><span style=\"background-color:#e4e4ff\">NBF_DEFAULT_CAPACITY</span> <span style=\"color:#0000ff\">20\n</span><span style=\"color:#808000\">#define </span>NBF_DEFAULT_ERROR <span style=\"color:#0000ff\">0.0001</span></pre>\n\n<p>So the same values should be used when testing the Python port.</p>\n\n<p>&nbsp;</p>\n\n<p>2. <em>libbloom </em>uses the open source <em>MurmurHash2</em> hash algorithm which is available in Python as the <a href=\"https://pypi.python.org/pypi/mmhash\">mmhash</a> package so you do not need to port it to Python.</p>\n\n<p>&nbsp;</p>\n\n<p>3. You will call the Python bloom filter port <em>BloomFilter </em>and it will reside under the <em>libbloompy</em> package.</p>\n\n<p>&nbsp;</p>\n\n<p>4. The Python <em>BloomFilter</em> class that you will create should be functionally compatible with <a href=\"https://github.com/jaybaird/python-bloomfilter/blob/master/pybloom/pybloom.py\">pybloom</a> so that it can be used as a drop-in replacement in PyIPND.</p>\n\n<p>The only line that needs to change in PyIPND would be the <a href=\"https://gitlab.com/sah2ed/pyipnd/blob/master/IPND/beacon.py#L9\">line</a> that currently imports <em>pybloom</em>. It should change from:</p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">from pybloom import BloomFilter</span></p>\n\n<p>to:</p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">from libbloompy import BloomFilter</span></p>\n\n<p>&nbsp;</p>\n\n<h2>3.3. Tests</h2>\n\n<p>1. Create a small command line C application that uses <em>libbloom</em> to add several elements to the bloom filter then serialize the bloom filter to a (binary) file.</p>\n\n<p>2. Now using the serialized bloom filter file, pass it to the C app then test for membership of existent and non-existent elements and print the results to the console.</p>\n\n<p>3. Create a small Python script that behaves identically to the C program as described in steps 1 and 2. The Python program should be able to accept the serialized bloom filter file and print the same results as the C program. The converse should also work -- the C program should also be able to accept a serialized bloom filter from the Python file and print accurate test results.</p>\n\n<p>&nbsp;</p>\n\n<h1><span><span><span><span><span>4.0. Challenge Deliverables</span></span></span></span></span></h1>\n\n<p style=\"text-align:start\"><span><span><span><span><span><span>Please submit, in a compressed archive:</span></span></span></span></span></span></p>\n\n<ul>\n\t<li><span><span><span><span><span><span><a href=\"http://apps.topcoder.com/wiki/download/attachments/22249797/DeploymentGuideTemplate.doc?version=1\">Deployment Guide</a> (DG): describing how to deploy and run your test scripts demonstrating your implementation;</span></span></span></span></span></span></li>\n\t<li><span><span><span><span>Code: all code necessary for testing including updated PyIPND code, u<span><span><span><span>pdated Docker files and Python scripts.</span></span></span></span></span></span></span></span></li>\n</ul>\n\n<p>Note that the winner will be required to help with merging the code with the master branch.</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30050386",
+  "finalSubmissionGuidelines": "<p><span><span><span><span><span><strong>1. Third Party Code/Libraries</strong> - All third party code/libraries must be open source and you must include the license in your submission. The license must allow us to modify/re-package the code as necessary. If you have any questions regarding this, please post in the forums. Submissions that include third party code without the proper license information will be disqualified if the third party code is found to be non-usable due to license restrictions.<br />\n<br />\n<strong>2. Attribution/References </strong>- You must properly attribute and or reference any sentences, paragraphs or quotes that you cite in your text-based submission. If your submission is found to include text that has been copied and pasted from an online source without properly attributing the source, you will receive a not-so-nice email from the topcoder competition manager.<br />\n<br />\n<strong>3. Spell Check </strong>- We understand that not all submitters will be native English speakers and that there will be spelling/grammatical mistakes. We request that you first run your submission through a grammar/spell checker before submission so as to fix simple mistakes.</span></span></span></span></span></p>\n",
+  "forumId": 29572,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=29572",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 42,
+  "numberOfSubmissions": 6,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2015-06-02T01:10:00.000Z",
+      "actualStartTime": "2015-06-02T01:10:00.000Z",
+      "scheduledEndTime": "2015-07-02T01:10:00.000Z",
+      "actualendTime": null,
+      "_id": "581355b3550dfb3b52c4fdba"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-06-03T23:31:00.000Z",
+      "actualStartTime": "2015-06-03T23:31:00.000Z",
+      "scheduledEndTime": "2015-06-04T10:50:00.000Z",
+      "actualendTime": "2015-06-04T10:50:00.000Z",
+      "_id": "581355b3550dfb3b52c4fdb9"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2015-06-02T01:16:00.000Z",
+      "actualStartTime": "2015-06-02T01:16:00.000Z",
+      "scheduledEndTime": "2015-07-02T01:16:00.000Z",
+      "actualendTime": null,
+      "_id": "581355b3550dfb3b52c4fdb8"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-06-04T14:38:00.000Z",
+      "actualStartTime": "2015-06-04T14:38:00.000Z",
+      "scheduledEndTime": "2015-06-06T14:18:00.000Z",
+      "actualendTime": "2015-06-06T14:18:00.000Z",
+      "_id": "581355b3550dfb3b52c4fdb7"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-06-06T14:20:00.000Z",
+      "actualStartTime": "2015-06-06T14:20:00.000Z",
+      "scheduledEndTime": "2015-06-07T08:31:00.000Z",
+      "actualendTime": "2015-06-07T08:31:00.000Z",
+      "_id": "581355b3550dfb3b52c4fdb6"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-06-07T10:49:00.000Z",
+      "actualStartTime": "2015-06-07T10:49:00.000Z",
+      "scheduledEndTime": "2015-06-09T06:17:00.000Z",
+      "actualendTime": "2015-06-09T06:17:00.000Z",
+      "_id": "581355b3550dfb3b52c4fdb5"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-06-09T06:20:00.000Z",
+      "actualStartTime": "2015-06-09T06:20:00.000Z",
+      "scheduledEndTime": "2015-06-09T06:34:00.000Z",
+      "actualendTime": "2015-06-09T06:34:00.000Z",
+      "_id": "581355b3550dfb3b52c4fdb4"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-06-02T01:10:00.000Z",
+  "prize": [
+    300
+  ],
+  "projectId": 8588,
+  "registrants": [
+    {
+      "handle": "wjxtt2008",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-02T09:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fdb3"
+    },
+    {
+      "handle": "ifox",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-02T01:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fdb2"
+    },
+    {
+      "handle": "Easyhard",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-02T01:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fdb1"
+    },
+    {
+      "handle": "rajkumari19803",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-02T02:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fdb0"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-02T05:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fdaf"
+    },
+    {
+      "handle": "marshallmutiso",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-02T05:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fdae"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-02T05:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fdad"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-02T07:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fdac"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-02T07:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fdab"
+    },
+    {
+      "handle": "aarifjindani",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-02T08:22:00.000Z",
+      "submissionDate": "2015-06-08T14:32:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fdaa"
+    },
+    {
+      "handle": "praks123",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-02T08:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fda9"
+    },
+    {
+      "handle": "0nkery",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-02T12:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fda8"
+    },
+    {
+      "handle": "Ksys",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-02T12:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fda7"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-02T14:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fda6"
+    },
+    {
+      "handle": "fengyindiehun",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-02T15:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fda5"
+    },
+    {
+      "handle": "KMMHK",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-02T15:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fda4"
+    },
+    {
+      "handle": "dsroyster",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-02T19:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fda3"
+    },
+    {
+      "handle": "lbotsch",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-02T19:57:00.000Z",
+      "submissionDate": "2015-06-07T17:37:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fda2"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-03T05:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fda1"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-03T06:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fda0"
+    },
+    {
+      "handle": "Sher-Khan",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-03T09:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd9f"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-03T10:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd9e"
+    },
+    {
+      "handle": "red_dragon",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-04T04:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd9d"
+    },
+    {
+      "handle": "TaiwoAyanleye",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-03T16:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd9c"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-03T18:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd9b"
+    },
+    {
+      "handle": "jbgeddes3",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-04T01:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd9a"
+    },
+    {
+      "handle": "ahmedsoubky",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-04T01:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd99"
+    },
+    {
+      "handle": "Masoon",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-04T13:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd98"
+    },
+    {
+      "handle": "tyuiko",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-04T13:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd97"
+    },
+    {
+      "handle": "smtryingcode",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-04T18:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd96"
+    },
+    {
+      "handle": "LizaSheina",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-04T20:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd95"
+    },
+    {
+      "handle": "WiggleVision",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-04T20:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd94"
+    },
+    {
+      "handle": "bootkit",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-04T21:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd93"
+    },
+    {
+      "handle": "sribee",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-05T01:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd92"
+    },
+    {
+      "handle": "swktopcoder1",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-05T08:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd91"
+    },
+    {
+      "handle": "SoftTec",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-05T09:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd90"
+    },
+    {
+      "handle": "cgangee",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-05T11:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd8f"
+    },
+    {
+      "handle": "sweetpee",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-05T20:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd8e"
+    },
+    {
+      "handle": "Joof2",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-07T18:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd8d"
+    },
+    {
+      "handle": "demo.b",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-07T22:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd8c"
+    },
+    {
+      "handle": "madhurrajn",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-08T03:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd8b"
+    },
+    {
+      "handle": "substance9",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-08T06:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581355b3550dfb3b52c4fd8a"
+    }
+  ],
+  "registrationEndDate": "2015-07-02T01:10:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-07-02T01:16:00.000Z",
+  "submissions": [
+    {
+      "handle": "lbotsch",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-06-04T14:37:00.000Z",
+      "_id": "581355b3550dfb3b52c4fdc0"
+    },
+    {
+      "handle": "lbotsch",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-06-03T23:29:00.000Z",
+      "_id": "581355b3550dfb3b52c4fdbf"
+    },
+    {
+      "handle": "lbotsch",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-06-06T13:29:00.000Z",
+      "_id": "581355b3550dfb3b52c4fdbe"
+    },
+    {
+      "handle": "lbotsch",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-06-07T17:37:00.000Z",
+      "_id": "581355b3550dfb3b52c4fdbd"
+    },
+    {
+      "handle": "aarifjindani",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-06-07T10:48:00.000Z",
+      "_id": "581355b3550dfb3b52c4fdbc"
+    },
+    {
+      "handle": "aarifjindani",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-06-08T14:32:00.000Z",
+      "_id": "581355b3550dfb3b52c4fdbb"
+    }
+  ],
+  "technology": [
+    "C",
+    "Python"
+  ]
+}

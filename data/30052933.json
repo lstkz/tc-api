@@ -1,7 +1,7 @@
 {
   "_id": 30052933,
   "_isComplete": true,
-  "__v": 1,
+  "__v": 0,
   "_lastUpdate": "2016-10-27T17:51:40.205Z",
   "appealsEndDate": "2016-02-26T03:59:00.000Z",
   "challengeCommunity": "develop",
@@ -15,11 +15,6 @@
   "detailedRequirements": "<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Topcoder has a client that is developing their ability to provide television and online program recommendations to their viewing public. &nbsp;In order to do this, they are building a recommendation engine by implementing Collaborative Filtering based on Apache Spark using a Python interface. &nbsp;This client is hoping that the Topcoder community can help them refine their recommendation engine and also develop some visualizations that provide intuitions about the viewing habits of their customers.</span></span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">In this challenge, we&rsquo;re going to be laying the groundwork for future work by implementing a Collaborative Filtering Application based on the Spark mlib library:</span></p>\n\n<p><a href=\"http://spark.apache.org/docs/latest/mllib-collaborative-filtering.html\" style=\"line-height: 1.6; text-decoration: none;\"><u>http://spark.apache.org/docs/latest/mllib-collaborative-filtering.html</u></a></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">This library uses the alternating least squares algorithm to learn latent factors. &nbsp;&nbsp;Fortunately, we don&rsquo;t have to start from ground zero when we&rsquo;re developing our solution. &nbsp;There is a movie recommendation system which has been developed as a tutorial for mlib collaborative filtering which we can use as a starting point for this system:</span></p>\n\n<p><a href=\"https://databricks-training.s3.amazonaws.com/movie-recommendation-with-mllib.html\" style=\"line-height: 1.6; text-decoration: none;\"><u>https://databricks-training.s3.amazonaws.com/movie-recommendation-with-mllib.html</u></a></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">The goal of this challenge provide a program recommendation system using the movie-recommendation system as a starting point. &nbsp;&nbsp;Of course, you won&rsquo;t simply be able to cut and paste code and get this to work. &nbsp;The datasets are similar but not the same. &nbsp;The original data set for the tutorial can be found </span><a href=\"https://s3-us-west-2.amazonaws.com/databricks-meng/usb.zip\" style=\"line-height: 1.6; text-decoration: none;\"><u>here</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">. &nbsp;The format of the movie-recommendation files can be found in the &lt;installation directory&gt;/usb/data/movielens/medium. &nbsp;</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">The data for the new collaborative filtering system has been set up to make the transition as straightforward as possible. &nbsp;Just as in the movie-recommendation tutorial, we&rsquo;ve created three files for you:</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">programs.csv - lists the programs and the corresponding genres associated with the shows</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">viewers.csv - list the anonymized viewer data along with their gender and birth dates</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">views.csv - lists the viewer ids along with the number of times each viewer has watched a show</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Here is the data dictionary for the files:</span></p>\n\n<p dir=\"ltr\"><span><strong>Programs.csv</strong></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">ProgramId: Integer - &nbsp;PK for the Program</span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">ProgramName: String - Name of the Program</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Genre: &nbsp;Name of the Genre -- these have been obfuscated but the original values where strings such as &lsquo;Comedy&rsquo;, &lsquo;Drama&rsquo;, etc.</span></p>\n\n<p dir=\"ltr\"><span><strong>Viewers.csv</strong></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">ViewerId: &nbsp;Integer - PK for a viewer</span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Gender: &nbsp;Enum (&lsquo;m&rsquo;, &lsquo;f&rsquo;, &lsquo;u&rsquo;) Male, Female, Unknown</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">DateOfBirth: &nbsp;Date - Viewer Birth Date</span></p>\n\n<p dir=\"ltr\"><span><strong>Views.csv</strong></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">ViewerId: Integer - FK to Viewer</span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Source: Enum(&lsquo;Source 1&rsquo;, &lsquo;Source 2&rsquo;, &lsquo;Source 3&rsquo;, &lsquo;Source 4&rsquo;) - these values have been obfuscated but they represent the viewing mechanism/channel the viewers used to watch the show such as a web interface or through a mobile device.</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">MostRecentLocalDateKey: &nbsp;Date of most recent view</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">MostRecentTimeOfVisit: &nbsp;Timestamp of most recent view</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">ProgramId: &nbsp;Integer - FK to Program</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">NumberOfViews: Number of times a viewer watch a particular program on a particular source in the year 2015.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">You&rsquo;ll need to adjust the data input processes to parse .csv files rather than working with the &ldquo;::&rdquo; delimiter that is used in the movie recommendation tutorial.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Our client has more ambitious goals for this application than simply providing a set of program recommendations for an individual viewer. &nbsp;&nbsp;Here are the requirements for the application:</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Requirement #1: &nbsp;As part of this challenge, you should write a function which displays a listing of shows sorted in descending order by potential audience size. &nbsp;The list should display the show name, the genres, and the number of viewers which have might have a preference for each show. &nbsp;Please also display the median viewer for each show in terms of gender and birth date. &nbsp;If this is computationally prohibitive, you can limit the list to the top X shows.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Requirement #2: &nbsp;It would also be interesting to display the actual audience viewing statistics as well as the potential ones. &nbsp;Can you also write a function which displays the lists of shows based on the actual viewing statistics? &nbsp;&nbsp;The list should display the show name, the genres, and the number of viewers which have might viewed each program. &nbsp;Please also display the median viewer for each show in terms of gender and birth date. &nbsp;&nbsp;If this is computationally prohibitive, you can limit the list to the top X shows.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Requirement #3: &nbsp;As part of your submission you should discuss what steps you&rsquo;ve taken to minimize Root Mean Squared Error and how the submission compares to naive baseline. &nbsp;For example, you could explain the data partitioning process you completed for your training, validation, and testing sets and how that process generated different error results.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Requirement #4: &nbsp;(Optional) &nbsp;Create a new function which measures </span><a href=\"https://en.wikipedia.org/wiki/Information_retrieval\" style=\"line-height: 1.6; text-decoration: none;\"><u>Mean Average Precision</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> for the various data sets. &nbsp;</span><a href=\"http://fastml.com/what-you-wanted-to-know-about-mean-average-precision/\" style=\"line-height: 1.6; text-decoration: none;\"><u>Here</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> is another article which describes Mean Average Precision in more user-friendly terms.</span></p>\n\n<p><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Requirement #5: &nbsp;(Optional) &nbsp;The core requirement here is to implement a recommendation engine using Python. &nbsp;You may use technologies other than the Python Spark mlib library and sample code. &nbsp;Of course, the recommendation engine must still process the data provided.</span></span></p>\n",
   "digitalRunPoints": null,
   "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30052933",
-  "event": {
-    "id": 3446,
-    "description": "2016 TopCoder(R) Open",
-    "shortDescription": "tco16"
-  },
   "finalSubmissionGuidelines": "<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.6667px\">You should develop this application with the Python programming language.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.6667px\">Please include all source code including data manipulation scripts with your submission zip file.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.6667px\">If you&rsquo;ve created test, training and validation files please provide a URL where those files can be downloaded. &nbsp;You don&rsquo;t need to provide those in the submission itself, but you should provide a submission.txt file in the root directory of your submission where links to your data files can be found.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.6667px\">Please document your solution including analysis of the optimizations requested in Requirement #3 above.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p><span><span style=\"background-color:transparent; font-size:14.6667px\">(Optional) If you decide to implement a MAP function and display those results, please include a description of how this was implemented in your documentation.</span></span></p>\n\t</li>\n</ol>\n",
   "forumId": 31938,
   "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=31938",
@@ -27,6 +22,136 @@
   "numberOfCheckpointsPrizes": 0,
   "numberOfRegistrants": 123,
   "numberOfSubmissions": 11,
+  "postingDate": "2016-02-11T17:00:00.000Z",
+  "projectId": 9454,
+  "registrationEndDate": "2016-02-17T14:00:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-02-18T13:59:00.000Z",
+  "submissions": [
+    {
+      "handle": "cjalmeida",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-02-18T03:57:00.000Z",
+      "_id": "58123eace0be5f30ae5664a0"
+    },
+    {
+      "handle": "aplavin",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 96.88,
+      "finalScore": 98.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-02-18T13:54:00.000Z",
+      "_id": "58123eace0be5f30ae56649f"
+    },
+    {
+      "handle": "ketzjs09",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 88.75,
+      "finalScore": 95.63,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-02-18T13:57:00.000Z",
+      "_id": "58123eace0be5f30ae56649e"
+    },
+    {
+      "handle": "parapluplu",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 93.13,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-02-18T07:53:00.000Z",
+      "_id": "58123eace0be5f30ae56649d"
+    },
+    {
+      "handle": "manavender.623",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 93.13,
+      "finalScore": 94.38,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-02-18T09:43:00.000Z",
+      "_id": "58123eace0be5f30ae56649c"
+    },
+    {
+      "handle": "kubapb",
+      "placement": 6,
+      "screeningScore": null,
+      "initialScore": 88.75,
+      "finalScore": 93.13,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-02-18T12:24:00.000Z",
+      "_id": "58123eace0be5f30ae56649b"
+    },
+    {
+      "handle": "AndreM",
+      "placement": 7,
+      "screeningScore": null,
+      "initialScore": 63.75,
+      "finalScore": 63.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-02-18T12:02:00.000Z",
+      "_id": "58123eace0be5f30ae56649a"
+    },
+    {
+      "handle": "vrancic",
+      "placement": 8,
+      "screeningScore": null,
+      "initialScore": 60,
+      "finalScore": 63.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-02-18T12:52:00.000Z",
+      "_id": "58123eace0be5f30ae566499"
+    },
+    {
+      "handle": "testXuSanping",
+      "placement": 9,
+      "screeningScore": null,
+      "initialScore": 46.25,
+      "finalScore": 46.25,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-02-18T10:56:00.000Z",
+      "_id": "58123eace0be5f30ae566498"
+    },
+    {
+      "handle": "kalip",
+      "placement": 10,
+      "screeningScore": null,
+      "initialScore": 23.75,
+      "finalScore": 23.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-02-17T12:59:00.000Z",
+      "_id": "58123eace0be5f30ae566497"
+    },
+    {
+      "handle": "ogajames",
+      "placement": 11,
+      "screeningScore": null,
+      "initialScore": 23.75,
+      "finalScore": 23.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-02-17T13:24:00.000Z",
+      "_id": "58123eace0be5f30ae566496"
+    }
+  ],
   "phases": [
     {
       "type": "Registration",
@@ -74,16 +199,6 @@
       "_id": "58123eace0be5f30ae566491"
     }
   ],
-  "platforms": [
-    "Other"
-  ],
-  "postingDate": "2016-02-11T17:00:00.000Z",
-  "prize": [
-    2000,
-    1000,
-    500
-  ],
-  "projectId": 9454,
   "registrants": [
     {
       "handle": "Sky_",
@@ -1193,136 +1308,21 @@
       "_id": "58123eace0be5f30ae566416"
     }
   ],
-  "registrationEndDate": "2016-02-17T14:00:00.000Z",
-  "reviewScorecardId": 30001610,
-  "reviewType": "COMMUNITY",
-  "screeningScorecardId": null,
-  "submissionEndDate": "2016-02-18T13:59:00.000Z",
-  "submissions": [
-    {
-      "handle": "cjalmeida",
-      "placement": 1,
-      "screeningScore": null,
-      "initialScore": 100,
-      "finalScore": 100,
-      "points": 0,
-      "submissionStatus": "Active",
-      "submissionDate": "2016-02-18T03:57:00.000Z",
-      "_id": "58123eace0be5f30ae5664a0"
-    },
-    {
-      "handle": "aplavin",
-      "placement": 2,
-      "screeningScore": null,
-      "initialScore": 96.88,
-      "finalScore": 98.75,
-      "points": 0,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2016-02-18T13:54:00.000Z",
-      "_id": "58123eace0be5f30ae56649f"
-    },
-    {
-      "handle": "ketzjs09",
-      "placement": 3,
-      "screeningScore": null,
-      "initialScore": 88.75,
-      "finalScore": 95.63,
-      "points": 0,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2016-02-18T13:57:00.000Z",
-      "_id": "58123eace0be5f30ae56649e"
-    },
-    {
-      "handle": "parapluplu",
-      "placement": 4,
-      "screeningScore": null,
-      "initialScore": 93.13,
-      "finalScore": 95,
-      "points": 0,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2016-02-18T07:53:00.000Z",
-      "_id": "58123eace0be5f30ae56649d"
-    },
-    {
-      "handle": "manavender.623",
-      "placement": 5,
-      "screeningScore": null,
-      "initialScore": 93.13,
-      "finalScore": 94.38,
-      "points": 0,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2016-02-18T09:43:00.000Z",
-      "_id": "58123eace0be5f30ae56649c"
-    },
-    {
-      "handle": "kubapb",
-      "placement": 6,
-      "screeningScore": null,
-      "initialScore": 88.75,
-      "finalScore": 93.13,
-      "points": 0,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2016-02-18T12:24:00.000Z",
-      "_id": "58123eace0be5f30ae56649b"
-    },
-    {
-      "handle": "AndreM",
-      "placement": 7,
-      "screeningScore": null,
-      "initialScore": 63.75,
-      "finalScore": 63.75,
-      "points": 0,
-      "submissionStatus": "Failed Review",
-      "submissionDate": "2016-02-18T12:02:00.000Z",
-      "_id": "58123eace0be5f30ae56649a"
-    },
-    {
-      "handle": "vrancic",
-      "placement": 8,
-      "screeningScore": null,
-      "initialScore": 60,
-      "finalScore": 63.75,
-      "points": 0,
-      "submissionStatus": "Failed Review",
-      "submissionDate": "2016-02-18T12:52:00.000Z",
-      "_id": "58123eace0be5f30ae566499"
-    },
-    {
-      "handle": "testXuSanping",
-      "placement": 9,
-      "screeningScore": null,
-      "initialScore": 46.25,
-      "finalScore": 46.25,
-      "points": 0,
-      "submissionStatus": "Failed Review",
-      "submissionDate": "2016-02-18T10:56:00.000Z",
-      "_id": "58123eace0be5f30ae566498"
-    },
-    {
-      "handle": "kalip",
-      "placement": 10,
-      "screeningScore": null,
-      "initialScore": 23.75,
-      "finalScore": 23.75,
-      "points": 0,
-      "submissionStatus": "Failed Review",
-      "submissionDate": "2016-02-17T12:59:00.000Z",
-      "_id": "58123eace0be5f30ae566497"
-    },
-    {
-      "handle": "ogajames",
-      "placement": 11,
-      "screeningScore": null,
-      "initialScore": 23.75,
-      "finalScore": 23.75,
-      "points": 0,
-      "submissionStatus": "Failed Review",
-      "submissionDate": "2016-02-17T13:24:00.000Z",
-      "_id": "58123eace0be5f30ae566496"
-    }
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "prize": [
+    2000,
+    1000,
+    500
   ],
   "technology": [
     "Data Science",
     "Python"
+  ],
+  "platforms": [
+    "Other"
   ]
 }

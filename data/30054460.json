@@ -1,0 +1,331 @@
+{
+  "_id": 30054460,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:06:35.005Z",
+  "appealsEndDate": "2016-06-10T03:45:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Hercules TV Web Apps News and Lifestyle Pages - YouTube Content Scraper",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<div><span style=\"font-family:source sans pro,arial,helvetica,sans-serif\">A previous challenge has implemented a set of REST APIs for handling video assets, including storing them and managing them (create, retrieve, update, delete). &nbsp;We also built a sample RSS scraper that parses data out of configured feeds and puts video assets in to the data store using the video REST API. &nbsp;This challenge will implement a new parser to parse out Youtube user videos</span><br />\n<br />\n<strong>Existing Code</strong><br />\n<br />\n<span style=\"font-family:source sans pro,arial,helvetica,sans-serif\">The existing application is in Gitlab and access will be provided through links in the forum.</span><br />\n<br />\n<strong>Scraper</strong><br />\n<br />\n<span style=\"font-family:source sans pro,arial,helvetica,sans-serif\">The scraper will be implemented as a configurable delayed job. &nbsp;The job will run at a configurable interval and will read in the Youtube details, looking for assets added since the last time it ran. &nbsp;Each asset will be parsed and placed into the data store using the REST API.</span><br />\n<br />\n<span style=\"font-family:source sans pro,arial,helvetica,sans-serif\">The scraper will be configured with:</span><br />\n<br />\n<span style=\"font-family:source sans pro,arial,helvetica,sans-serif\">* A username of the user, like &quot;tastemade&quot; (this can go in the URL parameter for the scraper)</span><br />\n<span style=\"font-family:source sans pro,arial,helvetica,sans-serif\">* A category to use when adding videos</span><br />\n<span style=\"font-family:source sans pro,arial,helvetica,sans-serif\">* A provider value to use when adding videos</span><br />\n<br />\n<strong>Sample data</strong><br />\n<br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">For this challenge, please target the data in the &quot;Tastemade&quot; page here:</span><br />\n<br />\n<u><a class=\"in-cell-link\" href=\"https://www.youtube.com/user/tastemade\" target=\"_blank\">https://www.youtube.com/user/tastemade</a></u><br />\n<br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">The category value should be configurable for each parser, since different YouTube channels will have different categories and providers. &nbsp;If we can easily just subclass a generic YouTubeParser class and fill in these details, that would be fine. &nbsp;We won&#39;t need to change these at runtime at the moment. &nbsp;<br />\n<br />\nThe parser will be expected to grab the username and use the YouTube API to get details about the playlists and videos in the user. &nbsp;It is expected that an API key will be configured in the app for YouTube.<br />\n<br />\n1. &nbsp;Get the channel ID for the username (this only needs to be done once and must be saved in the database for quick reference)<br />\n&nbsp; &nbsp; &nbsp;&nbsp;</span><span style=\"line-height:1.6; white-space:pre-wrap\">https://www.googleapis.com/youtube/v3/channels?part=contentDetails&amp;forUsername=tastemade</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">2. Get the playlists for the channel ID</span><br />\n&nbsp; &nbsp; https://developers.google.com/youtube/v3/docs/playlists/list#try-it<br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">3. For each playlist, get the playlist items</span><br />\n&nbsp; &nbsp; https://developers.google.com/youtube/v3/docs/playlistItems/list&nbsp;<br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">4. For each playlist item, get the video details. &nbsp;For &quot;part&quot;, use &quot;snippet,player&quot;<br />\n&nbsp; &nbsp;&nbsp;</span>https://developers.google.com/youtube/v3/docs/videos/list#try-it<br />\n<br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">The direct mp4 file for playback doesn&#39;t appear to be easily accessible from the API, so we can link the user to the embed URL (</span><span style=\"color:rgb(34, 34, 34); font-family:menlo,monospace; font-size:11px\">http://www.youtube.com/watch?v=Z347wjtDgGE as an example) </span><font color=\"#666666\" face=\"source sans pro, arial, helvetica, sans-serif\"><span style=\"font-size:12px; line-height:19.2px\">If you can figure out how to get direct access to the mp4 file, that would be a nice additional feature.</span></font><br />\n<br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">The thumbnail URL used should be the largest available in the list of thumbnails.</span><br />\n<br />\n<strong>Heroku deploy</strong><br />\n<br />\n<span style=\"font-family:source sans pro,arial,helvetica,sans-serif\">Your deployment documentation should extend the existing documentation for the Node services and should cover how to deploy the newly created job to Heroku to run at a regular interval on a separate dyno from the service.</span><br />\n<br />\n<strong>Existing bugs</strong><br />\n<br />\n<span style=\"font-family:source sans pro,arial,helvetica,sans-serif\">There may be a few minor bugs in the code right now - these are not your responsibility to fix, unless they block implementation of the requirements above. &nbsp;It would be appreciated if you logged them as part of your submission.</span><br />\n<br />\n<strong>Submission format</strong><br />\n<br />\n<span style=\"font-family:source sans pro,arial,helvetica,sans-serif\">Your submission should be a Git patch file against commit hash&nbsp;f9090ce94db2c9f8fd7f987ccb940a5529989045. &nbsp;</span><strong>Make sure to test your patch file before submitting!&nbsp;<br />\n<br />\nDeployment document</strong><br />\n<br />\n<span style=\"font-family:source sans pro,arial,helvetica,sans-serif\">&nbsp;Your patch file should update the README with information about configuring and using the YouTube parser.</span></div>\n\n<div>&nbsp;</div>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30054460",
+  "finalSubmissionGuidelines": "Please see above",
+  "forumId": 33292,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33292",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 24,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-03T13:01:00.000Z",
+      "actualStartTime": "2016-06-03T13:01:00.000Z",
+      "scheduledEndTime": "2016-06-06T13:02:00.000Z",
+      "actualendTime": "2016-06-06T13:02:00.000Z",
+      "_id": "5813232b550dfb3b52b3e055"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-03T13:07:00.000Z",
+      "actualStartTime": "2016-06-03T13:07:00.000Z",
+      "scheduledEndTime": "2016-06-06T13:02:00.000Z",
+      "actualendTime": "2016-06-06T13:02:00.000Z",
+      "_id": "5813232b550dfb3b52b3e054"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-06T13:02:00.000Z",
+      "actualStartTime": "2016-06-06T13:02:00.000Z",
+      "scheduledEndTime": "2016-06-09T03:16:00.000Z",
+      "actualendTime": "2016-06-09T03:16:00.000Z",
+      "_id": "5813232b550dfb3b52b3e053"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-09T03:16:00.000Z",
+      "actualStartTime": "2016-06-09T03:16:00.000Z",
+      "scheduledEndTime": "2016-06-10T03:16:00.000Z",
+      "actualendTime": "2016-06-10T03:16:00.000Z",
+      "_id": "5813232b550dfb3b52b3e052"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-10T03:16:00.000Z",
+      "actualStartTime": "2016-06-10T03:16:00.000Z",
+      "scheduledEndTime": "2016-06-10T03:45:00.000Z",
+      "actualendTime": "2016-06-10T03:45:00.000Z",
+      "_id": "5813232b550dfb3b52b3e051"
+    }
+  ],
+  "platforms": [
+    "Heroku"
+  ],
+  "postingDate": "2016-06-03T13:01:00.000Z",
+  "prize": [
+    500,
+    250
+  ],
+  "projectId": 9599,
+  "registrants": [
+    {
+      "handle": "utkarshkukreti",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T13:14:00.000Z",
+      "submissionDate": "2016-06-06T12:13:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e050"
+    },
+    {
+      "handle": "veshu",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T14:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e04f"
+    },
+    {
+      "handle": "ananthhh",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T15:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e04e"
+    },
+    {
+      "handle": "ecavalier313",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T19:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e04d"
+    },
+    {
+      "handle": "thkang91",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T19:38:00.000Z",
+      "submissionDate": "2016-06-06T12:24:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e04c"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T20:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e04b"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T20:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e04a"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T23:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e049"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-03T23:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e048"
+    },
+    {
+      "handle": "phaniram",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-04T01:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e047"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-04T01:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e046"
+    },
+    {
+      "handle": "Blackhole08",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-04T07:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e045"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-04T08:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e044"
+    },
+    {
+      "handle": "jackchongs",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-04T15:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e043"
+    },
+    {
+      "handle": "gondzo",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-04T18:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e042"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-04T18:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e041"
+    },
+    {
+      "handle": "twds",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-05T04:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e040"
+    },
+    {
+      "handle": "Amith",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-05T07:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e03f"
+    },
+    {
+      "handle": "XinScirpt",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-05T08:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e03e"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-05T10:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e03d"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-05T10:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e03c"
+    },
+    {
+      "handle": "mehblahwhatever",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-05T19:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e03b"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-06T08:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e03a"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-06T10:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813232b550dfb3b52b3e039"
+    }
+  ],
+  "registrationEndDate": "2016-06-06T13:02:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-06-06T13:02:00.000Z",
+  "submissions": [
+    {
+      "handle": "utkarshkukreti",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 98.75,
+      "finalScore": 98.75,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-06-06T12:13:00.000Z",
+      "_id": "5813232b550dfb3b52b3e057"
+    },
+    {
+      "handle": "thkang91",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 91.25,
+      "finalScore": 91.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-06-06T12:24:00.000Z",
+      "_id": "5813232b550dfb3b52b3e056"
+    }
+  ],
+  "technology": [
+    "Node.js"
+  ]
+}

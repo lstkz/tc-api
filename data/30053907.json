@@ -1,0 +1,365 @@
+{
+  "_id": 30053907,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:14:58.349Z",
+  "appealsEndDate": "2016-05-04T17:35:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Project Werbung - JIRA App Development with Swift - S3 Uploads",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong><span style=\"color:#000000\">INTRODUCTION</span></strong></span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">This is the next in a series of iOS challenges to develop a mobile front end for submitting issues to a JIRA ticketing system. This challenge will focus on updating the existing project to incorporate the first step in a video upload feature.</span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>REQUIREMENTS</strong></span></span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">You&rsquo;ll be updating the existing Xcode project to include functionality for uploading media files (photos or videos) to S3 on issue submission to JIRA.</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">In the previous challenge, we added handling of the display for the custom field type &nbsp;com.atlassian.jira.plugin.system.customfieldtypes:url. &nbsp;This field type renders on screen as a button for the user to select a video or photo from their device to attach to the JIRA ticket.</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">In order to upload the file to S3, you&rsquo;ll be making an API call to a proxy to retrieve a pre-signed URL. &nbsp;The base URL for the proxy server is accessible via the Configuration singleton in the JIRA library project.</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">To upload via the proxy, first do a GET to /getPreSignedPutUrl/file.ext where &ldquo;file.ext&rdquo; is the file as it should be named in the S3 bucket &nbsp;Name the file uniquely using the logged in user&rsquo;s ID and a UTC timestamp. &nbsp;The response will return the following JSON structure:</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">{</span></span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">&nbsp; &nbsp; &quot;url&quot;: &quot;https://bucket.s3.amazonaws.com/werbung/file.jpg?AWSAccessKeyId=XYZ&amp;Expires=1461706880&amp;Signature=XYZ&quot;</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">}</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Do a PUT to the above URL with the binary data of the file to be uploaded in the body of the request. If the upload is successful, set the value of the custom url field in the POST to JIRA to the URL received above, less the query string. &nbsp;If the upload fails, prompt the user to either try the upload again, or continue issue submission to JIRA without the attachment.</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">This upload operation should only be performed if the user selected a media file to attach to their issue. &nbsp;Otherwise, the issue submission to JIRA should continue normally.</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>SETUP</strong></span></span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- See the challenge forums for details on adding yourself to the </span><a href=\"https://gitlab.com/groups/Hercules-ProjectWerbung\" style=\"font-family: arial, helvetica, sans-serif; font-size: 14px; text-decoration: none;\"><u>Hercules Werbung group</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\"> on Gitlab if you are not already a member</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- Once added to the team, </span><a href=\"https://gitlab.com/Hercules-ProjectWerbung/iOS\" style=\"font-family: arial, helvetica, sans-serif; font-size: 14px; text-decoration: none;\"><u>fork the repository</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\"> if you haven&rsquo;t already and work off of the </span><a href=\"https://gitlab.com/Hercules-ProjectWerbung/iOS/tree/PW_09\" style=\"font-family: arial, helvetica, sans-serif; font-size: 14px; text-decoration: none;\"><u>PW_09</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\"> branch</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- Add </span><a href=\"https://gitlab.com/u/harrywynn\" style=\"font-family: arial, helvetica, sans-serif; font-size: 14px; text-decoration: none;\"><u>harrywynn</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\"> and </span><a href=\"https://gitlab.com/u/lazybaer\" style=\"font-family: arial, helvetica, sans-serif; font-size: 14px; text-decoration: none;\"><u>lazybaer</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\"> as members of your forked repository with Reporter access</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- View the </span><a href=\"https://gitlab.com/Hercules-ProjectWerbung/android/tree/master\" style=\"font-family: arial, helvetica, sans-serif; font-size: 14px; text-decoration: none;\"><u>README</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\"> in the repository for API access specifics and resources</span></p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30053907",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:rgb(0, 0, 0)\">-- Xcode 7.3 project with all screens and functionality as outlined above</span></span></span><br />\n<span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- Code must compile against iOS SDK 9.3 with a deployment target of iOS 8.0</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- Develop for iPhone (locked to portrait) and iPad (not locked) size classes</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- Use storyboards and autolayout for all views and navigation</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- All code must be written in Swift and be well commented</span><br />\n<span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- Upload your source project as a zip</span></p>\n",
+  "forumId": 32804,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=32804",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 21,
+  "numberOfSubmissions": 7,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-27T01:15:00.000Z",
+      "actualStartTime": "2016-04-27T01:15:00.000Z",
+      "scheduledEndTime": "2016-05-01T01:15:00.000Z",
+      "actualendTime": "2016-05-01T01:15:00.000Z",
+      "_id": "58134142550dfb3b52be95f9"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-27T01:20:00.000Z",
+      "actualStartTime": "2016-04-27T01:20:00.000Z",
+      "scheduledEndTime": "2016-05-01T01:15:00.000Z",
+      "actualendTime": "2016-05-01T01:15:00.000Z",
+      "_id": "58134142550dfb3b52be95f8"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-01T01:15:00.000Z",
+      "actualStartTime": "2016-05-01T01:15:00.000Z",
+      "scheduledEndTime": "2016-05-03T13:09:00.000Z",
+      "actualendTime": "2016-05-03T13:09:00.000Z",
+      "_id": "58134142550dfb3b52be95f7"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-03T13:09:00.000Z",
+      "actualStartTime": "2016-05-03T13:09:00.000Z",
+      "scheduledEndTime": "2016-05-04T13:09:00.000Z",
+      "actualendTime": "2016-05-04T13:09:00.000Z",
+      "_id": "58134142550dfb3b52be95f6"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-04T13:09:00.000Z",
+      "actualStartTime": "2016-05-04T13:09:00.000Z",
+      "scheduledEndTime": "2016-05-04T17:35:00.000Z",
+      "actualendTime": "2016-05-04T17:35:00.000Z",
+      "_id": "58134142550dfb3b52be95f5"
+    }
+  ],
+  "platforms": [
+    "AWS",
+    "iOS"
+  ],
+  "postingDate": "2016-04-27T01:15:00.000Z",
+  "prize": [
+    500,
+    300
+  ],
+  "projectId": 9396,
+  "registrants": [
+    {
+      "handle": "muzehyun",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-27T07:04:00.000Z",
+      "submissionDate": "2016-04-30T21:41:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134142550dfb3b52be95f4"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-27T01:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134142550dfb3b52be95f3"
+    },
+    {
+      "handle": "hfreedomx",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-27T01:42:00.000Z",
+      "submissionDate": "2016-04-29T15:03:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134142550dfb3b52be95f2"
+    },
+    {
+      "handle": "JinkProject",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-27T02:03:00.000Z",
+      "submissionDate": "2016-04-30T19:25:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134142550dfb3b52be95f1"
+    },
+    {
+      "handle": "vvvpig",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-27T02:16:00.000Z",
+      "submissionDate": "2016-04-29T11:55:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134142550dfb3b52be95f0"
+    },
+    {
+      "handle": "albet.januar",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-27T02:51:00.000Z",
+      "submissionDate": "2016-04-30T10:30:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134142550dfb3b52be95ef"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-27T03:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134142550dfb3b52be95ee"
+    },
+    {
+      "handle": "general7078",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-27T07:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134142550dfb3b52be95ed"
+    },
+    {
+      "handle": "hash3r",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-27T08:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134142550dfb3b52be95ec"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-27T10:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134142550dfb3b52be95eb"
+    },
+    {
+      "handle": "lowell",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-27T10:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134142550dfb3b52be95ea"
+    },
+    {
+      "handle": "N1k1tung",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-27T11:16:00.000Z",
+      "submissionDate": "2016-04-30T10:48:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134142550dfb3b52be95e9"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-27T13:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134142550dfb3b52be95e8"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-27T15:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134142550dfb3b52be95e7"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-27T22:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134142550dfb3b52be95e6"
+    },
+    {
+      "handle": "sindu",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-28T02:07:00.000Z",
+      "submissionDate": "2016-04-30T17:26:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134142550dfb3b52be95e5"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-28T02:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134142550dfb3b52be95e4"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-28T04:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134142550dfb3b52be95e3"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-28T15:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134142550dfb3b52be95e2"
+    },
+    {
+      "handle": "alveron",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-30T00:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134142550dfb3b52be95e1"
+    },
+    {
+      "handle": "LieutenantRoger",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-30T14:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134142550dfb3b52be95e0"
+    }
+  ],
+  "registrationEndDate": "2016-05-01T01:15:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-05-01T01:15:00.000Z",
+  "submissions": [
+    {
+      "handle": "sindu",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 96.88,
+      "finalScore": 98.13,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-04-30T17:26:00.000Z",
+      "_id": "58134142550dfb3b52be9600"
+    },
+    {
+      "handle": "muzehyun",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 97.5,
+      "finalScore": 97.5,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-04-30T21:41:00.000Z",
+      "_id": "58134142550dfb3b52be95ff"
+    },
+    {
+      "handle": "N1k1tung",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 96.88,
+      "finalScore": 96.88,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-04-30T10:48:00.000Z",
+      "_id": "58134142550dfb3b52be95fe"
+    },
+    {
+      "handle": "vvvpig",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 90,
+      "finalScore": 93.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-04-29T11:55:00.000Z",
+      "_id": "58134142550dfb3b52be95fd"
+    },
+    {
+      "handle": "hfreedomx",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 88.75,
+      "finalScore": 88.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-04-29T15:03:00.000Z",
+      "_id": "58134142550dfb3b52be95fc"
+    },
+    {
+      "handle": "albet.januar",
+      "placement": 6,
+      "screeningScore": null,
+      "initialScore": 87.5,
+      "finalScore": 87.5,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-04-30T10:30:00.000Z",
+      "_id": "58134142550dfb3b52be95fb"
+    },
+    {
+      "handle": "JinkProject",
+      "placement": 7,
+      "screeningScore": null,
+      "initialScore": 85,
+      "finalScore": 86.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-04-30T19:25:00.000Z",
+      "_id": "58134142550dfb3b52be95fa"
+    }
+  ],
+  "technology": [
+    "Swift"
+  ]
+}

@@ -1,0 +1,438 @@
+{
+  "_id": 30051898,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T11:00:19.919Z",
+  "appealsEndDate": "2015-11-05T02:33:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Sunshot - Building DataCloud -  NodeJS Sensor Data Simulator",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\"><span style=\"line-height:1.6\">The goal of this challenge is to build a small NodeJS application that accepts an input file of devices/streams and will emulate a sensor (device) by sending data.</span></p>\n\n<p dir=\"ltr\">The application will also serve a small UI that allows a file to be uploaded, and a screen that allows managing streams/devices.</p>\n\n<h1 dir=\"ltr\">Challenge Requirements</h1>\n\n<p dir=\"ltr\">You will address the following in this challenge :</p>\n\n<h3 dir=\"ltr\"><u>NodeJS Framework and Modules</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- nodejs</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- expressjs (latest version)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- &nbsp;<a href=\"https://github.com/caolan/async\">async</a> (latest version)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- <a href=\"https://github.com/typicode/lowdb\">JSON DB</a> (latest version)</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Input File</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The node application will expose an endpoint to accept input file in csv format or JSON format with multiple device/stream pairs, data values, etc.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Sample CSV/JSON file is provided in challenge forums. (direct link <a href=\"https://drive.google.com/open?id=0B73tfGLY7t1HbUlOSDdLUHMwekU\">https://drive.google.com/open?id=0B73tfGLY7t1HbUlOSDdLUHMwekU</a>)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Columns Clarifications :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- API Key - M2X API Key</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- DeviceID - &nbsp;Device ID / Key in m2x</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Stream Name - name of the stream in m2X</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- h00 - h24 - these are 24 hourly value columns</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Randomizer value (i.e. 0.5 - this is the +/- threshold for a random number based on the hours value - see data generation section)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Boolean: trend (yes/no) &mdash; see data generation section</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>REST API Backend</u></h3>\n\n<p dir=\"ltr\">Write a nodejs/expressjs application with following information :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The application should accept input file as input argument when running the application i.e. node app.js &lt;input file&gt;</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- If file is csv format it should be converted to json and stored in the json db.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Configuration (file only, no UI)</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Port number - port the app is listening on</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Send Interval - [default= 1 minute] number representing time interval (in minutes) to generate and send data.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Use JSON DB <a href=\"https://github.com/typicode/lowdb\">https://github.com/typicode/lowdb</a> as database in this application.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- API REST Endpoints</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- POST /StopAll - stop sending data for all streams (idle until start is called)</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Basically this means stop the data generator scheduler job.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- POST /StartAll - start / restart sending data for all streams</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Logic :</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Load the new input file in JSON db (convert it to json if it is csv)</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Mark all streams as enabled</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Start the data generator job</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- POST /StartStream/{stream name}</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- This starts/restarts data generation job for the given stream</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Logic :</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Mark the stream as enabled in the json db.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- POST /StopStream/{stream_name}-</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- This stops the streams data generation job for the given stream</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Logic</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Mark the stream as disabled in the json db.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- POST /ImportFile - &nbsp;receives a new input file</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Add validation for the csv/JSON file, it should have all required fields as the provided sample file.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- File logic :</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Calls StopAll</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Stores file locally (overwrites existing).</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Calls StartAll</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- PUT /Stream/{stream-id}</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Used to update the hourly value of the given stream.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- The passed parameters are the stream id, the hourly key and hourly value.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Logic :</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Stop the given stream</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Update the stream object in json db</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Start the stream again</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Move logic to utility class so it can be used by different endpoints, i.e. /ImportFile will use same logic as /StopAll and /StartAll.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Socket.io</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Write a real time <a href=\"http://socket.io/\">socket io</a> that emits the latest generated value for each stream to connected clients.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Sensitive data should be configurable.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Add proper error handling.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Add proper logging.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>User Interface</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Use Default Bootstrap theme to deliver basic and good look and feel.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Use AngularJS for frontend communication with backend.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- You will build a single admin page</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- No authentication or authorization required.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Simple Upload File</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- User will browse and upload CSV/JSON file.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- There should be a progress upload indicator</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Status message depends on the backend progress &nbsp;and workflow update.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- A table listing all streams, allowing user to &ldquo;interrupt&rdquo; the data generation by updating the hourly value or turning stream on/off</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Show button at top to stop All / Start All depending on streams state.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Each row (stream) should be displayed</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Stream Name &nbsp;: as in the file</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Last Value - last generated value sent to m2x for this stream, this value will be updated in real time using the socket io controller.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Stop / Start button - stops/start only this stream</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Update button - allows updating the stream data in backend when user changes any hourly value.</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- It is preferred that this button is enabled only when user makes a change to existing hourly field.</p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">- Values for h00-h24 in the file</p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\">- The fields are editable, only digits are allowed.</p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Data Generator Job Scheduler </u></h3>\n\n<p dir=\"ltr\">We will have single job scheduler run periodically using configured &ldquo;Send Interval&rdquo; variable for the interval time.</p>\n\n<p dir=\"ltr\">The generator will generate data and send it to the stream using this api endpoint <a href=\"https://m2x.att.com/developer/documentation/v2/device#Post-Data-Stream-Values\">https://m2x.att.com/developer/documentation/v2/device#Post-Data-Stream-Values</a></p>\n\n<p dir=\"ltr\">Each time the job scheduler run it will load all &ldquo;enabled&rdquo; streams from the JSON db.</p>\n\n<p dir=\"ltr\">The Logic to generate data is this :</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Random Value</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">The input file contains a value for each hour in a 24 hour period. The app will generate and send a random number to m2x every X minutes (default 1 min).<br />\n\t\tA random number should be generated based on the correct hourly value (h00 - h24) for the current time +/- the randomizer value. &nbsp;Let&#39;s say for the 12pm hour (h12), the temperature in the store is supposed to be 72 degrees and we have the randomizer value set at 0.5. This means that every minute during h12, the simulator will create a temperature value within the range of 71.5 and 72.5 degrees (i.e.e +/- 0.5 degrees from 72).</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Store latest generated value in the JSON DB for this stream.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Use the socket.io to emit the generated value to connected clients..</p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Trending value transition</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">If the [TREND] column in the file for this stream is &lsquo;Y&rsquo; (TRUE) &nbsp;the transition to the next hourly value (i.e. going from h01 to h02) is accomplished over 20 intervals (Default send interval is 1 minute). The increment would be calculated as ABS([NewValue] - [OldValue]) / 20. If h00 = 72 and h01 = 82, the value is incremented by 0.5 each time it is sent for 20 intervals of sending data (Creating an upward trend when graphed). {72.5, 73, 73.5, 74&hellip;..}</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">After the 20 intervals completed the Data Generation logic should reset to use Random Value data generation logic.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Store latest generated value in the JSON DB for this stream.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Use the socket.io to emit the generated value to connected clients.</p>\n\t\t</li>\n\t</ol>\n\t</li>\n</ol>\n\n<h2 dir=\"ltr\">M2X Demo Account</h2>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Sign-up for a free account with <a href=\"https://m2x.att.com/developer/documentation/v2/overview\">AT&amp;T M2x</a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Create a device (hardware / other)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Create a stream (note endpoints for logging value to this stream)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Review the API</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><a href=\"https://m2x.att.com/developer/documentation/v2/device\">https://m2x.att.com/developer/documentation/v2/device</a></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Posting Data Stream values - <a href=\"https://m2x.att.com/developer/documentation/v2/device#Post-Data-Stream-Values\">https://m2x.att.com/developer/documentation/v2/device#Post-Data-Stream-Values</a></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">API Keys : <a href=\"https://m2x.att.com/developer/documentation/v2/overview\">https://m2x.att.com/developer/documentation/v2/overview</a></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Code Samples from AT&amp;T <a href=\"https://m2x.att.com/developer/sample-code\">https://m2x.att.com/developer/sample-code</a></p>\n\t</li>\n</ol>\n\n<h1 dir=\"ltr\">Hosting</h1>\n\n<p dir=\"ltr\">Provide a deployment steps to host and run the application in Heroku.</p>\n\n<h1 dir=\"ltr\">Documents</h1>\n\n<p dir=\"ltr\">Sample input csv/json file is provided in challenge forums.</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30051898",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<h1 dir=\"ltr\">Deliverable</h1>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- All source code that implement the requirement.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- README in markup language</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Verification document contains steps to verify your solution.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Sample input file.</p>\n\t</li>\n</ul>\n",
+  "forumId": 31010,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=31010",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 35,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-27T16:38:00.000Z",
+      "actualStartTime": "2015-10-27T16:38:00.000Z",
+      "scheduledEndTime": "2015-11-01T16:38:00.000Z",
+      "actualendTime": "2015-11-01T16:38:00.000Z",
+      "_id": "58132fc3550dfb3b52b8af53"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-27T16:43:00.000Z",
+      "actualStartTime": "2015-10-27T16:43:00.000Z",
+      "scheduledEndTime": "2015-11-01T16:38:00.000Z",
+      "actualendTime": "2015-11-01T16:38:00.000Z",
+      "_id": "58132fc3550dfb3b52b8af52"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-01T16:38:00.000Z",
+      "actualStartTime": "2015-11-01T16:38:00.000Z",
+      "scheduledEndTime": "2015-11-03T16:33:00.000Z",
+      "actualendTime": "2015-11-03T16:33:00.000Z",
+      "_id": "58132fc3550dfb3b52b8af51"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-03T16:33:00.000Z",
+      "actualStartTime": "2015-11-03T16:33:00.000Z",
+      "scheduledEndTime": "2015-11-04T16:34:00.000Z",
+      "actualendTime": "2015-11-04T16:34:00.000Z",
+      "_id": "58132fc3550dfb3b52b8af50"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-04T16:34:00.000Z",
+      "actualStartTime": "2015-11-04T16:34:00.000Z",
+      "scheduledEndTime": "2015-11-05T02:33:00.000Z",
+      "actualendTime": "2015-11-05T02:33:00.000Z",
+      "_id": "58132fc3550dfb3b52b8af4f"
+    }
+  ],
+  "platforms": [
+    "Heroku",
+    "NodeJS"
+  ],
+  "postingDate": "2015-10-27T16:38:00.000Z",
+  "prize": [
+    850,
+    400
+  ],
+  "projectId": 9159,
+  "registrants": [
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T02:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af4e"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-27T20:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af4d"
+    },
+    {
+      "handle": "code56Life",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-27T16:54:00.000Z",
+      "submissionDate": "2015-11-01T10:33:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af4c"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-27T17:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af4b"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-27T20:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af4a"
+    },
+    {
+      "handle": "Luckyodell",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-27T22:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af49"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T00:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af48"
+    },
+    {
+      "handle": "dpebble",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T03:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af47"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T05:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af46"
+    },
+    {
+      "handle": "CrazyCoderLZB",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T05:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af45"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T06:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af44"
+    },
+    {
+      "handle": "gets0ul",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T08:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af43"
+    },
+    {
+      "handle": "flytoj2ee",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T09:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af42"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T10:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af41"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T10:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af40"
+    },
+    {
+      "handle": "java1980",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T14:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af3f"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T13:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af3e"
+    },
+    {
+      "handle": "Shadrach",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T17:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af3d"
+    },
+    {
+      "handle": "sfaxiano",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-29T01:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af3c"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-29T02:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af3b"
+    },
+    {
+      "handle": "VishalRocks",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-29T04:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af3a"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-29T15:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af39"
+    },
+    {
+      "handle": "rakeshk_87",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-29T18:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af38"
+    },
+    {
+      "handle": "vimrc",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-30T01:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af37"
+    },
+    {
+      "handle": "kiril.kartunov",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-30T06:43:00.000Z",
+      "submissionDate": "2015-11-01T13:54:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af36"
+    },
+    {
+      "handle": "altaironfire",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-30T16:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af35"
+    },
+    {
+      "handle": "NikhilKalige",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-30T22:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af34"
+    },
+    {
+      "handle": "halceyon",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-31T02:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af33"
+    },
+    {
+      "handle": "cyberjag",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-31T06:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af32"
+    },
+    {
+      "handle": "ifox",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-31T07:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af31"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-31T11:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af30"
+    },
+    {
+      "handle": "jaindsonvs",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-31T13:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af2f"
+    },
+    {
+      "handle": "chengweichi",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-31T17:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af2e"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-01T05:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af2d"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-01T13:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af2c"
+    }
+  ],
+  "registrationEndDate": "2015-11-01T16:38:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-11-01T16:38:00.000Z",
+  "submissions": [
+    {
+      "handle": "kiril.kartunov",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 92.5,
+      "finalScore": 92.5,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-11-01T13:54:00.000Z",
+      "_id": "58132fc3550dfb3b52b8af55"
+    },
+    {
+      "handle": "code56Life",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 77.5,
+      "finalScore": 78.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-11-01T10:33:00.000Z",
+      "_id": "58132fc3550dfb3b52b8af54"
+    }
+  ],
+  "technology": [
+    "HTML",
+    "JSON",
+    "Node.js"
+  ]
+}

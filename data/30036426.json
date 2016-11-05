@@ -1,0 +1,538 @@
+{
+  "_id": 30036426,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:15:28.226Z",
+  "appealsEndDate": "2013-12-10T22:49:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Healthcare Fraud Prevention - Partner Client Integration Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><span style=\"font-family:arial,helvetica,sans-serif;\"><span style=\"font-size: 14px;\"><strong>Project overview</strong></span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif;\">The Healthcare Fraud Prevention Partnership (HFPP) is a coalition of healthcare insurers who aim to share data in search of suspicious claims. A claim is a demand for reimbursement under an insurance plan. Insurers are happy to pay legitimate claims but do not want to cover&nbsp;fraudulent or wasteful reimbursement, which ultimately results in higher costs for all consumers. To assist in the identification of suspicious&nbsp;claims, partners intend to make their own database of claims available for studies to be conducted by a trusted third party.</span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif;\"><span style=\"line-height: 1.6em;\">TopCoder has developed a data exchange network that will be used for this purpose. Each partner in the network will install a software package that will connect it to the network and make its data available for studies. The components of the partner&#39;s software&nbsp;package have already been developed. </span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif;\"><span style=\"line-height: 1.6em;\">In this contest, your job is to assemble the client network node components into a fully integrated package that is ready for installation by the partner&#39;s IT personnel.</span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif;\"><span style=\"font-size: 14px;\"><b>Client Integration</b></span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif;\">One of the major challenges in this contest is the integration of the client modules. The query client is the partner&#39;s point of contact with the network node. It is connected to three other modules:</span></p>\n\n<ul style=\"list-style-type:square;\">\n\t<li><span style=\"font-family:arial,helvetica,sans-serif;\">query decision module</span></li>\n\t<li><span style=\"font-family:arial,helvetica,sans-serif;\">database appliance</span></li>\n\t<li><span style=\"font-family:arial,helvetica,sans-serif;\">conversion module</span></li>\n</ul>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif;\">In this contest, the competitors are expected to complete the following tasks for the client integration:</span></p>\n\n<ol>\n\t<li><span style=\"font-family:arial,helvetica,sans-serif;\">Replace dataappliance.py with the real data appliance module (attached).</span></li>\n\t<li><span style=\"font-family:arial,helvetica,sans-serif;\">Replace dataconversion.py with the real data conversion module (attached).</span></li>\n\t<li><span style=\"font-family:arial,helvetica,sans-serif;\">Integrate with the query parsing and generation module (attached).</span></li>\n\t<li><span style=\"font-family:arial,helvetica,sans-serif;\">Complete query decision module (datafullfilment.py). Please see the details below.</span></li>\n\t<li><span style=\"font-family:arial,helvetica,sans-serif;\">Update client code to support https.</span></li>\n</ol>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif;\"><span style=\"font-size: 14px;\"><strong>Query Decision Module</strong></span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif;\">When the query client receives a data request through the network, it begins by passing the query to the query decision module, which is responsible for deciding whether the data request will be accepted. Some partners may implement manual staging, which means that the response may not be received for hours or days. Therefore, you must modify the current implementation to make it possible for a long delay to occur. We expect the following workflow to be implemented:</span></p>\n\n<p><em><span style=\"font-family:courier new,courier,monospace;\">1. partner client receive data request<br />\n2. check whether this is an immediately-fullfilable query (non-manual) with decision module</span></em></p>\n\n<div><em><span style=\"font-family:courier new,courier,monospace;\">&nbsp;&nbsp;&nbsp; 2.1 if it is, go to 3</span></em></div>\n\n<div><em><span style=\"font-family:courier new,courier,monospace;\">&nbsp;&nbsp;&nbsp; 2.2 if it is not, </span></em></div>\n\n<div><em><span style=\"font-family:courier new,courier,monospace;\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.2.1 transfer the query to decision module</span></em></div>\n\n<div><em><span style=\"font-family:courier new,courier,monospace;\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.2.2 response with a message that states this query will be posted back after manual approval.</span></em></div>\n\n<div><em><span style=\"font-family:courier new,courier,monospace;\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.2.3 go to 7</span></em></div>\n\n<div><em><span style=\"font-family:courier new,courier,monospace;\">3. parse the query by using&nbsp;<span style=\"background-color: rgb(245, 245, 245); color: rgb(51, 51, 51);\">Healthcare Fraud Prevention - Query Parsing and Query Generation</span></span></em></div>\n\n<div><em><span style=\"font-family:courier new,courier,monospace;\"><span style=\"background-color: rgb(245, 245, 245); color: rgb(51, 51, 51);\">4. execute sql by using&nbsp;</span>dataappliance module result will be csv file</span></em></div>\n\n<div><em><span style=\"font-family:courier new,courier,monospace;\">5. convert module csv-&gt;xml</span></em></div>\n\n<div><em><span style=\"font-family:courier new,courier,monospace;\">6. partner client will then add result in data response and send to data response service in node server</span></em></div>\n\n<div><span style=\"font-family:arial,helvetica,sans-serif;\"><em><span style=\"font-family:courier new,courier,monospace;\">7. end</span></em></span></div>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif;\"><span style=\"font-size: 14px;\"><strong>Query Decision Module Web Interface</strong></span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif;\">This contest needs to complete a simple web interface for the client personnel to approve or deny a data request (step 2.2.2 in last section).&nbsp; If the request is approved, step 3-6 will be executed. Otherwise, we posts back an error message indicating the denial.</span></p>\n",
+  "digitalRunPoints": 675,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30036426",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2013-12-11T06:18:00.000Z",
+  "finalSubmissionGuidelines": "<p><span style=\"font-size:14px;\"><strong>Software environment</strong></span></p>\n\n<ul style=\"list-style-type:square;\">\n\t<li>all integration code to be written in&nbsp;Python 3.3</li>\n\t<li>operating system: fresh&nbsp;install of Ubuntu 12.04&nbsp;with all current updates</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px;\"><strong>Deliverables</strong></span></p>\n\n<ul style=\"list-style-type:square;\">\n\t<li>all&nbsp;source code and configuration files required to build the assembly</li>\n\t<li>a detailed deployment and configuration guide that describes how to install the partner software from scratch</li>\n\t<li>unit tests are not required, but the deployment guide must demonstrate basic usage</li>\n</ul>\n",
+  "forumId": 19456,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=19456",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 38,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-01T05:59:00.000Z",
+      "actualStartTime": "2013-12-01T05:59:00.000Z",
+      "scheduledEndTime": "2013-12-01T06:02:00.000Z",
+      "actualendTime": "2013-12-01T06:02:00.000Z",
+      "_id": "58134f70550dfb3b52c30888"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-01T06:02:00.000Z",
+      "actualStartTime": "2013-12-01T06:02:00.000Z",
+      "scheduledEndTime": "2013-12-01T09:22:00.000Z",
+      "actualendTime": "2013-12-01T09:22:00.000Z",
+      "_id": "58134f70550dfb3b52c30887"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-01T12:00:00.000Z",
+      "actualStartTime": "2013-12-01T12:00:00.000Z",
+      "scheduledEndTime": "2013-12-04T12:00:00.000Z",
+      "actualendTime": "2013-12-04T12:00:00.000Z",
+      "_id": "58134f70550dfb3b52c30886"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-01T12:05:00.000Z",
+      "actualStartTime": "2013-12-01T12:05:00.000Z",
+      "scheduledEndTime": "2013-12-07T12:05:00.000Z",
+      "actualendTime": "2013-12-07T12:05:00.000Z",
+      "_id": "58134f70550dfb3b52c30885"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-07T12:05:00.000Z",
+      "actualStartTime": "2013-12-07T12:05:00.000Z",
+      "scheduledEndTime": "2013-12-07T12:30:00.000Z",
+      "actualendTime": "2013-12-07T12:30:00.000Z",
+      "_id": "58134f70550dfb3b52c30884"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-07T12:30:00.000Z",
+      "actualStartTime": "2013-12-07T12:30:00.000Z",
+      "scheduledEndTime": "2013-12-09T13:03:00.000Z",
+      "actualendTime": "2013-12-09T13:03:00.000Z",
+      "_id": "58134f70550dfb3b52c30883"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-09T13:03:00.000Z",
+      "actualStartTime": "2013-12-09T13:03:00.000Z",
+      "scheduledEndTime": "2013-12-10T13:05:00.000Z",
+      "actualendTime": "2013-12-10T13:05:00.000Z",
+      "_id": "58134f70550dfb3b52c30882"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-10T13:05:00.000Z",
+      "actualStartTime": "2013-12-10T13:05:00.000Z",
+      "scheduledEndTime": "2013-12-10T22:49:00.000Z",
+      "actualendTime": "2013-12-10T22:49:00.000Z",
+      "_id": "58134f70550dfb3b52c30881"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-10T22:49:00.000Z",
+      "actualStartTime": "2013-12-10T22:49:00.000Z",
+      "scheduledEndTime": "2013-12-11T01:16:00.000Z",
+      "actualendTime": "2013-12-11T01:16:00.000Z",
+      "_id": "58134f70550dfb3b52c30880"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-11T01:16:00.000Z",
+      "actualStartTime": "2013-12-11T01:16:00.000Z",
+      "scheduledEndTime": "2013-12-11T06:18:00.000Z",
+      "actualendTime": "2013-12-11T06:18:00.000Z",
+      "_id": "58134f70550dfb3b52c3087f"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-11T06:18:00.000Z",
+      "actualStartTime": "2013-12-11T06:18:00.000Z",
+      "scheduledEndTime": "2013-12-11T07:35:00.000Z",
+      "actualendTime": "2013-12-11T07:35:00.000Z",
+      "_id": "58134f70550dfb3b52c3087e"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-11T07:35:00.000Z",
+      "actualStartTime": "2013-12-11T07:35:00.000Z",
+      "scheduledEndTime": "2013-12-12T17:51:00.000Z",
+      "actualendTime": "2013-12-12T17:51:00.000Z",
+      "_id": "58134f70550dfb3b52c3087d"
+    }
+  ],
+  "platforms": [],
+  "postingDate": "2013-12-01T12:00:00.000Z",
+  "prize": [
+    1500,
+    750
+  ],
+  "projectId": 6277,
+  "registrants": [
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-02T21:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f70550dfb3b52c3087c"
+    },
+    {
+      "handle": "gonia_119",
+      "reliability": "6%",
+      "registrationDate": "2013-12-01T12:25:00.000Z",
+      "submissionDate": null,
+      "rating": "957",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f70550dfb3b52c3087b"
+    },
+    {
+      "handle": "oipn4e2",
+      "reliability": "100%",
+      "registrationDate": "2013-12-01T12:55:00.000Z",
+      "submissionDate": "2013-12-07T05:42:00.000Z",
+      "rating": "1757",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58134f70550dfb3b52c3087a"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-01T13:37:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58134f70550dfb3b52c30879"
+    },
+    {
+      "handle": "billthu",
+      "reliability": "6%",
+      "registrationDate": "2013-12-01T14:20:00.000Z",
+      "submissionDate": null,
+      "rating": "762",
+      "colorStyle": "color: #999999",
+      "_id": "58134f70550dfb3b52c30878"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2013-12-01T14:55:00.000Z",
+      "submissionDate": null,
+      "rating": "1690",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58134f70550dfb3b52c30877"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2013-12-01T15:41:00.000Z",
+      "submissionDate": null,
+      "rating": "829",
+      "colorStyle": "color: #999999",
+      "_id": "58134f70550dfb3b52c30876"
+    },
+    {
+      "handle": "fabrizyo",
+      "reliability": "0%",
+      "registrationDate": "2013-12-01T16:18:00.000Z",
+      "submissionDate": null,
+      "rating": "1160",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f70550dfb3b52c30875"
+    },
+    {
+      "handle": "code.freak",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-01T17:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f70550dfb3b52c30874"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "20%",
+      "registrationDate": "2013-12-01T17:07:00.000Z",
+      "submissionDate": "2013-12-07T11:54:00.000Z",
+      "rating": "949",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f70550dfb3b52c30873"
+    },
+    {
+      "handle": "saarixx",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-01T17:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f70550dfb3b52c30872"
+    },
+    {
+      "handle": "snood101",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-01T17:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f70550dfb3b52c30871"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "100%",
+      "registrationDate": "2013-12-01T22:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f70550dfb3b52c30870"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "0%",
+      "registrationDate": "2013-12-02T02:21:00.000Z",
+      "submissionDate": null,
+      "rating": "1722",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58134f70550dfb3b52c3086f"
+    },
+    {
+      "handle": "srikkbhat",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-02T03:10:00.000Z",
+      "submissionDate": null,
+      "rating": "749",
+      "colorStyle": "color: #999999",
+      "_id": "58134f70550dfb3b52c3086e"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-02T04:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f70550dfb3b52c3086d"
+    },
+    {
+      "handle": "Fantoccini",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-02T04:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f70550dfb3b52c3086c"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "0%",
+      "registrationDate": "2013-12-02T05:35:00.000Z",
+      "submissionDate": null,
+      "rating": "885",
+      "colorStyle": "color: #999999",
+      "_id": "58134f70550dfb3b52c3086b"
+    },
+    {
+      "handle": "Rhapsody0710",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-02T05:59:00.000Z",
+      "submissionDate": null,
+      "rating": "391",
+      "colorStyle": "color: #999999",
+      "_id": "58134f70550dfb3b52c3086a"
+    },
+    {
+      "handle": "praveens73",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-02T15:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f70550dfb3b52c30869"
+    },
+    {
+      "handle": "ohyan07",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-02T07:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f70550dfb3b52c30868"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-02T08:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f70550dfb3b52c30867"
+    },
+    {
+      "handle": "brain_cn",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-02T08:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f70550dfb3b52c30866"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-02T08:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f70550dfb3b52c30865"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-02T08:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f70550dfb3b52c30864"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-02T09:41:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58134f70550dfb3b52c30863"
+    },
+    {
+      "handle": "jol",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-02T10:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f70550dfb3b52c30862"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "13%",
+      "registrationDate": "2013-12-02T11:16:00.000Z",
+      "submissionDate": null,
+      "rating": "555",
+      "colorStyle": "color: #999999",
+      "_id": "58134f70550dfb3b52c30861"
+    },
+    {
+      "handle": "michael_tang",
+      "reliability": "0%",
+      "registrationDate": "2013-12-02T12:51:00.000Z",
+      "submissionDate": null,
+      "rating": "912",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f70550dfb3b52c30860"
+    },
+    {
+      "handle": "BLE",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-02T12:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f70550dfb3b52c3085f"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "6%",
+      "registrationDate": "2013-12-03T09:36:00.000Z",
+      "submissionDate": null,
+      "rating": "1027",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f70550dfb3b52c3085e"
+    },
+    {
+      "handle": "cmax",
+      "reliability": "0%",
+      "registrationDate": "2013-12-03T17:09:00.000Z",
+      "submissionDate": null,
+      "rating": "1051",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f70550dfb3b52c3085d"
+    },
+    {
+      "handle": "agus.mw",
+      "reliability": "13%",
+      "registrationDate": "2013-12-04T04:40:00.000Z",
+      "submissionDate": null,
+      "rating": "993",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f70550dfb3b52c3085c"
+    },
+    {
+      "handle": "devmodugu",
+      "reliability": "0%",
+      "registrationDate": "2013-12-04T05:52:00.000Z",
+      "submissionDate": null,
+      "rating": "855",
+      "colorStyle": "color: #999999",
+      "_id": "58134f70550dfb3b52c3085b"
+    },
+    {
+      "handle": "caoweiquan322",
+      "reliability": "90%",
+      "registrationDate": "2013-12-04T05:56:00.000Z",
+      "submissionDate": "2013-12-06T17:01:00.000Z",
+      "rating": "1149",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f70550dfb3b52c3085a"
+    },
+    {
+      "handle": "JGeeks",
+      "reliability": "n/a",
+      "registrationDate": "2013-12-04T06:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f70550dfb3b52c30859"
+    },
+    {
+      "handle": "leftlzf",
+      "reliability": "6%",
+      "registrationDate": "2013-12-04T08:40:00.000Z",
+      "submissionDate": null,
+      "rating": "813",
+      "colorStyle": "color: #999999",
+      "_id": "58134f70550dfb3b52c30858"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2013-12-02T01:55:00.000Z",
+      "submissionDate": null,
+      "rating": "889",
+      "colorStyle": "color: #999999",
+      "_id": "58134f70550dfb3b52c30857"
+    }
+  ],
+  "registrationEndDate": "2013-12-04T12:00:00.000Z",
+  "reliabilityBonus": 300,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2013-12-07T12:05:00.000Z",
+  "submissions": [
+    {
+      "handle": "caoweiquan322",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 98.41,
+      "finalScore": 98.74,
+      "points": 438.75,
+      "submissionStatus": "Active",
+      "submissionDate": "2013-12-06T17:01:00.000Z",
+      "_id": "58134f70550dfb3b52c3088b"
+    },
+    {
+      "handle": "yedtoss",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 91.67,
+      "finalScore": 95.56,
+      "points": 168.75,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2013-12-07T11:54:00.000Z",
+      "_id": "58134f70550dfb3b52c3088a"
+    },
+    {
+      "handle": "oipn4e2",
+      "placement": 3,
+      "screeningScore": 100,
+      "initialScore": 93.58,
+      "finalScore": 94.44,
+      "points": 67.5,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2013-12-07T05:42:00.000Z",
+      "_id": "58134f70550dfb3b52c30889"
+    }
+  ],
+  "technology": [
+    "Java",
+    "Python",
+    "SQL"
+  ]
+}

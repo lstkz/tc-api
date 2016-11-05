@@ -1,0 +1,390 @@
+{
+  "_id": 30036162,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T23:14:05.825Z",
+  "appealsEndDate": "2013-11-12T23:12:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Module Assembly - ActionHero Tasks for Adding LDAP Entry and Sending Verification Emails",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Project Overview</span></h2>\n\n<p>TopCoder and the TopCoder community have worked hard to get the platform to its currently level of maturity, but we&#39;re far from done. It&#39;s time to take the platform to the next level. TopCoder is going to start taking some steps to open up the platform API to the outside and community developers so they could incorporate it in their websites, applications or build their own applications (web, mobile or desktop).</p>\n\n<p>The ultimate goal is to open up and build an &quot;API&quot; that is targeting all different type of audiences - Software and Studio Competitors, SRM/MM competitors, Copilots, Admins and TopCoder partners - each audience will have different interests and usages of the API, so it will be a huge project and we need to make sure that we are in the right direction from the beginning.</p>\n\n<p>In this contest, we are going to implement part of the Member registration process as ActionHero Tasks (<a href=\"https://github.com/evantahler/actionHero/wiki/Tasks\">https://github.com/evantahler/actionHero/wiki/Tasks</a>), like adding LDAP entry and sending verficication emails.</p>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Competition Task Overview</span></h2>\n\n<p><span style=\"color:#FF0000;\"><span style=\"font-size: 12px;\"><img align=\"absmiddle\" alt=\"\" border=\"0\" height=\"16\" src=\"http://apps.topcoder.com/wiki/images/icons/emoticons/warning.gif\" width=\"16\" /> <strong>Please raise questions as quick as you can, I am familiar with related database and code base, I can provide as much support as I can.</strong></span></span></p>\n\n<p><span style=\"color:#FF0000;\"><span style=\"font-size: 12px;\"><img align=\"absmiddle\" alt=\"\" border=\"0\" height=\"16\" src=\"http://apps.topcoder.com/wiki/images/icons/emoticons/warning.gif\" width=\"16\" /></span><strong>The updated code must still deploy and work on heroku - any submission which can&#39;t be deployed on heroku successfully will be failed in screening phase - primary reviewer must check this.</strong></span></p>\n\n<p>The implementation will base on the node.js version of TC platform API - <span class=\"nobr\"><a href=\"https://github.com/cloudspokes/tc-api\" rel=\"nofollow\">https://github.com/cloudspokes/tc-api</a>.</span> <strong>Please follow the existing actionhero pattern for your development.</strong></p>\n\n<h2><strong>Adding LDAP Entry ActionHero Task</strong></h2>\n\n<p>In order to let the user take effect (be able to login), an entry will need to be added into LDAP server, check <u>addTopCoderMemberProfile</u> and <u>activateLDAPEntry</u> methods in <a href=\"https://coder.topcoder.com/internal/web_module/branches/tc_reg_revamp/src/main/com/topcoder/reg/services/impl/UserServiceImpl.java\">UserServiceImpl </a>for reference.</p>\n\n<p>In this implementation, you should let node.js directly talking to LDAP server.</p>\n\n<p>Please implement the logic by using <a href=\"http://ldapjs.org/\">http://ldapjs.org/</a>.</p>\n\n<p>Following are the LDAP info in VM:<br />\n<span style=\"color:#0000FF;\">/home/tc/jboss-4.0.4.GA/bin/run.conf</span></p>\n\n<p>we have</p>\n\n<p><span style=\"color:#0000FF;\">JAVA_OPTS=&quot;$JAVA_OPTS -Djavax.net.ssl.trustStore=TC.prod.ldap.keystore&quot;</span></p>\n\n<p>which is</p>\n\n<p><span style=\"color:#0000FF;\">/home/tc/jboss-4.0.4.GA/bin/TC.cloud.ldap.keystore</span></p>\n\n<p>in conf has</p>\n\n<p><span style=\"color:#0000FF;\">/home/tc/jboss-4.0.4.GA/server/all/conf/LDAP.properties</span></p>\n\n<h2><strong>Sending Verification Email ActionHero Task</strong></h2>\n\n<p>Please use <a href=\"https://github.com/andris9/Nodemailer\">nodemailer</a> for email sending logic, detail logic for sending activation email is already implemented in Java, please check <u>sendActivationEmail</u> method in <a href=\"https://coder.topcoder.com/internal/web_module/branches/tc_reg_revamp/src/main/com/topcoder/reg/RegistrationHelper.java\">RegistrationHelper</a><u> </u>class.</p>\n\n<p>Notes,</p>\n\n<ol>\n\t<li>The email settings should be configurable. so we can easily adapt the configuration for different environment.</li>\n\t<li>The email content should be in spearate file (template), so we can easily update the email content if needed.</li>\n\t<li>The activation code will be generated when inserting user record, the actionhero task should take one parameter as activation code.</li>\n</ol>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Configurations</span></h3>\n\n<p>In the previous changes for API framework, we are removing configuration files. and use environment variables&nbsp;as described here: <a href=\"http://12factor.net/config\">http://12factor.net/config</a></p>\n\n<ul>\n\t<li>Please update initial support/documentation for dev (local), staging (heroku), and production environments.</li>\n\t<li>Please update two bash scripts to set the dev / heroku configuration values to environment variables (see <u>deploy</u> directory)</li>\n</ul>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Testing</span></h3>\n\n<p><span style=\"font-size:12px;\">Please provide testing to make sure the ActionHero Tasks can working properly for various cases.</span></p>\n\n<p><span style=\"font-size:12px;\">The API Framework supports tests. </span>Use supertest (https://github.com/visionmedia/supertest) with mocha (http://visionmedia.github.io/mocha/). Don&#39;t install mocha globally.</p>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Code Format</span></h3>\n\n<p>All code must pass <a href=\"http://www.jslint.com/\">jslint</a>. You may use &quot;nomen: true&quot;.</p>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Winner Only</span></h3>\n\n<p>Winner will create pull request against the main github repo in final fix phase, and help merge and integrating with the main Member Registration logic.</p>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Virutal Machines</span> (VMs)</h3>\n\n<p>VM specific information is found here: <span class=\"nobr\"><a href=\"http://www.topcoder.com/wiki/display/docs/VM+Image+2.5\" rel=\"nofollow\">http://www.topcoder.com/wiki/display/docs/VM+Image+2.5</a></span></p>\n\n<p>Upon registration as a submitter or reviewer you will need to request a VM based on the TopCoder systems image. The VM will be active through aggregation review, after which it will be terminated except for the winner&#39;s and the reviewers&#39;. To request your image, please post in contest forum.</p>\n\n<p>Before requesting your VM, you need to ensure that you have an SSH key created and in your member profile. Instructions to do so are here: <span class=\"nobr\"><a href=\"http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key\" rel=\"nofollow\">http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key</a></span>, and instructions to connect afterwards are here: <span class=\"nobr\"><a href=\"http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key\" rel=\"nofollow\">http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key</a></span>.</p>\n\n<p>Please realize that VMs are currently issued manually. We make every attempt to issue the VM as soon as it is requested, however, there may be delays of up to 12 hours depending on time of day when you request. We encourage everyone to request a VM as soon as possible to minimize any such delays.</p>\n\n<h2 style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><strong><span style=\"color: rgb(255, 0, 0);\">Review Board Requirements</span></strong></h2>\n\n<p style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Reviewers need to write Supertest tests for the APIs.</p>\n\n<p style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">There are three roles:</p>\n\n<ul>\n\t<li style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Accuracy - Tests the implementation on the accuracy of the results when using the component.</li>\n\t<li style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Failure - Tests the implementation&#39;s ability to handle bad data and incorrect usage.</li>\n\t<li style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Security - Tests the oauth, sql inject and other security related requirements.</li>\n</ul>\n\n<p style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Reviewer could send preferred role by Contact Manager&nbsp;after system selected the reviwer.</p>\n\n<p style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Copilot will assign the role to reviewers if reviewer didn&#39;t send the preferred role information.</p>\n\n<p style=\"margin: 0px 0px 12px; padding: 0px; line-height: 1.5em; word-wrap: break-word; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\">Reviewer must create pull request from GitHub for the tests.</p>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Technology Overview</span></h2>\n\n<ul style=\"font-family: Arial, Helvetica, Verdana, sans-serif; font-size: 12px; line-height: 16px;\">\n\t<li>JavaScript</li>\n\t<li><span class=\"nobr\"><a href=\"http://nodejs.org/\" rel=\"nofollow\">Node.js 0.10.x</a></span></li>\n\t<li><a href=\"https://github.com/evantahler/actionHero\">actionhero.js framework</a></li>\n</ul>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Documentation Provided</span></h2>\n\n<p>Please check the deployment guide in codebase for reference.</p>\n",
+  "digitalRunPoints": 360,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30036162",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2013-11-14T01:40:00.000Z",
+  "finalSubmissionGuidelines": "<p><strong><span style=\"color:#FF0000;\"><span style=\"line-height: 1.6em;\">Submission Deliverables</span></span></strong></p>\n\n<p><span style=\"font-size:12px;\">A complete list of deliverables can be viewed in the TopCoder Assembly competition Tutorial at: <a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorial\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorial&nbsp;</a></span></p>\n\n<p><span style=\"font-size:12px;\">Below is an overview of the deliverables:</span></p>\n\n<ul>\n\t<li>Source Code.</li>\n\t<li>Deployment guide to configure and verify the application.</li>\n</ul>\n\n<p><strong><span style=\"color:#FF0000;\"><span style=\"line-height: 1.6em;\">Final Submission </span></span></strong></p>\n\n<p><span style=\"font-size:12px;\">For each member, the final submission should be uploaded to the Online Review Tool.</span></p>\n",
+  "forumId": 19407,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=19407",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 24,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-04T12:28:00.000Z",
+      "actualStartTime": "2013-11-04T12:28:00.000Z",
+      "scheduledEndTime": "2013-11-04T12:29:00.000Z",
+      "actualendTime": "2013-11-04T12:29:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6e5c"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-04T12:29:00.000Z",
+      "actualStartTime": "2013-11-04T12:29:00.000Z",
+      "scheduledEndTime": "2013-11-04T14:15:00.000Z",
+      "actualendTime": "2013-11-04T14:15:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6e5b"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-04T14:15:00.000Z",
+      "actualStartTime": "2013-11-04T14:15:00.000Z",
+      "scheduledEndTime": "2013-11-06T14:15:00.000Z",
+      "actualendTime": "2013-11-06T14:15:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6e5a"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-04T14:20:00.000Z",
+      "actualStartTime": "2013-11-04T14:20:00.000Z",
+      "scheduledEndTime": "2013-11-09T14:20:00.000Z",
+      "actualendTime": "2013-11-09T14:20:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6e59"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-09T14:20:00.000Z",
+      "actualStartTime": "2013-11-09T14:20:00.000Z",
+      "scheduledEndTime": "2013-11-09T15:55:00.000Z",
+      "actualendTime": "2013-11-09T15:55:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6e58"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-09T15:55:00.000Z",
+      "actualStartTime": "2013-11-09T15:55:00.000Z",
+      "scheduledEndTime": "2013-11-11T14:43:00.000Z",
+      "actualendTime": "2013-11-11T14:43:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6e57"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-11T14:43:00.000Z",
+      "actualStartTime": "2013-11-11T14:43:00.000Z",
+      "scheduledEndTime": "2013-11-12T14:43:00.000Z",
+      "actualendTime": "2013-11-12T14:43:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6e56"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-12T14:43:00.000Z",
+      "actualStartTime": "2013-11-12T14:43:00.000Z",
+      "scheduledEndTime": "2013-11-12T23:12:00.000Z",
+      "actualendTime": "2013-11-12T23:12:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6e55"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-12T23:12:00.000Z",
+      "actualStartTime": "2013-11-12T23:12:00.000Z",
+      "scheduledEndTime": "2013-11-13T01:19:00.000Z",
+      "actualendTime": "2013-11-13T01:19:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6e54"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-13T01:19:00.000Z",
+      "actualStartTime": "2013-11-13T01:19:00.000Z",
+      "scheduledEndTime": "2013-11-14T01:40:00.000Z",
+      "actualendTime": "2013-11-14T01:40:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6e53"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-14T01:40:00.000Z",
+      "actualStartTime": "2013-11-14T01:40:00.000Z",
+      "scheduledEndTime": "2013-11-14T13:40:00.000Z",
+      "actualendTime": "2013-11-14T13:40:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6e52"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-14T13:40:00.000Z",
+      "actualStartTime": "2013-11-14T13:40:00.000Z",
+      "scheduledEndTime": "2013-11-22T14:38:00.000Z",
+      "actualendTime": "2013-11-22T14:38:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6e51"
+    }
+  ],
+  "platforms": [],
+  "postingDate": "2013-11-04T14:15:00.000Z",
+  "prize": [
+    800,
+    400
+  ],
+  "projectId": 6757,
+  "registrants": [
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-04T19:09:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6e50"
+    },
+    {
+      "handle": "mehblahwhatever",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-04T22:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6e4f"
+    },
+    {
+      "handle": "KeSyren",
+      "reliability": "20%",
+      "registrationDate": "2013-11-04T23:10:00.000Z",
+      "submissionDate": null,
+      "rating": "744",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6e4e"
+    },
+    {
+      "handle": "chuxy111",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-05T00:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6e4d"
+    },
+    {
+      "handle": "brain_cn",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-05T01:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6e4c"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-05T02:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6e4b"
+    },
+    {
+      "handle": "me551ah",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-05T02:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6e4a"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "6%",
+      "registrationDate": "2013-11-05T03:39:00.000Z",
+      "submissionDate": null,
+      "rating": "770",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6e49"
+    },
+    {
+      "handle": "dualfitting",
+      "reliability": "33%",
+      "registrationDate": "2013-11-04T14:24:00.000Z",
+      "submissionDate": null,
+      "rating": "1592",
+      "colorStyle": "color: #DDCC00",
+      "_id": "5813dbbd550dfb3b52ea6e48"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-04T14:24:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6e47"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-04T14:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6e46"
+    },
+    {
+      "handle": "pinoydream",
+      "reliability": "0%",
+      "registrationDate": "2013-11-04T15:07:00.000Z",
+      "submissionDate": null,
+      "rating": "1188",
+      "colorStyle": "color: #00A900",
+      "_id": "5813dbbd550dfb3b52ea6e45"
+    },
+    {
+      "handle": "progloco",
+      "reliability": "0%",
+      "registrationDate": "2013-11-04T15:09:00.000Z",
+      "submissionDate": null,
+      "rating": "866",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6e44"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2013-11-04T15:14:00.000Z",
+      "submissionDate": null,
+      "rating": "889",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6e43"
+    },
+    {
+      "handle": "freegod",
+      "reliability": "26%",
+      "registrationDate": "2013-11-04T15:38:00.000Z",
+      "submissionDate": null,
+      "rating": "587",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6e42"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "6%",
+      "registrationDate": "2013-11-04T16:07:00.000Z",
+      "submissionDate": null,
+      "rating": "691",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6e41"
+    },
+    {
+      "handle": "jacksunwei",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-04T17:12:00.000Z",
+      "submissionDate": "2013-11-09T11:25:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6e40"
+    },
+    {
+      "handle": "saarixx",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-04T17:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6e3f"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-05T09:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6e3e"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "0%",
+      "registrationDate": "2013-11-05T10:22:00.000Z",
+      "submissionDate": null,
+      "rating": "58",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6e3d"
+    },
+    {
+      "handle": "alex.english80",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-05T12:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dbbd550dfb3b52ea6e3c"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2013-11-05T14:02:00.000Z",
+      "submissionDate": null,
+      "rating": "829",
+      "colorStyle": "color: #999999",
+      "_id": "5813dbbd550dfb3b52ea6e3b"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "0%",
+      "registrationDate": "2013-11-05T15:43:00.000Z",
+      "submissionDate": null,
+      "rating": "997",
+      "colorStyle": "color: #00A900",
+      "_id": "5813dbbd550dfb3b52ea6e3a"
+    },
+    {
+      "handle": "flytoj2ee",
+      "reliability": "20%",
+      "registrationDate": "2013-11-06T03:36:00.000Z",
+      "submissionDate": null,
+      "rating": "1247",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813dbbd550dfb3b52ea6e39"
+    }
+  ],
+  "registrationEndDate": "2013-11-06T14:15:00.000Z",
+  "reliabilityBonus": 160,
+  "reviewScorecardId": 30001530,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2013-11-09T14:20:00.000Z",
+  "submissions": [
+    {
+      "handle": "jacksunwei",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 91.64,
+      "finalScore": 92.33,
+      "points": 360,
+      "submissionStatus": "Active",
+      "submissionDate": "2013-11-09T11:25:00.000Z",
+      "_id": "5813dbbd550dfb3b52ea6e5d"
+    }
+  ],
+  "technology": [
+    "JavaScript",
+    "Node.js",
+    "Other"
+  ]
+}

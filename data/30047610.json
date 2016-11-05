@@ -1,0 +1,186 @@
+{
+  "_id": 30047610,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T09:54:38.040Z",
+  "appealsEndDate": "2014-12-12T04:01:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "[serenity] New Discussion email Notification with Kue and sendgrid",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><em>Like food, water, shelter, and fire, sending emails when a discussion message is posted to a site is a fundamental skill for survival. This exploratory challenge will allow you to use two of our serenity apis, Kue (node job queue), and sendgrid to send email notifications. &nbsp;</em></p>\n\n<p><em><span>The goal of this challenge is create a mechanism to notify participant on a challenge when a new discussion message is created. The notification will be an email with the body of the message. We build off our previous challenge of using Kue as a worker queue platform. The flow would be something like this:</span></em></p>\n\n<p><strong>Flow</strong></p>\n\n<p>1. &nbsp;A new discussion thread is created by a participant of the challenge<br />\n2. &nbsp;The discussion service will use the Kue api to create a new queue [name: 60_new_discussion_message] that includes all the details of the discussion message. (1 job)<br />\n3. &nbsp;A consumer/producer [file name: 6getParticpantsForDiscussionNotification.js ] will parse that job for the challenge id, message content and author of the message, and will call to the discussion service to get all the participants.<br />\n4. &nbsp;The list of participants will be added to the new queue [name: 61_sendDiscussionNotification ] but the author of the message should be removed. ( this may be one job for all the participants or 1 job per participant ) and should include the message content, challenge name, and author of the message.<br />\n5. &nbsp;A consumer [file name: 6sendDiscussionNotificationEmails.js ] will work of the 61_sendDiscussionNotification queue and email each participant the content of the new discussion post, and complete the job.</p>\n\n<p><em>If you have used thr forums at topcoder you should have a pretty good idea of how this flow works. The major difference is that these discussion.messages are less forum style and more github style, meaning a single threaded message attached to an object. Our current dev systems do not have all the data you need yet so you will have to simulate some things. For example we don&#39;t resolve the email as of yet so you will have to simulate the userId as the email. Also of course you can&#39;t send these emails out to the participants so you should send them to yourself (or me) and just put the userId and Role in the Subject header along with the text &quot;New Discussion post for challenge {{challenge.name }} by {{message.createdBy}}&quot;</em></p>\n\n<p><strong>Requirements</strong><br />\n1. &nbsp;Download the base code from the <a href=\"https://github.com/appirio-tech/lc1-event-service\">event-service repo</a><br />\n2. &nbsp;Look at the docs/challenge.NewDiscussionEmailNotification.md doc for more details on the api calls you will need.<br />\n3. &nbsp;Create a curl script that will add a job to the 60_new_discussion_message queue by passing the minimum fields: challengeId, messageId, createdBy, createdAt and content. You can parts of the above json payload for inspiration.<br />\n4. &nbsp;Create the appropriate producers and consumers as described in the Flow that will result in send mock emails to the participants of the challenge minus the author.<br />\n5. &nbsp;The end goal of this challenge is to send actual emails but only to yourself and the subject of email will contain the userid or handle to simulate the actual mailto address of all the participants. You can look the the consumer/producers with the 5 prefix to get an idea of how the mail functionality works but it is pretty trivial. You will need to sign up for a free account with sendgrid and you may use topcoder.com as the website in the signup. The sendgrid node module is in the package.json so all you need to do is put your SENDGRID_USERNAME and SENDGRID_USERNAME in a .env file. (.env* is in gitignore but be sure to delete yours when you submit.)<br />\n6. &nbsp;Address error handling and retries as you see necessary. Since the discussion services (your simulate curl call) will be making the first job you can assume that it is not necessary to check for duplicates but it would be nice.<br />\n7. &nbsp;Also it is desired to have some sort of status about the sendmail call in the completed jobs if it is possible.<br />\n8. &nbsp;The result of this challenge is not deployment ready code but it should prove it works That being said you have some liberties to make some choices that will allow for flexibility, scaleability and ease of use. Please read the other challenge doc in the repo and the Readme for setup instructions and more context.</p>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30047610",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalSubmissionGuidelines": "<p>1. &nbsp;Submit your src as a single zip file which includes the .git dir<br />\n2. &nbsp;Submit a short video of your solution in action (links to screencast, youtube, dropbox are preferred over video file uploads.) If English is not your first language you are welcome to annotate you video with text over narration.<br />\n3. &nbsp;Submit a detail description of you implementation and recommendation.</p>\n",
+  "forumId": 27063,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=27063",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 6,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-04T22:11:00.000Z",
+      "actualStartTime": "2014-12-04T22:11:00.000Z",
+      "scheduledEndTime": "2014-12-08T16:11:00.000Z",
+      "actualendTime": "2014-12-08T16:11:00.000Z",
+      "_id": "5813205e550dfb3b52b2b8d6"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-04T22:16:00.000Z",
+      "actualStartTime": "2014-12-04T22:16:00.000Z",
+      "scheduledEndTime": "2014-12-08T16:11:00.000Z",
+      "actualendTime": "2014-12-08T16:11:00.000Z",
+      "_id": "5813205e550dfb3b52b2b8d5"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-08T16:11:00.000Z",
+      "actualStartTime": "2014-12-08T16:11:00.000Z",
+      "scheduledEndTime": "2014-12-10T16:05:00.000Z",
+      "actualendTime": "2014-12-10T16:05:00.000Z",
+      "_id": "5813205e550dfb3b52b2b8d4"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-10T16:05:00.000Z",
+      "actualStartTime": "2014-12-10T16:05:00.000Z",
+      "scheduledEndTime": "2014-12-11T16:05:00.000Z",
+      "actualendTime": "2014-12-11T16:05:00.000Z",
+      "_id": "5813205e550dfb3b52b2b8d3"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-11T16:05:00.000Z",
+      "actualStartTime": "2014-12-11T16:05:00.000Z",
+      "scheduledEndTime": "2014-12-12T04:01:00.000Z",
+      "actualendTime": "2014-12-12T04:01:00.000Z",
+      "_id": "5813205e550dfb3b52b2b8d2"
+    }
+  ],
+  "platforms": [
+    "NodeJS"
+  ],
+  "postingDate": "2014-12-04T22:11:00.000Z",
+  "prize": [
+    700,
+    400
+  ],
+  "projectId": 7971,
+  "registrants": [
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-05T00:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813205e550dfb3b52b2b8d1"
+    },
+    {
+      "handle": "kiri4a",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-05T07:47:00.000Z",
+      "submissionDate": "2014-12-08T06:09:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813205e550dfb3b52b2b8d0"
+    },
+    {
+      "handle": "gpbencke",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-05T10:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813205e550dfb3b52b2b8cf"
+    },
+    {
+      "handle": "xiufei",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-05T12:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813205e550dfb3b52b2b8ce"
+    },
+    {
+      "handle": "mahnunchik",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-05T17:45:00.000Z",
+      "submissionDate": "2014-12-07T15:24:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813205e550dfb3b52b2b8cd"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-06T15:19:00.000Z",
+      "submissionDate": "2014-12-08T04:10:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813205e550dfb3b52b2b8cc"
+    }
+  ],
+  "registrationEndDate": "2014-12-08T16:11:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2014-12-08T16:11:00.000Z",
+  "submissions": [
+    {
+      "handle": "peakpado",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 99.38,
+      "finalScore": 99.38,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-12-08T04:10:00.000Z",
+      "_id": "5813205e550dfb3b52b2b8d9"
+    },
+    {
+      "handle": "kiri4a",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 96.25,
+      "finalScore": 96.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-12-08T06:09:00.000Z",
+      "_id": "5813205e550dfb3b52b2b8d8"
+    },
+    {
+      "handle": "mahnunchik",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 86.25,
+      "finalScore": 87.5,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-12-07T15:24:00.000Z",
+      "_id": "5813205e550dfb3b52b2b8d7"
+    }
+  ],
+  "technology": [
+    "Node.js",
+    "Redis"
+  ]
+}

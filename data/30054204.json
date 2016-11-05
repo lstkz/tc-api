@@ -1,0 +1,1275 @@
+{
+  "_id": 30054204,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:15:00.441Z",
+  "appealsEndDate": "2016-06-09T01:24:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Living Progress - Data to Drops - Keyword Categorization",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></h2>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Millions of people around the world rely on water points for their daily existence. Too often the water points fail and communities are left without the water they desperately need. A lack of basic information on these failures has made keeping water flowing a major challenge for governments and aid agencies. Across the globe, many communities have come to rely on public water access points. People will come to these water points and open the tap or pump the handpump to fill their containers. As long as the water is flowing, they will carry the water home, and use it for sustenance: drinking, cooking, cleaning, bathing, and more. The water from these points are a critical foundation for success, health, and prosperity.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Unfortunately, these water points systematically fail due to technical breakdowns, water scarcity, vandalism, and misuse. When these water points fail the very foundation for community wellbeing fails. People have to revert to distant water sources, dirty water, or exorbitant prices. Better understanding the causes of failure will allow NGOs and governments to better avoid these failures, ensuring that water services last over time.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">The recently launched </span><a href=\"https://www.waterpointdata.org/\" style=\"text-decoration:none;\"><u>Water Point Data Exchange</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> (WPDx) has made significant progress in analyzing these failures and establishing a path forward to lasting services. WPDx consists of a data exchange standard and a central repository of compliant data. The water point data is aggregated from governments, NGOs, academia, and other sources and then standardized for integration into the central repository. This unprecedented library of information is already providing a foundation for improved research and effective policies to help keep water flowing. &nbsp;The major limitation of WPDx is the presence of several open text fields among the standardized attributes. These fields (such as water point status, and water point type) allow for much needed flexibility, but severely curtail analysis. This solution will provide secondary processing on the WPDx data to convert those open text values into meaningful categories that allow for analysis.<br />\n<br />\nThis challenge is part of the&nbsp;</span><a href=\"http://blitz.topcoder.com/hpe-lpc_design/\" style=\"color: rgb(102, 102, 102); padding: 0px; margin: 0px; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 12px; line-height: 18px; text-decoration: none;\"><u>HPE Living Progress Challenge Blitz Program</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">&nbsp;(Secure top placements in the leaderboard to grab additional cash prizes)</span></p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Competition Task Overview</span></h2>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Before diving into more sophisticated analysis and categorization mechanisms we&rsquo;re going to develop a simple keyword matching solution to clean and tag the data from three fields in the raw WPDx data set. &nbsp;The data is well-suited to this type of tagging so we want to use this mechanism as a baseline. &nbsp;Your solution should try to deal with misspellings and should be case-insensitive. &nbsp;&nbsp;Please do not implement a Bayesian algorithm or attempt a neural network. &nbsp;Regular expressions are fine though. We&rsquo;ve selected a set of 4000 records from the whole dataset which will allow you to validate your solution. &nbsp;</span></p>\n&nbsp;\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">The data can be accessed here: &nbsp;</span><a href=\"https://drive.google.com/file/d/0ByjxTGykXQjAa1FCRV9BNEYyQjA/view?usp=sharing\" style=\"text-decoration:none;\"><u>https://drive.google.com/file/d/0ByjxTGykXQjAa1FCRV9BNEYyQjA/view?usp=sharing</u></a></p>\n&nbsp;\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">We&rsquo;ll test the solutions with approximately 1000 records which are not provided to you in advance. &nbsp;&nbsp;The solutions will be evaluated for accuracy. &nbsp;Fifty percent of the score for the submissions will be based on the accuracy of your categorization efforts. &nbsp;The accuracy metric is fairly simple:</span></p>\n&nbsp;\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Accuracy = # of correct responses/# of total responses</span></p>\n&nbsp;\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">What we&rsquo;re doing in this challenge is mapping the values in the #water_tech and #water_source fields to a cleaned and distinct set of water source types. &nbsp;The source data is quite messy and the water source info may be found in either field. &nbsp;The strategy for dealing with this is typically just to concatenate the fields together and search the concatenated string for possible matching keywords. &nbsp;It won&rsquo;t be possible to categorize every field. &nbsp;There are null values even in the training data.</span></p>\n&nbsp;\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Here is the list of water source types you&rsquo;ll be mapping from the #water_source and #water_tech fields:</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Borehole or tubewell</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Null </span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Piped into public tap or basin</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Piped water to yard/plot</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Protected dug well</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Protected spring</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Public tap or standpipe</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Rainwater</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Surface water</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Unprotected dug well</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Unprotected spring</span></p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Additional Requirements</span></h2>\n<span style=\"background-color:transparent; font-size:14.6667px\">1. You should use Python 2.7 to complete this application. &nbsp;</span><br />\n<span style=\"background-color:transparent; font-size:14.6667px\">2. Please name your Python script keyword.py. &nbsp;</span><br />\n<span style=\"background-color:transparent; font-size:14.6667px\">3. The script should take two command line parameters. &nbsp;The 1st parameter should be the file path of the input file. &nbsp;The 2nd is the the file path of the output file. </span><br />\n<span style=\"background-color:transparent; font-size:14.6667px\">4. The output file format should be exactly the same as in the input file with one additional column: &nbsp;&ldquo;Water Source Types&rdquo;.</span>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Technology Overview</span></h2>\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Linux<br />\nPython 2.7<br />\nData Science</span>",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30054204",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<h2><strong><span style=\"color:rgb(255, 0, 0)\">Submission Deliverables</span></strong></h2>\n\n<p><span style=\"background-color:transparent; font-size:14.6667px\">1. Please submit all code required by the application in your submission.zip</span><br />\n<span style=\"background-color:transparent; font-size:14.6667px\">2. Document the build process for your code including all dependencies (pip installs etc..)</span></p>\n",
+  "forumId": 33067,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33067",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 94,
+  "numberOfSubmissions": 30,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-26T18:00:00.000Z",
+      "actualStartTime": "2016-05-26T18:00:00.000Z",
+      "scheduledEndTime": "2016-05-31T18:01:00.000Z",
+      "actualendTime": "2016-05-31T18:01:00.000Z",
+      "_id": "58134144550dfb3b52be99ae"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-26T18:05:00.000Z",
+      "actualStartTime": "2016-05-26T18:05:00.000Z",
+      "scheduledEndTime": "2016-05-31T18:01:00.000Z",
+      "actualendTime": "2016-05-31T18:01:00.000Z",
+      "_id": "58134144550dfb3b52be99ad"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-31T18:01:00.000Z",
+      "actualStartTime": "2016-05-31T18:01:00.000Z",
+      "scheduledEndTime": "2016-06-07T19:07:00.000Z",
+      "actualendTime": "2016-06-07T19:07:00.000Z",
+      "_id": "58134144550dfb3b52be99ac"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-07T19:08:00.000Z",
+      "actualStartTime": "2016-06-07T19:08:00.000Z",
+      "scheduledEndTime": "2016-06-08T19:09:00.000Z",
+      "actualendTime": "2016-06-08T19:09:00.000Z",
+      "_id": "58134144550dfb3b52be99ab"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-08T19:09:00.000Z",
+      "actualStartTime": "2016-06-08T19:09:00.000Z",
+      "scheduledEndTime": "2016-06-09T01:24:00.000Z",
+      "actualendTime": "2016-06-09T01:24:00.000Z",
+      "_id": "58134144550dfb3b52be99aa"
+    }
+  ],
+  "platforms": [
+    "Linux"
+  ],
+  "postingDate": "2016-05-26T18:00:00.000Z",
+  "prize": [
+    1200,
+    600
+  ],
+  "projectId": 9613,
+  "registrants": [
+    {
+      "handle": "perfectus",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-26T18:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be99a9"
+    },
+    {
+      "handle": "azael.arauz",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-26T18:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be99a8"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-26T18:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be99a7"
+    },
+    {
+      "handle": "J.Bogusz",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-26T18:46:00.000Z",
+      "submissionDate": "2016-05-31T17:55:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be99a6"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-26T19:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be99a5"
+    },
+    {
+      "handle": "ybkr007",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-26T20:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be99a4"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-26T20:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be99a3"
+    },
+    {
+      "handle": "WojciechMigda",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-26T20:39:00.000Z",
+      "submissionDate": "2016-05-29T19:59:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be99a2"
+    },
+    {
+      "handle": "ranitdas",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-26T20:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be99a1"
+    },
+    {
+      "handle": "hp87",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-26T21:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be99a0"
+    },
+    {
+      "handle": "Ksys",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-26T22:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be999f"
+    },
+    {
+      "handle": "moshu",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-26T22:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be999e"
+    },
+    {
+      "handle": "adanvillarreal",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-26T23:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be999d"
+    },
+    {
+      "handle": "thkang91",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T00:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be999c"
+    },
+    {
+      "handle": "qwer_zcc",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T00:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be999b"
+    },
+    {
+      "handle": "yrwol",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T00:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be999a"
+    },
+    {
+      "handle": "ifox",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T01:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9999"
+    },
+    {
+      "handle": "jcallow",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T01:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9998"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T01:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9997"
+    },
+    {
+      "handle": "zhangyilun",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T01:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9996"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T01:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9995"
+    },
+    {
+      "handle": "asteroidiv",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T01:35:00.000Z",
+      "submissionDate": "2016-05-30T04:58:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9994"
+    },
+    {
+      "handle": "Rushikesh.Deshp",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T01:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9993"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T02:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9992"
+    },
+    {
+      "handle": "rtriv",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T02:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9991"
+    },
+    {
+      "handle": "subsunacop2011",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T02:47:00.000Z",
+      "submissionDate": "2016-05-31T09:25:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9990"
+    },
+    {
+      "handle": "miao.bigface",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T02:53:00.000Z",
+      "submissionDate": "2016-05-30T05:54:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be998f"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T03:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be998e"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T03:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be998d"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T03:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be998c"
+    },
+    {
+      "handle": "henriqdp",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T03:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be998b"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T03:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be998a"
+    },
+    {
+      "handle": "johnsgr17",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T03:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9989"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T03:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9988"
+    },
+    {
+      "handle": "twds",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T04:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9987"
+    },
+    {
+      "handle": "maximillian",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T04:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9986"
+    },
+    {
+      "handle": "IhRlaeh1",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T04:29:00.000Z",
+      "submissionDate": "2016-05-28T07:14:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9985"
+    },
+    {
+      "handle": "tbor",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T06:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9984"
+    },
+    {
+      "handle": "susox",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T07:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9983"
+    },
+    {
+      "handle": "mars-horizon",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T07:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9982"
+    },
+    {
+      "handle": "kondakovdmitry",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T08:09:00.000Z",
+      "submissionDate": "2016-05-29T22:16:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9981"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T08:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9980"
+    },
+    {
+      "handle": "lukasbindreiter",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T09:54:00.000Z",
+      "submissionDate": "2016-05-28T19:33:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be997f"
+    },
+    {
+      "handle": "Savvas_cl",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T11:22:00.000Z",
+      "submissionDate": "2016-05-31T15:10:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be997e"
+    },
+    {
+      "handle": "allenjuly7",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T11:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be997d"
+    },
+    {
+      "handle": "osamir",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T11:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be997c"
+    },
+    {
+      "handle": "lightmare",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T12:05:00.000Z",
+      "submissionDate": "2016-05-31T16:27:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be997b"
+    },
+    {
+      "handle": "net_buster",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T12:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be997a"
+    },
+    {
+      "handle": "mren",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T12:37:00.000Z",
+      "submissionDate": "2016-05-31T11:02:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9979"
+    },
+    {
+      "handle": "Anas.Egbaria",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T12:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9978"
+    },
+    {
+      "handle": "utkarshkukreti",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T13:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9977"
+    },
+    {
+      "handle": "birdofpreyru",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T14:03:00.000Z",
+      "submissionDate": "2016-05-30T11:20:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9976"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T14:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9975"
+    },
+    {
+      "handle": "blackguess",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T15:19:00.000Z",
+      "submissionDate": "2016-05-30T04:29:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9974"
+    },
+    {
+      "handle": "emacer65",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T15:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9973"
+    },
+    {
+      "handle": "Yermouth",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T15:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9972"
+    },
+    {
+      "handle": "TheKingOfWrong",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T16:13:00.000Z",
+      "submissionDate": "2016-05-28T22:01:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9971"
+    },
+    {
+      "handle": "hyy5159",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T17:27:00.000Z",
+      "submissionDate": "2016-05-31T14:40:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9970"
+    },
+    {
+      "handle": "stuppie",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T17:35:00.000Z",
+      "submissionDate": "2016-05-28T07:14:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be996f"
+    },
+    {
+      "handle": "Bende",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T19:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be996e"
+    },
+    {
+      "handle": "ketzjs09",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T19:31:00.000Z",
+      "submissionDate": "2016-05-30T22:19:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be996d"
+    },
+    {
+      "handle": "Pag2",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T20:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be996c"
+    },
+    {
+      "handle": "szy2015",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T22:11:00.000Z",
+      "submissionDate": "2016-05-31T08:09:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be996b"
+    },
+    {
+      "handle": "Jessehuze",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T23:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be996a"
+    },
+    {
+      "handle": "yannial",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T23:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9969"
+    },
+    {
+      "handle": "xl1393",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-27T23:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9968"
+    },
+    {
+      "handle": "smatsumoto",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T00:36:00.000Z",
+      "submissionDate": "2016-05-29T05:33:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9967"
+    },
+    {
+      "handle": "marchyoung",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T01:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9966"
+    },
+    {
+      "handle": "sans.affect",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T01:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9965"
+    },
+    {
+      "handle": "sachith500",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T02:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9964"
+    },
+    {
+      "handle": "EgorLakomkin",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T05:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9963"
+    },
+    {
+      "handle": "shmuel.naaman",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T05:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9962"
+    },
+    {
+      "handle": "BunnyStan",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T05:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9961"
+    },
+    {
+      "handle": "dejucoder",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T05:55:00.000Z",
+      "submissionDate": "2016-05-29T22:21:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9960"
+    },
+    {
+      "handle": "AlexeyProkopnev",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T07:45:00.000Z",
+      "submissionDate": "2016-05-30T14:41:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be995f"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T08:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be995e"
+    },
+    {
+      "handle": "daved_87",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T08:06:00.000Z",
+      "submissionDate": "2016-05-31T06:44:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be995d"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T10:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be995c"
+    },
+    {
+      "handle": "tripures",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T11:10:00.000Z",
+      "submissionDate": "2016-05-30T04:54:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be995b"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T12:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be995a"
+    },
+    {
+      "handle": "codingisgood",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T14:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9959"
+    },
+    {
+      "handle": "prajwalkr",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T17:45:00.000Z",
+      "submissionDate": "2016-05-29T17:43:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9958"
+    },
+    {
+      "handle": "swatnew",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T20:23:00.000Z",
+      "submissionDate": "2016-05-31T16:52:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9957"
+    },
+    {
+      "handle": "Ulery",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-28T20:35:00.000Z",
+      "submissionDate": "2016-05-30T21:24:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9956"
+    },
+    {
+      "handle": "sassien",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-29T00:44:00.000Z",
+      "submissionDate": "2016-05-29T00:50:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9955"
+    },
+    {
+      "handle": "republic82",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-29T07:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9954"
+    },
+    {
+      "handle": "AaronYin",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-29T16:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9953"
+    },
+    {
+      "handle": "clankjak",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-29T20:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9952"
+    },
+    {
+      "handle": "a.s.solodkaya",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-29T21:30:00.000Z",
+      "submissionDate": "2016-05-31T17:56:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9951"
+    },
+    {
+      "handle": "jol",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-30T06:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be9950"
+    },
+    {
+      "handle": "popyy0202",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-30T14:28:00.000Z",
+      "submissionDate": "2016-05-31T17:31:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be994f"
+    },
+    {
+      "handle": "paulocezar",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-30T16:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be994e"
+    },
+    {
+      "handle": "EvanFabry",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-31T17:54:00.000Z",
+      "submissionDate": "2016-05-31T17:59:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be994d"
+    },
+    {
+      "handle": "seerwright",
+      "reliability": "n/a",
+      "registrationDate": "2016-05-31T12:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134144550dfb3b52be994c"
+    }
+  ],
+  "registrationEndDate": "2016-05-31T18:01:00.000Z",
+  "reviewScorecardId": 30001962,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-05-31T18:01:00.000Z",
+  "submissions": [
+    {
+      "handle": "smatsumoto",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 97.5,
+      "finalScore": 98.75,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-05-29T05:33:00.000Z",
+      "_id": "58134144550dfb3b52be99cc"
+    },
+    {
+      "handle": "WojciechMigda",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 96.25,
+      "finalScore": 98.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-29T19:59:00.000Z",
+      "_id": "58134144550dfb3b52be99cb"
+    },
+    {
+      "handle": "kondakovdmitry",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 96.25,
+      "finalScore": 98.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-29T22:16:00.000Z",
+      "_id": "58134144550dfb3b52be99ca"
+    },
+    {
+      "handle": "Ulery",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 98.75,
+      "finalScore": 98.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-30T21:24:00.000Z",
+      "_id": "58134144550dfb3b52be99c9"
+    },
+    {
+      "handle": "ketzjs09",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 97.5,
+      "finalScore": 98.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-30T22:19:00.000Z",
+      "_id": "58134144550dfb3b52be99c8"
+    },
+    {
+      "handle": "szy2015",
+      "placement": 6,
+      "screeningScore": null,
+      "initialScore": 98.75,
+      "finalScore": 98.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-31T08:09:00.000Z",
+      "_id": "58134144550dfb3b52be99c7"
+    },
+    {
+      "handle": "IhRlaeh1",
+      "placement": 7,
+      "screeningScore": null,
+      "initialScore": 97.5,
+      "finalScore": 97.5,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-28T07:14:00.000Z",
+      "_id": "58134144550dfb3b52be99c6"
+    },
+    {
+      "handle": "AlexeyProkopnev",
+      "placement": 8,
+      "screeningScore": null,
+      "initialScore": 97.5,
+      "finalScore": 97.5,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-30T14:41:00.000Z",
+      "_id": "58134144550dfb3b52be99c5"
+    },
+    {
+      "handle": "mren",
+      "placement": 9,
+      "screeningScore": null,
+      "initialScore": 95,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-31T11:02:00.000Z",
+      "_id": "58134144550dfb3b52be99c4"
+    },
+    {
+      "handle": "asteroidiv",
+      "placement": 10,
+      "screeningScore": null,
+      "initialScore": 91.25,
+      "finalScore": 93.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-30T04:58:00.000Z",
+      "_id": "58134144550dfb3b52be99c3"
+    },
+    {
+      "handle": "hyy5159",
+      "placement": 11,
+      "screeningScore": null,
+      "initialScore": 91.25,
+      "finalScore": 93.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-31T14:40:00.000Z",
+      "_id": "58134144550dfb3b52be99c2"
+    },
+    {
+      "handle": "a.s.solodkaya",
+      "placement": 12,
+      "screeningScore": null,
+      "initialScore": 91.25,
+      "finalScore": 91.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-31T17:56:00.000Z",
+      "_id": "58134144550dfb3b52be99c1"
+    },
+    {
+      "handle": "blackguess",
+      "placement": 13,
+      "screeningScore": null,
+      "initialScore": 90,
+      "finalScore": 90,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-30T04:29:00.000Z",
+      "_id": "58134144550dfb3b52be99c0"
+    },
+    {
+      "handle": "TheKingOfWrong",
+      "placement": 14,
+      "screeningScore": null,
+      "initialScore": 42.5,
+      "finalScore": 88.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-28T22:01:00.000Z",
+      "_id": "58134144550dfb3b52be99bf"
+    },
+    {
+      "handle": "daved_87",
+      "placement": 15,
+      "screeningScore": null,
+      "initialScore": 86.25,
+      "finalScore": 86.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-31T06:44:00.000Z",
+      "_id": "58134144550dfb3b52be99be"
+    },
+    {
+      "handle": "lightmare",
+      "placement": 16,
+      "screeningScore": null,
+      "initialScore": 86.25,
+      "finalScore": 86.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-31T16:27:00.000Z",
+      "_id": "58134144550dfb3b52be99bd"
+    },
+    {
+      "handle": "miao.bigface",
+      "placement": 17,
+      "screeningScore": null,
+      "initialScore": 78.75,
+      "finalScore": 78.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-30T05:54:00.000Z",
+      "_id": "58134144550dfb3b52be99bc"
+    },
+    {
+      "handle": "J.Bogusz",
+      "placement": 18,
+      "screeningScore": null,
+      "initialScore": 78.75,
+      "finalScore": 78.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-31T17:55:00.000Z",
+      "_id": "58134144550dfb3b52be99bb"
+    },
+    {
+      "handle": "popyy0202",
+      "placement": 19,
+      "screeningScore": null,
+      "initialScore": 70,
+      "finalScore": 70,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-31T17:31:00.000Z",
+      "_id": "58134144550dfb3b52be99ba"
+    },
+    {
+      "handle": "birdofpreyru",
+      "placement": 20,
+      "screeningScore": null,
+      "initialScore": 68.75,
+      "finalScore": 68.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-30T11:20:00.000Z",
+      "_id": "58134144550dfb3b52be99b9"
+    },
+    {
+      "handle": "tripures",
+      "placement": 21,
+      "screeningScore": null,
+      "initialScore": 57.5,
+      "finalScore": 57.5,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-30T04:54:00.000Z",
+      "_id": "58134144550dfb3b52be99b8"
+    },
+    {
+      "handle": "Savvas_cl",
+      "placement": 22,
+      "screeningScore": null,
+      "initialScore": 53.75,
+      "finalScore": 53.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-31T15:10:00.000Z",
+      "_id": "58134144550dfb3b52be99b7"
+    },
+    {
+      "handle": "lukasbindreiter",
+      "placement": 23,
+      "screeningScore": null,
+      "initialScore": 51.25,
+      "finalScore": 51.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-05-28T19:33:00.000Z",
+      "_id": "58134144550dfb3b52be99b6"
+    },
+    {
+      "handle": "sassien",
+      "placement": 24,
+      "screeningScore": null,
+      "initialScore": 37.5,
+      "finalScore": 37.5,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-29T00:50:00.000Z",
+      "_id": "58134144550dfb3b52be99b5"
+    },
+    {
+      "handle": "prajwalkr",
+      "placement": 25,
+      "screeningScore": null,
+      "initialScore": 36.25,
+      "finalScore": 36.25,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-29T17:43:00.000Z",
+      "_id": "58134144550dfb3b52be99b4"
+    },
+    {
+      "handle": "dejucoder",
+      "placement": 26,
+      "screeningScore": null,
+      "initialScore": 36.25,
+      "finalScore": 36.25,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-29T22:21:00.000Z",
+      "_id": "58134144550dfb3b52be99b3"
+    },
+    {
+      "handle": "swatnew",
+      "placement": 27,
+      "screeningScore": null,
+      "initialScore": 33.75,
+      "finalScore": 33.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-31T16:52:00.000Z",
+      "_id": "58134144550dfb3b52be99b2"
+    },
+    {
+      "handle": "stuppie",
+      "placement": 28,
+      "screeningScore": null,
+      "initialScore": 32.5,
+      "finalScore": 32.5,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-28T07:14:00.000Z",
+      "_id": "58134144550dfb3b52be99b1"
+    },
+    {
+      "handle": "EvanFabry",
+      "placement": 29,
+      "screeningScore": null,
+      "initialScore": 27.5,
+      "finalScore": 27.5,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-31T17:59:00.000Z",
+      "_id": "58134144550dfb3b52be99b0"
+    },
+    {
+      "handle": "subsunacop2011",
+      "placement": 30,
+      "screeningScore": null,
+      "initialScore": 17.5,
+      "finalScore": 17.5,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-05-31T09:25:00.000Z",
+      "_id": "58134144550dfb3b52be99af"
+    }
+  ],
+  "technology": [
+    "Data Science",
+    "Python"
+  ]
+}

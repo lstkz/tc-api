@@ -1,0 +1,307 @@
+{
+  "_id": 30051346,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:36:56.232Z",
+  "appealsEndDate": "2015-09-14T10:42:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "TopCoder Data Warehouse - Update Design Project Results and Add User Stats Update Time Log",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><span style=\"font-size:14px\"><strong>Challenge Requirements:</strong></span></p>\n\n<p>In this challenge we want to update the loader TCLoadTCS to update the logic of&nbsp;doLoadDesignProjectResults and update other loaders to log the update time of user stats related table.</p>\n\n<p>1) we want to add the following columns to the tcs_dw: design_project_result table</p>\n\n<ul>\n\t<li>inquire_timestamp : the time the member registered for the challenge</li>\n\t<li>submit_ind: whether the the member submits</li>\n\t<li>valid_submission_ind : whether the member submission passess screening (i.e. it&#39;s a valid submission)</li>\n</ul>\n\n<p>2) we want to update the logic of loading records design_project_result</p>\n\n<ul>\n\t<li>The current loader only loads the member with the submission that wins a prize, we want to load a record for every registrant of a design challenge.\n\t<ul>\n\t\t<li>If the registrant does not submit, there will also be a record to store the inquire_timestamp with submit_ind set to 0, other columns like upload_id, submission_id, prize_id, prize_amount, placement, dr_points, is_checkpoint etc will all be NULL.</li>\n\t\t<li>As design challenge allow multiple submissions. If the member has multiple submissions, there will be multiplle records, one record for each submission.</li>\n\t\t<li>If the submission does not get a prize, the prize_id, prize_amount, dr_points will all be NULL.</li>\n\t</ul>\n\t</li>\n\t<li>the codes of current loader should handle the case when a submission does not get a prize, but the results loaded on our prod server only have submission with prize. Please prepare test data and verify this. If there is a bug, please fix it.</li>\n</ul>\n\n<p>3) add a new column <em>dw_stats_updated_time</em> to topcoder_dw:coder. This column is used to record the timestamp the user stats stored in dw gets updated. User stats can be retrieved from many dw tables in topcoder_dw and tcs_dw database. If a record of a certain user in these tables get updated (include the case a new record is inserted), the dw_stats_updated_time value should be set to the current load time.</p>\n\n<p>The queries used to get user stats (design, development and marathon) can be found in&nbsp;SUP-MemberStatsDatastoreMigration-190815-1133-4.pdf, starting from page 22. If you have any quetions, feel free to ask in the forum.</p>\n\n<p>These tables are updated in different loaders, make sure you update all the needed loaders and add the logic descirbed above.</p>\n\n<p><strong><span style=\"font-size:14px\">Code Base</span></strong></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">com.topcoder.shared.util.dwload.TCLoadCoders (https://coder.topcoder.com/internal/shared/trunk/src/main/com/topcoder/shared/util/dwload/TCLoadCoders.java)</span></p>\n\n<pre>\n<span style=\"font-family:courier new,courier,monospace\">com.topcoder.utilities.dwload.TCLoadTCS</span></pre>\n\n<p><span style=\"font-family:courier new,courier,monospace\">(https://coder.topcoder.com/internal/web_module/trunk/src/main/com/topcoder/utilities/dwload/TCLoadTCS.java)</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">com.topcoder.dde.util.DWLoad.RatingQubits</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">(https://coder.topcoder.com/internal/web_module/trunk/src/main/com/topcoder/dde/util/DWLoad/RatingQubits.java)</span></p>\n\n<pre>\n<span style=\"font-family:courier new,courier,monospace\">com.topcoder.dde.util.DWLoad.ReliabilityRating</span></pre>\n\n<p><span style=\"background-color:rgb(255, 255, 224)\">Please send email to support@topcoder.com with challenge name / ID, your topcoder handle to request the SVN access.</span></p>\n\n<p><strong><span style=\"font-size:14px\">VM Information</span></strong></p>\n\n<p>You need a TopCoder VM to work on this challenge, you will mainly use the informix database on VM and if you choose to run data loader to load the warehouse data, you will need to run the loaders under account &#39;tc&#39;. Please request the VM in the challenge forum.</p>\n\n<p>Information about VM can be found below:</p>\n\n<p>VM specific information is found here: http://www.topcoder.com/wiki/display/docs/VM+Image+2.5. Upon registration as a submitter or reviewer you will need to request a VM based on the new TopCoder Cockpit/Direct image. To request your image, please use the forum. Before requesting your VM, you need to ensure that you have an SSH key created and in your member profile. Instructions to do so are here: http://www.topcoder.com/wiki/display/projects/Generate+SSH+Key, and instructions to connect afterwards are here: http://www.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key.</p>\n\n<p><strong><span style=\"font-size:14px\">Testing</span></strong></p>\n\n<ul>\n\t<li><span style=\"color:rgb(105, 105, 105)\">The dataware house databases on the TopCoder VM assigned to you will not have any data, so please</span>\n\n\t<ul>\n\t\t<li><span style=\"color:rgb(105, 105, 105)\">Prepare the test data for dataware house load. After inserting the test data, run the corresponding loaders on the VM to load oltp data into DW.</span></li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30051346",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<ul>\n\t<li>Updated source codes / configurations.</li>\n\t<li>The deployment guide with verification details.</li>\n</ul>\n",
+  "forumId": 30474,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=30474",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 22,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-09-09T08:00:00.000Z",
+      "actualStartTime": "2015-09-09T08:00:00.000Z",
+      "scheduledEndTime": "2015-09-13T15:00:00.000Z",
+      "actualendTime": "2015-09-13T15:00:00.000Z",
+      "_id": "58135478550dfb3b52c4901e"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-09-09T08:05:00.000Z",
+      "actualStartTime": "2015-09-09T08:05:00.000Z",
+      "scheduledEndTime": "2015-09-13T15:00:00.000Z",
+      "actualendTime": "2015-09-13T15:00:00.000Z",
+      "_id": "58135478550dfb3b52c4901d"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-09-13T15:00:00.000Z",
+      "actualStartTime": "2015-09-13T15:00:00.000Z",
+      "scheduledEndTime": "2015-09-14T10:32:00.000Z",
+      "actualendTime": "2015-09-14T10:32:00.000Z",
+      "_id": "58135478550dfb3b52c4901c"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-09-14T10:32:00.000Z",
+      "actualStartTime": "2015-09-14T10:32:00.000Z",
+      "scheduledEndTime": "2015-09-14T10:41:00.000Z",
+      "actualendTime": "2015-09-14T10:41:00.000Z",
+      "_id": "58135478550dfb3b52c4901b"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-09-14T10:41:00.000Z",
+      "actualStartTime": "2015-09-14T10:41:00.000Z",
+      "scheduledEndTime": "2015-09-14T10:42:00.000Z",
+      "actualendTime": "2015-09-14T10:42:00.000Z",
+      "_id": "58135478550dfb3b52c4901a"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-09-09T08:00:00.000Z",
+  "prize": [
+    1000
+  ],
+  "projectId": 7830,
+  "registrants": [
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-09T08:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c49019"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-09T08:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c49018"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-09T12:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c49017"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-09T12:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c49016"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-09T14:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c49015"
+    },
+    {
+      "handle": "Veve",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-09T16:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c49014"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-09T19:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c49013"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-09T20:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c49012"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-10T05:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c49011"
+    },
+    {
+      "handle": "smtryingcode",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-10T08:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c49010"
+    },
+    {
+      "handle": "vinaysingh",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-10T14:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c4900f"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-10T15:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c4900e"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-10T16:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c4900d"
+    },
+    {
+      "handle": "Ishada",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-10T18:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c4900c"
+    },
+    {
+      "handle": "esteer",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-10T18:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c4900b"
+    },
+    {
+      "handle": "Vovka",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-10T18:31:00.000Z",
+      "submissionDate": "2015-09-12T13:38:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c4900a"
+    },
+    {
+      "handle": "superManfirst",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-11T08:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c49009"
+    },
+    {
+      "handle": "brusoth09",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-11T13:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c49008"
+    },
+    {
+      "handle": "Leo_Zhao",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-12T00:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c49007"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-12T14:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c49006"
+    },
+    {
+      "handle": "Cronot99",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-12T20:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c49005"
+    },
+    {
+      "handle": "juanmetalpagano",
+      "reliability": "n/a",
+      "registrationDate": "2015-09-12T21:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58135478550dfb3b52c49004"
+    }
+  ],
+  "registrationEndDate": "2015-09-13T15:00:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-09-13T15:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "Vovka",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 97.5,
+      "finalScore": 97.5,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-09-12T13:38:00.000Z",
+      "_id": "58135478550dfb3b52c4901f"
+    }
+  ],
+  "technology": [
+    "Java",
+    "SQL"
+  ]
+}

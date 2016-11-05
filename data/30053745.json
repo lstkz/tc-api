@@ -1,0 +1,246 @@
+{
+  "_id": 30053745,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:15:06.482Z",
+  "appealsEndDate": "2016-04-18T00:06:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Topcoder - Remove Supply Server Dependency From Tagging MicroService",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2 dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">The supply server (ap-supply-server) is a pattern that was used early when we started building the new version of the topcoder microservice REST APIs.</span></h2>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">The goal of the supply server was to centralize application initialization and configuration logic, as well as allow multiple microservices to be executed together in the same instance, which is handy for local development.</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">However, the supply server approach has several disadvantages mainly related with maintenance or multiple configuration files and complexity.</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">We want to remove the supply server from our microservices and use simple dropwizard instead. &nbsp;</span></p>\n\n<h2 dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:21.3333px\">Concepts</span></h2>\n\n<h3 dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:18.6667px\">Supply Library</span></h3>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">The supply library is a shared library used by all of our microservices, among other things the supply library provides jdbc persistence and base classes that simplify the initialization and execution of dropwizard applications. The most relevant classes to use in the supply library are:</span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">BaseApplication</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">This class is the superclass for all dropwizard application classes. It provides the entrypoint (main method) for the dropwizard application, and its subclasses are responsible for instantiating, initializing and registering all necessary resources for the microservice;</span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">BaseAppConfiguration</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">This is the superclass for all dropwizard configuration classes. The configuration class is responsible for loading configs from the configuration yaml file and exposing it to the application. The subclasses of this class should have the same properties as the yaml file.</span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:21.3333px\">Runtime</span></h2>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">Microservices are executed in AWS ElasticBeanstalk. They are built and deployed automatically using Jenkins jobs that poll github repositories.</span></p>\n\n<h2 dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:21.3333px\">Environments, configs, and build scripts</span></h2>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">There are several build scripts and config files that are required to automatically build and deploy microservices. The supply server based approach requires a copy of some of these files for each of our environments, this is something that we want to change.</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">The run-config folder contains files for dev, qa, and prod environments (<span style=\"color:rgb(255, 0, 0)\">qa and prod folders are removed for security reason, but it is similar as dev folder</span>). The main files in those folders are:</span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">supply-server.yaml</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">Contains microservice specific configurations, such as datastore connection information, authentication domain, logging, etc.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">For each environment there are different ip addresses, domain names, etc.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">One of the problems that we have&nbsp;</span><span style=\"font-size:14.6667px\">today</span><span style=\"background-color:transparent; font-size:14.6667px\">&nbsp;is that the supply-server.yaml file contains some unused configuration because of the way other microservices use the same runtime when we run them together. We want the supply-server.yaml to be cleaned up and have only the configurations that a specific microservice requires.</span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">sumo-logic</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">Sumo logic is used to centralize logs, and the config files defines the sumo logic behavior. Note, we want collectors with different names for each environment as: &lt;microservice-name&gt;-&lt;environment&gt;, e.g.: challenge-dev</span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">NewRelic</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">New relic is used for monitoring, there are environment specific new relic configurations in the newrelic.yml file.</span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">We want to consolidate these files, and have only one for all environments, in which all common configurations are stored. Environment specific configurations should be parameterized either with environment variables at runtime, or substitutions during build.</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">Also no private information should be stored in any of the configuration files, this includes database passwords, third party service keys like sumo logic and new relic, etc.</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">A file with environment specific private information to be used for substitution at build time can be introduced, and it will be stored in the jenkins server to be used by the build job.</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">Updating the build scripts is also in scope for this challenge, however, creating a jenkins job is not, it is enough if the build script can be executed from the command line given the necessary parameters, like the path to the file environment specific info.</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">Note that some environment specific and private information are injected to the supply-server.yml file using vm arguments e.g.:</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">java -Ddw.databases[0].password=123 &hellip; -jar service.jar server supply-server.yml</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">The above would set 123 to the password property below in supply-server.yml:</span></p>\n\n<p>databases:</p>\n\n<p>&nbsp; - datasourceName: oltp</p>\n\n<p>&nbsp; &nbsp; # the name of your JDBC driver<br />\n&nbsp; &nbsp; driverClass: com.informix.jdbc.IfxDriver</p>\n\n<p>&nbsp; &nbsp; # the username<br />\n&nbsp; &nbsp; user: coder</p>\n\n<p>&nbsp; &nbsp; # the password<br />\n&nbsp; &nbsp; # NOTE: password is set as a java system property: i.e., -Ddw.database.password=&lt;password&gt;</p>\n\n<h2 dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:21.3333px\">Instructions</span></h2>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">We have already removed the supply server from several of our microservices, and below are the steps to be performed:</span></p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">Obtain the supply library code, we&rsquo;ll assume that it will be in the ap-supply-library folder;</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">Obtain the code for the tagging microservice, we&rsquo;ll assume that it will be in the ap-tagging-microservice folder;</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">Build the supply library and install in the local cache, from the&nbsp;</span><span style=\"font-size:14.6667px\">ap-supply-library</span><span style=\"background-color:transparent; font-size:14.6667px\">&nbsp;folder do:</span></p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">mvn clean compile install</span></p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">In the&nbsp;</span><span style=\"font-size:14.6667px\">ap-tagging-microservice</span><span style=\"background-color:transparent; font-size:14.6667px\">&nbsp;folder, update the pom.xml file to make sure it uses the latest version of the supply library you have just built;</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">In the microservice, create a microservice specific configuration class:</span></p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">It should be in the com.appirio.service.tagging package.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">It should be called TagServiceConfiguration</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">It should inherit from BaseAppConfiguration (part of the supply library)</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">It should contain all the relevant properties from the supply-server.yml file to this specific microservice. Please analyse the code and delete any extraneous properties from the yml file and the configuration class.</span></p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">Create a microservice specific application class</span></p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">It should be in the com.appirio.service.tagging package</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">It should be called TagServiceApplication</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">It should extend BaseApplication parameterized with the configuration class created in the previous step: e.g. : TagServiceApplication extends &nbsp;BaseApplication&lt;TagServiceConfiguration&gt;</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">The getName method should return the name of the microservice;</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">The logServiceSpecificConfiguration should use the logger to output all configurations for the microservice that are NOT private information, i.e. don&rsquo;t output tokens, keys, db passwords, etc.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">A main method should exist that simple invokes the run method, e.g.:</span><br />\n\t\t<span style=\"font-size:10px\"><span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;public static void main(String[] args) throws Exception {</span><br />\n\t\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new TagServiceApplication().run(args);</span><br />\n\t\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;}</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">The registerResources method should register all resources found in the supply-server.yml resources property. The supply server approach uses reflection to instantiate resources based on configuration, and we don&rsquo;t want to use this approach anymore, we simple want the resources to be created and registered in a more traditional fashion, e.g.:&nbsp;</span><br />\n\t\t<span style=\"font-size:10px\"><span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;@Override</span><br />\n\t\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;protected void registerResources(ChallengeServiceConfiguration config, Environment env) throws Exception {</span><br />\n\t\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Register resources here</span><br />\n\t\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;env.jersey().register(new ChallengeFactory(config,</span><br />\n\t\t<span style=\"background-color:transparent\">env).getResourceInstance());</span><br />\n\t\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;env.jersey().register(new ChallengeResultsFactory(config, env).getResourceInstance());</span><br />\n\t\t<span style=\"background-color:transparent\">&hellip;</span></span></p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">Add the execution plugin to the microservice pom.xml fixing the main class name:</span><br />\n\t<span style=\"font-size:10px\"><span style=\"background-color:transparent\">&lt;build&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;plugin&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;artifactId&gt;maven-shade-plugin&lt;/artifactId&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;version&gt;2.3&lt;/version&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;configuration&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;createDependencyReducedPom&gt;true&lt;/createDependencyReducedPom&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;filters&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;filter&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;artifact&gt;*:*&lt;/artifact&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;excludes&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;exclude&gt;META-INF/*.SF&lt;/exclude&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;exclude&gt;META-INF/*.DSA&lt;/exclude&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;exclude&gt;META-INF/*.RSA&lt;/exclude&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/excludes&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/filter&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/filters&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/configuration&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;executions&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;execution&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;phase&gt;package&lt;/phase&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;goals&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;goal&gt;shade&lt;/goal&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/goals&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;configuration&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;transformers&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;transformer implementation=&quot;org.apache.maven.plugins.shade.resource.ServicesResourceTransformer&quot; /&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;transformer implementation=&quot;org.apache.maven.plugins.shade.resource.ManifestResourceTransformer&quot;&gt;</span><br />\n\t<span style=\"background-color:transparent\">&lt;mainClass&gt;com.appirio.service.tagging.TagServiceApplication&lt;/mainClass&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/transformer&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/transformers&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/configuration&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/execution&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/executions&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/plugin&gt;</span><br />\n\t<span style=\"background-color:transparent\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/plugins&gt;</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">Copy the supply-server.yml file from any of the environment in run-config, to the src/main/resources folder and rename it to &lt;microservice&gt;.yml, e.g. tagging-service.yml. Clean up the properties.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">Mov run-config/build folder to base folder (same level as service folder), and consolidate the common configurations.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">Create a src/main/resources/new-relic-url-patterns file, it should contain a list of all endpoints exposed by this microservice. Refer to the resources to determine the urls, or you can just run the microservice, dropwizard will output all url when it is loading up. Example url patterns file:</span><br />\n\t<span style=\"font-size:10px\"><span style=\"background-color:transparent\">GET members\\/.*\\/challenges\\/</span><br />\n\t<span style=\"background-color:transparent\">GET members\\/.*\\/srms\\/</span><br />\n\t<span style=\"background-color:transparent\">GET members\\/.*\\/mms\\/</span><br />\n\t<span style=\"background-color:transparent\">GET members\\/.*\\/</span><br />\n\t<span style=\"background-color:transparent\">PUT members\\/.*\\/</span><br />\n\t<span style=\"background-color:transparent\">GET challengeResults\\/</span><br />\n\t<span style=\"background-color:transparent\">GET challenges\\/test\\/</span><br />\n\t<span style=\"background-color:transparent\">GET challenges\\/</span><br />\n\t<span style=\"background-color:transparent\">GET marathonMatches\\/</span><br />\n\t<span style=\"background-color:transparent\">GET marathonMatchResults\\/</span><br />\n\t<span style=\"background-color:transparent\">GET srms\\/</span><br />\n\t<span style=\"background-color:transparent\">GET srmResults\\/</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">Remove the run-config folder.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Code coverage must not decrease.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">All classes, methods and fields must have descriptive javadocs. Any method with more than 10 lines must have inline comments.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Updated the README.md file to reflect the new changes clearly</p>\n\t</li>\n</ol>\n\n<h2 dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:21.3333px\">Verification</span></h2>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"font-size:14.6667px\">The tagging microservice needs to work with AWS DynamoDB, in order to make it work locally, we have figured out the way previously, the related information will be provided in forum.</span></p>\n\t</li>\n\t<li>\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">Build the microservice. From the microservice folder do:</span><br />\n\t<span style=\"background-color:transparent; font-size:14.6667px\">mvn clean compile package</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; font-size:14.6667px\">Run the microservice. From the microservice folder:&nbsp;</span><br />\n\t<span style=\"font-size:10px\"><span style=\"background-color:transparent\">java &lt;jvm params&gt; -jar target/&lt;microservice&gt;.jar server src/main/resources/&lt;microservice&gt;.yml</span></span><br />\n\t<span style=\"background-color:transparent; font-size:14.6667px\">Note: &lt;jvm params&gt; should include any environment specific parameters that are not hardcoded in the yml: -Ddw.&lt;property-name&gt;=&lt;value&gt;</span></p>\n\t</li>\n</ol>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">If the service starts successfully, you should see log messages similar to the ones below, displaying a list of registered endpoints specific to your service. If the service starts cleanly and you see the entries for all resources of the microservice, the service has been migrated correctly. Here is the example logs generated when the member microservice starts:</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:10px\">&nbsp; &nbsp;INFO &nbsp;[2016-04-08 03:57:51,305] io.dropwizard.jersey.DropwizardResourceConfig: The following paths were found for the configured resources:</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:10px\">&nbsp;&nbsp;&nbsp;GET &nbsp;&nbsp;&nbsp;&nbsp;/v3/members/{handle}/financial (com.appirio.service.member.resources.MemberFinancialResource)</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:10px\">&nbsp;&nbsp;&nbsp;GET &nbsp;&nbsp;&nbsp;&nbsp;/v3/members/{handle} (com.appirio.service.member.resources.MemberProfileResource)</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:10px\">&nbsp;&nbsp;&nbsp;POST &nbsp;&nbsp;&nbsp;/v3/members/{handle}/photoUploadUrl (com.appirio.service.member.resources.MemberProfileResource)</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:10px\">&nbsp;&nbsp;&nbsp;PUT &nbsp;&nbsp;&nbsp;&nbsp;/v3/members/{handle} (com.appirio.service.member.resources.MemberProfileResource)</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:10px\">&nbsp;&nbsp;&nbsp;PUT &nbsp;&nbsp;&nbsp;&nbsp;/v3/members/{handle}/photo (com.appirio.service.member.resources.MemberProfileResource)</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:10px\">&nbsp;&nbsp;&nbsp;GET &nbsp;&nbsp;&nbsp;&nbsp;/v3/members/{handle}/stats (com.appirio.service.member.resources.MemberStatsResource)</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:10px\">&nbsp;&nbsp;&nbsp;GET &nbsp;&nbsp;&nbsp;&nbsp;/v3/members/{handle}/stats/history (com.appirio.service.member.resources.MemberHistoryStatsResource)</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:10px\">&nbsp;&nbsp;&nbsp;GET &nbsp;&nbsp;&nbsp;&nbsp;/v3/members/stats/distribution (com.appirio.service.member.resources.MemberDistributionStatsResource)</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:10px\">&nbsp;&nbsp;&nbsp;GET &nbsp;&nbsp;&nbsp;&nbsp;/v3/members/{handle}/skills (com.appirio.service.member.resources.MemberSkillsResource)</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:10px\">&nbsp;&nbsp;&nbsp;PATCH &nbsp;&nbsp;/v3/members/{handle}/skills (com.appirio.service.member.resources.MemberSkillsResource)</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:10px\">&nbsp;&nbsp;&nbsp;GET &nbsp;&nbsp;&nbsp;&nbsp;/v3/members/{handle}/externalAccounts (com.appirio.service.member.resources.MemberExternalAccountsResource)</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:10px\">&nbsp;&nbsp;&nbsp;DELETE &nbsp;/v3/members/{handle}/externalLinks/{key} (com.appirio.service.member.resources.MemberExternalLinksResource)</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:10px\">&nbsp;&nbsp;&nbsp;GET &nbsp;&nbsp;&nbsp;&nbsp;/v3/members/{handle}/externalLinks (com.appirio.service.member.resources.MemberExternalLinksResource)</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:10px\">&nbsp;&nbsp;&nbsp;POST &nbsp;&nbsp;&nbsp;/v3/members/{handle}/externalLinks (com.appirio.service.member.resources.MemberExternalLinksResource)</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:10px\">&nbsp; &nbsp;INFO &nbsp;[2016-04-08 03:57:51,537] org.eclipse.jetty.server.handler.ContextHandler: Started i.d.j.MutableServletContextHandler@12fccff0{/,null,AVAILABLE}</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:10px\">&nbsp; &nbsp;INFO &nbsp;[2016-04-08 03:57:51,541] io.dropwizard.setup.AdminEnvironment: tasks =</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:10px\">&nbsp;&nbsp;&nbsp;POST &nbsp;&nbsp;&nbsp;/tasks/gc (io.dropwizard.servlets.tasks.GarbageCollectionTask)</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:10px\">&nbsp; &nbsp;INFO &nbsp;[2016-04-08 03:57:51,547] org.eclipse.jetty.server.handler.ContextHandler: Started i.d.j.MutableServletContextHandler@7babed9e{/,null,AVAILABLE}</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:10px\">&nbsp; &nbsp;INFO &nbsp;[2016-04-08 03:57:51,551] org.eclipse.jetty.server.ServerConnector: Started application@31e739bf{HTTP/1.1}{0.0.0.0:8080}</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:10px\">&nbsp; &nbsp;INFO &nbsp;[2016-04-08 03:57:51,552] org.eclipse.jetty.server.ServerConnector: Started admin@29079032{HTTP/1.1}{0.0.0.0:8081}</span></p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30053745",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<ul>\n\t<li>Added/Updated files</li>\n\t<li>A changed file describing the added, updated and deleted files and directories.</li>\n\t<li>updated README.md file decribing the configurations and how to run the microservice, including the verification steps.&nbsp;<span style=\"color:rgb(255, 0, 0)\">No additional Deployment Guide document needed</span>.</li>\n</ul>\n",
+  "forumId": 32655,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=32655",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 14,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-12T01:20:00.000Z",
+      "actualStartTime": "2016-04-12T01:20:00.000Z",
+      "scheduledEndTime": "2016-04-16T01:20:00.000Z",
+      "actualendTime": "2016-04-16T01:20:00.000Z",
+      "_id": "5813414a550dfb3b52bea0da"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-12T01:25:00.000Z",
+      "actualStartTime": "2016-04-12T01:25:00.000Z",
+      "scheduledEndTime": "2016-04-16T01:20:00.000Z",
+      "actualendTime": "2016-04-16T01:20:00.000Z",
+      "_id": "5813414a550dfb3b52bea0d9"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-16T01:20:00.000Z",
+      "actualStartTime": "2016-04-16T01:20:00.000Z",
+      "scheduledEndTime": "2016-04-17T01:15:00.000Z",
+      "actualendTime": "2016-04-17T01:15:00.000Z",
+      "_id": "5813414a550dfb3b52bea0d8"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-17T01:15:00.000Z",
+      "actualStartTime": "2016-04-17T01:15:00.000Z",
+      "scheduledEndTime": "2016-04-17T13:15:00.000Z",
+      "actualendTime": "2016-04-17T13:15:00.000Z",
+      "_id": "5813414a550dfb3b52bea0d7"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-17T13:15:00.000Z",
+      "actualStartTime": "2016-04-17T13:15:00.000Z",
+      "scheduledEndTime": "2016-04-18T00:06:00.000Z",
+      "actualendTime": "2016-04-18T00:06:00.000Z",
+      "_id": "5813414a550dfb3b52bea0d6"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-04-12T01:20:00.000Z",
+  "prize": [
+    300,
+    150
+  ],
+  "projectId": 9601,
+  "registrants": [
+    {
+      "handle": "twds",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-12T01:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414a550dfb3b52bea0d5"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-12T02:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414a550dfb3b52bea0d4"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-12T04:55:00.000Z",
+      "submissionDate": "2016-04-13T03:23:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414a550dfb3b52bea0d3"
+    },
+    {
+      "handle": "OlinaRuan",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T07:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414a550dfb3b52bea0d2"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-12T11:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414a550dfb3b52bea0d1"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-12T13:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414a550dfb3b52bea0d0"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-12T14:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414a550dfb3b52bea0cf"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-12T14:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414a550dfb3b52bea0ce"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T03:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414a550dfb3b52bea0cd"
+    },
+    {
+      "handle": "alazyrabbit",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T07:10:00.000Z",
+      "submissionDate": "2016-04-13T10:22:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414a550dfb3b52bea0cc"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-13T14:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414a550dfb3b52bea0cb"
+    },
+    {
+      "handle": "Coryf88",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-14T00:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414a550dfb3b52bea0ca"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-15T19:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414a550dfb3b52bea0c9"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-15T23:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813414a550dfb3b52bea0c8"
+    }
+  ],
+  "registrationEndDate": "2016-04-16T01:20:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-04-16T01:20:00.000Z",
+  "submissions": [
+    {
+      "handle": "alazyrabbit",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 96.88,
+      "finalScore": 96.88,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-04-13T10:22:00.000Z",
+      "_id": "5813414a550dfb3b52bea0dc"
+    },
+    {
+      "handle": "lanchongyizu",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 96.25,
+      "finalScore": 96.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-04-13T03:23:00.000Z",
+      "_id": "5813414a550dfb3b52bea0db"
+    }
+  ],
+  "technology": [
+    "Java"
+  ]
+}

@@ -1,0 +1,555 @@
+{
+  "_id": 30052474,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T23:13:38.065Z",
+  "appealsEndDate": "2015-12-28T13:29:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Java Web App for Health Clinic Booking Engine - Functional Enhancements",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:rgb(0, 0, 0)\">Topcoder has been asked by a client to develop a scheduling tool for a medical setting. &nbsp;In a&nbsp;</span><a href=\"https://www.topcoder.com/challenge-details/30052242/?type=develop&amp;noncache=true\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\" target=\"_blank\"><span style=\"color:rgb(0, 0, 255)\">previous challenge</span></a><span style=\"color:rgb(0, 0, 0)\">, we developed a tool which will allow scheduling staff at the clinic to enter availability of medical personnel and to handle the actual scheduling of appointments. &nbsp;&nbsp;The staff in this clinic manage a variety of medical tests and procedures which are called products (and stored in the Product2 table in Salesforce.com). &nbsp;Each product is associated with different medical staff and has different time requirements. &nbsp;There are some other business rules as well -- for example, some products/tests can only be administered by males nurses to male patients or by females nurses to female patients.</span></span></p>\n\n<p><span style=\"color:rgb(0, 0, 0)\"><span style=\"font-family:arial,helvetica,sans-serif\">The application as a whole - a medical practice management app - is primarily going to be developed in Salesforce.com. &nbsp;You will see that the data model for the application definitely has a Salesforce.com flavor to it. &nbsp;However, the booking engine that we&rsquo;re developing here has been developed in Java as a web application using Heroku and PostgreSQL. &nbsp;This booking engine is integrated with data from Salesforce.com and will take advantage of the Heroku Connect and Salesforce.com Canvas functionality to integrate with SFDC. &nbsp; Our first submission has done an outstanding job of documenting the setup and configuration required to get the Canvas application up and running. &nbsp;The app has been designed to function within a SFDC frame -- less than full screen. &nbsp;The default width for Canvas Apps is 800px and the default height is 900px. &nbsp;</span></span></p>\n\n<p><span style=\"color:rgb(0, 0, 0)\"><span style=\"font-family:arial,helvetica,sans-serif\">In this challenge we&#39;re going to tackle a series of functional enhancements and implement the business rules required by the medical practice. &nbsp; Here is the additional functionality we need add:</span></span></p>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">1.&nbsp; SEQUENCING OF ASSIGNMENTS</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">When our booking engine currently schedules resources for a particular product it looks to see if time is available for a particular time slot for all personnel (Contacts) &nbsp;and if the time available the booking flags that particular time (9:00 AM - 9:30 AM) as unavailable for the particular resources.&nbsp; What we really need to do is a bit more complicated. &nbsp; &nbsp;Rather than scheduling all the resources at the same time for a particular product we need to schedule them in sequence.&nbsp; The sequence of the resources required is determined by the capability_required.order__c value for a particular product.&nbsp; The capability_required.est_visit_time_mins__c defines how long a visit is required for each resource. &nbsp; For example, a particular test might require 30 mins from a technician (9:00 - 9:30), followed by 30 mins from a nurse the same gender as the patient (9:30-10:00 AM), followed by 30 mins for a doctor (10:00 - 10:30 AM).</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">2.&nbsp; MULTIPLE PRODUCT SUPPORT</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">The booking engine should be able handle the scheduling of multiple products at once.&nbsp; The reality of the situation is the clients of the health clinic often have multiple tests and procedures to complete in a single visit to the clinic. &nbsp; One of the requirements for this capability is that the customers (Contacts with record type = &quot;Client&quot;) should be able to schedule all their procedures on a single day with a maximum gap of 45 mins between timeslots with clinic staff on a particular day.</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">&quot;Multiple&quot; products is defined as 1 or more products. In theory there is no limit on the number of products but in practice you can assume that there will be no more than 8 if this makes the coding easier.</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">For clarity:</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">2.1 A booking is made for 2 products</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">Product 1: 15 minutes technician THEN 30 minutes nurse THEN 30 minutes doctor</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">Product 2: 30 minutes nurse THEN 30 minutes doctor</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">Note that the order is derived product2.capability_required__c.order__c as described in the previous point</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">Say the booking starts at&nbsp;9am&nbsp;and the clinic is not busy so the assignments are contiguous, then the assignments will be as follows</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">Assignment 1: Technician at&nbsp;9am&nbsp;for 15 minutes (product 1)</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">Assignment 2: Nurse at&nbsp;9:15&nbsp;for 60 minutes (product 1 + 2)</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">Assignment 3: Doctor at&nbsp;10:15&nbsp;for 60 minutes (product 1 + 2)</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">2.2 Bounary condition where the ordering is different</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">Product 1: 15 minutes technician THEN 30 minutes nurse THEN 30 minutes doctor</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">Product 2: 15 minutes doctor THEN 30 minutes nurse THEN 30 minutes doctor</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">This case is hard to manage and the customer&#39;s requirements are not 100% clear on this point, so the following ordering is acceptable</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">Say the booking starts at&nbsp;9am&nbsp;and the clinic is not busy so the assignments are contiguous, then the assignments will be as follows</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">Assignment 1: Technician at&nbsp;9am&nbsp;for 15 minutes (product 1)</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">Assignment 2: Nurse at&nbsp;9:15&nbsp;for 60 minutes (product 1 + 2)</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">Assignment 3: Doctor at&nbsp;10:15&nbsp;for 75 minutes (product 1 + both visits for doctor 2)</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">The optimisation of this will be changed in the future so comments in your code must clearly state where this boundary condition is being handled.</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">3.&nbsp; GET AND POST PARMS</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">We have a bit of a workaround for bringing up the Availability screen powered by the booking engine.&nbsp; It uses a custom button which brings up the availability related to a particular case and a hard-coded product id.&nbsp; We need to update the application so that the product ID(s) should be accepted via GET or POST params rather than being hardcoded in the custom button. This will facilitate wrapping the application in a salesforce canvas app.</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">4. EXPECTED DATA VOLUMES &amp; SCALABILITY</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">Expected data volumes are</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">\n<ul>\n\t<li>Contact (resource): ~100 records</li>\n\t<li>Capability required: ~5-10 per product</li>\n\t<li>Capability obtained: ~20-30 per contact</li>\n\t<li>ContactAvailability: ~100 resources x 4 slots per hour x 8 hours per day x 5 days per week x ~10 weeks of availability records in the future = ~160k records</li>\n</ul>\n\n<div>The solution must be capable of scaling to 10x these volumes while remaining reasonably performant.</div>\n</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">Where possible, use cursors and paging of results in the DB which can moved through when users click on the next &amp; previous buttons. The use of SQL procedures, functions, view and indexed is permitted, so long as they are compatible with Heroku postgres.</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">Note that the application should only retrieve 5 days worth of data from the database at a time in order to ensure that there are no memory / timeout issues associated with retrieving large result sets. The use of paging / cursors for the next/prev buttons is suggested but not essential as long as there are no potential memory issues.</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30052474",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:rgb(0, 0, 0)\"><span style=\"font-size:14px\">1. &nbsp;Please use the code from the previous challenge as the basis for your submission. &nbsp;The code can be found in the following GitHub repository: &nbsp;https://github.com/cloudspokes/medical-booking-engine. &nbsp;</span></span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:rgb(0, 0, 0)\"><span style=\"font-size:14px\">2. &nbsp;You should provide your GitHub ID to the challenge forums and you&#39;ll be added a collaborator for the repository listed above. You should fork the repository to pull down the latest version of the code. &nbsp;If you win the competition you&#39;ll be asked to submit a pull request.</span></span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:rgb(0, 0, 0)\"><span style=\"font-size:14px\">3. &nbsp;There is some setup required for this challenge but the Deployment Guide does a good job of outlining the steps required to get the app up and running in an SFDC developer org.</span></span></span></p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:rgb(0, 0, 0)\"><span style=\"font-size:14px\">4. &nbsp;As part of your submission, please provide a document which discusses the changes made and the code updated to implement each of the requirements defined above.</span></span></span></p>\n",
+  "forumId": 31534,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=31534",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 48,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-12-17T10:04:00.000Z",
+      "actualStartTime": "2015-12-17T10:04:00.000Z",
+      "scheduledEndTime": "2015-12-23T02:04:00.000Z",
+      "actualendTime": "2015-12-23T02:04:00.000Z",
+      "_id": "5813dba2550dfb3b52ea567b"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-12-17T10:10:00.000Z",
+      "actualStartTime": "2015-12-17T10:10:00.000Z",
+      "scheduledEndTime": "2015-12-24T02:04:00.000Z",
+      "actualendTime": "2015-12-24T02:04:00.000Z",
+      "_id": "5813dba2550dfb3b52ea567a"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-12-24T02:04:00.000Z",
+      "actualStartTime": "2015-12-24T02:04:00.000Z",
+      "scheduledEndTime": "2015-12-27T02:03:00.000Z",
+      "actualendTime": "2015-12-27T02:03:00.000Z",
+      "_id": "5813dba2550dfb3b52ea5679"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-12-27T02:03:00.000Z",
+      "actualStartTime": "2015-12-27T02:03:00.000Z",
+      "scheduledEndTime": "2015-12-28T02:04:00.000Z",
+      "actualendTime": "2015-12-28T02:04:00.000Z",
+      "_id": "5813dba2550dfb3b52ea5678"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-12-28T02:04:00.000Z",
+      "actualStartTime": "2015-12-28T02:04:00.000Z",
+      "scheduledEndTime": "2015-12-28T13:29:00.000Z",
+      "actualendTime": "2015-12-28T13:29:00.000Z",
+      "_id": "5813dba2550dfb3b52ea5677"
+    }
+  ],
+  "platforms": [
+    "Heroku",
+    "Salesforce.com",
+    "Other"
+  ],
+  "postingDate": "2015-12-17T10:04:00.000Z",
+  "prize": [
+    2000,
+    1000
+  ],
+  "projectId": 9279,
+  "registrants": [
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T10:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5676"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T10:37:00.000Z",
+      "submissionDate": "2015-12-24T02:01:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5675"
+    },
+    {
+      "handle": "premtec",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T10:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5674"
+    },
+    {
+      "handle": "MonicaMuranyi",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T10:50:00.000Z",
+      "submissionDate": "2015-12-24T00:22:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5673"
+    },
+    {
+      "handle": "twds",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T11:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5672"
+    },
+    {
+      "handle": "hemkant.c",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T11:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5671"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T11:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5670"
+    },
+    {
+      "handle": "son4moon",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T11:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea566f"
+    },
+    {
+      "handle": "Muhammad.Amin",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T12:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea566e"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T13:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea566d"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T13:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea566c"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T13:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea566b"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T13:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea566a"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T15:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5669"
+    },
+    {
+      "handle": "naeem95m",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T15:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5668"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T15:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5667"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T16:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5666"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T16:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5665"
+    },
+    {
+      "handle": "CrazyCoderLZB",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T19:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5664"
+    },
+    {
+      "handle": "Eric.Allen",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T21:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5663"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T23:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5662"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-17T23:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5661"
+    },
+    {
+      "handle": "toode",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-18T00:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5660"
+    },
+    {
+      "handle": "ChenXiaoTemp",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-18T03:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea565f"
+    },
+    {
+      "handle": "gauravs23",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-18T03:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea565e"
+    },
+    {
+      "handle": "darkwater",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-18T07:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea565d"
+    },
+    {
+      "handle": "gvir",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-18T09:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea565c"
+    },
+    {
+      "handle": "abhaygoyal",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-18T12:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea565b"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-18T16:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea565a"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-18T19:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5659"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-18T22:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5658"
+    },
+    {
+      "handle": "Luckyodell",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-18T23:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5657"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-19T01:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5656"
+    },
+    {
+      "handle": "nodesabd",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-19T04:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5655"
+    },
+    {
+      "handle": "bannie2492",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-19T04:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5654"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-19T05:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5653"
+    },
+    {
+      "handle": "sathishk2con",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-19T07:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5652"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-19T12:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5651"
+    },
+    {
+      "handle": "avbngera",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-19T14:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5650"
+    },
+    {
+      "handle": "herodolphin",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-19T15:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea564f"
+    },
+    {
+      "handle": "Srikanth171",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-19T15:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea564e"
+    },
+    {
+      "handle": "smtryingcode",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-19T23:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea564d"
+    },
+    {
+      "handle": "11110583",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-20T06:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea564c"
+    },
+    {
+      "handle": "krnaveen14",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-20T07:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea564b"
+    },
+    {
+      "handle": "cybrkit",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-20T23:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea564a"
+    },
+    {
+      "handle": "Faycal",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-21T14:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5649"
+    },
+    {
+      "handle": "ksuhail7",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-22T04:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5648"
+    },
+    {
+      "handle": "chtbharti",
+      "reliability": "n/a",
+      "registrationDate": "2015-12-22T14:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813dba2550dfb3b52ea5647"
+    }
+  ],
+  "registrationEndDate": "2015-12-23T02:04:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-12-24T02:04:00.000Z",
+  "submissions": [
+    {
+      "handle": "MonicaMuranyi",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 94.38,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-12-24T00:22:00.000Z",
+      "_id": "5813dba2550dfb3b52ea567d"
+    },
+    {
+      "handle": "sah2ed",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 89.38,
+      "finalScore": 91.88,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-12-24T02:01:00.000Z",
+      "_id": "5813dba2550dfb3b52ea567c"
+    }
+  ],
+  "technology": [
+    "Java",
+    "PostgreSQL"
+  ]
+}

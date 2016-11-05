@@ -1,0 +1,433 @@
+{
+  "_id": 30035530,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:14:38.292Z",
+  "appealsEndDate": "2014-10-08T18:59:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "DTN Security Key - Proof of Concept - DTN ITRM Prototype",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h1>1.0. Introduction</h1>\n\n<p>Delay-Tolerant Security Key Agreement, or DTKA, is an ION-compatible module for security key administration in DTN prototyped by the Jet Propulsion Laboratory (JPL) at CalTech for NASA.<br />\nA high-level overview of DTKA can be read in this document: <sup><span><a href=\"http://apps.topcoder.com/wiki/download/attachments/143950053/Delay-Tolerant+Key+Administration+cleared.pptx\" rel=\"nofollow\">http://apps.topcoder.com/wiki/download/attachments/143950053/Delay-Tolerant+Key+Administration+cleared.pptx<sup><img alt=\"\" class=\"rendericon\" src=\"http://apps.topcoder.com/wiki/images/icons/linkext7.gif\" style=\"height:7px; width:7px\" /></sup></a></span></sup></p>\n\n<p>As part of the modifications we&#39;ll be making to DTKA, we would like to prototype a proof of concept that demonstrates that, after a few key exchanges, the Key Authority (KA) servers in a DTN network are able to determine with some accuracy, the malicious nodes in the network that should be blacklisted before the next key exchange round.</p>\n\n<p>This guide will outline instructions on how to implement the Iterative Reputation and Trust Management (ITRM) algorithm that will be added to DTKA to keep track of the trustworthiness or otherwise of new nodes that join a DTN network.</p>\n\n<h1><a name=\"DTKA-ITRMAlgorithm-2.0.RelatedLiterature\"></a>2.0. Related Literature</h1>\n\n<p>An Iterative Algorithm for Trust Management and Adversary Detection for Delay-Tolerant Networks. Erman Ayday, Student Member, IEEE, and Faramarz Fekri, Senior Member, IEEE</p>\n\n<p><span><a href=\"https://documents.epfl.ch/users/a/ay/ayday/www/erman_publications/tmc12.pdf\" rel=\"nofollow\">https://documents.epfl.ch/users/a/ay/ayday/www/erman_publications/tmc12.pdf<sup><img alt=\"\" class=\"rendericon\" src=\"http://apps.topcoder.com/wiki/images/icons/linkext7.gif\" style=\"height:7px; width:7px\" /></sup></a></span></p>\n\n<h1><a name=\"DTKA-ITRMAlgorithm-3.0.Algorithm\"></a>3.0. Algorithm</h1>\n\n<h3><a name=\"DTKA-ITRMAlgorithm-3.1.ITRMAlgorithmExplanation\"></a>3.1. ITRM Algorithm Explanation</h3>\n\n<p>Initially the network has one first node N1 and by assumption it is trustful node (even this assumption can be wrong and will be discovered by iterative process later). This node belongs to trusted nodes in bipartite graph. The second node N2 is market as not-trusted at the beginning. There is a vertex between N1 and N2 with weight V12. Node N1 has a rating V1, node N2 has a rating V2, node N1 rate node N2 with V12 rating and node N2 rate N1 with rating V21.</p>\n\n<p>Given that each node Ni rated other nodes Nj with rating values V(ij) let us compute rating of the node Nj. Plus, Vi means the rating of trust for node Ni and Vj means the rating of trust for node Nj. Each node as a rater corresponds to a check vertex in the graph. If a node Ni has rating for Nj, the edge has weight edge with value Vij from the Ni vertex to Nj vertex.</p>\n\n<p><strong><em>Vj = &sum;(Vi*Vij)/&sum;Vi, (i=I,N; i!= j)</em></strong> <strong><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em></strong> <strong><em>(1)</em></strong></p>\n\n<p>where N number of all nodes in trusted DTN.</p>\n\n<p>There is another formula to calculate inconsistency coefficient for each node Ni as Ci:</p>\n\n<p><strong><em>Ci = (1/[T])* &sum;dist(Vij,Vj),</em></strong><strong><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em></strong> <strong><em>(2)</em></strong></p>\n\n<p>Where sum is for every j of Nj from set T, dist is a distance metrics, [T] is size of set of all nodes connected with node Ni.</p>\n\n<p>A node creates its own rating about another node by collecting ratings about the node and aggregating them. Each node has rating table, whose entries are used for storing the ratings of the nodes. In DTN a node has to wait for a very long time to issue its own ratings for all the nodes in the network.&nbsp; However, it is desirable for a node to have a fresh estimate of the reputation of all the nodes in the network in a timely manner, mitigating the effects of malicious nodes immediately. To achieve this goal, I propose an iterative detection mechanism, which operates by using the rating tables formed by other nodes. The rating table of a node can be represented by a bipartite graph consisting one check vertex and some bit vertices (a subset of all nodes in DTN for which the node has received big number of feedbacks to form a rating).</p>\n\n<p>How to detect malicious node using ITRM? Check vertex Ni with the highest inconsistency coefficient Ci (calculated by formula 2) is selected and put to the blacklist if its inconsistency is greater than or equal to pre-definite threshold. If there is no check vertex with inconsistency greater than or equal to pre-defined threshold, the algorithm stops its iterations. Once the check vertex Ni is put to the blacklist, its rating Vi (calculated by formula 1) is deleted for all vertices Nj it is connected to:<br />\n{Vij}</p>\n\n<p>Please refer to the spec for more details: <span><a href=\"http://apps.topcoder.com/wiki/download/attachments/146767909/ITRM.docx\" rel=\"nofollow\">http://apps.topcoder.com/wiki/download/attachments/146767909/ITRM.docx<sup><img alt=\"\" class=\"rendericon\" src=\"http://apps.topcoder.com/wiki/images/icons/linkext7.gif\" style=\"height:7px; width:7px\" /></sup></a></span></p>\n\n<h3><a name=\"DTKA-ITRMAlgorithm-3.2.ClassDiagram\"></a>3.2. Class Diagram</h3>\n\n<p>This assembly will build a proof of concept implementation of the Iterative Trust and Reputation Management (ITRM) algorithm to isolate malicious nodes in a network of connected nodes.</p>\n\n<p>Please refer to the attached TC UML diagram for the classes in scope for this assembly. <span><a href=\"http://apps.topcoder.com/wiki/download/attachments/146767909/dtka_diagrams.tcuml\" rel=\"nofollow\">http://apps.topcoder.com/wiki/download/attachments/146767909/dtka_diagrams.tcuml<sup><img alt=\"\" class=\"rendericon\" src=\"http://apps.topcoder.com/wiki/images/icons/linkext7.gif\" style=\"height:7px; width:7px\" /></sup></a></span></p>\n\n<h3><a name=\"DTKA-ITRMAlgorithm-3.3.Testing\"></a>3.3. Testing</h3>\n\n<p>Your submission must demonstrate that after a few runs of the ITRM algorithm, the rating values of non-malicious nodes converge to a value that asserts that such nodes are not malicious. Of course, your implementation of the algorithm should equally demonstrate with a certain degree of accuracy that the ITRM algorithm is able to identify nodes that are malicious by allowing the rating of such nodes to fall below the trustworthiness threshold.</p>\n\n<p>The following example is for illustration though in practice, the number of malicious nodes will usually not be as high as half the number of nodes in the network.<br />\n&nbsp;<br />\nThere are 3 KA servers named KA1 - KA3.<br />\nThere are 6 nodes which are named n1 - n6.<br />\nLet&#39;s assume that only nodes 1, 2 and 6 are trustworthy, the others (3, 4 and 5) are malicious.</p>\n\n<p>Assuming that inconsistency coeff (i.c.) ranges from 0 - 1 and a node is considered malicious when its i.c. drops below 0.5, and that when a node contacts a KA server for key exchange for the first time, the KA server assigns it an i.c of 0.5 (but in my example below the value is chosen at random), then the inconsistency coeff of nodes 1 - 6 at each server are as follows:</p>\n\n<div class=\"code panel\" style=\"border-width: 1px;\">\n<div class=\"codeContent panelContent\">\n<pre>\nRound 1 KA1: 0.5, 0.6, 0.1, 0.3, 0.5, 0.9 KA2: 0.9, 0.5, 0.3, 0.1, 0.6, 0.5 KA3: 0.1, 0.1, 0.2, 0.3, 0.2, 0.1\nRound 2 KA1: 0.6, 0.8, 0.2, 0.1, 0.4, 0.8 KA2: 0.7, 0.7, 0.3, 0.1, 0.6, 0.6 KA3: 0.4, 0.3, 0.2, 0.3, 0.2, 0.5\nRound 3 KA1: 0.8, 0.7, 0.1, 0.3, 0.5, 0.8 KA2: 0.9, 0.6, 0.3, 0.1, 0.6, 0.6 KA3: 0.6, 0.6, 0.2, 0.3, 0.2, 0.5</pre>\n</div>\n</div>\n\n<p>By round 3, the values of nodes 1, 2 and 6 converge above 0.5&nbsp;across the 3 KA servers showing that they are not malicious nodes.<br />\n&nbsp;</p>\n\n<h2><a name=\"DTKA-ITRMAlgorithm-4.SubmissionDeliverables\"></a>4. Submission Deliverables</h2>\n\n<p>You are free to develop your implementation in any of the programming languages listed in the contest spec (C, C++, C#, Java, Python, or Node.js JavaScript).</p>\n\n<p>With the exception of solutions coded in C, you must structure your code using object oriented techniques.</p>\n\n<ul>\n\t<li>Your final submission must include all necessary files required to run the code, including IDE project files.</li>\n\t<li>Your test output. Can be a simple text file containing the piped output from executing the app from the console.</li>\n\t<li>A detailed deployment guide describing all the steps required to test the solution successfully.</li>\n</ul>\n\n<h2><a name=\"DTKA-ITRMAlgorithm-5.Support\"></a>5. Support</h2>\n\n<p>All standard terms governing assembly contests including support applies to this contest.</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30035530",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2014-10-12T06:27:00.000Z",
+  "finalSubmissionGuidelines": "<p>Allowed programming languages: C, C++, C#, Java, Python or JavaScript (Node.js).</p>\n\n<p><span><strong>1. Submission Upload</strong> - For each member, the final submission should be uploaded via the challenge detail page on </span><a href=\"http://www.topcoder.com\" style=\"line-height: 1.6;\">topcoder.com</a><span>.</span></p>\n\n<p><strong>2. Third Party Code/Libraries</strong><span style=\"color:rgb(102, 102, 102); font-family:lucida grande,helvetica,arial,sans-serif; font-size:12px\">&nbsp;- All third party code/libraries must be open source and you must include the license in your submission. The license must allow us to modify/re-package the code as necessary. If you have any questions regarding this, please post in the forums. Submissions that include third party code without the proper license information will be disqualified if the third party code is found to be non-usable due to license restrictions.</span></p>\n\n<p><strong>3. Attribution/References</strong><span style=\"color:rgb(102, 102, 102); font-family:lucida grande,helvetica,arial,sans-serif; font-size:12px\">- You must properly attribute and or reference any sentences, paragraphs or quotes that you cite in your text-based submission. If your submission is found to include text that has been copied and pasted from an online source without properly attributing the source, you will receive a not-so-nice email from the topcoder competition manager.</span></p>\n\n<p><strong>4. Spell Check&nbsp;</strong><span style=\"color:rgb(102, 102, 102); font-family:lucida grande,helvetica,arial,sans-serif; font-size:12px\">- We understand that not all submitters will be native English speakers and that there will be spelling/grammatical mistakes. We request that you first run your submission through a grammar/spell checker before submission so as to fix simple mistakes.&nbsp;</span></p>\n",
+  "forumId": 18963,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=18963",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 23,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-27T08:29:00.000Z",
+      "actualStartTime": "2014-09-27T08:29:00.000Z",
+      "scheduledEndTime": "2014-09-27T08:30:00.000Z",
+      "actualendTime": "2014-09-27T08:30:00.000Z",
+      "_id": "58134f3e550dfb3b52c2d664"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-27T08:30:00.000Z",
+      "actualStartTime": "2014-09-27T08:30:00.000Z",
+      "scheduledEndTime": "2014-09-28T05:46:00.000Z",
+      "actualendTime": "2014-09-28T05:46:00.000Z",
+      "_id": "58134f3e550dfb3b52c2d663"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-29T22:50:00.000Z",
+      "actualStartTime": "2014-09-29T22:50:00.000Z",
+      "scheduledEndTime": "2014-10-02T22:50:00.000Z",
+      "actualendTime": "2014-10-02T22:50:00.000Z",
+      "_id": "58134f3e550dfb3b52c2d662"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-29T22:55:00.000Z",
+      "actualStartTime": "2014-09-29T22:55:00.000Z",
+      "scheduledEndTime": "2014-10-05T22:55:00.000Z",
+      "actualendTime": "2014-10-05T22:55:00.000Z",
+      "_id": "58134f3e550dfb3b52c2d661"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-05T22:55:00.000Z",
+      "actualStartTime": "2014-10-05T22:55:00.000Z",
+      "scheduledEndTime": "2014-10-06T10:21:00.000Z",
+      "actualendTime": "2014-10-06T10:21:00.000Z",
+      "_id": "58134f3e550dfb3b52c2d660"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-06T10:22:00.000Z",
+      "actualStartTime": "2014-10-06T10:22:00.000Z",
+      "scheduledEndTime": "2014-10-08T10:00:00.000Z",
+      "actualendTime": "2014-10-08T10:00:00.000Z",
+      "_id": "58134f3e550dfb3b52c2d65f"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-08T10:00:00.000Z",
+      "actualStartTime": "2014-10-08T10:00:00.000Z",
+      "scheduledEndTime": "2014-10-08T18:16:00.000Z",
+      "actualendTime": "2014-10-08T18:16:00.000Z",
+      "_id": "58134f3e550dfb3b52c2d65e"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-08T18:16:00.000Z",
+      "actualStartTime": "2014-10-08T18:16:00.000Z",
+      "scheduledEndTime": "2014-10-08T18:59:00.000Z",
+      "actualendTime": "2014-10-08T18:59:00.000Z",
+      "_id": "58134f3e550dfb3b52c2d65d"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-08T18:59:00.000Z",
+      "actualStartTime": "2014-10-08T18:59:00.000Z",
+      "scheduledEndTime": "2014-10-08T20:21:00.000Z",
+      "actualendTime": "2014-10-08T20:21:00.000Z",
+      "_id": "58134f3e550dfb3b52c2d65c"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-08T20:21:00.000Z",
+      "actualStartTime": "2014-10-08T20:21:00.000Z",
+      "scheduledEndTime": "2014-10-11T08:36:00.000Z",
+      "actualendTime": "2014-10-11T08:36:00.000Z",
+      "_id": "58134f3e550dfb3b52c2d65b"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-11T08:36:00.000Z",
+      "actualStartTime": "2014-10-11T08:36:00.000Z",
+      "scheduledEndTime": "2014-10-11T20:38:00.000Z",
+      "actualendTime": "2014-10-11T20:38:00.000Z",
+      "_id": "58134f3e550dfb3b52c2d65a"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-12T14:51:00.000Z",
+      "actualStartTime": "2014-10-12T14:51:00.000Z",
+      "scheduledEndTime": "2014-10-17T14:51:00.000Z",
+      "actualendTime": "2014-10-17T14:51:00.000Z",
+      "_id": "58134f3e550dfb3b52c2d659"
+    },
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-28T05:46:00.000Z",
+      "actualStartTime": "2014-09-28T05:46:00.000Z",
+      "scheduledEndTime": "2014-09-28T12:34:00.000Z",
+      "actualendTime": "2014-09-28T12:34:00.000Z",
+      "_id": "58134f3e550dfb3b52c2d658"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-28T12:34:00.000Z",
+      "actualStartTime": "2014-09-28T12:34:00.000Z",
+      "scheduledEndTime": "2014-09-29T22:50:00.000Z",
+      "actualendTime": "2014-09-29T22:50:00.000Z",
+      "_id": "58134f3e550dfb3b52c2d657"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-11T20:38:00.000Z",
+      "actualStartTime": "2014-10-11T20:38:00.000Z",
+      "scheduledEndTime": "2014-10-12T06:27:00.000Z",
+      "actualendTime": "2014-10-12T06:27:00.000Z",
+      "_id": "58134f3e550dfb3b52c2d656"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-10-12T06:27:00.000Z",
+      "actualStartTime": "2014-10-12T06:27:00.000Z",
+      "scheduledEndTime": "2014-10-12T14:51:00.000Z",
+      "actualendTime": "2014-10-12T14:51:00.000Z",
+      "_id": "58134f3e550dfb3b52c2d655"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2014-09-29T22:50:00.000Z",
+  "prize": [
+    1000,
+    500
+  ],
+  "projectId": 6583,
+  "registrants": [
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T01:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3e550dfb3b52c2d654"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2014-09-29T23:41:00.000Z",
+      "submissionDate": null,
+      "rating": "1088",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f3e550dfb3b52c2d653"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T01:12:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58134f3e550dfb3b52c2d652"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T01:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3e550dfb3b52c2d651"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T01:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3e550dfb3b52c2d650"
+    },
+    {
+      "handle": "thomasjpfan",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T02:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3e550dfb3b52c2d64f"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-09-30T03:07:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58134f3e550dfb3b52c2d64e"
+    },
+    {
+      "handle": "rajeshk87",
+      "reliability": "0%",
+      "registrationDate": "2014-09-30T05:53:00.000Z",
+      "submissionDate": null,
+      "rating": "600",
+      "colorStyle": "color: #999999",
+      "_id": "58134f3e550dfb3b52c2d64d"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T06:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3e550dfb3b52c2d64c"
+    },
+    {
+      "handle": "M.J.TH",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T09:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3e550dfb3b52c2d64b"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T10:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3e550dfb3b52c2d64a"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-30T12:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3e550dfb3b52c2d649"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "0%",
+      "registrationDate": "2014-09-30T16:39:00.000Z",
+      "submissionDate": null,
+      "rating": "1447",
+      "colorStyle": "color: #6666FF",
+      "_id": "58134f3e550dfb3b52c2d648"
+    },
+    {
+      "handle": "pirosl_tc",
+      "reliability": "0%",
+      "registrationDate": "2014-09-30T20:44:00.000Z",
+      "submissionDate": null,
+      "rating": "738",
+      "colorStyle": "color: #999999",
+      "_id": "58134f3e550dfb3b52c2d647"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "26%",
+      "registrationDate": "2014-09-30T21:15:00.000Z",
+      "submissionDate": null,
+      "rating": "1607",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58134f3e550dfb3b52c2d646"
+    },
+    {
+      "handle": "agus.mw",
+      "reliability": "0%",
+      "registrationDate": "2014-10-01T02:46:00.000Z",
+      "submissionDate": "2014-10-05T14:06:00.000Z",
+      "rating": "1030",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f3e550dfb3b52c2d645"
+    },
+    {
+      "handle": "Cagi",
+      "reliability": "0%",
+      "registrationDate": "2014-10-01T07:03:00.000Z",
+      "submissionDate": null,
+      "rating": "1114",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f3e550dfb3b52c2d644"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "0%",
+      "registrationDate": "2014-10-01T08:26:00.000Z",
+      "submissionDate": null,
+      "rating": "58",
+      "colorStyle": "color: #999999",
+      "_id": "58134f3e550dfb3b52c2d643"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2014-10-01T17:55:00.000Z",
+      "submissionDate": null,
+      "rating": "585",
+      "colorStyle": "color: #999999",
+      "_id": "58134f3e550dfb3b52c2d642"
+    },
+    {
+      "handle": "arshadasif0312",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-01T19:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3e550dfb3b52c2d641"
+    },
+    {
+      "handle": "mauhur",
+      "reliability": "n/a",
+      "registrationDate": "2014-10-02T01:45:00.000Z",
+      "submissionDate": "2014-10-04T04:19:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3e550dfb3b52c2d640"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "20%",
+      "registrationDate": "2014-10-02T12:10:00.000Z",
+      "submissionDate": null,
+      "rating": "1125",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f3e550dfb3b52c2d63f"
+    },
+    {
+      "handle": "rawuza",
+      "reliability": "26%",
+      "registrationDate": "2014-10-02T13:34:00.000Z",
+      "submissionDate": null,
+      "rating": "1021",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f3e550dfb3b52c2d63e"
+    }
+  ],
+  "registrationEndDate": "2014-10-02T22:50:00.000Z",
+  "reliabilityBonus": 200,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-10-05T22:55:00.000Z",
+  "submissions": [
+    {
+      "handle": "agus.mw",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 96.31,
+      "finalScore": 96.92,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-10-05T14:06:00.000Z",
+      "_id": "58134f3e550dfb3b52c2d666"
+    },
+    {
+      "handle": "mauhur",
+      "placement": null,
+      "screeningScore": 50,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Failed Screening",
+      "submissionDate": "2014-10-04T04:19:00.000Z",
+      "_id": "58134f3e550dfb3b52c2d665"
+    }
+  ],
+  "technology": [
+    "C",
+    "C#",
+    "C++",
+    "Java",
+    "Node.js",
+    "Python"
+  ]
+}

@@ -1,0 +1,442 @@
+{
+  "_id": 30048922,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T11:01:02.858Z",
+  "appealsEndDate": "2015-02-25T12:20:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "SunShot - Clearly Energy -  Green Button Ruby Gem Library Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:21px\">Challenge Overview</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The </span><a href=\"http://www.greenbuttondata.org/\" style=\"text-decoration:none;\"><u>Green Button</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> Standard is a secure way of transmitting energy usage information developed by the United States Department of Energy. </span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The goal of this challenge is to develop a Ruby based gem to allow third-party applications the retrieval of Green Button XML formatted data and return the data as a Ruby objects with specific attributes. </span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">This follows the path known as </span><em>Green Button Connect</em><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> in the Green Button </span><a href=\"http://www.greenbuttondata.org/developers/#examples\" style=\"text-decoration:none;\"><u>Documentation</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">.</span></p>\n\n<h1 dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:21px\">Challenge Requirements</span></h1>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">You are developing a Ruby based gem in this challenge that retrieves Retail Customer data using </span><a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/\" style=\"text-decoration:none;\"><u>GreenButton RESTful API</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">.</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Before getting started coding, you are encouraged to look at </span><a href=\"http://www.greenbuttondata.org/developers\" style=\"text-decoration:none;\"><u>this page</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> that gives overview about GreenButton Concept, API and Entities. </span></p>\n\n<h4 dir=\"ltr\"><u>General Notes</u></h4>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">This version will only handle UsagePoints of service category (kind) = 0 (Electricity), if the downloaded data is not of type Electricity then returns error to caller stating that we only support Electricity data in this version.</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">For more information about UsagePoints kinds, refer to this </span><a href=\"https://github.com/energyos/OpenESPI-Common-java/blob/master/etc/espiDerived.xsd#LC3027\" style=\"text-decoration:none;\"><u>xsd</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> file that has rich documentation about the entities in GreenButton.</span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">This gem will be extended in future to extract different kinds. Your solution should be flexible to add more parsers without much efforts (i.e. use facade and adapter design pattern to address this).</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">All dates are stored in UTC format, when parsed it should be converted to the local timezone using LocalTimeParameters returned in the XML response.</span></p>\n\t</li>\n</ul>\n\n<h4 dir=\"ltr\"><u>Expected SDK Usage</u></h4>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The gem should have a single module </span><strong>GreenButton</strong><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">, sample usage would look like this : </span></p>\n\n<p dir=\"ltr\"><em>require &lsquo;greenbutton&rsquo;</em></p>\n\n<p dir=\"ltr\"><em>gb = GreenButton.downloadData(accessToken, subscriptionId,.. some optional parameters .. )</em></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">where </span><strong>accessToken</strong><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> is retail customer access_token and </span><strong>subscriptionId</strong><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> is the retailCustomer resourceURI (i.e. </span><a href=\"https://services.greenbuttondata.org/DataCustodian/espi/1_1/resource/Batch/Subscription/5\" style=\"text-decoration:none;\"><u>https://services.greenbuttondata.org/DataCustodian/espi/1_1/resource/Batch/Subscription/5</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">) </span></p>\n\n<p dir=\"ltr\"><span style=\"color:#0000CD\"><span style=\"background-color:transparent; font-family:arial; font-size:15px\">The returned gb is a collection of gb_data_description instances.</span></span></p>\n\n<p dir=\"ltr\"><u>Parsing the XML response</u></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The parsing is the major requirement in this challenge, this </span><a href=\"https://github.com/cew821/greenbutton\" style=\"text-decoration:none;\"><u>greenbutton ruby library</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> can be reused in this challenge, or you can find it helpful to understand parsing the returned XML. Also (check next point ..)</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">It is also Ok to use an open source gem library to map between XML and ruby objects, there are number of gem libraries, </span><a href=\"https://github.com/apotonick/representable\" style=\"text-decoration:none;\"><u>representable</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> is an option.</span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">You can refer to the </span><a href=\"https://services.greenbuttondata.org/\" style=\"text-decoration:none;\"><u>sandbox website</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> and login : </span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Use alan/koala to login</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Navigate to UsagePoints </span><a href=\"https://services.greenbuttondata.org/DataCustodian/RetailCustomer/1/UsagePoint/1/show\" style=\"text-decoration:none;\"><u>page</u></a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Alan authorized this third party app to access monthly consumption, click on the </span><u>Monthly Electricity Consumption</u><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> link to navigate to the Interval Blocks of the usage points.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The code that is displaying the screen you show is in Github:</span><a href=\"https://github.com/energyos/OpenESPI-DataCustodian-java\" style=\"text-decoration:none;\"><u>https://github.com/energyos/OpenESPI-DataCustodian-java</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> , </span><br />\n\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">This is a java MVC implementation in the Spring framework. </span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The particular controller that is displaying the usage point is: </span><a href=\"https://github.com/energyos/OpenESPI-DataCustodian-java/blob/master/src/main/java/org/energyos/espi/datacustodian/web/customer/UsagePointController.java\" style=\"text-decoration:none;\"><u>https://github.com/energyos/OpenESPI-DataCustodian-java/blob/master/src/main/java/org/energyos/espi/datacustodian/web/customer/UsagePointController.java</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> and the associated .jsp is: </span><a href=\"https://github.com/energyos/OpenESPI-DataCustodian-java/blob/master/src/main/webapp/WEB-INF/jsp/customer/usagepoints/index.jsp\" style=\"text-decoration:none;\"><u>https://github.com/energyos/OpenESPI-DataCustodian-java/blob/master/src/main/webapp/WEB-INF/jsp/customer/usagepoints/index.jsp</u></a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">If you are familiar with java you can read and understand how it parses data and pass it to frontend. </span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">But it is not really required. We are just trying to simplify the efforts for you to get started! :)</span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h4 dir=\"ltr\"><u>The GreenButton Wrapper Classes</u></h4>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Define the module with name : </span><strong>GreenButton</strong></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">It will expose &lsquo;downloadData&rsquo; function with following parameters</span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">accessToken : represents the retail customer access token</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">subscriptionId : represents the retail customer resourceURI</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">interval_start_time (optional) : represents the start date to retrieve data.</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">interval_end_time (optional) : represents the end date to retrieve data.</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The method will call the GreenButton API using the </span><a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/#!/Batch/connectMyDataFeed_get_2\" style=\"text-decoration:none;\"><u>subscriptionID URI</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> and pass accessToken in header &lsquo;Authorization&rsquo;. and set the optional intervals if set. Refer to the Swagger documentation to understand the parameters to pass.</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The XML response from API call will be passed to target Parser based on the service category (kind), we only support Electricity in this challenge.</span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Build &nbsp;a Parser to handle parsing the returned XML. The referenced gem ruby library above should be helpful.</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#0000FF\"><span style=\"background-color:transparent; font-family:arial; font-size:15px\">For each UsagePoint create gb_data_description for common attributes, and gb_data_array that hold gb_data entries of interval blocks.</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Create the gb_data entries of interval blcoks from the parsed XML.</span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Below are the mapping between XML and attributes.</span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#0000CD\"><span style=\"background-color:transparent; font-family:arial; font-size:15px\">Return the gb_data_description entries.</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Note the module should be initialized with following information :</span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">the 3rd party admin access tokens :</span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Here is more details about the </span><a href=\"http://www.greenbuttondata.org/espi/access_tokens/\" style=\"text-decoration:none;\"><u>access tokens</u></a></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&lsquo;client_access_token&rsquo;, and &lsquo;registration_access_token&rsquo; should be a private members, and initialized before using the module.</span></p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/#!/ApplicationInformation/getApplicationInformation_get_2\" style=\"text-decoration:none;\"><u>applicationInformationURL</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> : this is used to retrieve custodian ID, as it is available in the application information structure.</span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">GreenButton should provide two classes :</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><strong>gb_data_description</strong><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> </span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"color:#0000CD\"><span style=\"background-color:transparent; font-family:arial; font-size:15px\">Handle attributes common to UsagePoint interval blocks (gb_data)</span>.</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Attributes are:</span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">custodian</span></p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">When setting this value, you need to execute applicationInformationURL call with &lsquo;registration_access_token&rsquo; set in Authorization header.</span></p>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The response XML contains the custodian id, try it in </span><a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/#!/ApplicationInformation/getApplicationInformation_get_2\" style=\"text-decoration:none;\"><u>sandbox</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> to see the response sample.</span></p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">user_id : this should be set to the passed access_token. </span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">commodity</span></p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">this info exists under Meter Reading Data XML</span></p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">currency</span></p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">this info exists under Meter Reading Data XML</span></p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">unit_of_measure</span></p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">this info exists under Meter Reading Data XML (uom element)</span></p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">power_of_ten_multiplier</span></p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">this info exists under Meter Reading Data XML</span></p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"color:#0000CD\"><span style=\"background-color:transparent; font-family:arial; font-size:15px\">gb_data_array - collection of gb_data</span></span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">updated - last updated date/time</span></p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">this info exists under Interval Block Data XML</span></p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Methods are :</span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">new()</span></p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Creates new instance</span></p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">_parse</span></p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">returns a hash (dictionary-like) of parsed elements</span></p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><strong>gb_data</strong><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> </span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"color:#0000FF\"><span style=\"background-color:transparent; font-family:arial; font-size:15px\">H</span><span style=\"background-color:transparent; font-family:arial; font-size:15px\">andles the green button entry values. </span></span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">It holds Interval Block information</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Attributes are:</span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">gb_data_description_id</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">time_start - in local time</span></p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Use LocalTimeParameters to convert the date</span></p>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">this information retrieved from IntervalBlock &gt; Interval &gt; start</span></p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">time_duration</span></p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">this information retrieved from IntervalBlock &gt; Interval &gt; duration</span></p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">interval_readings</span></p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">This holds array of gb_data_interval.</span></p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Methods are :</span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">_parse</span><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&nbsp;&nbsp;&nbsp; </span></p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">returns a hash of parsed elements</span></p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><strong>gb_data_readings</strong></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">This holds interval readings</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">attributes are :</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">time_start - in local time</span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Use LocalTimeParameters to convert the date</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">this information retrieved from IntervalBlock &gt; IntervalReading &gt; timePeriod &gt; start</span></p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">time_duration</span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">this information retrieved from IntervalBlock &gt; IntervalReading &gt; timePeriod &gt; duration</span></p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">value</span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">this information retrieved from IntervalBlock &gt; IntervalReading &gt; value</span></p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">cost</span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">this information retrieved from IntervalBlock &gt; IntervalReading &gt; cost</span></p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h4 dir=\"ltr\"><u>GreenButton Data Model </u></h4>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">You can find details about Greenbutton model definition in this </span><a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/\" style=\"text-decoration:none;\"><u>page</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">. </span></p>\n\n<h4 dir=\"ltr\"><u>OAuth 2.0 and GreenButton API Endpoints</u></h4>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">You need to pass OAuth 2.0 access token when communicating with the API. The SDK should accept an access token be passed as input to the downloadData method.</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Sandbox has OAuth server turned-off so you will be using a predefined-tokens listed in </span><a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/\" style=\"text-decoration:none;\"><u>this page</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> for testing purpose.</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Also since the module accepts the API endpoint to be executed as input parameter, you can use sample data (check References section below) instead of hitting the sandbox directly.</span></p>\n\n<h4 dir=\"ltr\"><u>Ruby API Client Framework</u></h4>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">To communicate with the GreenButton API, there are a number of HTTP client gems out there such as</span><a href=\"https://github.com/typhoeus/typhoeus\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> </span><u>Typhoeus</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">,</span><a href=\"https://github.com/lostisland/faraday\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> </span><u>Faraday</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> and</span><a href=\"https://github.com/jnunemaker/httparty\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> </span><u>httparty</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">. The standard library includes</span><a href=\"http://ruby-doc.org/stdlib-2.0.0/libdoc/net/http/rdoc/Net/HTTP.html\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> </span><u>Net::HTTP</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">, however it isn&#39;t very straightforward to use.</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">It is up to you to pick up an existing gem library or do it from scratch.</span></p>\n\n<h4 dir=\"ltr\"><u>Abstracting</u></h4>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Please make sure to create mixin to include the common code/functionality.</span></p>\n\n<h4 dir=\"ltr\"><u>Setting Up the Gem</u></h4>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Use </span><a href=\"http://bundler.io/\" style=\"text-decoration:none;\"><u>Bundler</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> to take care of gem dependencies.</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">A standard folder structure would look like this :</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">��������� Gemfile</span><br />\n<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">��������� LICENSE.txt</span><br />\n<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">��������� README.md</span><br />\n<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">��������� Rakefile</span><br />\n<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">��������� benzinator.gemspec</span><br />\n<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">��������� lib</span><br />\n<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&nbsp;&nbsp;&nbsp;��������� greenbutton</span><br />\n<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&nbsp;&nbsp;&nbsp;��� &nbsp;&nbsp;��������� version.rb</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;��������� &lt;class-name&gt;.rb</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;��������� model</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;��������� &lt;model-name&gt;.rb</span><br />\n<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&nbsp;&nbsp;&nbsp;��������� greenbutton.rb (the module entry point)</span></p>\n\n<h4 dir=\"ltr\"><u>Writing Tests</u></h4>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">All of your code should be test covered (</span><a href=\"http://rspec.info/\" style=\"text-decoration:none;\"><u>RSpec</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> preferred). </span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">As mentioned above, you can use the Sandbox or host the sample data to test your solution.</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">If you see any problem with sandbox stopped behaving normally, post in challenge forums, and we will reset it (Sandbox).</span></p>\n\n<h4 dir=\"ltr\"><u>Documentation</u></h4>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Because other programmers will be working with your code, and incorporating it into their projects, all functions must be documented in detail in the code (</span><a href=\"https://rubygems.org/gems/tomdoc\" style=\"text-decoration:none;\"><u>TomDoc</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> preferred). </span></p>\n\n<h4 dir=\"ltr\"><u>Coding Standard</u></h4>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Follows coding standards listed here: </span></p>\n\n<p dir=\"ltr\"><a href=\"https://github.com/copycopter/style-guide\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">https://github.com/copycopter/style-guide</span></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> and</span><a href=\"http://www.salesforce.com/us/developer/docs/chatterapi/\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> &nbsp;</span></a><a href=\"https://github.com/copycopter/style-guide\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">https://github.com/copycopter/style-guide</span></a></p>\n\n<h4 dir=\"ltr\"><u>Readme</u></h4>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Provide a detailed readme file using Markdown language with following information :</span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Overview</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Setup Prerequisites</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">How to install</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Usage Example</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Reference to GreenButton API Documentation</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Reference this Ruby Gem Documentation</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Any details about any limitations of your solution.</span></p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Please note, we&#39;re judging this competition not just on the code, but also on the quality of the documentation, </span><span style=\"background-color:transparent; color:#ff0000; font-family:arial; font-size:15px\">test coverage</span><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">, and ease of use.</span></p>\n\n<h4 dir=\"ltr\"><u>References</u></h4>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><a href=\"http://www.greenbuttondata.org/espi/access_tokens/\" style=\"text-decoration:none;\"><u>http://www.greenbuttondata.org/espi/access_tokens/</u></a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/\" style=\"text-decoration:none;\"><u>http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/</u></a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><a href=\"http://www.greenbuttondata.org/build/\" style=\"text-decoration:none;\"><u>http://www.greenbuttondata.org/build/</u></a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/\" style=\"text-decoration:none;\"><u>energyos.github.io/OpenESPI-GreenButton-API-Documentation/</u></a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Green Button API test access tokens and sandbox: </span><a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/</span></a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Sample data:</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Generic:</span><a href=\"http://services.greenbuttondata.org/sample-data.html\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> http://services.greenbuttondata.org/sample-data.html</span></a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Pacific Gas &amp; Electric:</span><a href=\"http://energy.gov/downloads/green-button-sample-data-pge\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> http://energy.gov/downloads/green-button-sample-data-pge</span></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> use file:</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><a href=\"http://energy.gov/sites/prod/files/pge_electric_interval_data_2011-03-06_to_2012-04-06%20E1%20Residential%20Large%20Usage.xml_1.zip\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">pge_electric_interval_data_2011-03-06_to_2012-04-06 E1 Residential Large Usage.xml_1.zip</span></a></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">San Diego Gas &amp; Electric:</span><a href=\"http://www.sdge.com/sites/default/files/documents/SDGEElectricIntervalDataFeb12011toJan312012.xml?nid=2945\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> http://www.sdge.com/sites/default/files/documents/SDGEElectricIntervalDataFeb12011toJan312012.xml?nid=2945</span></a></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p><br />\n&nbsp;</p>\n",
+  "digitalRunPoints": 630,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30048922",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2015-03-01T17:58:00.000Z",
+  "finalSubmissionGuidelines": "<h1 dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:21px\">Deliverable</span></h1>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">All source code files and scripts that addresses the challenge requirement.</span></p>\n\t</li>\n\t<li dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Detailed readme file as clarified above.</span></li>\n</ul>\n",
+  "forumId": 28241,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=28241",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 21,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-16T11:17:00.000Z",
+      "actualStartTime": "2015-02-16T11:17:00.000Z",
+      "scheduledEndTime": "2015-02-16T11:19:00.000Z",
+      "actualendTime": "2015-02-16T11:19:00.000Z",
+      "_id": "58132fee550dfb3b52b8d867"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-16T11:19:00.000Z",
+      "actualStartTime": "2015-02-16T11:19:00.000Z",
+      "scheduledEndTime": "2015-02-16T13:36:00.000Z",
+      "actualendTime": "2015-02-16T13:36:00.000Z",
+      "_id": "58132fee550dfb3b52b8d866"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-16T13:37:00.000Z",
+      "actualStartTime": "2015-02-16T13:37:00.000Z",
+      "scheduledEndTime": "2015-02-18T13:37:00.000Z",
+      "actualendTime": "2015-02-18T13:37:00.000Z",
+      "_id": "58132fee550dfb3b52b8d865"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-16T13:42:00.000Z",
+      "actualStartTime": "2015-02-16T13:42:00.000Z",
+      "scheduledEndTime": "2015-02-21T14:32:00.000Z",
+      "actualendTime": "2015-02-21T14:32:00.000Z",
+      "_id": "58132fee550dfb3b52b8d864"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-21T14:32:00.000Z",
+      "actualStartTime": "2015-02-21T14:32:00.000Z",
+      "scheduledEndTime": "2015-02-22T01:35:00.000Z",
+      "actualendTime": "2015-02-22T01:35:00.000Z",
+      "_id": "58132fee550dfb3b52b8d863"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-22T01:36:00.000Z",
+      "actualStartTime": "2015-02-22T01:36:00.000Z",
+      "scheduledEndTime": "2015-02-24T01:24:00.000Z",
+      "actualendTime": "2015-02-24T01:24:00.000Z",
+      "_id": "58132fee550dfb3b52b8d862"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-24T01:24:00.000Z",
+      "actualStartTime": "2015-02-24T01:24:00.000Z",
+      "scheduledEndTime": "2015-02-25T01:24:00.000Z",
+      "actualendTime": "2015-02-25T01:24:00.000Z",
+      "_id": "58132fee550dfb3b52b8d861"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-25T01:24:00.000Z",
+      "actualStartTime": "2015-02-25T01:24:00.000Z",
+      "scheduledEndTime": "2015-02-25T12:20:00.000Z",
+      "actualendTime": "2015-02-25T12:20:00.000Z",
+      "_id": "58132fee550dfb3b52b8d860"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-25T12:20:00.000Z",
+      "actualStartTime": "2015-02-25T12:20:00.000Z",
+      "scheduledEndTime": "2015-02-25T12:41:00.000Z",
+      "actualendTime": "2015-02-25T12:41:00.000Z",
+      "_id": "58132fee550dfb3b52b8d85f"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-25T12:41:00.000Z",
+      "actualStartTime": "2015-02-25T12:41:00.000Z",
+      "scheduledEndTime": "2015-02-28T01:07:00.000Z",
+      "actualendTime": "2015-02-28T01:07:00.000Z",
+      "_id": "58132fee550dfb3b52b8d85e"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-28T01:07:00.000Z",
+      "actualStartTime": "2015-02-28T01:07:00.000Z",
+      "scheduledEndTime": "2015-02-28T10:34:00.000Z",
+      "actualendTime": "2015-02-28T10:34:00.000Z",
+      "_id": "58132fee550dfb3b52b8d85d"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-02T06:31:00.000Z",
+      "actualStartTime": "2015-03-02T06:31:00.000Z",
+      "scheduledEndTime": "2015-03-03T19:09:00.000Z",
+      "actualendTime": "2015-03-03T19:09:00.000Z",
+      "_id": "58132fee550dfb3b52b8d85c"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-28T10:35:00.000Z",
+      "actualStartTime": "2015-02-28T10:35:00.000Z",
+      "scheduledEndTime": "2015-02-28T19:12:00.000Z",
+      "actualendTime": "2015-02-28T19:12:00.000Z",
+      "_id": "58132fee550dfb3b52b8d85b"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-28T19:12:00.000Z",
+      "actualStartTime": "2015-02-28T19:12:00.000Z",
+      "scheduledEndTime": "2015-03-01T05:15:00.000Z",
+      "actualendTime": "2015-03-01T05:15:00.000Z",
+      "_id": "58132fee550dfb3b52b8d85a"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-01T05:15:00.000Z",
+      "actualStartTime": "2015-03-01T05:15:00.000Z",
+      "scheduledEndTime": "2015-03-01T07:21:00.000Z",
+      "actualendTime": "2015-03-01T07:21:00.000Z",
+      "_id": "58132fee550dfb3b52b8d859"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-01T07:21:00.000Z",
+      "actualStartTime": "2015-03-01T07:21:00.000Z",
+      "scheduledEndTime": "2015-03-01T08:22:00.000Z",
+      "actualendTime": "2015-03-01T08:22:00.000Z",
+      "_id": "58132fee550dfb3b52b8d858"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-01T08:23:00.000Z",
+      "actualStartTime": "2015-03-01T08:23:00.000Z",
+      "scheduledEndTime": "2015-03-01T17:58:00.000Z",
+      "actualendTime": "2015-03-01T17:58:00.000Z",
+      "_id": "58132fee550dfb3b52b8d857"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-01T17:58:00.000Z",
+      "actualStartTime": "2015-03-01T17:58:00.000Z",
+      "scheduledEndTime": "2015-03-02T06:31:00.000Z",
+      "actualendTime": "2015-03-02T06:31:00.000Z",
+      "_id": "58132fee550dfb3b52b8d856"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-02-16T13:37:00.000Z",
+  "prize": [
+    1400,
+    700
+  ],
+  "projectId": 8534,
+  "registrants": [
+    {
+      "handle": "ahisham",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-16T15:00:00.000Z",
+      "submissionDate": "2015-02-21T02:10:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d855"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2015-02-16T23:49:00.000Z",
+      "submissionDate": null,
+      "rating": "1055",
+      "colorStyle": "color: #00A900",
+      "_id": "58132fee550dfb3b52b8d854"
+    },
+    {
+      "handle": "mohhasbias",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-16T14:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d853"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "40%",
+      "registrationDate": "2015-02-16T14:05:00.000Z",
+      "submissionDate": "2015-02-21T14:29:00.000Z",
+      "rating": "1037",
+      "colorStyle": "color: #00A900",
+      "_id": "58132fee550dfb3b52b8d852"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-16T14:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d851"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-16T14:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d850"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-16T14:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d84f"
+    },
+    {
+      "handle": "nikozian",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-16T16:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d84e"
+    },
+    {
+      "handle": "halbcoder",
+      "reliability": "21%",
+      "registrationDate": "2015-02-16T19:18:00.000Z",
+      "submissionDate": null,
+      "rating": "671",
+      "colorStyle": "color: #999999",
+      "_id": "58132fee550dfb3b52b8d84d"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2015-02-16T21:38:00.000Z",
+      "submissionDate": null,
+      "rating": "1028",
+      "colorStyle": "color: #00A900",
+      "_id": "58132fee550dfb3b52b8d84c"
+    },
+    {
+      "handle": "mo.sehsah",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-17T09:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d84b"
+    },
+    {
+      "handle": "pvmagacho",
+      "reliability": "20%",
+      "registrationDate": "2015-02-16T23:54:00.000Z",
+      "submissionDate": null,
+      "rating": "820",
+      "colorStyle": "color: #999999",
+      "_id": "58132fee550dfb3b52b8d84a"
+    },
+    {
+      "handle": "misaxi",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-17T05:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d849"
+    },
+    {
+      "handle": "aproxacs",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-17T07:34:00.000Z",
+      "submissionDate": "2015-02-20T07:00:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d848"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-17T09:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d847"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-17T12:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d846"
+    },
+    {
+      "handle": "phaniram",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-17T15:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d845"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-17T18:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d844"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-18T05:22:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58132fee550dfb3b52b8d843"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-18T10:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fee550dfb3b52b8d842"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "13%",
+      "registrationDate": "2015-02-18T11:33:00.000Z",
+      "submissionDate": null,
+      "rating": "1684",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58132fee550dfb3b52b8d841"
+    }
+  ],
+  "registrationEndDate": "2015-02-18T13:37:00.000Z",
+  "reliabilityBonus": 280,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-02-21T14:32:00.000Z",
+  "submissions": [
+    {
+      "handle": "ahmed.seddiq",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 89.36,
+      "finalScore": 89.36,
+      "points": 409.5,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-02-21T14:29:00.000Z",
+      "_id": "58132fee550dfb3b52b8d86a"
+    },
+    {
+      "handle": "aproxacs",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 88.76,
+      "finalScore": 88.76,
+      "points": 157.5,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-02-20T07:00:00.000Z",
+      "_id": "58132fee550dfb3b52b8d869"
+    },
+    {
+      "handle": "ahisham",
+      "placement": 3,
+      "screeningScore": 100,
+      "initialScore": 83.27,
+      "finalScore": 83.38,
+      "points": 63,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-02-21T02:10:00.000Z",
+      "_id": "58132fee550dfb3b52b8d868"
+    }
+  ],
+  "technology": [
+    "API",
+    "Other",
+    "REST",
+    "Ruby"
+  ]
+}

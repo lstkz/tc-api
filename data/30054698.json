@@ -1,0 +1,604 @@
+{
+  "_id": 30054698,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:59:57.704Z",
+  "appealsEndDate": "2016-07-26T18:21:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Thunderbird Java App Bug Fixes F2F Challenge",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2016-07-30T20:47:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -7740697,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><strong><span style=\"color:#FF0000\"><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">We are offering multiple prizes for this challenge, anyone submit passing review submission by Sunday 3rd but you did not win first place, will get $200 prize.</span></span></strong></h2>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">We have an iPad app that sync data + videos with a backend java application.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">The syncing can be done via WIFI (we call it automatic syncing) if both the iPad and java apps are connected to same network. &nbsp;If no WIFI, the other option is to sync via USB Cable (Manual syncing).</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">We have problem with syncing videos in the Manual syncing (USB Cable) and we need a fix.</span></p>\n\n<h1><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:26.6667px\">Challenge Requirements</span></h1>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">You are required to fix the java application so syncing videos work as expected, to reproduce :</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- If you are on Mac OSX/Linux, you need to update PythonInvoker#getPythonCount to return 1 always. Then start &lsquo;src/main/resources/usbmuxd/tcprelay.py&rsquo; from terminal directly, &nbsp;PythonInvoker is assuming you are running this on Windows. In windows you don&rsquo;t need to make any changes, the app should run python tcprelay successfully if you have it in environment.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Update configuration.properties</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- serverPort : 8888</span></p>\n\n<p style=\"margin-left:36pt\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- eLogbookUrlX : update URL to use the java backend port, in pom.xml</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Remove `Remote Address Filter` in web.xml</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Run the java backend</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Run the iPad app &gt; Disconnect cable &gt; Connect it with Wifi &gt; Set the IP address of the java backend and connect, if succeeded you will be automatically redirected to the dashboard page where you can create TIC sheets.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Disable wifi and create multiple TIC sheets (you need to create 20 TIC records), each record should have 1-2 videos where video duration should be at least 12 minutes.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Connect Cable and open the web app : http://&lt;domain&gt;:&lt;port&gt;/thunderbird/portal/index &gt; it will show you table of Outage, with top part showing information div that iPad is connected, you need to click Sync to start syncing.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Observe until the syncing is completed successfully, and check the folder backend/target/tomcat/TIC/filestore for list of videos.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- List of videos will not match number of videos in iPad as indication the download is not complete yet, wait for few minutes (no specific duration to wait), and when it gets completed, you will see all videos but then you will notice that some of the videos will keep re-downloaded from the iPad app, the log file will show you something related to History not showing a successful sync history for videos and it redo the download again (The log file will be found in forums).</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">The problem we see in the java side that when syncing is not mark complete that :</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Not all videos actually were imported.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- And when they are done properly the sync history related tables won&rsquo;t persist the status properly that successfully imported videos still showing as they are not imported.</span></p>\n\n<p><span style=\"background-color:transparent; font-size:14.6667px\">- If you can see any other problems please report it in forums and fix it, we will pay extra payment for any additional bug you found.</span></p>\n\n<ul>\n</ul>\n\n<h3><span style=\"background-color:transparent; color:rgb(67, 67, 67); font-family:arial; font-size:18.6667px\">Notes</span></h3>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- In order to reproduce you need to setup the Java API Backend application following the README in the gitlab repo.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- After launching the app and the backend is running, you need to login or create a user, then set the java api host and port properly in settings screen, then make sure the syncing is set to Automatic not Manual (manual represents syncing via USB Cable)</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Then navigate to sheet list screen and click on Start New TIC, add new tool and answer questions, then add video, then save, then submit. You can keep trying adding video, creating new TICs, then adding videos, syncing with backend .. etc until you manage to get it crashed. This is the only way we can be able to reproduce the issue.</span></p>\n\n<h1><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:26.6667px\">Gitlab Access</span></h1>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">We have two repos : </span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">iPad app : </span><a href=\"https://gitlab.com/tc-thunderbird/frontend\" style=\"text-decoration:none;\"><u>https://gitlab.com/tc-thunderbird/frontend</u></a></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Java Backend : </span><a href=\"https://gitlab.com/tc-thunderbird/backend\" style=\"text-decoration:none;\"><u>https://gitlab.com/tc-thunderbird/backend</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> </span></p>\n&nbsp;\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">1.You can get access to the Gitlab repo group in this tool </span><a href=\"https://tc-ragnar.herokuapp.com/ragnar/groups/564783092789620e00fa75d1/629771\" style=\"text-decoration:none;\"><u>https://tc-ragnar.herokuapp.com/ragnar/groups/564783092789620e00fa75d1/629771</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\"> </span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">If you are having trouble with the auto registration tool, please post here for help.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">2. Once added to the team, and you want to store working on any issue, you will need to use the master branch of the iPad repo, and you need to fork java backend to your own repo so you can commit changes there, and submit link to your repo for review.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">3. When you submit, commit your changes to the forked repo, add elkhawajah and jcori to your forked repo.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">4. Create merge request for your fixes.</span></p>\n\n<h1><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:26.6667px\">Deliverable</span></h1>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">Upload the following in zip file to Online Review :</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Link to the merge request.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">- Verification Document - will be great if you can include the cause of issue, how to reproduce, and what was the fix briefly.</span></p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30054698",
+  "finalSubmissionGuidelines": ".",
+  "forumId": 33510,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33510",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 52,
+  "numberOfSubmissions": 4,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2016-06-30T20:47:00.000Z",
+      "actualStartTime": "2016-06-30T20:47:00.000Z",
+      "scheduledEndTime": "2016-07-30T20:47:00.000Z",
+      "actualendTime": null,
+      "_id": "58132fad550dfb3b52b8a3bc"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-02T13:00:00.000Z",
+      "actualStartTime": "2016-07-02T13:00:00.000Z",
+      "scheduledEndTime": "2016-07-03T15:52:00.000Z",
+      "actualendTime": "2016-07-03T15:52:00.000Z",
+      "_id": "58132fad550dfb3b52b8a3bb"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2016-06-30T20:52:00.000Z",
+      "actualStartTime": "2016-06-30T20:52:00.000Z",
+      "scheduledEndTime": "2016-07-30T20:52:00.000Z",
+      "actualendTime": null,
+      "_id": "58132fad550dfb3b52b8a3ba"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-03T16:12:00.000Z",
+      "actualStartTime": "2016-07-03T16:12:00.000Z",
+      "scheduledEndTime": "2016-07-07T09:34:00.000Z",
+      "actualendTime": "2016-07-07T09:34:00.000Z",
+      "_id": "58132fad550dfb3b52b8a3b9"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-07-07T09:35:00.000Z",
+      "actualStartTime": "2016-07-07T09:35:00.000Z",
+      "scheduledEndTime": "2016-07-26T18:21:00.000Z",
+      "actualendTime": "2016-07-26T18:21:00.000Z",
+      "_id": "58132fad550dfb3b52b8a3b8"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-06-30T20:47:00.000Z",
+  "prize": [
+    1000
+  ],
+  "projectId": 9625,
+  "registrants": [
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-01T00:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3b7"
+    },
+    {
+      "handle": "utkarshkukreti",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-01T00:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3b6"
+    },
+    {
+      "handle": "mark.guo",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-01T01:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3b5"
+    },
+    {
+      "handle": "OlinaRuan",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-01T01:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3b4"
+    },
+    {
+      "handle": "Zyan",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-01T03:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3b3"
+    },
+    {
+      "handle": "narasimha.dvnr",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-01T04:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3b2"
+    },
+    {
+      "handle": "namanyadav12",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-01T05:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3b1"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-01T08:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3b0"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-01T09:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3af"
+    },
+    {
+      "handle": "gets0ul",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-01T12:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3ae"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-01T14:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3ad"
+    },
+    {
+      "handle": "slimani.idriss",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-01T14:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3ac"
+    },
+    {
+      "handle": "2014csb1027",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-01T15:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3ab"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-01T20:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3aa"
+    },
+    {
+      "handle": "code_now",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-02T01:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3a9"
+    },
+    {
+      "handle": "suisl",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-02T01:59:00.000Z",
+      "submissionDate": "2016-07-04T11:14:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3a8"
+    },
+    {
+      "handle": "SwagmasterShi",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-02T02:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3a7"
+    },
+    {
+      "handle": "TRashmi",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-02T04:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3a6"
+    },
+    {
+      "handle": "smatsumoto",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-02T05:40:00.000Z",
+      "submissionDate": "2016-07-02T13:00:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3a5"
+    },
+    {
+      "handle": "perfectus",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-02T07:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3a4"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-02T08:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3a3"
+    },
+    {
+      "handle": "vishwasmys.9491",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-02T19:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3a2"
+    },
+    {
+      "handle": "vizz706417",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-02T19:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3a1"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-02T20:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a3a0"
+    },
+    {
+      "handle": "AadityaDev",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-03T11:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a39f"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-03T13:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a39e"
+    },
+    {
+      "handle": "KKodeRR",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-04T11:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a39d"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-04T15:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a39c"
+    },
+    {
+      "handle": "arjun_singh",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-04T19:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a39b"
+    },
+    {
+      "handle": "amitvikram",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-05T09:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a39a"
+    },
+    {
+      "handle": "gfnation",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-05T18:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a399"
+    },
+    {
+      "handle": "shyam.kanojia9",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-06T04:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a398"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-06T04:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a397"
+    },
+    {
+      "handle": "balajincse",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-06T06:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a396"
+    },
+    {
+      "handle": "albet.januar",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-06T14:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a395"
+    },
+    {
+      "handle": "Davide.Marro",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-07T07:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a394"
+    },
+    {
+      "handle": "hp87",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-11T20:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a393"
+    },
+    {
+      "handle": "webs1king",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-12T05:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a392"
+    },
+    {
+      "handle": "faisalbasha1982",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-12T16:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a391"
+    },
+    {
+      "handle": "abhiiitcse",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-12T16:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a390"
+    },
+    {
+      "handle": "moe.hamdan09",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-13T17:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a38f"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-16T09:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a38e"
+    },
+    {
+      "handle": "OEDead",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-16T12:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a38d"
+    },
+    {
+      "handle": "Eric_D",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-18T11:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a38c"
+    },
+    {
+      "handle": "sfaxiano",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-18T22:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a38b"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-20T12:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a38a"
+    },
+    {
+      "handle": "samsara0614",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-21T05:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a389"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-21T21:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a388"
+    },
+    {
+      "handle": "guwenqing",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-22T20:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a387"
+    },
+    {
+      "handle": "anvesh1981",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-24T14:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a386"
+    },
+    {
+      "handle": "harini.sekaran",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-25T10:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a385"
+    },
+    {
+      "handle": "AtomskiMrav",
+      "reliability": "n/a",
+      "registrationDate": "2016-07-25T17:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fad550dfb3b52b8a384"
+    }
+  ],
+  "registrationEndDate": "2016-07-30T20:47:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-07-30T20:52:00.000Z",
+  "submissions": [
+    {
+      "handle": "smatsumoto",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-07-02T13:00:00.000Z",
+      "_id": "58132fad550dfb3b52b8a3c0"
+    },
+    {
+      "handle": "suisl",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-07-03T16:11:00.000Z",
+      "_id": "58132fad550dfb3b52b8a3bf"
+    },
+    {
+      "handle": "suisl",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-07-03T17:24:00.000Z",
+      "_id": "58132fad550dfb3b52b8a3be"
+    },
+    {
+      "handle": "suisl",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-07-04T11:14:00.000Z",
+      "_id": "58132fad550dfb3b52b8a3bd"
+    }
+  ],
+  "technology": [
+    "Java"
+  ]
+}

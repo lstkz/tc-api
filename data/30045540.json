@@ -1,7 +1,7 @@
 {
   "_id": 30045540,
   "_isComplete": true,
-  "__v": 1,
+  "__v": 0,
   "_lastUpdate": "2016-10-27T17:49:18.165Z",
   "appealsEndDate": "2014-09-09T13:34:00.000Z",
   "challengeCommunity": "develop",
@@ -15,11 +15,6 @@
   "detailedRequirements": "<h1><span><strong>Hercules PCDVR HTML App - JavaScript Services Assembly Specification</strong></span></h1>\n\n<h2><span><strong>Overview</strong></span></h2>\n\n<p><span>The Hercules PCDVR project allows users to upload their media to the Hercules cloud servers, including photos, videos, and music, along with other files.&nbsp; The client already has working iOS and Android apps that work with the client services.&nbsp; This architecture is kicking off the HTML5 application that allows users to do the same thing they can with the mobile apps.&nbsp; This architecture will define the JavaScript classes and calls to interface with the client&#39;s backend services.</span></p>\n\n<p><span>This assembly will implement the entire JavaScript services module.</span></p>\n\n<h2><span><strong>Data Models</strong></span></h2>\n\n<p><span>The data models used in this assembly are presented on &quot;JavaScript Services Class Diagram&quot;.</span></p>\n\n<p><span>Note that the data models are just mappings to JSON resource objects defined in the client&#39;s REST API or used to encapsulate API call request options, there is NO need to explicitly define JavaScript &quot;classes&quot; for them, but please document the JSON object structure in relevant service documentation.</span></p>\n\n<p><span>For example, File data model represents a file in the client&#39;s REST API, and it maps to JSON object as follows:</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">{<br />\n&nbsp; &quot;fileguid&quot;: &quot;daea0d30-294d-11e4-9ee9-fa163ec722ac&quot;,<br />\n&nbsp; &quot;albumguid&quot;: &quot;9e8541a0-26ca-11e4-bfcf-fa163e89ec2a&quot;,<br />\n&nbsp; &quot;name&quot;: &quot;Test File&quot;,<br />\n&nbsp; &quot;deleted&quot;: false,<br />\n&nbsp; &quot;thumbnailUrl&quot;: &quot;/thumbnails/daea0d30-294d-11e4-9ee9-fa163ec722ac&quot;,<br />\n&nbsp; &quot;mediaUrl&quot;: &quot;http://ugc-media-qa.comcast.net/media/media/daeb6cc0-294d-11e4-9ee9-fa163ec722ac?authtoken=gyLt4JmJ8GO0Neeyi7hR4_kSNJ9TnTn4mw0LQzaBSMkC7Ga3zvKSKT6drvGo7XxiGoyK0-2NROJLmGd_IZZ3MaDHrcEfAsZr3l0tMT0Q7pE&quot;,<br />\n&nbsp; &quot;mediaStatus&quot;: &quot;UPLOAD-COMPLETE&quot;,<br />\n&nbsp; &quot;size&quot;: 10567,<br />\n&nbsp; &quot;type&quot;: &quot;PNG&quot;,<br />\n&nbsp; &quot;mimeType&quot;: &quot;image/png&quot;,<br />\n&nbsp; &quot;duration&quot;: &quot;&quot;,<br />\n&nbsp; &quot;otherFormat&quot;: &quot;&quot;,<br />\n&nbsp; &quot;avgBitRate&quot;: &quot;&quot;,<br />\n&nbsp; &quot;imageSize&quot;: &quot;1024x1024&quot;,<br />\n&nbsp; &quot;rotation&quot;: &quot;&quot;,<br />\n&nbsp; &quot;genre&quot;: &quot;&quot;,<br />\n&nbsp; &quot;title&quot;: &quot;&quot;,<br />\n&nbsp; &quot;artist&quot;: &quot;&quot;,<br />\n&nbsp; &quot;eTag&quot;: &quot;864cf2db6f8412583531e2f0beb9c538&quot;,<br />\n&nbsp; &quot;isNew&quot;: false,<br />\n&nbsp; &quot;lastModifiedDate&quot;: &quot;2014-08-21T16:11:37.798&quot;,<br />\n&nbsp; &quot;createdDate&quot;: &quot;2014-08-21T16:11:37.798&quot;<br />\n}</span></p>\n\n<h2><span><strong>JavaScript Services</strong></span></h2>\n\n<p><span>A set of JavaScript services will be implemented in this application, which provides UI JavaScript the access to various business operations.</span></p>\n\n<p><span>Specifically the following services will be implemented, please refer to &quot;JavaScript Services Class Diagram&quot; for more information and implementation details.</span></p>\n\n<ul>\n\t<li><strong><span>BaseService</span></strong></li>\n</ul>\n\n<p><span>This is the base service that provides an abstract sendRequest method to access remote API server.</span></p>\n\n<ul>\n\t<li><strong><span>AlbumService</span></strong></li>\n</ul>\n\n<p><span>This service provides methods to manage albums.</span></p>\n\n<ul>\n\t<li><strong><span>FileService</span></strong></li>\n</ul>\n\n<p><span>This service provides methods to manage files.</span></p>\n\n<ul>\n\t<li><strong><span>MediaService</span></strong></li>\n</ul>\n\n<p><span>This service provides methods to manage file media data.</span></p>\n\n<ul>\n\t<li><strong><span>ActivityService</span></strong></li>\n</ul>\n\n<p><span>This service provides methods to access user activities.</span></p>\n\n<ul>\n\t<li><strong><span>ThumbnailService</span></strong></li>\n</ul>\n\n<p><span>This service provides a method to get full thumbnail URL.</span></p>\n\n<p><span>The following principles will be followed in the JavaScript service implementation:</span></p>\n\n<ul>\n\t<li><span>The JavaScript services will be defined in a namespace &quot;com.hercules.ugc.services&quot; so that the global namespace won&#39;t be polluted.</span></li>\n\t<li><span>Some services inherit from BaseService using JavaScript prototype.</span></li>\n\t<li><span>Separate JS files will be used for each service.</span></li>\n\t<li><span>com.hercules.ugc.services.Globals is used to hold common configurations and provides methods to set/get access token. Access token will be stored in HTML5 sessionStorage so that it can survive page refresh but not window/tab close.</span></li>\n\t<li><span>The functions of services are implemented in asynchronous manner, i.e. all functions will take a callback function that will be called to notify function caller of result. The callback function generally receives an error message (if operation failed) or the operation result (if operation succeeded). Note that not all operations require operation result, so some callbacks will only accept the error message parameter.&nbsp;</span></li>\n</ul>\n\n<p><span>The following code snippet illustrates the implementation patterns of the JavaScript services:</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">/* Globals.js defines the namespace and Globals */<br />\n// define namespace<br />\nvar com = com || {};<br />\ncom.hercules = {};<br />\ncom.hercules.ugc = {};<br />\ncom.hercules.ugc.services = {};<br />\ncom.hercules.ugc.services.Globals = {<br />\n&nbsp; &nbsp; REST_API_BASE_URL : &#39;https://secure.api.comcast.net/xcloud-qa&#39;,<br />\n&nbsp; &nbsp; setAccessToken : ...,<br />\n&nbsp; &nbsp; getAccessToken : ...<br />\n};</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">/* BaseService.js defines the BaseService */<br />\n// Utility to implement prototype inheritance<br />\nif (typeof Object.create !== &#39;function&#39;) {<br />\n&nbsp; &nbsp; Object.create = function (o) {<br />\n&nbsp; &nbsp; &nbsp; &nbsp; function F() {}<br />\n&nbsp; &nbsp; &nbsp; &nbsp; F.prototype = o;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; return new F();<br />\n&nbsp; &nbsp; };<br />\n}<br />\n// BaseService<br />\ncom.hercules.ugc.services.BaseService = {};<br />\ncom.hercules.ugc.services.BaseService.sendRequest = ...;</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">/* AlbumService.js defines the AlbumService */<br />\ncom.hercules.ugc.services.AlbumService = Object.create(com.hercules.ugc.services.BaseService);<br />\ncom.hercules.ugc.services.AlbumService.getMyAlbums = ...;<br />\n...</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">/* FileService.js defines the FileService */<br />\ncom.hercules.ugc.services.FileService = Object.create(com.hercules.ugc.services.BaseService);<br />\ncom.hercules.ugc.services.FileService.getMyFiles = ...;<br />\n...</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">/* MediaService.js defines the MediaService */<br />\ncom.hercules.ugc.services.MediaService = Object.create(com.hercules.ugc.services.BaseService);<br />\ncom.hercules.ugc.services.MediaService.uploadMedia = ...;<br />\n...</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">/* ActivityService.js defines the ActivityService */<br />\ncom.hercules.ugc.services.ActivityService = Object.create(com.hercules.ugc.services.BaseService);<br />\ncom.hercules.ugc.services.ActivityService.getMyActivities = ...;<br />\n...</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">/* ThumbnailService.js defines the ThumbnailService*/<br />\ncom.hercules.ugc.services.ThumbnailService = {};<br />\ncom.hercules.ugc.services.ThumbnailService.getFullThumbnailUrl = ...;</span></p>\n\n<h2><span><strong>Configuration</strong></span></h2>\n\n<p><span>The only configuration used in JavaScript services is the base URL of the client&#39;s REST API, which is specified in com.hercules.ugc.services.Globals.REST_API_BASE_URL. The URL should not include trailing &quot;/&quot; character.</span></p>\n\n<p><span>In production environment, the URL will be <a href=\"https://secure.api.comcast.net/xcloud\"><span style=\"color:rgb(4, 51, 255)\">https://secure.api.comcast.net/xcloud</span></a></span></p>\n\n<p><span style=\"color:#000000\">In QA environment, the URL will be <a href=\"https://secure.api.comcast.net/xcloud-qa\"><span>https://secure.api.comcast.net/xcloud-qa</span></a></span></p>\n\n<p><span>JavaScript services caller may override this configuration simply by changing its value, e.g.</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">com.hercules.ugc.services.Globals.REST_API_BASE_URL = &#39;https://secure.api.comcast.net/xcloud&#39;;</span></p>\n\n<h2><span><strong>Logging</strong></span></h2>\n\n<p><u><a href=\"https://github.com/pimterry/loglevel\">loglevel</a></u><span> library will be used to perform logging.</span></p>\n\n<p><span>Errors will be logged at ERROR level, debug information (like method entry/exit, input parameters, etc.) will be logged at DEBUG level. API requests/responses should be logged at DEBUG level, and the access token must NOT be included in the log message. For instance:</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">log.error(&#39;Error occurred &#39; + error);<br />\nlog.debug(&#39;Entering FileService.getMyFiles...&#39;);</span></p>\n\n<p><span>In production environment, only ERROR level logging should be enabled, all other logging levels should be disabled as follows:</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">log.setLevel(&#39;error&#39;);</span></p>\n\n<h2><span><strong>Exception Handling</strong></span></h2>\n\n<p><span>The functions of JavaScript services are implemented in asynchronous manner, i.e. most functions will take a callback function that will be called to notify function caller of result. If error occurs, callback function will be called with a string detailing the error.</span></p>\n\n<p><span>HTTP response status codes are used in the client&#39;s API server to indicate errors, and the JavaScript services will interpret status codes other than 200 as errors accordingly (this behavior is provided by the XHR wrapper library).</span></p>\n\n<p><span>Many JavaScript service methods will validate input parameters and use callback to report invalid inputs (if the callback function itself is not provided, the error message will be thrown to the caller directly). For service methods without callback function (i.e. the synchronous method calls), an error message will be thrown to the caller directly.</span></p>\n\n<h2><strong>Test Pages</strong></h2>\n\n<p>In addition to the Javascript libraries, you must provide some basic test pages that allow reviewers to:</p>\n\n<ul>\n\t<li>Login</li>\n\t<li>Upload an image or video</li>\n\t<li>Perform all operations, including &quot;GET&quot; calls</li>\n\t<li>Validate the JSON output for each call&nbsp;</li>\n</ul>\n\n<p>Please use a small Bootstrap.css template so that the test pages look good and are usuable for future work, and for demo&#39;ing to the client.</p>\n\n<h2><span><strong>Browser Support</strong></span></h2>\n\n<p><span>The following browsers must be supported:</span></p>\n\n<ul>\n\t<li><span>IE 10+</span></li>\n\t<li><span>Chrome 4+</span></li>\n\t<li><span>Firefox 3.5+</span></li>\n\t<li><span>Safari 4+</span></li>\n</ul>\n\n<h2><span><strong>Deliverables</strong></span></h2>\n\n<ul>\n\t<li><span>Source code and configuration files.</span></li>\n\t<li><span>Deployment guide to configure and verify the application.</span></li>\n\t<li><span>Test page showing uploading working for a given image</span></li>\n</ul>\n\n<h2><span><strong>Technology overview</strong></span></h2>\n\n<ul>\n\t<li><span>JavaScript</span></li>\n\t<li><span>HTTP</span></li>\n\t<li><span>REST</span></li>\n\t<li><span>HTML5</span></li>\n\t<li><span>AJAX</span></li>\n\t<li><span style=\"color:rgb(0, 0, 0); font-family:helvetica; font-size:12px\"><a href=\"https://github.com/ded/reqwest\"><span style=\"font-family:arial; font-size:10px\">reqwest 1.1.2</span></a></span></li>\n\t<li><span style=\"color:rgb(0, 0, 0); font-family:helvetica; font-size:12px\"><a href=\"https://github.com/pimterry/loglevel\"><span style=\"font-family:arial; font-size:10px\">loglevel 1.1.0</span></a></span></li>\n</ul>\n\n<h2><span><strong>Existing Documents</strong></span></h2>\n\n<ul>\n\t<li><span>Class Diagram</span></li>\n\t<li><span>Sequence Diagrams</span></li>\n\t<li><span>Application Design Specification</span></li>\n\t<li><span>Assembly Specification</span></li>\n</ul>\n",
   "digitalRunPoints": 810,
   "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30045540",
-  "event": {
-    "id": 3442,
-    "description": "2015 topcoder Open",
-    "shortDescription": "tco15"
-  },
   "finalFixEndDate": "2014-09-09T14:08:00.000Z",
   "finalSubmissionGuidelines": "<p>Please see above</p>\n",
   "forumId": 25298,
@@ -28,6 +23,27 @@
   "numberOfCheckpointsPrizes": 0,
   "numberOfRegistrants": 26,
   "numberOfSubmissions": 1,
+  "postingDate": "2014-09-02T13:00:00.000Z",
+  "projectId": 7989,
+  "registrationEndDate": "2014-09-04T13:00:00.000Z",
+  "reliabilityBonus": 360,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-09-07T13:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 98.23,
+      "finalScore": 99.25,
+      "points": 810,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-09-07T07:25:00.000Z",
+      "_id": "58123e1e0659262e95e00cb1"
+    }
+  ],
   "phases": [
     {
       "type": "Specification Submission",
@@ -138,15 +154,6 @@
       "_id": "58123e1e0659262e95e00ca5"
     }
   ],
-  "platforms": [
-    "HTML"
-  ],
-  "postingDate": "2014-09-02T13:00:00.000Z",
-  "prize": [
-    1800,
-    900
-  ],
-  "projectId": 7989,
   "registrants": [
     {
       "handle": "ahmed.seddiq",
@@ -383,28 +390,21 @@
       "_id": "58123e1e0659262e95e00c8b"
     }
   ],
-  "registrationEndDate": "2014-09-04T13:00:00.000Z",
-  "reliabilityBonus": 360,
-  "reviewScorecardId": 30001470,
-  "reviewType": "COMMUNITY",
-  "screeningScorecardId": 30000412,
-  "submissionEndDate": "2014-09-07T13:00:00.000Z",
-  "submissions": [
-    {
-      "handle": "Sky_",
-      "placement": 1,
-      "screeningScore": 100,
-      "initialScore": 98.23,
-      "finalScore": 99.25,
-      "points": 810,
-      "submissionStatus": "Active",
-      "submissionDate": "2014-09-07T07:25:00.000Z",
-      "_id": "58123e1e0659262e95e00cb1"
-    }
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "prize": [
+    1800,
+    900
   ],
   "technology": [
     "HTML5",
     "HTTP",
     "JavaScript"
+  ],
+  "platforms": [
+    "HTML"
   ]
 }

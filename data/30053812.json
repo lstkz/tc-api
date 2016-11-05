@@ -1,0 +1,299 @@
+{
+  "_id": 30053812,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:12:49.693Z",
+  "appealsEndDate": "2016-04-22T15:39:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Topcoder - Create Stored Procedure For ID Generation",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2016-05-19T15:10:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -13986089,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2>Background</h2>\n\n<p>The topcoder platform uses a table in informix called <u>id_sequences</u>, this table is in the <u>common_oltp</u> database.<br />\nThis table is used to generate primary keys for several tables in the system. Each row in the <u>id_sequences</u> table represents the sequence to a specific table in the database.</p>\n\n<p>The table contains the following fields:<br />\n- name: String, a unique name for a given sequence, it identifies the table that is tied to this sequence;<br />\n- next_block_start: Long, the next available primary key to be generated for that given table;<br />\n- block_size: Long, the block size represents how many keys a given application can create before fetching a new block;<br />\n- exhausted: Long, not used</p>\n\n<p>The process for a given application to generate primary keys is as follows:<br />\n1- Select a given sequence by name depending for which table primary keys are needed;<br />\n2- Keep the values of next_block_start (N) and block_size (K) in memory;<br />\n3- Update next_block_start in the selected record in the id_sequences table to be equals to N + K;<br />\n4- Create records using [N, N+1, N+2, ... N+K-1] as keys;<br />\n5- Once the keys are all used up, restart the process for the next record;</p>\n\n<p>This process is old school but it worked well for many years, unfortunately now that we have more and more applications with different technologies generating multiple records concurrently, we are running into concurrency issues that are causing primary key collisions, i.e. an application tries to insert a record using a previously used primary key from another application.&nbsp;<br />\nIdeally we would move to use sequences in the database, but unfortunately that would require many legacy applications to be modified, and we need a simpler solution for now.</p>\n\n<h2>Scope</h2>\n\n<p>We want to use a stored procedure to simplify this process and make sure the access to this table happens in a single transaction. Also the record should be <strong>locked</strong> while the transaction is running to avoid other applications fetching the keys in parallel before the sequence is updated.<br />\nCreate a stored procedure that:<br />\n1- Receives a single string parameter &quot;sequence_name&quot;;<br />\n2- Find the sequence in the common_oltp:id_sequences record that has a name that is an exact match to the provided sequence_name. If none exists, return an error;<br />\n3- Save the current value of next_block_start in a variable N and block_size to a variable K (feel free to use other variable names);<br />\n4- update next_block_start to be equals to N + K;<br />\n5- Return N, and K with names next_block_start and block_size respectively;</p>\n\n<h2><u>Verification</u></h2>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">Members can use the docker informix image:&nbsp;</div>\n\n<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px; line-height: normal;\">\n<p>docker run -it -p 2021:2021&nbsp; appiriodevops/informix:1.1&nbsp;</p>\n\n<p>And connect to informix on localhost port 2021</p>\n\n<p>the username/password is informix/1nf0rm1x</p>\n\n<p>&nbsp;</p>\n</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30053812",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<ul>\n\t<li>The implementation of stored procedure.</li>\n\t<li>The verification steps which can be used to make sure the stored procedure working properly.</li>\n</ul>\n",
+  "forumId": 32709,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=32709",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 22,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2016-04-19T15:10:00.000Z",
+      "actualStartTime": "2016-04-19T15:10:00.000Z",
+      "scheduledEndTime": "2016-05-19T15:10:00.000Z",
+      "actualendTime": null,
+      "_id": "581340c1550dfb3b52be6d57"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-21T08:11:00.000Z",
+      "actualStartTime": "2016-04-21T08:11:00.000Z",
+      "scheduledEndTime": "2016-04-22T15:39:00.000Z",
+      "actualendTime": "2016-04-22T15:39:00.000Z",
+      "_id": "581340c1550dfb3b52be6d56"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2016-04-19T15:15:00.000Z",
+      "actualStartTime": "2016-04-19T15:15:00.000Z",
+      "scheduledEndTime": "2016-05-19T15:15:00.000Z",
+      "actualendTime": null,
+      "_id": "581340c1550dfb3b52be6d55"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-04-19T15:10:00.000Z",
+  "prize": [
+    60
+  ],
+  "projectId": 9601,
+  "registrants": [
+    {
+      "handle": "makedoge",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-19T15:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d54"
+    },
+    {
+      "handle": "sri02",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-19T16:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d53"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-19T20:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d52"
+    },
+    {
+      "handle": "dashitou",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-20T04:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d51"
+    },
+    {
+      "handle": "aquacdr",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-20T04:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d50"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-20T05:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d4f"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-20T08:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d4e"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-20T12:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d4d"
+    },
+    {
+      "handle": "felipejunges",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-20T12:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d4c"
+    },
+    {
+      "handle": "RajHadooper",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-20T12:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d4b"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-20T14:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d4a"
+    },
+    {
+      "handle": "another1",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-20T15:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d49"
+    },
+    {
+      "handle": "TheKingOfWrong",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-20T18:34:00.000Z",
+      "submissionDate": "2016-04-21T08:11:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d48"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-21T01:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d47"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-21T04:46:00.000Z",
+      "submissionDate": "2016-04-21T11:45:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d46"
+    },
+    {
+      "handle": "thinkinjava",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-21T08:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d45"
+    },
+    {
+      "handle": "Aravind46",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-21T11:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d44"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-21T15:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d43"
+    },
+    {
+      "handle": "hrrbrig",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-21T16:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d42"
+    },
+    {
+      "handle": "Tnsbisht",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-22T01:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d41"
+    },
+    {
+      "handle": "Acyn",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-22T11:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d40"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-22T15:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340c1550dfb3b52be6d3f"
+    }
+  ],
+  "registrationEndDate": "2016-05-19T15:10:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-05-19T15:15:00.000Z",
+  "submissions": [
+    {
+      "handle": "TheKingOfWrong",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-04-21T08:11:00.000Z",
+      "_id": "581340c1550dfb3b52be6d59"
+    },
+    {
+      "handle": "lanchongyizu",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-04-21T11:45:00.000Z",
+      "_id": "581340c1550dfb3b52be6d58"
+    }
+  ],
+  "technology": [
+    "SQL"
+  ]
+}

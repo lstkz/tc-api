@@ -1,0 +1,212 @@
+{
+  "_id": 30045756,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T09:54:46.376Z",
+  "appealsEndDate": "2014-09-23T17:37:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Extend RESTful Middleware interface to MS SQL2008",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h1 dir=\"ltr\"><span><u>General Description</u></span></h1>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">We&#39;re working with our customer to re-imagine their legacy construction management tool as a modern HTML5 based application. In this part of the project we&#39;re working on the &quot;middleware&quot;. This is the piece that will facilitates the interaction between their database and the front-end application.</span></span><br />\n&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">The goal of this challenge is two-fold:</span></span><br />\n&nbsp;</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span>Extend the existing middleware software to add the specific REST calls detailed below</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span>Establish the framework in the middleware for easily adding and managing future REST calls</span></span><br />\n\t&nbsp;</p>\n\t</li>\n</ol>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">The existing code base was created during a previous challenge and contains basic utility calls to the database. The server is simple to stand up and is provided with this challenge. It can be setup in Windows Server or even in Windows 7 with the .Net 4.5.2 runtime installed. In addition, we have an Amazon EC2 instance running a copy of the database with sanitized data. Participants will be provided read-only access to this database. Attached to this challenge is also the DB dump which can be imported into SQL2008/2012 for those that would prefer that approach.</span></span><br />\n&nbsp;</p>\n\n<h1 dir=\"ltr\"><span><u>Overall Guidelines and Requirements</u></span><br />\n&nbsp;</h1>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- The data/payload from the client will be in JSON format. Please see the existing calls in the code base for clarity.</span><br />\n<br />\n<span style=\"font-family:arial\">- The data returned from the server to the client will also be in JSON format (typically a result code + a result set from the database).</span></span><br />\n&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- The SQL statements must be easily re-configurable and <strong>must be contained in external files</strong> (one file per application route / REST call) which are read in when the middleware server is launched.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Use the sample SQL statements for each call defined below (minor tweaks/modifications to allow for the passed parameters and / or database name will be needed).</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Ability to execute multiple SQL statements per route (e.g. the file defining the SQL statements for the route can contain more than one SQL statement to be executed).</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Note that in some cases, stored procedures will be called instead of direct SQL statements.</span></span><br />\n&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Remember, a primary goal of this challenge is to update the code base so that adding and modifying database related calls such as these is simple and easily manageable.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Additional calls and routes should be easy to add in the future.</span></span><br />\n&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Fields not included in the JSON payload should be null or not included in SQL updates or inserts.</span></span><br />\n&nbsp;</p>\n\n<h1 dir=\"ltr\"><span><u>REST Calls</u></span><br />\n&nbsp;</h1>\n\n<p dir=\"ltr\"><span><strong>���</strong><span style=\"color:rgb(0, 0, 205); font-family:arial\">GET /projects</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Get all projects</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Sample SQL:</span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:30pt\"><span><span style=\"color:rgb(218, 165, 32); font-family:arial\">select t1_projnum, location, facilitytype, contractor from (select projnum as t1_projnum, MIN(rev) as t1_rev from [WinCS-01].dbo.project group by projnum) t1 join (select projnum, MIN(schdtype) as t2_schdtype from [WinCS-01].dbo.project group by projnum) t2 on t1.t1_projnum = t2.projnum join [WinCS-01].dbo.project t3 on t3.projnum = t1.t1_projnum and t3.schdtype = t2.t2_schdtype and t3.rev = t1.t1_rev</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- This one is ugly because it&#39;s a 3 field composite key table and we need a list of unique projects </span><em>regardless</em><span style=\"font-family:arial\"> of two of those fields</span></span><br />\n&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 205); font-family:arial\">GET /projects/{projnum}/schedule_types/{schdtype}/rev/{rev}</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Get a specific project&#39;s details</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Sample ���SQL:</span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:30pt\"><span><span style=\"color:rgb(218, 165, 32); font-family:arial\">select * from dbo.project where projnum = &#39;EN000005&#39; and schdtype = &#39;E&#39; and rev = 0</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Table has a 3 field composite key</span></span><br />\n&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 205); font-family:arial\">POST /projects</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Create a new project</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Sample SQL:</span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:30pt\"><span><span style=\"color:rgb(218, 165, 32); font-family:arial\">insert into dbo.project ([ALL fields - see table definition]) values ([ALL VALUES])</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Fields not included in JSON payload should default to NULL</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- projnum, schdtype, and rev are required</span></span><br />\n&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 205); font-family:arial\">DELETE /projects/{projnum}/schedule_types/{schdtype}/rev/{rev}</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Delete a project (and associated entries in other tables)</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Sample SQL:</span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:30pt\"><span><span style=\"color:rgb(218, 165, 32); font-family:arial\">dbo.sp_DeleteProj @ProjNum = &#39;TestProjA1&#39;, @SchdType = &#39;Z&#39;, @rev = 99.111</span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:30pt\"><span><span style=\"color:rgb(218, 165, 32); font-family:arial\">delete from [WinCS-01].dbo.cco where projnum = &#39;X00001&#39; and schdtype = &#39;X&#39; and rev = 0</span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:30pt\"><span><span style=\"color:rgb(218, 165, 32); font-family:arial\">delete from [WinCS-01].dbo.equipmenttemp where projnum = &#39;X00001&#39; and schdtype = &#39;X&#39; and rev = 0</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Note the file containing these statement will be executing a stored procedure and 2 SQL statements. These all need to be contained in a single file which will be referenced when this call is made</span></span><br />\n&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(0, 0, 205); font-family:arial\">PUT /projects/{projnum}/schedule_types/{schdtype}/rev/{rev}</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Update a specific project</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">���- Sample SQL:</span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:30pt\"><span><span style=\"color:rgb(218, 165, 32); font-family:arial\">update [WinCS-01].dbo.project set location = &#39;Project 5&#39;, contractor = &#39;Contractor L&#39; where projnum = &#39;EN000005&#39; and schdtype = &#39;C&#39; and rev = 0 </span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- All fields included in JSON payload should be updated</span></span><br />\n&nbsp;</p>\n\n<h1 dir=\"ltr\"><span><u>Additional Resources</u></span><br />\n&nbsp;</h1>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Existing middleware code base (attached)</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Database dump compatible with SQL Server 2008/2012 for testing (attached)</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- EC2 instance with read-only access for testing</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Database table definitions (attached)</span></span><br />\n&nbsp;</p>\n\n<h1 dir=\"ltr\"><span><u>Related Challenges</u></span><br />\n&nbsp;</h1>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- </span><a href=\"http://www.topcoder.com/challenge-details/30044426/?type=develop&amp;noncache=true\" style=\"text-decoration:none;\"><u>Develop a REST Interface to a MS SQL 2008 Server</u></a></span></p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30045756",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalSubmissionGuidelines": "<h1 dir=\"ltr\"><span><u>Submission Deliverables</u></span><br />\n&nbsp;</h1>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Fully updated middleware software ready to be installed.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- All existing functionality of the middleware must be maintained.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span><span style=\"font-family:arial\">- Existing REST calls may be migrated to the new methodology</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- All new REST calls defined in this challenge must be implemented</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Full documentation (see below)</span></span><br />\n&nbsp;</p>\n\n<h1 dir=\"ltr\"><span><u>Documentation</u></span><br />\n&nbsp;</h1>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Documentation of the changes made to the existing middleware platform.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Updated installation documentation (if needed)</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Detailed explanation of how to add additional, future REST calls to the platform.</span></span><br />\n&nbsp;</p>\n\n<h1 dir=\"ltr\"><span><u>Code Aesthetics</u></span><br />\n&nbsp;</h1>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Code must be clean (no non-applicable comments, unused variables etc), tidy (consistent indents) and well commented</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-family:arial\">- Clear and purposeful naming for variables, classes etc.</span></span></p>\n\n<div>&nbsp;</div>\n",
+  "forumId": 25481,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=25481",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 11,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-16T19:00:00.000Z",
+      "actualStartTime": "2014-09-16T19:00:00.000Z",
+      "scheduledEndTime": "2014-09-22T02:00:00.000Z",
+      "actualendTime": "2014-09-22T02:00:00.000Z",
+      "_id": "58132066550dfb3b52b2c159"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-16T19:05:00.000Z",
+      "actualStartTime": "2014-09-16T19:05:00.000Z",
+      "scheduledEndTime": "2014-09-22T02:00:00.000Z",
+      "actualendTime": "2014-09-22T02:00:00.000Z",
+      "_id": "58132066550dfb3b52b2c158"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-22T02:00:00.000Z",
+      "actualStartTime": "2014-09-22T02:00:00.000Z",
+      "scheduledEndTime": "2014-09-22T17:23:00.000Z",
+      "actualendTime": "2014-09-22T17:23:00.000Z",
+      "_id": "58132066550dfb3b52b2c157"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-22T17:23:00.000Z",
+      "actualStartTime": "2014-09-22T17:23:00.000Z",
+      "scheduledEndTime": "2014-09-23T05:40:00.000Z",
+      "actualendTime": "2014-09-23T05:40:00.000Z",
+      "_id": "58132066550dfb3b52b2c156"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-23T05:40:00.000Z",
+      "actualStartTime": "2014-09-23T05:40:00.000Z",
+      "scheduledEndTime": "2014-09-23T17:37:00.000Z",
+      "actualendTime": "2014-09-23T17:37:00.000Z",
+      "_id": "58132066550dfb3b52b2c155"
+    }
+  ],
+  "platforms": [
+    "NodeJS",
+    "Other"
+  ],
+  "postingDate": "2014-09-16T19:00:00.000Z",
+  "prize": [
+    600,
+    300,
+    100
+  ],
+  "projectId": 7143,
+  "registrants": [
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-16T22:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132066550dfb3b52b2c154"
+    },
+    {
+      "handle": "partychen",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-17T00:23:00.000Z",
+      "submissionDate": "2014-09-19T14:57:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132066550dfb3b52b2c153"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-17T00:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132066550dfb3b52b2c152"
+    },
+    {
+      "handle": "karthikwildyyy",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-17T03:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132066550dfb3b52b2c151"
+    },
+    {
+      "handle": "hnuljy",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-17T03:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132066550dfb3b52b2c150"
+    },
+    {
+      "handle": "grebisz",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-17T06:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132066550dfb3b52b2c14f"
+    },
+    {
+      "handle": "mayank8888",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-17T12:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132066550dfb3b52b2c14e"
+    },
+    {
+      "handle": "iCare",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-17T13:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132066550dfb3b52b2c14d"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-17T17:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132066550dfb3b52b2c14c"
+    },
+    {
+      "handle": "lich2014",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-18T07:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132066550dfb3b52b2c14b"
+    },
+    {
+      "handle": "spanhawk",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-18T20:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132066550dfb3b52b2c14a"
+    }
+  ],
+  "registrationEndDate": "2014-09-22T02:00:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2014-09-22T02:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "partychen",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 81.25,
+      "finalScore": 81.25,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-09-19T14:57:00.000Z",
+      "_id": "58132066550dfb3b52b2c15a"
+    }
+  ],
+  "technology": [
+    "JavaScript",
+    "Node.js",
+    "SQL Server"
+  ]
+}

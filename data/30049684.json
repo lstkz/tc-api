@@ -1,0 +1,377 @@
+{
+  "_id": 30049684,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T09:54:14.613Z",
+  "appealsEndDate": "2015-04-13T02:27:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Horizon WebGL Proof of Concept - Basic component usage and new animation",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2015-05-09T14:55:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -46465075,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p>Horizon has an existing system that uses the React library (http://facebook.github.io/react/) &nbsp;for defining the user interface of a television-based UI. &nbsp;The current performance is not reaching the level they would like to see it, on the embedded system. &nbsp;</p>\n\n<p>Your submission must run in both Chrome and the Raspberry Pi. &nbsp;If you don&#39;t have a Raspberry Pi B+, you can test in Chrome, but note that if your submission doesn&#39;t run on the Pi, it will be rejected.</p>\n\n<p>Two assemblies have already run and completed to build out React components for:</p>\n\n<p>1) WebGL canvas<br />\n2) Basic quad component<br />\n3) Text component<br />\n4) Image component</p>\n\n<p>These components support colors, sizes, positioning, and opacity, along with image URLs and font information for images and text.</p>\n\n<h2><strong>General Requirements:</strong></h2>\n\n<p>Now that we have a good base of primitives to work with, we are going to start to build out a simple proof of concept with basic interactivity that we can test and run in both Google Chrome and on the Raspberry Pi B+.</p>\n\n<p>This F2F will do the following:</p>\n\n<p>1) Build out a simple sample page with static images, rectangles, and text<br />\n2) Implement a simple animation for scrolling vertically and horizontally.</p>\n\n<h2><br />\n<strong>Sample UI</strong></h2>\n\n<p>Attached in the forum is a sample UI that shows what the UI for the project currently is. &nbsp;We are going to greatly simplify what&#39;s here, but it shows the general requirements of what the final goal likely will be.</p>\n\n<p>If you have Node.js installed, you can easily run the demo UI using the &quot;node-static&quot; npm package:</p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">$ unzip TestUI.zip<br />\n$ cd TestUI<br />\n$ npm install -g node-static<br />\n$ static</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">serving &quot;.&quot; at http://127.0.0.1:8080</span></p>\n\n<p><br />\nThis UI shows:</p>\n\n<p>1) A top menu<br />\n2) The time and date<br />\n3) Multiple rows of content<br />\n4) Animations when scrolling content left and right, selecting content, and scrolling between the rows up and down.</p>\n\n<h2><br />\n<strong>Detailed requirements:</strong></h2>\n\n<p>For this F2F, we are going to use the React components in the source code provided to replicate this UI, but in a simplified fashion:</p>\n\n<p>* The UI should be implemented in a heirarchical object model. &nbsp;This means that the main screen will contain the title and rows as a &quot;group&quot; of components. &nbsp;Each row will contain movie cells as a group of image, quad, and text components. &nbsp;The components have the ability to be nested inside each other, with relative placement, so it makes sense to use that functionality here to make the UI definition match how it will be used.</p>\n\n<p>Something like this:</p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">&lt;WebGL Canvas&gt;<br />\n&nbsp; &lt;Title Text&gt;<br />\n&nbsp; &lt;/Title Text&gt;<br />\n&nbsp; &lt;Content Rows&gt;<br />\n&nbsp; &nbsp;&nbsp; &nbsp;&lt;Row 1&gt;<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;Cell 1 /&gt;<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;Cell 2 /&gt;<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;Cell 3 /&gt;<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;...<br />\n&nbsp;&nbsp; &nbsp;&lt;/Row 1&gt;<br />\n&nbsp;&nbsp; &nbsp;&lt;Row 2&gt;<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;...<br />\n&nbsp;&nbsp; &nbsp;&lt;/Row 2&gt;<br />\n&nbsp; &lt;Content Rows&gt;<br />\n&lt;/WebGL Canvas&gt;</span></p>\n\n<p><br />\n* The text at the top of the screen in your submission should match the example, but will be static. &nbsp;This includes the date and time, &quot;On Demand&quot; text, and the &quot;Top Picks&quot;, &quot;Replay&quot;, &quot;My Prime&quot;, &quot;Video Store&quot;, and &quot;My Content&quot; menu options</p>\n\n<p>* There will be 4 rows of cells. &nbsp;Each row will have 12 cells in it<br />\n* A cell will contain the cover image, text underneath (title), the IMDB logo, and a score (8.7 / 10). &nbsp;<br />\n* The background can be black for this F2F - it does not have to change as the selection changes like shown in the example<br />\n* The layout for the assets and the metadata information should be configurable in a JSON file<br />\n* All the different box images must be unique. &nbsp;48 different images are provided in the forum.</p>\n\n<h2><strong>Animation requirements:</strong></h2>\n\n<p>This F2F will also add simple slide animations for transitioning up and down between rows and left and right between cells. &nbsp;We don&#39;t have to do everything shown in the example - there&#39;s no fade in or out of content or changes in opacity and the selected cell won&#39;t &quot;grow&quot; or &quot;shrink&quot; as selection changes.</p>\n\n<p>The requirements for animation are that the animation be defined simply and within the React heirarchy itself. &nbsp;The goal is to easily tie the animation to the component heirarchy and tweak it as needed.&nbsp;</p>\n\n<p>A sample may look like this:</p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">var AssetRow = React.createClass({&nbsp;<br />\n&nbsp;&nbsp; &nbsp;mixins: [AnimationMixin],&nbsp;<br />\n&nbsp;&nbsp; &nbsp;animationMap: {&nbsp;<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;moveLeft: {&nbsp;<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;transform: translate3d(-30, 0, 0),&nbsp;<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;transition: 200ms linear<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;},&nbsp;<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;moveRight: {&nbsp;<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;transform: translate3d(30, 0, 0),&nbsp;<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;transition: 200ms linear<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;}&nbsp;<br />\n&nbsp;&nbsp; &nbsp;},&nbsp;<br />\n&nbsp;&nbsp; &nbsp;handleKeyPress: function(e) {&nbsp;<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;if(e.keyCode === VK_KEY_LEFT) {&nbsp;<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;this.animate(this.animationMap.moveLeft);<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;},&nbsp;</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;} else if(e.keyCode === VK_KEY_RIGHT) {&nbsp;<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;this.animate(this.animationMap.moveRight);<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;}<br />\n&nbsp;&nbsp; &nbsp;}<br />\n});</span></p>\n\n<p>The animations don&#39;t have to be particularly efficient for this F2F, but they do need to animate in the time given. &nbsp;Open source libraries to help with this will be considered. &nbsp;MIT, BSD, and Apache licenses are preferred, and velocity.js has been explicitly allowed by the client at this point. &nbsp;Other libraries should be approved in the forum first.</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30049684",
+  "finalSubmissionGuidelines": "<p>Please see above</p>\n",
+  "forumId": 28916,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=28916",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 28,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2015-04-09T14:55:00.000Z",
+      "actualStartTime": "2015-04-09T14:55:00.000Z",
+      "scheduledEndTime": "2015-05-09T14:55:00.000Z",
+      "actualendTime": null,
+      "_id": "58132046550dfb3b52b2ab2e"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-11T17:05:00.000Z",
+      "actualStartTime": "2015-04-11T17:05:00.000Z",
+      "scheduledEndTime": "2015-04-11T18:04:00.000Z",
+      "actualendTime": "2015-04-11T18:04:00.000Z",
+      "_id": "58132046550dfb3b52b2ab2d"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2015-04-09T15:00:00.000Z",
+      "actualStartTime": "2015-04-09T15:00:00.000Z",
+      "scheduledEndTime": "2015-05-09T15:00:00.000Z",
+      "actualendTime": null,
+      "_id": "58132046550dfb3b52b2ab2c"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-12T06:47:00.000Z",
+      "actualStartTime": "2015-04-12T06:47:00.000Z",
+      "scheduledEndTime": "2015-04-13T02:20:00.000Z",
+      "actualendTime": "2015-04-13T02:20:00.000Z",
+      "_id": "58132046550dfb3b52b2ab2b"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-13T02:22:00.000Z",
+      "actualStartTime": "2015-04-13T02:22:00.000Z",
+      "scheduledEndTime": "2015-04-13T02:27:00.000Z",
+      "actualendTime": "2015-04-13T02:27:00.000Z",
+      "_id": "58132046550dfb3b52b2ab2a"
+    }
+  ],
+  "platforms": [
+    "HTML"
+  ],
+  "postingDate": "2015-04-09T14:55:00.000Z",
+  "prize": [
+    400
+  ],
+  "projectId": 8341,
+  "registrants": [
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-09T16:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab29"
+    },
+    {
+      "handle": "kcchiu",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-09T16:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab28"
+    },
+    {
+      "handle": "topcoder09",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-09T17:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab27"
+    },
+    {
+      "handle": "macs054",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-09T18:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab26"
+    },
+    {
+      "handle": "StevenSeo",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-09T18:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab25"
+    },
+    {
+      "handle": "deepak999",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-09T19:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab24"
+    },
+    {
+      "handle": "wsobolewski",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-09T19:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab23"
+    },
+    {
+      "handle": "DawnB",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-09T23:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab22"
+    },
+    {
+      "handle": "talha_iiita",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T04:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab21"
+    },
+    {
+      "handle": "superastrom",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T06:21:00.000Z",
+      "submissionDate": "2015-04-12T06:45:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab20"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T06:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab1f"
+    },
+    {
+      "handle": "talesforce",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T08:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab1e"
+    },
+    {
+      "handle": "laudarch",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T08:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab1d"
+    },
+    {
+      "handle": "JJ2015",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T13:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab1c"
+    },
+    {
+      "handle": "xin135",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T13:45:00.000Z",
+      "submissionDate": "2015-04-12T15:16:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab1b"
+    },
+    {
+      "handle": "sereepap2029",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T13:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab1a"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T13:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab19"
+    },
+    {
+      "handle": "GautamVeldanda",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T16:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab18"
+    },
+    {
+      "handle": "CLINDO",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T18:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab17"
+    },
+    {
+      "handle": "Oskari.Mantere",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T22:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab16"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-10T22:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab15"
+    },
+    {
+      "handle": "karthiks416",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-11T00:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab14"
+    },
+    {
+      "handle": "bosszhang",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-11T03:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab13"
+    },
+    {
+      "handle": "ohyan07",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-11T07:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab12"
+    },
+    {
+      "handle": "yogen",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-11T08:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab11"
+    },
+    {
+      "handle": "sabbirhs",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-11T13:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab10"
+    },
+    {
+      "handle": "sagarpatel",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-11T17:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab0f"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-13T01:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132046550dfb3b52b2ab0e"
+    }
+  ],
+  "registrationEndDate": "2015-05-09T14:55:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-05-09T15:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "superastrom",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-04-11T17:03:00.000Z",
+      "_id": "58132046550dfb3b52b2ab31"
+    },
+    {
+      "handle": "superastrom",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-04-12T06:45:00.000Z",
+      "_id": "58132046550dfb3b52b2ab30"
+    },
+    {
+      "handle": "xin135",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-04-12T15:16:00.000Z",
+      "_id": "58132046550dfb3b52b2ab2f"
+    }
+  ],
+  "technology": [
+    "HTML"
+  ]
+}

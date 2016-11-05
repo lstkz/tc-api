@@ -1,0 +1,312 @@
+{
+  "_id": 30051750,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T11:00:19.968Z",
+  "appealsEndDate": "2015-11-06T04:47:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "SunShot - Re-volv Reinvestment Improvement Code Challenge",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p>Welcome to the SunShot - RE-volv Reinvestment Improvement Challenge Part 1!</p>\n\n<p dir=\"ltr\">RE-volv is a solar energy crowdfunding platform. &nbsp;The platform allows individuals to donate to solar energy projects. &nbsp;RE-volv then re-invests the money the projects&#39; saved by switching to solar into more solar energy projects.</p>\n\n<p dir=\"ltr\">The goal is to allow users to pick specific solar energy projects to allocate their RE-volv reinvestment funds toward.</p>\n\n<h2 dir=\"ltr\">Challenge Requirements</h2>\n\n<p dir=\"ltr\">For this challenge, we need to design the additional pages and functionality outlined below.</p>\n\n<p dir=\"ltr\">We don&rsquo;t have available PSD for the existing site pages but you can copy the overall look and feel from existing website : https://revolv-stage.herokuapp.com/. You can screengrab the needed page as the background of your design and apply the additional requirements mentioned below.</p>\n\n<h2 dir=\"ltr\">General Notes</h2>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Set up the RE-volv open-source code according to instructions found here: <a href=\"https://github.com/calblueprint/revolv#installation\">https://github.com/calblueprint/revolv#installation</a> &nbsp;&nbsp;You will need to use Vagrant to run the project while developing. Environment Variables setup mentioned here.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Write all new Python code according to the PEP8 coding convention (<a href=\"https://www.python.org/dev/peps/pep-0008/\">https://www.python.org/dev/peps/pep-0008/</a>) and using Python 2.7.10</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">We don&rsquo;t have an updated UI prototype for the changes requested, try to reuse existing UI components, and use your best judgement for how it should look like. You fixes should work in responsive view.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Updated and new JS/python code should be well documented, use PEP257 for docstring conventions.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Update README file if needed.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Update Seed script for data generation.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Please make sure to create helper/interface to include the common code/functionality.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">You can access CMS by navigating to /cms.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">You will need to set up a dummy paypal API key and add it to the . &nbsp;Create a new paypal API key, and make sure it is set to go to the Paypal Sandbox when testing, so you won&rsquo;t be charged. &nbsp;Also note that on the RE-volv staging site (<a href=\"https://revolv-stage.herokuapp.com/\">https://revolv-stage.herokuapp.com/</a>) a credit card can be used and will not be charged. PayPal is set to testing mode on the staging site. &nbsp;To run your development server with your paypal keys:</p>\n\t</li>\n</ol>\n\n<p dir=\"ltr\">export PAYPAL_MODE=sandbox<br />\nexport PAYPAL_CLIENT_ID=...your paypal id...<br />\nexport PAYPAL_CLIENT_SECRET=...your paypal secret key...</p>\n\n<p dir=\"ltr\">Also please make sure your solution is flexible, use facade design pattern and adapter design pattern (and any other proper design pattern) to enable future extensibility of the solution.</p>\n\n<h2 dir=\"ltr\">Functional Requirements</h2>\n\n<h3 dir=\"ltr\"><u>Definitions</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- &quot;Revolving funds&quot;: these are the funds that a given RE-Volv user has to to allocate to new projects on RE-Volv. &nbsp;You should consult payments/models.py for information about how this works. &nbsp;Every user who&#39;s backed a project has an amount, that varies month to month, that they can allocate to projects in the future.</p>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- &ldquo;Donation&rdquo;: an amount, in USD, that is pledged to a RE-volv project or to the Solar Seed Fund. &nbsp;When a user makes a &ldquo;donation&rdquo; they are giving money directly to a project, or directly to the Solar Seed Fund. &nbsp;This is different from pledging &ldquo;Revolving funds&rdquo; to a project, because pledging &ldquo;Revolving funds&rdquo; to a project does not cost the user any money. &nbsp;Instead, pledging &ldquo;Revolving funds&rdquo; deducts from the user&rsquo;s internal &ldquo;Revolving funds&rdquo; credit balance.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Reinvestment fund allocation</u></h3>\n\n<p dir=\"ltr\">Please see <a href=\"https://github.com/calblueprint/revolv/issues/291\">https://github.com/calblueprint/revolv/issues/291</a> for background on how this reinvestment allocation process should work.</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- You can assume that Re-volv will manually set the monthly repayment goes to the Solar Seed Fund, and how much goes to RE-volv overhead. Assume the repayment will take 20 years, so we will have two new fields in project model, one for reinvestment fund (Solar Seed Fund) and the other for re-volv overhead, each field can be a new model with three fields (project, year, and amount), because each year will have different monthly repayment amount and it is the same for all months per year hence the &lsquo;year&rsquo; field. So these two new fields will be used when calculating the reinvestment fund goes for each donor per project.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- On the 1st of the month RE-volv calculates how much money is available for reinvestment (i.e. how much is coming in) and allocates it evenly among the projects posted. &nbsp;Please see `payments/models.py` to see how this works.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This calculation and allocation should happen automatically using a new script named `reinvestment_allocation.py` and placed in a new `tasks` directory.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This script should be run periodically using a celery periodic task (<a href=\"http://docs.celeryproject.org/en/latest/userguide/periodic-tasks.html\">http://docs.celeryproject.org/en/latest/userguide/periodic-tasks.html</a>), and should run once a month on the 1st of every month. &nbsp;It should run before the `monthly_reminders.py` script is run.</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- the schedule should be configurable so that you and reviewer can test this scheduler within few minutes/hours instead once per month :)</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- We will cap the amount of &ldquo;Reinvestment funds&rdquo; any given project can receive by the amount allocated to it that month. Please see <a href=\"https://github.com/calblueprint/revolv/issues/291\">https://github.com/calblueprint/revolv/issues/291</a> for how this should work, to clarify the scenario :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- let&rsquo;s say there&rsquo;s $5,000 in the Solar Seed Fund on the first of the month. And we&rsquo;re running 5 campaigns that month. Each project is going to get $1,000 that month. Meaning, we always split the money evenly among each project that needs it over the course of the month. However, we want past donors to have a say in which project their reinvestment will fund (even though all the projects get the same amount.) So for the first 15 days each donor has the option to reinvest their Solar Seed Fund Credit in any of the five projects. But once $1,000 of Solar Seed Fund Credit has been allocated to a given project, it stops receiving reinvestments. No one can allocate any more reinvestments to it. Then people can only choose to put their reinvestments into the remaining 4 projects. This continues until people only have a choice to invest in one project. Or, for those people who don&rsquo;t invest by the 15th, their money will be allocated to the appropriate project by pulling Solar Seed Fund Credit from people in alphabetical order, as described below.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- If the user does not pick a project to allocate their &ldquo;Reinvestment funds&rdquo; toward by the 15th of the month, their &ldquo;Reinvestment funds&rdquo; will instead be reinvested directly by RE-volv on the user&rsquo;s behalf.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- If it is past the 15th day of the month, the user should no longer have reinvestment funds available to spend. &nbsp;We will instead allocate their reinvestment funds on their behalf.</p>\n\t</li>\n</ul>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- A new script should be created, named `reinvestment_rollover.py` and placed in a new `tasks` directory.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This script should be run periodically using a celery periodic task (<a href=\"http://docs.celeryproject.org/en/latest/userguide/periodic-tasks.html\">http://docs.celeryproject.org/en/latest/userguide/periodic-tasks.html</a>), and should run once a month on the 15th of every month.</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Again the schedule and scheduler options should be configurable to allow flexibility in testing.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- This script should move all users&rsquo; unused &ldquo;Reinvestment funds&rdquo; from the user to individual projects, as follows:</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Calculate how much money is still owed to each project and allocate reinvestment funds accordingly. &nbsp;See <a href=\"https://github.com/calblueprint/revolv/issues/291\">https://github.com/calblueprint/revolv/issues/291</a> for instructions on how this calculation this should work. Also consult `payments/models.py`.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Among donors that did not manually select which project to reinvest their &ldquo;Reinvestment funds in&rdquo;, the reinvestments are pulled from their accounts in Alphabetical order by last name until each project has received its allocated amount.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The projects each user arbitrarily allocates their &ldquo;Reinvestment funds&rdquo; to will show up in their Dashboard the same way as projects they select directly do.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>How users pick a project to allocate &ldquo;Reinvestment funds&rdquo; toward</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- When a user has &ldquo;Reinvestment funds&rdquo; available to spend:</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- When visiting a RE-volv project page (e.g. /project/5/), instead of the &ldquo;Donate&rdquo; button they should instead see a button titled &ldquo;Reinvest $X&rdquo;. The &ldquo;Donate&rdquo; button at the top and the bottom of the page should be changed accordingly.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The reward options on the right hand side should be inactive : they shouldn&rsquo;t appear as having a pointer cursor on :hover, and they shouldn&rsquo;t be clickable. &nbsp;They should still appear, though.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- When a user has &ldquo;Reinvestment funds&rdquo; available to spend and they click on the new &ldquo;Reinvest $X&rdquo; button, a new modal should appear that should look similar to the current &ldquo;Confirm donation&rdquo; modal:</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\" style=\"margin-left: 120px;\"><img src=\"https://lh6.googleusercontent.com/KHSpPjB5wIRk5oUYs461iN0xstdKmKi5BQcbMFYW2j9s-KStiIxNfuOr4fXOVbO5TnRLeCjQDZeEVVy8t--oZJpRdmgtKQSam-slCs8cw14QtarugAqxbhc6eFS_oGbmq5eAxJLY\" style=\"height:185px; width:300px\" /></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- After picking a project to reinvest their Reinvestment funds toward, a modal dialog should appear prompting them to give a normal donation to the project:</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\" style=\"margin-left: 120px;\"><img src=\"https://lh4.googleusercontent.com/X-AIYlYyzxF009sUSk91B48BaLgolwM5tg3INYoKsx36fEboX4VbmXPcRncXX82PAPtnrKOtfwO0eUtCbXkPEhCMpHE85XLRAga-aAtGa6e2nRqJYZZ7Nz21s6GhDIzxjwOimM77\" style=\"height:223px; width:300px\" /></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Clicking on &ldquo;Donate!&rdquo; should cause the usual donation modal to appear, and continue with the usual donation process.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Clicking &ldquo;Not now&rdquo; should close the modal.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- After &ldquo;Reinvestment funds&rdquo; have been allocated to a project, those funds should be reflected in the project&rsquo;s total funding amount, e.g. the &ldquo;$Y donated&rdquo; and &ldquo;N% funded&rdquo; figures should reflect this reinvestment. &nbsp;Please consult &nbsp;payments/models.py to understand how &ldquo;Reinvestment funds&rdquo; and normal donation funds relate to each other.</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Modifications to how these reinvestment funds are structured in the database, etc may be required here.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Reinvestment page</u></h3>\n\n<p dir=\"ltr\">A new page should be created to highlight projects the user can allocate their &ldquo;Reinvestment funds&rdquo; toward. &nbsp;This page is linked from the reinvestment email that goes out.</p>\n\n<p dir=\"ltr\">Wireframe:</p>\n\n<p dir=\"ltr\"><img src=\"https://lh6.googleusercontent.com/RzRI6WoAkrPlYR-dzGUduLEa3DciBI-suo3vaV8ckRRE6rLk8DHma08AWnP8EPs4gKQ0qPFbcafNstC_Ou77r2Vy8llXUOuOy910x49-MldKsI1PvVfCY4Os9yt29pwaZ36Gl3eE\" /></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The reinvestment page layout should have the same global website layout (header/footer/navigation) and should re-use elements in the website where possible.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The projects widget will match the projects widget styling in /projects and landing page.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Clicking on project will take the user to project details page.</p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Emails to donors</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- On the first day of each month, every user who&#39;s ever donated to a project on RE-Volv should receive an email. Only users who are marked as &ldquo;subscribed_to_updates&rdquo; (see below) should be emailed.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The email should read:</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Subject: &quot;You have ${X} in RE-volv funds! Pick a project to support solar energy in a new community!&quot;</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- Email content for plain text and HTML provided below in screenshots.</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- The primary button in the email should link to the &ldquo;Reinvestment page&rdquo;.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Email template should be configurable, you can reuse existing templates/emails/emails.yml to configure the email.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The links contained in the email should automatically login the user when clicked. The user should not have to manually log in again if they&rsquo;re not already logged in.</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The automatic log in should be implemented using the `django-seasme` project: <a href=\"https://github.com/aaugustin/django-sesame\">https://github.com/aaugustin/django-sesame</a></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- There should be an unsubscribe option in the email to allow user to unsubscribe to updates :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- A new &ldquo;subscribed_to_updates&rdquo; field should be added to the `RevolvUserProfile` model that is, by default, True.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The bottom of each email, both plain text and HTML, should include a link to unsubscribe users. This link should take the user to the RE-volv site.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">- The backend of the link will mark their user account as no longer &ldquo;subscribed_to_updates&rdquo; = false, and render a successful message in a new page.</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- The page header/footer and layout should look like current website, the message will be displayed in the main area with proper styling.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">- Preferred this backend to be flexible to accept new types of unsubscribe, i.e. the link accepts unsubscribe_type parameter (for now we will have single value = &ldquo;unsubscribed_to_updates&rdquo;). For future we can use it to unsubscribe from other features.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">&nbsp;- A new script should be created, named `monthly_reminders.py` and placed in a new `tasks` directory.</p>\n\t</li>\n</ul>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Running this script should send emails to the relevant users, as described above.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The emails should be sent using the regular django email system, as used in other parts of the codebase.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- The emails script should be run periodically using a celery periodic task (<a href=\"http://docs.celeryproject.org/en/latest/userguide/periodic-tasks.html\">http://docs.celeryproject.org/en/latest/userguide/periodic-tasks.html</a>), and should run once a month on the 1st of every month.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Wireframe for email:</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\" style=\"margin-left: 80px;\"><img src=\"https://lh4.googleusercontent.com/TEB5SBLHOZBJZplkhHlXTY59rQcCA1c5LJAteSiNYchQcS_5ywPf4AQyazHKwO4r_G1PtP7R1Vr8yEdTTU9MqYNrztWVC4d5J__i-xCHmP4VIgb4lGaJr2gma-j0Pt-J7C14k0p6\" style=\"height:319px; width:500px\" /></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">- Email content (plain text):</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\">&ldquo;&rdquo;&rdquo;</p>\n\n<p dir=\"ltr\">From: RE-Volv Team</p>\n\n<p dir=\"ltr\">Subject: You have $&lt;X&gt; in RE-volv funds! Pick a project to support solar energy in a new community!</p>\n\n<p dir=\"ltr\">You have $&lt;X&gt; in RE-volv funds! Pick a project to support solar energy in a new community!</p>\n\n<p dir=\"ltr\">Click here to back a project with your $X in funds:</p>\n\n<p dir=\"ltr\">&lt;Reinvestment page URL&gt;</p>\n\n<p dir=\"ltr\">&ldquo;&rdquo;&rdquo;</p>\n\n<h2 dir=\"ltr\">Browser Compatability</h2>\n\n<p dir=\"ltr\">- IE10+</p>\n\n<p dir=\"ltr\">- Latest Google Chrome (Windows &amp; Mac OS)</p>\n\n<p dir=\"ltr\">- Latest Safari (Windows &amp; Mac OS)</p>\n\n<p dir=\"ltr\">- Latest Firefox (Windows &amp; Mac OS)</p>\n\n<p dir=\"ltr\">- Latest iOS Safari</p>\n\n<p dir=\"ltr\">- Latest Android Browser</p>\n\n<h3 dir=\"ltr\"><u>HTML</u></h3>\n\n<p dir=\"ltr\">- Provide comments on the page elements to give clear explanation of the code usage. The goal is to help future developers understand the code.</p>\n\n<p dir=\"ltr\">- Please use clean INDENTATION for all HTML code so future developers can follow the code.</p>\n\n<p dir=\"ltr\">- All HTML code naming should not have any conflicts or errors.</p>\n\n<p dir=\"ltr\">- Element and Attribute names should be in lowercase and use a &quot;-&quot; to separate multiple-word classes (i.e.. &quot;main-content&quot;)</p>\n\n<p dir=\"ltr\">- Use semantically correct tags- use H tags for headers, etc. Use strong and em tags instead of bold and italic tags.</p>\n\n<p dir=\"ltr\">- No inline CSS styles- all styles must be placed in an external stylesheet.</p>\n\n<p dir=\"ltr\">- Validate your code- reviewers may accept minor validation errors, but please comment your reason for any validation errors. Use the validators listed in the scorecard.</p>\n\n<h3 dir=\"ltr\"><u>CSS</u></h3>\n\n<p dir=\"ltr\">- Provide comments on the CSS code. We need CSS comments to give a clear explanation of the code usage. The goal is to help future developers understand the code.</p>\n\n<p dir=\"ltr\">- Please use clean INDENTATION for all CSS so developers can follow the code.</p>\n\n<p dir=\"ltr\">- All CSS naming should not have any conflicts.</p>\n\n<p dir=\"ltr\">- As possible use CSS3 style when create all styling.</p>\n\n<p dir=\"ltr\">- Use CSS to space out objects, not clear/transparent images (GIFs or PNGs) and use proper structural CSS to lay out your page.</p>\n\n<p dir=\"ltr\">- Only use table tags for tables of data/information and not for page layout.</p>\n\n<p dir=\"ltr\">- Use variables with well-chosen names. Use some sort of naming convention.</p>\n\n<h2 dir=\"ltr\"><u>Github repository</u></h2>\n\n<p dir=\"ltr\">- The source code exists in github <a href=\"https://github.com/calblueprint/revolv\">https://github.com/calblueprint/revolv</a></p>\n\n<p dir=\"ltr\">- The repo contains a very detailed deployment instructions for the application</p>\n\n<h2 dir=\"ltr\">Platforms</h2>\n\n<p dir=\"ltr\">- HTML</p>\n\n<p dir=\"ltr\">- CSS</p>\n\n<p dir=\"ltr\">- Python</p>\n\n<p dir=\"ltr\">- Django</p>\n\n<p dir=\"ltr\">- PostgreSQL</p>\n\n<h2><span style=\"line-height:1.6\">Technologies</span></h2>\n\n<p dir=\"ltr\">- HTML</p>\n\n<p dir=\"ltr\">- CSS</p>\n\n<p dir=\"ltr\">- Python</p>\n\n<p dir=\"ltr\">- Django</p>\n\n<div>&nbsp;</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30051750",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<h1 dir=\"ltr\">Deliverable</h1>\n\n<p dir=\"ltr\">- Git patch file of the changed code.</p>\n\n<p dir=\"ltr\">- Detailed deployment guide with verification steps.</p>\n",
+  "forumId": 30850,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=30850",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 22,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-26T13:51:00.000Z",
+      "actualStartTime": "2015-10-26T13:51:00.000Z",
+      "scheduledEndTime": "2015-10-31T13:52:00.000Z",
+      "actualendTime": "2015-10-31T13:52:00.000Z",
+      "_id": "58132fc3550dfb3b52b8af70"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-10-26T13:56:00.000Z",
+      "actualStartTime": "2015-10-26T13:56:00.000Z",
+      "scheduledEndTime": "2015-11-01T13:51:00.000Z",
+      "actualendTime": "2015-11-01T13:51:00.000Z",
+      "_id": "58132fc3550dfb3b52b8af6f"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-01T13:51:00.000Z",
+      "actualStartTime": "2015-11-01T13:51:00.000Z",
+      "scheduledEndTime": "2015-11-04T23:31:00.000Z",
+      "actualendTime": "2015-11-04T23:31:00.000Z",
+      "_id": "58132fc3550dfb3b52b8af6e"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-04T23:31:00.000Z",
+      "actualStartTime": "2015-11-04T23:31:00.000Z",
+      "scheduledEndTime": "2015-11-05T23:32:00.000Z",
+      "actualendTime": "2015-11-05T23:32:00.000Z",
+      "_id": "58132fc3550dfb3b52b8af6d"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-05T23:32:00.000Z",
+      "actualStartTime": "2015-11-05T23:32:00.000Z",
+      "scheduledEndTime": "2015-11-06T04:47:00.000Z",
+      "actualendTime": "2015-11-06T04:47:00.000Z",
+      "_id": "58132fc3550dfb3b52b8af6c"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-10-26T13:51:00.000Z",
+  "prize": [
+    1400,
+    600,
+    300
+  ],
+  "projectId": 9157,
+  "registrants": [
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-26T15:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af6b"
+    },
+    {
+      "handle": "fish00",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-26T15:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af6a"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-26T16:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af69"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-26T17:37:00.000Z",
+      "submissionDate": "2015-11-01T13:51:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af68"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-26T17:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af67"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-26T18:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af66"
+    },
+    {
+      "handle": "amit4111989",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-26T23:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af65"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-27T01:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af64"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-27T01:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af63"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-27T05:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af62"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-27T08:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af61"
+    },
+    {
+      "handle": "ghk413",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-27T13:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af60"
+    },
+    {
+      "handle": "Luckyodell",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-27T15:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af5f"
+    },
+    {
+      "handle": "mawueli",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-27T15:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af5e"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-27T15:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af5d"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T06:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af5c"
+    },
+    {
+      "handle": "justinwong0322",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T07:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af5b"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T11:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af5a"
+    },
+    {
+      "handle": "PeterBest",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-28T12:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af59"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-29T07:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af58"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-30T13:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af57"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2015-10-31T11:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fc3550dfb3b52b8af56"
+    }
+  ],
+  "registrationEndDate": "2015-10-31T13:52:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-11-01T13:51:00.000Z",
+  "submissions": [
+    {
+      "handle": "deedee",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 81.88,
+      "finalScore": 85.63,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-11-01T13:51:00.000Z",
+      "_id": "58132fc3550dfb3b52b8af71"
+    }
+  ],
+  "technology": [
+    "CSS",
+    "HTML",
+    "JavaScript",
+    "PostgreSQL",
+    "Python"
+  ]
+}

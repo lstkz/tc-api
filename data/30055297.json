@@ -1,0 +1,589 @@
+{
+  "_id": 30055297,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:05:51.874Z",
+  "appealsEndDate": "2016-10-07T12:55:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "HP Product Inventory - HP Search Competitive Products",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "In this contest, we want to create an command line tool to extract competitive products for HP products in the DB:<br />\nThe process of the new functionality should be as below:<br />\n1. Get all the product types for all HP products from the database.<br />\n2. Then for each product type, we query BestBuy Product Info API by Product Category. &nbsp;The Best Buy Product Categories can be derived from the Product Type field in our application.<br />\n3. It returns a list of Products in sorted list order by bestSellingRank asc. We&#39;ll get one of those lists for each Product Type/Category. &nbsp;Here is sample query which returns Laptops with their selling rank info in ascending order:&nbsp;<br />\n<br />\nhttps://api.bestbuy.com/v1/products((categoryPath.id=abcat0502000))?format=json&amp;show=sku,upc,name,categoryPath.name,salePrice,bestSellingRank&amp;apiKey=&lt;&lt;api_key&gt;&gt;&amp;sort=bestSellingRank.asc<br />\n<br />\n4. Our app will then have to iterate through each HP product in our database<br />\n5. For each HP product in our database, it will scan through the (ordered) list of products for matching the products types with the appropriate list, and it will find the 5 Best Selling Products in the designated price range (within 20% higher and 20% lower range) for a product type. The price range searched will be based on the HP product price.<br />\n6. The matched best selling products (we call them competitive products) should be saved to the Product etc. tables (as existing API extractor code), the siteId for the competitive products should be configurable. &nbsp;We&#39;ll need to add a manufacturer field to the Products table. &nbsp;The current API Product Extractor process, which only queries for HP Products, needs to be updated to write to this field. &nbsp;We&#39;ll need to populate this for the competitive products as well.<br />\n7. The associations between the competitive products and the HP products should be saved into the association table (which is a m-to-m table containing the hp productId and competitive product id).&nbsp;<br />\n<br />\nThis new command line tool should have its own codebase, and as it shares lots of functionalities as the existing HP API Extractor codebase, so we want you to refactor the&nbsp;HP API Extractor codebase to reuse the common code as much as possible:<br />\n* Please move the common code into a separate codebase (and referenced by this tool and&nbsp;HP API Extractor as lib). Please also add unit tests for this common code.&nbsp;<br />\n* Refactor the&nbsp;HP API Extractor codebase to use the common code as well. Note that a new&nbsp;bestSellingRank should be added to the Product table (New Column Name: bestBuyBestSellingRank), and please update the HP API Extractor to grab this value from best-buy API to store to the db.&nbsp;&nbsp;",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30055297",
+  "finalSubmissionGuidelines": "<div><span style=\"font-family:source sans pro,arial,helvetica,sans-serif\">-&nbsp;Upload all your source code in a zip file.</span><br />\n<span style=\"font-family:source sans pro,arial,helvetica,sans-serif\">- Provide documentation for your application. It should contain complete build, deployment, and execution instructions.</span><br />\n<span style=\"font-family:source sans pro,arial,helvetica,sans-serif\">- Screen sharing video is not required for this application.</span><br />\n<span style=\"font-family:source sans pro,arial,helvetica,sans-serif\">- You should use the existing code found in the GitHub repositories as the starting point for this application. &nbsp;The details for the GitHub repositories can be found in the Code Document forums attached to this challenge.</span><br />\n<span style=\"font-family:source sans pro,arial,helvetica,sans-serif\">- This application uses the Vertica database as a persistence layer. &nbsp;We have a docker script which configures this database for you. &nbsp;The details can be found in the Code Document forums attached to this challenge.</span></div>\n\n<div>&nbsp;</div>\n\n<p>&nbsp;</p>\n",
+  "forumId": 34076,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=34076",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 51,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-28T03:56:00.000Z",
+      "actualStartTime": "2016-09-28T03:56:00.000Z",
+      "scheduledEndTime": "2016-10-03T03:56:00.000Z",
+      "actualendTime": "2016-10-03T03:56:00.000Z",
+      "_id": "581322ff550dfb3b52b3ac1d"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-28T04:01:00.000Z",
+      "actualStartTime": "2016-09-28T04:01:00.000Z",
+      "scheduledEndTime": "2016-10-03T03:56:00.000Z",
+      "actualendTime": "2016-10-03T03:56:00.000Z",
+      "_id": "581322ff550dfb3b52b3ac1c"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-10-03T03:56:00.000Z",
+      "actualStartTime": "2016-10-03T03:56:00.000Z",
+      "scheduledEndTime": "2016-10-06T03:46:00.000Z",
+      "actualendTime": "2016-10-06T03:46:00.000Z",
+      "_id": "581322ff550dfb3b52b3ac1b"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-10-06T03:46:00.000Z",
+      "actualStartTime": "2016-10-06T03:46:00.000Z",
+      "scheduledEndTime": "2016-10-07T03:46:00.000Z",
+      "actualendTime": "2016-10-07T03:46:00.000Z",
+      "_id": "581322ff550dfb3b52b3ac1a"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-10-07T03:46:00.000Z",
+      "actualStartTime": "2016-10-07T03:46:00.000Z",
+      "scheduledEndTime": "2016-10-07T12:55:00.000Z",
+      "actualendTime": "2016-10-07T12:55:00.000Z",
+      "_id": "581322ff550dfb3b52b3ac19"
+    }
+  ],
+  "platforms": [
+    "AWS",
+    "EC2",
+    "Linux"
+  ],
+  "postingDate": "2016-09-28T03:56:00.000Z",
+  "prize": [
+    1000,
+    500
+  ],
+  "projectId": 8980,
+  "registrants": [
+    {
+      "handle": "Paras.Meh",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-29T10:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac18"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T11:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac17"
+    },
+    {
+      "handle": "Bende",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-29T03:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac16"
+    },
+    {
+      "handle": "M_vijay_5",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T05:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac15"
+    },
+    {
+      "handle": "net_buster",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T05:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac14"
+    },
+    {
+      "handle": "akinwale",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T05:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac13"
+    },
+    {
+      "handle": "kinfkong",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T06:32:00.000Z",
+      "submissionDate": "2016-10-03T02:11:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac12"
+    },
+    {
+      "handle": "ananthhh",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T06:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac11"
+    },
+    {
+      "handle": "samwoods",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T06:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac10"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T07:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac0f"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T07:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac0e"
+    },
+    {
+      "handle": "woka",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T07:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac0d"
+    },
+    {
+      "handle": "mehblahwhatever",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T08:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac0c"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T08:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac0b"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T08:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac0a"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T09:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac09"
+    },
+    {
+      "handle": "zzzkir",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T09:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac08"
+    },
+    {
+      "handle": "shoebkhan09ai",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T09:53:00.000Z",
+      "submissionDate": "2016-10-03T03:56:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac07"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T10:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac06"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T10:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac05"
+    },
+    {
+      "handle": "rtty",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T10:39:00.000Z",
+      "submissionDate": "2016-10-02T23:37:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac04"
+    },
+    {
+      "handle": "isv",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T11:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac03"
+    },
+    {
+      "handle": "code_now",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T14:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac02"
+    },
+    {
+      "handle": "gpbencke",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T12:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac01"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T13:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3ac00"
+    },
+    {
+      "handle": "sfaxiano",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T14:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abff"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T14:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abfe"
+    },
+    {
+      "handle": "narasimha.dvnr",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T16:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abfd"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T17:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abfc"
+    },
+    {
+      "handle": "AadityaDev",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T17:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abfb"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T20:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abfa"
+    },
+    {
+      "handle": "hemanthkumar32",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-28T23:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abf9"
+    },
+    {
+      "handle": "gondzo",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-29T00:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abf8"
+    },
+    {
+      "handle": "vmudimu",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-29T00:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abf7"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-29T05:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abf6"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-29T05:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abf5"
+    },
+    {
+      "handle": "TopG",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-29T08:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abf4"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-29T09:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abf3"
+    },
+    {
+      "handle": "johnkan",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-29T09:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abf2"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-29T09:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abf1"
+    },
+    {
+      "handle": "karan.sharda",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-29T10:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abf0"
+    },
+    {
+      "handle": "gopalrmd90",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-29T13:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abef"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-29T14:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abee"
+    },
+    {
+      "handle": "{code}jama",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-29T21:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abed"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-29T23:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abec"
+    },
+    {
+      "handle": "albertwang",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-30T07:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abeb"
+    },
+    {
+      "handle": "TiloW",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-30T09:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abea"
+    },
+    {
+      "handle": "lukasbindreiter",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-30T16:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abe9"
+    },
+    {
+      "handle": "bvenkata",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-30T19:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abe8"
+    },
+    {
+      "handle": "stevelvovo",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-30T19:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abe7"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-10-02T06:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581322ff550dfb3b52b3abe6"
+    }
+  ],
+  "registrationEndDate": "2016-10-03T03:56:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-10-03T03:56:00.000Z",
+  "submissions": [
+    {
+      "handle": "kinfkong",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 95,
+      "finalScore": 96.25,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-10-03T02:11:00.000Z",
+      "_id": "581322ff550dfb3b52b3ac20"
+    },
+    {
+      "handle": "rtty",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 89.38,
+      "finalScore": 89.38,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-10-02T23:37:00.000Z",
+      "_id": "581322ff550dfb3b52b3ac1f"
+    },
+    {
+      "handle": "shoebkhan09ai",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 75,
+      "finalScore": 75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-10-03T03:56:00.000Z",
+      "_id": "581322ff550dfb3b52b3ac1e"
+    }
+  ],
+  "technology": [
+    "Java",
+    "SQL",
+    "Vertica"
+  ]
+}

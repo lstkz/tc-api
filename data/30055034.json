@@ -1,0 +1,643 @@
+{
+  "_id": 30055034,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:13:34.292Z",
+  "appealsEndDate": "2016-09-07T10:04:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "TCO - System Conversion File Processing",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><br />\n<strong><em>Project Overview</em><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">:</span></strong></p>\n\n<p><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">A common requirement for a new system implementation is to load historical documents from a legacy system into the new system. Anywhere between 1,000 and 1,000,000 files may be loaded using APIs. &nbsp;Typical file formats may be PDF, doc, txt, png, and so on. Each file has values that will be used to determine where the individual file is loaded into the new system. These values will need to be extracted using the filename and a provided index mapping file.</span></p>\n\n<p><br />\n<strong><em>Competition Task Overview:</em></strong></p>\n\n<p><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">The requirement is to develop a program that will do the following:<br />\n1. Retrieve a zip folder from an SFTP, decrypt the folder using a provided PGP Public Key, unzip the folder, locate the index file from the folder and then loop through each file in the folder (excluding index file) to gather the required values and base64 encode the whole file.<br />\n2.&nbsp;Ultimately, each file will be individually uploaded to an endpoint using APIs. However since the API can not be exposed, we just want an API stub that won&#39;t actually call the API but will call a function and be able to handle the response. T</span><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\">he response should be a set of values for each file that will be used to load the file. These values will need to be output for each file in some type of log file which also contains any issues encountered. A diagram of the process is below.</span></p>\n\n<p><span style=\"background-color:transparent; font-family:arial; font-size:14.6667px\"><img src=\"https://lh4.googleusercontent.com/ln43PV60o0jOVuyEXpwoncT75Xu7hFNwUYFyca5YVMZOcmQ5mZKeX85bDzYeyoagtWGLS-lpT3Y-5vwd4DZyTp2fMwRcJHF0tPCkdYOttnvg1xCm8f5f-LMqE5rNOBCOpoDTR0ZW\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:315px; transform:rotate(0.00rad); width:624px\" /></span></p>\n&nbsp;\n\n<p><u>Input Values (configurable at deployment time)</u></p>\n\n<p><span style=\"background-color:transparent\">SFTP endpoint</span><br />\n<span style=\"background-color:transparent\">SFTP directory</span><br />\n<span style=\"background-color:transparent\">SFTP username</span><br />\n<span style=\"background-color:transparent\">SFTP password</span><br />\n<span style=\"background-color:transparent\">Target system username (stored for later use)</span><br />\n<span style=\"background-color:transparent\">Target system password (stored for later use)</span><br />\n<span style=\"background-color:transparent\">Index file name</span><br />\n<span style=\"background-color:transparent\">Desired output filename (dynamic using output values, it will contains some placeholders that will be replaced by real values, see examples below)</span><br />\n<span style=\"background-color:transparent\">PGP Public Key</span><br />\n<span style=\"background-color:transparent\">Default Document Category (stored for later use)</span></p>\n\n<ul>\n</ul>\n\n<p><u>Output Values</u>&nbsp;(for each file)</p>\n\n<p><span style=\"background-color:transparent\">filename</span><br />\n<span style=\"background-color:transparent\">userID</span><br />\n<span style=\"background-color:transparent\">base64 encoded file</span><br />\n<span style=\"background-color:transparent\">category</span></p>\n\n<ul>\n</ul>\n<br />\n<span style=\"background-color:transparent; font-family:arial\">The output values should be determined by using the index file that is located in the zip folder - the name of each file can be used to look up other values. The index file is a pipe delimited .txt file and there are three possible formats. RESUMEKEY is the userID. FILENAME, RESUMEPDFNAME, ATTACHMENTFILENAME are the filenames to match.</span><br />\n<br />\n<br />\n<span style=\"background-color:transparent; font-family:arial; font-size:10.6667px\">RESUMEKEY|ADDEDON|FIRSTNAME|MIDDLENAME|LASTNAME|EMAIL|FILENAME</span><br />\n<span style=\"background-color:transparent; font-family:arial; font-size:10.6667px\">123456|2014-02-03 19:48:46|Test||One|cccccccc@gmail.com|R_123456.txt</span><br />\n<span style=\"background-color:transparent; font-family:arial; font-size:10.6667px\">456789|2014-02-03 20:22:56|Test|Matthew|Two|aaaa@gmail.com|R_456789.txt</span><br />\n&nbsp;<br />\n<span style=\"background-color:transparent; font-family:arial; font-size:10.6667px\">ATTACHMENTID|RESUMEKEY|ADDEDON|CATEGORY|FIRSTNAME|MIDDLENAME|LASTNAME|EMAIL|RESUMEPDFNAME</span><br />\n<span style=\"background-color:transparent; font-family:arial; font-size:10.6667px\">A_6646692|123456|2015-02-19 13:12:58|R|Test|Adam|One|bbb@gmail.com|Sample_File_123445</span><br />\n<span style=\"background-color:transparent; font-family:arial; font-size:10.6667px\">A_6646695|456789|2013-07-11 13:51:29|R|Test||Two|aaa@yahoo.com|Another_File_451123</span><br />\n<br />\n<span style=\"background-color:transparent; font-family:arial; font-size:10.6667px\">ATTACHMENTID|RESUMEKEY|ADDEDON|CATEGORY|FIRSTNAME|MIDDLENAME|LASTNAME|EMAIL|ATTACHMENTFILENAME</span><br />\n<span style=\"background-color:transparent; font-family:arial; font-size:10.6667px\">904137|123456|2011-06-18 16:56:33|OTHER|Test|P|One|aaaa@hotmail.com|200100_John_Resume.doc</span><br />\n<span style=\"background-color:transparent; font-family:arial; font-size:10.6667px\">904196|456789|2011-06-18 19:26:30|OTHER|Test||Two|bbbb@hotmail.com|30001 Resume.docx</span><br />\n<br />\n<br />\n<u><span style=\"font-size:14px\">Example (using third option above)</span></u>\n\n<p><span style=\"font-size:14px\"><span style=\"background-color:transparent; font-family:arial\">Input file: 200100_John_Resume.doc</span><br />\n<span style=\"background-color:transparent; font-family:arial\">Desired output filename: [userID]BR.[extension]</span><br />\n<span style=\"background-color:transparent; font-family:arial\">Output filename: 123456BR.doc</span><br />\n<span style=\"background-color:transparent; font-family:arial\">Output userID: 123456</span><br />\n<span style=\"background-color:transparent; font-family:arial\">Output category = Default Category</span></span></p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30055034",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<p><span style=\"font-size:14px\"><strong><em>Additional Requirements:</em></strong><br />\n<span style=\"background-color:transparent\">Matching with the index file should be exact match - case sensitive, including spaces</span><br />\n<span style=\"background-color:transparent\">The files should not be opened to read content</span><br />\n<span style=\"background-color:transparent\">Each piece outlined in the diagram should be it&rsquo;s own component</span></span></p>\n\n<p><span style=\"font-size:14px\"><strong><em>Technology Overview:</em></strong><br />\n<span style=\"background-color:transparent\">Java</span></span></p>\n\n<ul>\n</ul>\n<span style=\"font-size:14px\"><strong><em>Submission Deliverables:</em></strong><br />\n<span style=\"background-color:transparent\">Please submit all code required by the application in your submission.zip</span><br />\n<span style=\"background-color:transparent\">Document the build process for your code, including how to configure, deploy and run the code and verify the results</span></span>\n\n<ol>\n</ol>\n",
+  "forumId": 33833,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33833",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 52,
+  "numberOfSubmissions": 7,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-01T03:00:00.000Z",
+      "actualStartTime": "2016-09-01T03:00:00.000Z",
+      "scheduledEndTime": "2016-09-05T03:01:00.000Z",
+      "actualendTime": "2016-09-05T03:01:00.000Z",
+      "_id": "581340ee550dfb3b52be7231"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-01T03:05:00.000Z",
+      "actualStartTime": "2016-09-01T03:05:00.000Z",
+      "scheduledEndTime": "2016-09-05T03:01:00.000Z",
+      "actualendTime": "2016-09-05T03:01:00.000Z",
+      "_id": "581340ee550dfb3b52be7230"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-05T03:01:00.000Z",
+      "actualStartTime": "2016-09-05T03:01:00.000Z",
+      "scheduledEndTime": "2016-09-06T20:09:00.000Z",
+      "actualendTime": "2016-09-06T20:09:00.000Z",
+      "_id": "581340ee550dfb3b52be722f"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-06T20:09:00.000Z",
+      "actualStartTime": "2016-09-06T20:09:00.000Z",
+      "scheduledEndTime": "2016-09-07T08:09:00.000Z",
+      "actualendTime": "2016-09-07T08:09:00.000Z",
+      "_id": "581340ee550dfb3b52be722e"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-09-07T08:09:00.000Z",
+      "actualStartTime": "2016-09-07T08:09:00.000Z",
+      "scheduledEndTime": "2016-09-07T10:04:00.000Z",
+      "actualendTime": "2016-09-07T10:04:00.000Z",
+      "_id": "581340ee550dfb3b52be722d"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-09-01T03:00:00.000Z",
+  "prize": [
+    800,
+    400
+  ],
+  "projectId": 10551,
+  "registrants": [
+    {
+      "handle": "Prepod",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T10:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be722c"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T06:55:00.000Z",
+      "submissionDate": "2016-09-05T00:55:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be722b"
+    },
+    {
+      "handle": "chuxy111",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T03:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be722a"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T03:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7229"
+    },
+    {
+      "handle": "HulkRambo",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T03:31:00.000Z",
+      "submissionDate": "2016-09-04T23:21:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7228"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T03:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7227"
+    },
+    {
+      "handle": "anhtuannd",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T03:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7226"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T03:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7225"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T03:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7224"
+    },
+    {
+      "handle": "vvvpig",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T04:00:00.000Z",
+      "submissionDate": "2016-09-03T15:03:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7223"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T04:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7222"
+    },
+    {
+      "handle": "isv",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T04:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7221"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T04:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7220"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T04:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be721f"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T05:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be721e"
+    },
+    {
+      "handle": "gvir",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T06:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be721d"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T06:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be721c"
+    },
+    {
+      "handle": "bannie2492",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T07:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be721b"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T08:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be721a"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T09:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7219"
+    },
+    {
+      "handle": "fanff",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T11:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7218"
+    },
+    {
+      "handle": "tongkunvwang",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T11:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7217"
+    },
+    {
+      "handle": "winterflame",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T12:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7216"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T15:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7215"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T13:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7214"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T13:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7213"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T13:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7212"
+    },
+    {
+      "handle": "alexpeptan",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T14:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7211"
+    },
+    {
+      "handle": "mrsfy",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T19:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7210"
+    },
+    {
+      "handle": "gmagniez",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T20:41:00.000Z",
+      "submissionDate": "2016-09-05T01:07:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be720f"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T20:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be720e"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-01T23:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be720d"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T01:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be720c"
+    },
+    {
+      "handle": "bandishankar",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T01:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be720b"
+    },
+    {
+      "handle": "sreedharrao225",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T01:46:00.000Z",
+      "submissionDate": "2016-09-03T05:25:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be720a"
+    },
+    {
+      "handle": "efornaciari",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T01:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7209"
+    },
+    {
+      "handle": "LeoLam",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T03:49:00.000Z",
+      "submissionDate": "2016-09-05T02:59:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7208"
+    },
+    {
+      "handle": "spanhawk",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T05:26:00.000Z",
+      "submissionDate": "2016-09-04T19:40:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7207"
+    },
+    {
+      "handle": "billsedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T06:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7206"
+    },
+    {
+      "handle": "liwanwan",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T08:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7205"
+    },
+    {
+      "handle": "klavorar",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T08:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7204"
+    },
+    {
+      "handle": "phaniram",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T11:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7203"
+    },
+    {
+      "handle": "hp87",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T17:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7202"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T18:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7201"
+    },
+    {
+      "handle": "benoitrion",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-02T18:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be7200"
+    },
+    {
+      "handle": "nf11624",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-03T05:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71ff"
+    },
+    {
+      "handle": "cairi",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-03T08:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71fe"
+    },
+    {
+      "handle": "TopG",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-04T07:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71fd"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-04T09:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71fc"
+    },
+    {
+      "handle": "ugultopu",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-04T10:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71fb"
+    },
+    {
+      "handle": "esteer",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-04T13:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71fa"
+    },
+    {
+      "handle": "Shunox",
+      "reliability": "n/a",
+      "registrationDate": "2016-09-04T20:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581340ee550dfb3b52be71f9"
+    }
+  ],
+  "registrationEndDate": "2016-09-05T03:01:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-09-05T03:01:00.000Z",
+  "submissions": [
+    {
+      "handle": "vvvpig",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 95,
+      "finalScore": 97.5,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-09-03T15:03:00.000Z",
+      "_id": "581340ee550dfb3b52be7238"
+    },
+    {
+      "handle": "spanhawk",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 93.13,
+      "finalScore": 93.13,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-09-04T19:40:00.000Z",
+      "_id": "581340ee550dfb3b52be7237"
+    },
+    {
+      "handle": "gmagniez",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 90.63,
+      "finalScore": 90.63,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-09-05T01:07:00.000Z",
+      "_id": "581340ee550dfb3b52be7236"
+    },
+    {
+      "handle": "HulkRambo",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 83.75,
+      "finalScore": 83.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-09-04T23:21:00.000Z",
+      "_id": "581340ee550dfb3b52be7235"
+    },
+    {
+      "handle": "sreedharrao225",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 70,
+      "finalScore": 70,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-09-03T05:25:00.000Z",
+      "_id": "581340ee550dfb3b52be7234"
+    },
+    {
+      "handle": "LeoLam",
+      "placement": 6,
+      "screeningScore": null,
+      "initialScore": 66.25,
+      "finalScore": 66.25,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-09-05T02:59:00.000Z",
+      "_id": "581340ee550dfb3b52be7233"
+    },
+    {
+      "handle": "testXuSanping",
+      "placement": 7,
+      "screeningScore": null,
+      "initialScore": 31.25,
+      "finalScore": 31.25,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-09-05T00:55:00.000Z",
+      "_id": "581340ee550dfb3b52be7232"
+    }
+  ],
+  "technology": [
+    "Java"
+  ]
+}

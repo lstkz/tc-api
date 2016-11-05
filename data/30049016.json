@@ -1,7 +1,7 @@
 {
   "_id": 30049016,
   "_isComplete": true,
-  "__v": 1,
+  "__v": 0,
   "_lastUpdate": "2016-10-27T17:50:27.845Z",
   "appealsEndDate": "2015-03-29T23:41:00.000Z",
   "challengeCommunity": "develop",
@@ -15,11 +15,6 @@
   "detailedRequirements": "<h1 dir=\"ltr\">Project Overview</h1>\n\n<p dir=\"ltr\"><span style=\"line-height:1.6\">The SolarAgs mobile app is the user front end of a process that automates, customizes, and optimizes the residential solar experience for homeowners. It provide and forum for homeowners to educate themselves about the merits of solar energy, and investigate complete system designs for their home without needing to call installers. For the installer, it provides a high-quality lead generation tool - the homeowner has already been through the design cycle, has seen photos of his/her house with solar installed, and has seen the financial analysis. As such, the app weeds out the window shoppers from the serious buyers.</span></p>\n\n<p dir=\"ltr\">With SolarAgs application, the user captures a photo of the house from the exterior of their home, answers a series of questions to determine goals and objective of their interest to &ldquo;go solar&rdquo; as well as economic considerations.</p>\n\n<p dir=\"ltr\">This data is transmitted to a back-end which uses cloud-computing methods to automate, customize, and optimize a Photovoltaics (PV) solution for the app user&rsquo;s own home.</p>\n\n<p dir=\"ltr\">The overall product has two parts: A front-end Android application which resides on the smartphone and a Node.js REST API back-end which is hosted in a cloud server.</p>\n\n<p dir=\"ltr\">The Android application is responsible for providing a functioning camera, GPS and compass data, and the entire user experience. After one or more images and data have been sent from the front-end to the back-end, the backend processes the data through a series of algorithms.</p>\n\n<p dir=\"ltr\">Lastly, the back-end returns one or more images and data to the smartphone app, for presentation to the user.</p>\n\n<h1 dir=\"ltr\">Challenge Task Overview</h1>\n\n<p dir=\"ltr\">In this challenge we are building part of the backend - a Node.js REST API.</p>\n\n<h1 dir=\"ltr\">Functionality Requirements</h1>\n\n<h3 dir=\"ltr\"><u>Technology Stack</u></h3>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The rest api application will be an&nbsp;<a href=\"http://expressjs.com/\">express.js</a>&nbsp;web application.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Facebook Node.js SDK can be one of the recommended ones by&nbsp;<a href=\"https://developers.facebook.com/docs/apis-and-sdks#node3p\">facebook</a>&nbsp;to be used for login.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><a href=\"https://github.com/dropbox/dropbox-js\">Dropbox Node.js Module</a>&nbsp;to interact with dropbox for photo hosting, and manipulating submissions data.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><a href=\"http://www.mongodb.org/\">MongoDB</a>&nbsp;as database and&nbsp;<a href=\"http://mongoosejs.com/\">Mongoose ORM module</a>&nbsp;to interact with the DB - we will use latest stable version.</p>\n\t</li>\n</ol>\n\n<h3 dir=\"ltr\"><u>Login/Authorization endpoint</u></h3>\n\n<p dir=\"ltr\">Users of the android application can login via Facebook or use the app as guests, in either cases, we need a token to keep track of submitted applications by either type of users (logged-in and guest), and that requires an API endpoint to register new user.</p>\n\n<p>The API Login endpoint details :</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">endpoint signature is &lsquo;POST /login&rsquo;</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">request body parameters :</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">facebook access token parameter (if available)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">type parameter : support two values (&lsquo;facebook&rsquo;, &lsquo;guest&rsquo;)</p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">It accepts input parameters as json format</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">It returns output as json object</p>\n\t</li>\n</ol>\n\n<p dir=\"ltr\">For Facebook Login, the flow will be as follow :</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Login via Facebook on Android app and obtain the Facebook Access Token</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Pass the Facebook Access Token and Refresh Token to the Signup REST API endpoint with &lsquo;type&rsquo; parameter of value &lsquo;facebook&rsquo;.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">API endpoint backend will perform the following logic :</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">check the given Facebook Access Token to make sure it is valid by making a graph call to the /me endpoint or via other functionality provided the Facebook nodejs SDK module.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Parse the response to get user id and email, and cross-reference this with existing users to see if it&rsquo;s a new or old one.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Create a random token, create a new User record in DB and store the random token (api_access_token) along with the obtained user id/email/access-token/refresh-token then send the api_access_token (in addition to any other needed info) back to the android app.</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">If backend needed the fb_access_token for getting more info, say retrieving the list of your user&rsquo;s friends, we can do so by retrieving it from the DB.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">For every call hereafter, send the api_access_token to authenticate it.</p>\n\t\t</li>\n\t</ol>\n\t</li>\n</ol>\n\n<p dir=\"ltr\">For guest users, the flow will be like this :</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Make call to the Signup REST API endpoint with &lsquo;type&rsquo; parameter of value &lsquo;guest&rsquo;</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">API endpoint backend will :</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Create random token, create new User record in DB and store the random token (api_access_token) and send it back to the android app.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">For every call hereafter, send the api_access_token to authenticate it.</p>\n\t\t</li>\n\t</ol>\n\t</li>\n</ol>\n\n<p dir=\"ltr\">The reason here we are tracking guest user so we can associate it with submitted application, and use it to lookup the processed results and send it back to the android application.</p>\n\n<h3 dir=\"ltr\"><u>Authorization Middleware</u></h3>\n\n<p dir=\"ltr\">You also need to add a middleware to verify the api_access_token for all API calls except the &nbsp;/login endpoint.</p>\n\n<h3 dir=\"ltr\"><u>Job Object endpoints</u></h3>\n\n<p dir=\"ltr\">User will provide technical and economic data and upload one or more photos. The data will be stored to DropBox and processed by SolarAgs backend. Storing to dropbox will be transparent to the user. The user will not be able to learn or realize that dropbox was used.</p>\n\n<p dir=\"ltr\">We need a CRUD operations to create, update, retrieve, and delete a Job (represents House Data) Objects.</p>\n\n<p dir=\"ltr\">Here a sequence diagram of the workflow of a Job :</p>\n\n<p dir=\"ltr\"><a href=\"https://drive.google.com/open?id=0B8huYiP6g3MLYUZweUp6STFYeUU&amp;authuser=0\">https://drive.google.com/open?id=0B8huYiP6g3MLYUZweUp6STFYeUU&amp;authuser=0</a></p>\n\n<p dir=\"ltr\">Provided in challenge forums a wireframe with basic explanation about the flow (PRD - SolarAgs v0.01.docx) showing the data we need to collect. Refer to it to get better understanding of what we are building.</p>\n\n<p dir=\"ltr\">Notes about the endpoints :</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Set Job :</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Signature &lsquo;POST /Job/{id}?&rsquo;</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">{id} is optional</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">The endpoint create or update an existing Job.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">It accepts input as &quot;multipart/form-data&quot; as this API accepts images data at the same time as set of key/value pairs (represents the data to be stored and sent to Dropbox for further processing), refer to (job-request.json file for more details about data we send to Dropbox), attributes are :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">First Name</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Last Name</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Age</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Address</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Street Address</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">City</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">State</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Postal Code</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Mail Stop</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Country</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Phone Number - array of type/number pairs :</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Type</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Number</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Gender</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Login type = {Facebook, Guest, Local Account, Google (future feature)}</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Email</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Longitude</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Latitude</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Annual Energy Payment (in $)</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Monthly Energy Payment (in $)</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Date</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Time</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Orientation</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">State</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Cardinal Direction</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Door width (in inch)</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">The images data are required.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Proper validation for input parameters must be added.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Associate a &lsquo;status&rsquo; field with the Job record, it can be one of the following :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Submitted : indicates the record are submitted to SolarAgs backend</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Processed : indicates the record returned from SolarAgs backend</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Completed : indicates the record processed and user completed the process of selecting the Design and Confirmed it.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">The endpoint will run logic depending on the status of the record :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">If record is new perform the following :</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Create new Job record in database with status &lsquo;Draft&rsquo;.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Create new folder under &lsquo;Inbox&rsquo; dropbox folder with name &ldquo;Job-{id}&rdquo; where {id} is the Job record id in previous step.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Store uploaded images in the &ldquo;Job-{id} folder.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Store submitted information in &lsquo;job-request.json file (refer to sample file provided in challenge forums).</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Update Job record status to &lsquo;Submitted&rsquo;.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">For existing Job if status is &lsquo;Submitted&rsquo; then return error with message that record is being processed and cannot be updated.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">For existing Job if status is &lsquo;Processed&rsquo; then it is expected user will do design review and verify the selection,</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">The passed in parameter will be the selected result entry, the &lsquo;selected_result&rsquo; will store reference to selected design.</p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Set Job status to &lsquo;completed&rsquo;.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">If record status is &lsquo;Completed&rsquo; then return error with message that record completed and no further update can be done.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">For existing jobs, only user associated with the job can update it.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">On successful create/update, the Job object should be returned as json object in the response with status code = 200.</p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Retrieve Job :</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Signature &lsquo;GET /Job/{id}&rsquo;</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">{id} represents the Job primary identifier</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">It returns entity associated with the passed user access token.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">It returns the object if found. Otherwise, returns 404 error with friendly message.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">On successful execution,the Job object should be returned as json object in the response.</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">The json object will contain the job-response data, the images should be web accessible URLs.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Retrieve All Job :</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Signature &lsquo;GET /Jobs&rsquo;</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">It returns entities associated with the passed user access token.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">On successful execution, It returns array of Job objects in json format in the response. Empty array if no result found.</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Each object in the array should contain the job-response data and result images.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Delete Job</p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Signature &lsquo;Delete /Job/{id}</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Verify the object exists. If not, return 404 error code with proper message.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">It should validate the job related to the passed user access token, otherwise, it should deny the action.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Delete the record from database.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Delete the Dropbox Job-{id} folder from dropbox (Inbox and Outbox)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">On successful submission, returns &lsquo;Result : Success&rsquo; json in the response.</p>\n\t\t</li>\n\t</ol>\n\t</li>\n</ol>\n\n<h3 dir=\"ltr\"><u>SolarAgs Status Job Scheduler</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">We need to keep - periodically - checking the jobs in the database with a status of submitted. We can build a Job Scheduler or may be easier to use &lsquo;SetInterval&rsquo; and make the interval time configurable with default value to be &lsquo;5&rsquo; minutes.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The results of the backend processing will be placed under &ldquo;Job-{id}&rdquo; in &ldquo;Outbox&rdquo; folder in Dropbox. &nbsp;</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">When result is found update Job record :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">If result is &lsquo;success&rsquo;, then set status to &lsquo;Processed&rsquo;.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Otherwise, set status to &lsquo;Failed&rsquo; and store the reason in &lsquo;message&rsquo; field.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p dir=\"ltr\">Note that an optimal solution would be to fire the &lsquo;setInterval&rsquo; or job scheduler only when at least one Job record is submitted.</p>\n\n<h3 dir=\"ltr\"><u>Objects Definition</u></h3>\n\n<p dir=\"ltr\">We have two objects to maintain in database :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">User record</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">ID (Primary)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">api_access_token (required)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">facebook_auth (optional)</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">access_token (required)</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">refresh_token (required)</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">email (optional)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">first_name (optional)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">last_name (optional)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">type (required) : &lsquo;facebook&rsquo;, &lsquo;guest&rsquo;</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Job record</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">ID (Primary)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">user_id : reference User#ID</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">selected_design (nullable)</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Hold the selected design id (corresponds to designNum of selected design in the job-response.json).</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">status (required) : &lsquo;Draft&rsquo;, &lsquo;Submitted&rsquo;, &lsquo;Processed&rsquo;, &lsquo;Completed&rsquo;, &lsquo;Failed&rsquo;</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">message (optional) : stores the fail reason.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p dir=\"ltr\">You are welcome to improve the model structure.</p>\n\n<h3 dir=\"ltr\"><u>Dropbox Configuration and Folder Structure</u></h3>\n\n<p dir=\"ltr\">Dropbox credentials should be stored in configuration, configuration will read it from environment variables.</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">We are providing the Dropbox credentials in challenge forums, you will use it for testing.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">We are also providing a sample image you can use for testing.</p>\n\t</li>\n</ol>\n\n<p dir=\"ltr\">The following two folders will exist in the Dropbox folder, request and response should follow same exact structure :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Inbox (for storing submitting jobs, we write to this folder)</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">job-{id}</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">job-request.json (json file)</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">img01.jpg</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Outbox (for storing jobs result, we will only read from this folder)</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">job-{id}</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">job-response.json (json file)</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">design01.jpg</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">design02.jpg</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p dir=\"ltr\">Provided in challenge forums sample for job-request.json and job-response.json.</p>\n\n<h3 dir=\"ltr\"><u>PostMan API File</u></h3>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Create postman json file listing all calls and sample data.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Provide description for endpoints (recent postman version support endpoint descriptions)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Get Started with Postman :&nbsp;<a href=\"http://www.getpostman.com/\">http://www.getpostman.com/</a></p>\n\t</li>\n</ul>\n\n<h3 dir=\"ltr\"><u>Hosting</u></h3>\n\n<p dir=\"ltr\">The target hosting platform is Amazon EC2 AWS. OS is Latest Ubuntu LTS.</p>\n\n<h3 dir=\"ltr\"><u>Documentation</u></h3>\n\n<p dir=\"ltr\">Provide a detailed README documentation for how to setup and configure the application locally and on aws.</p>\n\n<h3 dir=\"ltr\"><u>Configurations</u></h3>\n\n<p dir=\"ltr\">You are expected to use environment variables to store sensitive information and environment-specific configurations.&nbsp; &nbsp;&nbsp;</p>\n\n<h2 dir=\"ltr\">Folder Structure and Configuration</h2>\n\n<p dir=\"ltr\">Follow this folder structure :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">config/&nbsp;&nbsp;&nbsp; &nbsp;</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">config.js&nbsp;&nbsp; &nbsp;</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">app.js</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">controllers/</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">models/</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">services/</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">helpers/</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">README.md</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">env-sample (don&#39;t include .env in your submission)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">.. other files if needed</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\">For configuration, we expect routes and other sensitive config will be configured in config/config.js, we prefer if you use<a href=\"https://github.com/lorenwest/node-config\">&nbsp;node-config</a>&nbsp;module for that. but We will leave it up to you to use the proper approach.</p>\n",
   "digitalRunPoints": 720,
   "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30049016",
-  "event": {
-    "id": 3442,
-    "description": "2015 topcoder Open",
-    "shortDescription": "tco15"
-  },
   "finalFixEndDate": "2015-03-31T15:48:00.000Z",
   "finalSubmissionGuidelines": "<h1 dir=\"ltr\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:trebuchet ms; font-size:21px\">Deliverable</span></h1>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent\">All source code files and scripts that address the above requirements.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent\">Test samples</span></p>\n\t</li>\n\t<li dir=\"ltr\"><span style=\"background-color:transparent\">Detailed readme file as outlined above.</span></li>\n</ul>\n",
   "forumId": 28242,
@@ -28,6 +23,49 @@
   "numberOfCheckpointsPrizes": 0,
   "numberOfRegistrants": 28,
   "numberOfSubmissions": 3,
+  "postingDate": "2015-03-21T19:26:00.000Z",
+  "projectId": 8537,
+  "registrationEndDate": "2015-03-23T19:26:00.000Z",
+  "reliabilityBonus": 320,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-03-26T19:01:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 97.47,
+      "finalScore": 98.24,
+      "points": 468,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-03-23T16:05:00.000Z",
+      "_id": "58123e63e0be5f30ae561496"
+    },
+    {
+      "handle": "stevenfrog",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 88.2,
+      "finalScore": 88.93,
+      "points": 180,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-03-26T03:45:00.000Z",
+      "_id": "58123e63e0be5f30ae561495"
+    },
+    {
+      "handle": "peakpado",
+      "placement": 3,
+      "screeningScore": 100,
+      "initialScore": 74.53,
+      "finalScore": 80.04,
+      "points": 72,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-03-26T09:03:00.000Z",
+      "_id": "58123e63e0be5f30ae561494"
+    }
+  ],
   "phases": [
     {
       "type": "Specification Submission",
@@ -156,15 +194,6 @@
       "_id": "58123e63e0be5f30ae561486"
     }
   ],
-  "platforms": [
-    "Other"
-  ],
-  "postingDate": "2015-03-21T19:26:00.000Z",
-  "prize": [
-    1600,
-    800
-  ],
-  "projectId": 8537,
   "registrants": [
     {
       "handle": "AleaActaEst",
@@ -419,46 +448,14 @@
       "_id": "58123e63e0be5f30ae56146a"
     }
   ],
-  "registrationEndDate": "2015-03-23T19:26:00.000Z",
-  "reliabilityBonus": 320,
-  "reviewScorecardId": 30001470,
-  "reviewType": "COMMUNITY",
-  "screeningScorecardId": 30000412,
-  "submissionEndDate": "2015-03-26T19:01:00.000Z",
-  "submissions": [
-    {
-      "handle": "Sky_",
-      "placement": 1,
-      "screeningScore": 100,
-      "initialScore": 97.47,
-      "finalScore": 98.24,
-      "points": 468,
-      "submissionStatus": "Active",
-      "submissionDate": "2015-03-23T16:05:00.000Z",
-      "_id": "58123e63e0be5f30ae561496"
-    },
-    {
-      "handle": "stevenfrog",
-      "placement": 2,
-      "screeningScore": 100,
-      "initialScore": 88.2,
-      "finalScore": 88.93,
-      "points": 180,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2015-03-26T03:45:00.000Z",
-      "_id": "58123e63e0be5f30ae561495"
-    },
-    {
-      "handle": "peakpado",
-      "placement": 3,
-      "screeningScore": 100,
-      "initialScore": 74.53,
-      "finalScore": 80.04,
-      "points": 72,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2015-03-26T09:03:00.000Z",
-      "_id": "58123e63e0be5f30ae561494"
-    }
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "prize": [
+    1600,
+    800
   ],
   "technology": [
     "API",
@@ -467,5 +464,8 @@
     "MongoDB",
     "Node.js",
     "REST"
+  ],
+  "platforms": [
+    "Other"
   ]
 }

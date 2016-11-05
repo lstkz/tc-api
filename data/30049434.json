@@ -1,0 +1,404 @@
+{
+  "_id": 30049434,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T11:00:15.502Z",
+  "appealsEndDate": "2015-03-31T11:40:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "SunShot - Clearly Energy - Data Rollup and OFX File Creation Ruby on Rails [Bonus Payments]",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<div style=\"font-family: Arial, Helvetica, Verdana, sans-serif; font-size: 12px; line-height: 16.7999992370605px; border: 1px solid rgb(204, 204, 204); padding: 5px 10px; background: rgb(238, 238, 238);\">\n<h2><span style=\"color:rgb(255, 0, 0)\">We are giving out bonus payments to every participant that submits and has a score +80. Thus, if you submit and you don&#39;t win but your score is +80, we will still pay you a bonus for your efforts.</span></h2>\n</div>\n\n<h1 dir=\"ltr\">Challenge Overview</h1>\n\n<p dir=\"ltr\">The <a href=\"http://www.ofx.net/\">Open Financial Exchange</a> (OFX) data standard provides a secure way for banks and other financial institutions to exchange financial information.</p>\n\n<p dir=\"ltr\">The goal of this challenge is to develop a Ruby API to parse an incoming OFX request, use the data provided to authenticate with the app and respond in OFX format with the requested data.</p>\n\n<h1 dir=\"ltr\">Challenge Requirements</h1>\n\n<p dir=\"ltr\">You are building a<a href=\"http://rubyonrails.org/\"> Ruby on Rails</a> application with <a href=\"http://www.postgresql.org/\">Postgres</a> as the database.</p>\n\n<p dir=\"ltr\">The application is expected to expose a single API endpoint with following logic :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Accept OFX formatted post request body (formatted XML)</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Parse the OFX request body.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Use username and password information in OFX request to authenticate user</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Retrieve relevant data from database</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Format and return the OFX formatted response.</p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\">Following are more details.</p>\n\n<h4 dir=\"ltr\"><strong><u>Ruby Module/Class</u></strong></h4>\n\n<p dir=\"ltr\">Write an&nbsp;OFX class that handles the api endpoint call, parses the request, authenticates the user, and generate the response</p>\n\n<h4 dir=\"ltr\"><strong><u>API Endpoint</u></strong></h4>\n\n<p dir=\"ltr\">You are building a single endpoint api, here is the requirement for this endpoint :</p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Path : POST /ofx</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Body :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">An OFX formatted post request (formatted XML)</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Note that date format is YYYYMMDDHHMMSS.XXX [gmt offset[:tz name]]. Other acceptable formats are on <a href=\"http://www.ofx.net/DownloadPage/Files/OFX2.1.1.zip\">page 88 of the OFX document</a>.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">The content type will be application/x-ofx</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Refer to sample ofx-request.xml file (attached in challenge forums).</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h4 dir=\"ltr\"><strong><u>Parsing OFX Request</u></strong></h4>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The parsing logic can be taken from <a href=\"https://github.com/annacruz/ofx\">ofx</a> ruby gem :</p>\n\n\t<ul>\n\t\t<li>\n\t\t<p dir=\"ltr\">The gem is useful for parsing incoming requests.</p>\n\t\t</li>\n\t\t<li>\n\t\t<p dir=\"ltr\">You should not reference the gem here, instead reuse the code and modify it to suit the needs for parsing in this challenge.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">You are encouraged to search for other gems, write from scratch, or improve the above gem&#39;s code.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Refer to sample ofx-request.xml file (attached in challenge forums).</p>\n\t</li>\n</ul>\n\n<h4 dir=\"ltr\"><u><strong>User Authentication</strong></u></h4>\n\n<h4 dir=\"ltr\">All requests should be authenticated using Omniauth authentication, note the following :</h4>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<h4 dir=\"ltr\">Use <a href=\"https://github.com/intridea/omniauth-identity\">Omniauth identity</a> provider for authentication</h4>\n\t</li>\n\t<li dir=\"ltr\">\n\t<h4 dir=\"ltr\">Identity model fields :</h4>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<h4 dir=\"ltr\">ID (reference User model)</h4>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<h4 dir=\"ltr\">Email (corresponds to USERID in ofx request)</h4>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<h4 dir=\"ltr\">Password (corresponds to USERPASS in ofx request)</h4>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The user credentials will be extracted from OFX request (Refer to Parsing section above).</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">SIGNONMSGSRQV1 child elements (USERID, USERPASS) represents the (user email, password), respectively.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Successful authentication will set &ldquo;user_id&rdquo; in session to be passed to next steps in the logic/flow.</p>\n\t</li>\n</ul>\n\n<h4 dir=\"ltr\">Data Table and Retrieval</h4>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">You will use Postgres database</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Data table fields :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">user_id</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">date</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">provider</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">provider_account</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">value</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">memo</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The Postgres connection information should be configured in the application.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Sample data is provided in challenge forums (data-table.pdf).</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Retrieve data from database :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">user_id retrieved from authentication will be used here to retrieve data related to user.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">In parsed OFX request, we will take DTSTART and DTEND parameters to filter the data. These two are optional :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">The filtering will be against &lsquo;date&rsquo; column.</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">DTSTART : If absent it means requesting all history (up to DTEND, if present).</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">DTEND : if absent it means requesting all history (starting from DTSTART, if present)</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<h4 dir=\"ltr\"><strong><u>Generating OFX Response</u></strong></h4>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">In the OFX class, add functionality to generate response.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The OFX file generation can be taken from <a href=\"https://github.com/baconpat/ofx_for_ruby\">ofx_for_ruby</a> gem :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">The gem should not be referenced/used by the application because it is no longer maintained and the gem does not incorporate the latest OFX specification 2.1.1, but this gem is useful to generate OFX files, so we will reuse the code and modify it in our application to support latest OFX specification</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">The following files are useful to this challenge :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Top level routines to read OFX files (from_http_response_body) and create OFX files (to_http_post_body): lib/ofx/1.0.2/serializer.rb</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Parse and create file header: lib/ofx/1.0.2/header.rb</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Note: &nbsp;see <a href=\"https://github.com/annacruz/ofx/blob/master/lib/ofx/parser.rb\">https://github.com/annacruz/ofx/blob/master/lib/ofx/parser.rb</a> for parsing header with ofx 211 format</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Create OFX xml wrapper: lib/ofx/1.0.2/document.rb</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Uses lib/ofx/1.0.2/message_set.rb</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Create wrapper for bank transactions: lib/ofx/1.0.2/banking_message_set.rb</p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\">Individual transaction statements: lib/ofx/1.0.2/statements.rb</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">Status codes: lib/1.0.2/status.rb</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">You are encouraged to search for other gems, write from scratch, or improve the above gem&#39;s code.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Return OFX response to client.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Refer to forums for sample ofx-response.xml file (attached in challenge forums).</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Please note the following transaction attributes in the response:</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">All transactions should have type</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">&lt;ACCTTYPE&gt;CHECKING</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Echo back the &lt;FI&gt; tag if it is provided in the request message</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Echo back &lt;TRNUID&gt; tag if it is provided in the request message</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h4 dir=\"ltr\"><strong><u>OFX Version and Request/Response Format</u></strong></h4>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">We are using OFX version 2.1.1</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">The request/response will be in XML format.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><a href=\"http://www.ofx.net/DownloadPage/Files/OFX2.1.1.zip\">Download this document for OFX specs</a> for more details about OFX, request and response models details, schemas .. etc.</p>\n\t</li>\n</ul>\n\n<h4><strong><u>Sample OFX Request and Response, and Table Data</u></strong></h4>\n\n<p><span style=\"line-height:1.6\">���Provided in challenge forums: a document containing sample OFX request and response. and Sample table data.</span></p>\n\n<p>Note that the OFX samples are in SGML format but the supported format in your solution should be XML not SGML.</p>\n\n<h2 dir=\"ltr\">Unit Tests</h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">All of your code should be test covered (<a href=\"http://rspec.info/\">RSpec</a> preferred). You must cover at least +90% of the code.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">For failed authentication you need to verify the app returns the following signon error codes. See page 623 of OFX documentation for complete list of status codes, but only worry about generating codes for the following types of errors:</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">2001 (Invalid account),</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">15500 (Signon invalid),</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">2027 (Invalid date range)</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Test cases that must be addressed :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Use data in Appendix A to send request Case 1, pass authentication &ndash; test for return status code 0</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Use data in Appendix A to send request Case 1, respond with all data (7 transactions)</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Use data in Appendix A to send request Case 2, respond with data for selected dates (5 transactions)</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\">Documentation Provided</h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Official OFX 2.1.1 standard documentation: <a href=\"http://www.ofx.net/DownloadPage/Downloads.aspx\">http://www.ofx.net/DownloadPage/Downloads.aspx</a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Rails omniauth authentication : <a href=\"https://github.com/intridea/omniauth\">https://github.com/intridea/omniauth</a></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Oauth 2.0 authorization framework: <a href=\"http://oauth.net/\">http://oauth.net/</a> gem &quot;rack-oauth2&quot;</p>\n\t</li>\n</ul>\n\n<h1 dir=\"ltr\">Documentation</h1>\n\n<h4 dir=\"ltr\">Because other programmers will be working with your code, and incorporating it into their projects, all functions must be documented in detail in the code (<a href=\"http://tomdoc.org/\">TomDoc</a> preferred - In order to generate HTML properly you will need to use<a href=\"https://github.com/rubyworks/yard-tomdoc\"> Yard TomDoc</a>).</h4>\n\n<h1 dir=\"ltr\">Coding Standard</h1>\n\n<h4 dir=\"ltr\">Follows coding standards listed here:<a href=\"https://github.com/copycopter/style-guide\"> https://github.com/copycopter/style-guide</a></h4>\n\n<h1 dir=\"ltr\">Readme</h1>\n\n<h4 dir=\"ltr\">Provide a detailed readme file using Markdown language with following information :&nbsp;&nbsp; &nbsp;</h4>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<h4 dir=\"ltr\">Overview</h4>\n\t</li>\n\t<li dir=\"ltr\">\n\t<h4 dir=\"ltr\">Setup Prerequisites</h4>\n\t</li>\n\t<li dir=\"ltr\">\n\t<h4 dir=\"ltr\">How to install</h4>\n\t</li>\n\t<li dir=\"ltr\">\n\t<h4 dir=\"ltr\">Usage Example</h4>\n\t</li>\n\t<li dir=\"ltr\">\n\t<h4 dir=\"ltr\">Reference to API Documentation</h4>\n\t</li>\n\t<li dir=\"ltr\">\n\t<h4 dir=\"ltr\">Reference to the Ruby Gem Documentation&nbsp;&nbsp; &nbsp;</h4>\n\t</li>\n\t<li dir=\"ltr\">\n\t<h4 dir=\"ltr\">Any details about any limitations of your solution.</h4>\n\t</li>\n</ul>\n\n<p>Please note, we&#39;re judging this competition not just on the code, but also on the quality of the documentation, test coverage, and ease of use</p>\n",
+  "digitalRunPoints": 810,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30049434",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2015-03-31T14:37:00.000Z",
+  "finalSubmissionGuidelines": "<h1 dir=\"ltr\">Deliverable</h1>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">All source code files and scripts that address the challenge requirement.</p>\n\t</li>\n\t<li dir=\"ltr\">Detailed readme file as clarified above.</li>\n</ol>\n",
+  "forumId": 28051,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=28051",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 24,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-22T12:24:00.000Z",
+      "actualStartTime": "2015-03-22T12:24:00.000Z",
+      "scheduledEndTime": "2015-03-22T12:26:00.000Z",
+      "actualendTime": "2015-03-22T12:26:00.000Z",
+      "_id": "58132fbf550dfb3b52b8a99b"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-22T12:26:00.000Z",
+      "actualStartTime": "2015-03-22T12:26:00.000Z",
+      "scheduledEndTime": "2015-03-22T13:10:00.000Z",
+      "actualendTime": "2015-03-22T13:10:00.000Z",
+      "_id": "58132fbf550dfb3b52b8a99a"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-22T19:00:00.000Z",
+      "actualStartTime": "2015-03-22T19:00:00.000Z",
+      "scheduledEndTime": "2015-03-25T19:01:00.000Z",
+      "actualendTime": "2015-03-25T19:01:00.000Z",
+      "_id": "58132fbf550dfb3b52b8a999"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-22T19:05:00.000Z",
+      "actualStartTime": "2015-03-22T19:05:00.000Z",
+      "scheduledEndTime": "2015-03-27T19:07:00.000Z",
+      "actualendTime": "2015-03-27T19:07:00.000Z",
+      "_id": "58132fbf550dfb3b52b8a998"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-27T19:07:00.000Z",
+      "actualStartTime": "2015-03-27T19:07:00.000Z",
+      "scheduledEndTime": "2015-03-28T07:00:00.000Z",
+      "actualendTime": "2015-03-28T07:00:00.000Z",
+      "_id": "58132fbf550dfb3b52b8a997"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-28T07:00:00.000Z",
+      "actualStartTime": "2015-03-28T07:00:00.000Z",
+      "scheduledEndTime": "2015-03-30T07:01:00.000Z",
+      "actualendTime": "2015-03-30T07:01:00.000Z",
+      "_id": "58132fbf550dfb3b52b8a996"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-30T07:01:00.000Z",
+      "actualStartTime": "2015-03-30T07:01:00.000Z",
+      "scheduledEndTime": "2015-03-31T07:02:00.000Z",
+      "actualendTime": "2015-03-31T07:02:00.000Z",
+      "_id": "58132fbf550dfb3b52b8a995"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-31T07:02:00.000Z",
+      "actualStartTime": "2015-03-31T07:02:00.000Z",
+      "scheduledEndTime": "2015-03-31T11:40:00.000Z",
+      "actualendTime": "2015-03-31T11:40:00.000Z",
+      "_id": "58132fbf550dfb3b52b8a994"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-31T11:40:00.000Z",
+      "actualStartTime": "2015-03-31T11:40:00.000Z",
+      "scheduledEndTime": "2015-03-31T12:28:00.000Z",
+      "actualendTime": "2015-03-31T12:28:00.000Z",
+      "_id": "58132fbf550dfb3b52b8a993"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-31T12:29:00.000Z",
+      "actualStartTime": "2015-03-31T12:29:00.000Z",
+      "scheduledEndTime": "2015-03-31T14:37:00.000Z",
+      "actualendTime": "2015-03-31T14:37:00.000Z",
+      "_id": "58132fbf550dfb3b52b8a992"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-31T14:38:00.000Z",
+      "actualStartTime": "2015-03-31T14:38:00.000Z",
+      "scheduledEndTime": "2015-04-01T00:34:00.000Z",
+      "actualendTime": "2015-04-01T00:34:00.000Z",
+      "_id": "58132fbf550dfb3b52b8a991"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-01T00:34:00.000Z",
+      "actualStartTime": "2015-04-01T00:34:00.000Z",
+      "scheduledEndTime": "2015-04-06T00:35:00.000Z",
+      "actualendTime": "2015-04-06T00:35:00.000Z",
+      "_id": "58132fbf550dfb3b52b8a990"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-03-22T19:00:00.000Z",
+  "prize": [
+    1800,
+    900
+  ],
+  "projectId": 8534,
+  "registrants": [
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "66%",
+      "registrationDate": "2015-03-22T19:18:00.000Z",
+      "submissionDate": "2015-03-27T18:54:00.000Z",
+      "rating": "974",
+      "colorStyle": "color: #00A900",
+      "_id": "58132fbf550dfb3b52b8a98f"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "6%",
+      "registrationDate": "2015-03-23T00:13:00.000Z",
+      "submissionDate": null,
+      "rating": "1387",
+      "colorStyle": "color: #6666FF",
+      "_id": "58132fbf550dfb3b52b8a98e"
+    },
+    {
+      "handle": "albertwang",
+      "reliability": "73%",
+      "registrationDate": "2015-03-23T01:49:00.000Z",
+      "submissionDate": "2015-03-27T18:37:00.000Z",
+      "rating": "1649",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58132fbf550dfb3b52b8a98d"
+    },
+    {
+      "handle": "halbcoder",
+      "reliability": "20%",
+      "registrationDate": "2015-03-23T04:35:00.000Z",
+      "submissionDate": null,
+      "rating": "726",
+      "colorStyle": "color: #999999",
+      "_id": "58132fbf550dfb3b52b8a98c"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2015-03-23T05:59:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58132fbf550dfb3b52b8a98b"
+    },
+    {
+      "handle": "cmax",
+      "reliability": "0%",
+      "registrationDate": "2015-03-23T06:19:00.000Z",
+      "submissionDate": null,
+      "rating": "792",
+      "colorStyle": "color: #999999",
+      "_id": "58132fbf550dfb3b52b8a98a"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "20%",
+      "registrationDate": "2015-03-23T07:31:00.000Z",
+      "submissionDate": null,
+      "rating": "1155",
+      "colorStyle": "color: #00A900",
+      "_id": "58132fbf550dfb3b52b8a989"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-23T08:59:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58132fbf550dfb3b52b8a988"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-23T10:42:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58132fbf550dfb3b52b8a987"
+    },
+    {
+      "handle": "ohyan07",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-23T14:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbf550dfb3b52b8a986"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-23T16:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbf550dfb3b52b8a985"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2015-03-23T18:28:00.000Z",
+      "submissionDate": null,
+      "rating": "1019",
+      "colorStyle": "color: #00A900",
+      "_id": "58132fbf550dfb3b52b8a984"
+    },
+    {
+      "handle": "ValTrof",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-24T01:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbf550dfb3b52b8a983"
+    },
+    {
+      "handle": "phaniram",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-24T05:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbf550dfb3b52b8a982"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-24T08:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbf550dfb3b52b8a981"
+    },
+    {
+      "handle": "bukk530",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-24T08:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbf550dfb3b52b8a980"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "20%",
+      "registrationDate": "2015-03-24T09:05:00.000Z",
+      "submissionDate": null,
+      "rating": "1739",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58132fbf550dfb3b52b8a97f"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2015-03-24T13:40:00.000Z",
+      "submissionDate": null,
+      "rating": "672",
+      "colorStyle": "color: #999999",
+      "_id": "58132fbf550dfb3b52b8a97e"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2015-03-24T16:43:00.000Z",
+      "submissionDate": null,
+      "rating": "267",
+      "colorStyle": "color: #999999",
+      "_id": "58132fbf550dfb3b52b8a97d"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-25T00:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbf550dfb3b52b8a97c"
+    },
+    {
+      "handle": "rama.vundela",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-25T05:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbf550dfb3b52b8a97b"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-25T13:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbf550dfb3b52b8a97a"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-25T16:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbf550dfb3b52b8a979"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-25T18:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fbf550dfb3b52b8a978"
+    }
+  ],
+  "registrationEndDate": "2015-03-25T19:01:00.000Z",
+  "reliabilityBonus": 360,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-03-27T19:07:00.000Z",
+  "submissions": [
+    {
+      "handle": "albertwang",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 96.84,
+      "finalScore": 98.69,
+      "points": 567,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-03-27T18:37:00.000Z",
+      "_id": "58132fbf550dfb3b52b8a99d"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 89.68,
+      "finalScore": 93.33,
+      "points": 243,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-03-27T18:54:00.000Z",
+      "_id": "58132fbf550dfb3b52b8a99c"
+    }
+  ],
+  "technology": [
+    "PostgreSQL",
+    "Ruby",
+    "Ruby on Rails",
+    "XML"
+  ]
+}

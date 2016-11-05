@@ -1,0 +1,349 @@
+{
+  "_id": 30053444,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:59:55.225Z",
+  "appealsEndDate": "2016-05-01T12:35:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Lets App - iOS AWS Lambda Integration Part 3 F2F Challenge",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2016-05-24T16:31:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -13544854,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p>Let&#39;s App is a mobile social network app to help users connect with friends and plan on site activities.</p>\n\n<p>The goal of this challenge is to integrate the provided iOS XCode project with backend (Amazon Mobile Hub) to implement the Profile Feed and Followers/Followings screens.</p>\n\n<h1>Challenge Requirements</h1>\n\n<h3><u>Invision App</u></h3>\n\n<p>To view current screens we prototyped and currently integrating with backend you can check here</p>\n\n<p><a href=\"https://invis.io/765X7JXVY#/115618513_Profile\">https://invis.io/765X7JXVY#/115618513_Profile</a></p>\n\n<p>The screens we are handling in this challenge are profile screen, followers, and followings.</p>\n\n<h3><u>Amazon Mobile Hub iOS SDK</u></h3>\n\n<p>Amazon Mobile Hub SDK already integrated with the current XCode project, we have the signup and signin flows integrated.</p>\n\n<p>If you are facing a problem with current SDK or when making calls to AWS Lambda function, please post in forums, it might be AWS configuration issue.</p>\n\n<h3><u>Features To Integrate</u></h3>\n\n<p>The scope will integrate following features :</p>\n\n<p>- Review Pending Follower Requests.</p>\n\n<p>- View Followers.</p>\n\n<p>- View Followings</p>\n\n<p>- View Profile Feed for owner and other users.</p>\n\n<ol>\n</ol>\n\n<h3><u>Integration Requirements</u></h3>\n\n<p><u><strong>Pending Followers Requests</strong></u></p>\n\n<p>We have private profile feature in the app, and if enabled it requires followers to get approval before they can view users profile.</p>\n\n<p>We have a section in user profile screen to show pending approval requests.</p>\n\n<p>To get list of pending followers use <em>User_GetPendingFollowers</em> function. It does not require any information in body payload.</p>\n\n<p>Response will be json object with two fields :</p>\n\n<p>- Users (array of users, each contain id, username, name, and photoId)</p>\n\n<p>- Offset (used to pull next pending requests, if not set then no more pending requests)</p>\n\n<ul>\n</ul>\n\n<p>If user click (x) we call <em>User_ManageFriendship</em> with body contains two information :</p>\n\n<p>- friendId : the friend user#id</p>\n\n<p>- Operation : reject</p>\n\n<ul>\n</ul>\n\n<p>If user click (���) we call <em>User_ManageFriendship</em> with body contains two information :</p>\n\n<p>- friendId : the friend user#id</p>\n\n<p>- Operation : approve</p>\n\n<ul>\n</ul>\n\n<p>The record should be removed then, and replaced with new one if there are more pending requests.</p>\n\n<p><u><strong>User Profile Feed</strong></u></p>\n\n<p>When opening user profile there is a feed below the pending follower requests box.</p>\n\n<p>To get the feed simply call <em>Activity_GetUserProfileFeed</em>, if the user is not owner of profile you need to pass userId in the payload.</p>\n\n<p>Response will be :</p>\n\n<p>- Activities : array of activities to show in the feed.</p>\n\n<p>- Offset : to be used for progressive scrolling.</p>\n\n<ul>\n</ul>\n\n<p>The feed will display public and shared activities by the user, same as in My World Feed items.</p>\n\n<p>User can like and RSVP to activity from feed, user can view stats, user can navigate to view user profiles, invitees joining, and to comments section to comment on activity.</p>\n\n<p><u><strong>Followers Screen</strong></u></p>\n\n<p>This screen lists user followers, if the viewer is the profile owner, then we show pending followers requests box at the top.</p>\n\n<p>Same as in Profile screen, the pending requests will be pulled using <em>User_GetPendingFollowers</em>.</p>\n\n<p>To get followers (approved/active) list, use <em>User_GetFollowers</em>. It will return json of the following :</p>\n\n<p>- Users : array of users</p>\n\n<p>- Offset : to pull next set of users</p>\n\n<ul>\n\t<li>\n\t<p>- the status set here represents the user follow status with that user. So if status=active show &ldquo;following&rdquo;, if &ldquo;pending&rdquo; then show &ldquo;pending&rdquo;, if not set, then show &ldquo;follow+&rdquo; button.</p>\n\n\t<ul>\n\t</ul>\n\t</li>\n</ul>\n\n<p>When clicking &ldquo;Follow+&rdquo; button it will call <em>User_ManageFriendship</em> with friendId is the user to follow, and operation : follow :</p>\n\n<p>- If response is pending it means the friend enabled approve followers option. So show &lsquo;pending&rsquo; for that, otherwise, show &lsquo;following&rsquo;.</p>\n\n<ul>\n</ul>\n\n<p><u><strong>Followings Screen</strong></u></p>\n\n<p>This screen list users the profile owner is following.</p>\n\n<p>To get followings list, use <em>User_GetFollowings</em>. It will return json of the following :</p>\n\n<p>- Users : array of users</p>\n\n<p>- Offset : to pull next set of users</p>\n\n<ul>\n\t<li>\n\t<p>- the status set here represents the user follow status with that user. So if status=active show &ldquo;following&rdquo;, if &ldquo;pending&rdquo; then show &ldquo;pending&rdquo;, if not set, then show &ldquo;follow+&rdquo; button.</p>\n\n\t<ul>\n\t</ul>\n\t</li>\n</ul>\n\n<p>When clicking &ldquo;Follow+&rdquo; button it will call <em>User_ManageFriendship</em> with friendId is the user to follow, and operation : follow :</p>\n\n<p>- If response is pending it means the friend enabled approve followers option. So show &lsquo;pending&rsquo; for that, otherwise, show &lsquo;following&rsquo;.=</p>\n\n<ul>\n</ul>\n\n<h3><u>General Note</u></h3>\n\n<p>Note that we think it is good approach that calls to backend should be async, user should not wait for a call to finish unless it is required to perform follow up interaction with the app, the data can be cached, so user can see it while call is done async (with ability to show popup error if something wrong happened).</p>\n\n<h3><u>Postman File</u></h3>\n\n<p>Attached in the challenge forums postman file that you can use in postman app to test the lambda functions, see sample calls and responses <a href=\"https://www.getpostman.com/\">https://www.getpostman.com/</a></p>\n\n<p>The URL you will use to test the calls is <a href=\"http://54.164.65.111:3500\">http://54.164.65.111:3500</a></p>\n\n<p>For FB and Google access tokens we create demo page to get them &nbsp;<a href=\"http://54.164.65.111:5000\">http://54.164.65.111:5000</a> (this is only needed when you test the backend via postman, you will use the FB/Google iOS SDK to get these tokens if user signup using these social networks)</p>\n\n<p>The function&#39;s name in postman is in format /User/{function_name}, the AWS lambda function format is User_{function_name} so when you invoke function make sure to follow the format User_{function_name}.</p>\n\n<h1>Deliverable</h1>\n\n<p>- Git patch file of the changes you made to the XCode project.</p>\n\n<p>- Deployment guide and verification document.</p>\n\n<ol>\n</ol>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30053444",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<p>.</p>\n",
+  "forumId": 32405,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=32405",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 22,
+  "numberOfSubmissions": 4,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2016-04-24T16:31:00.000Z",
+      "actualStartTime": "2016-04-24T16:31:00.000Z",
+      "scheduledEndTime": "2016-05-24T16:31:00.000Z",
+      "actualendTime": null,
+      "_id": "58132fab550dfb3b52b89fe9"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-24T19:33:00.000Z",
+      "actualStartTime": "2016-04-24T19:33:00.000Z",
+      "scheduledEndTime": "2016-04-25T08:08:00.000Z",
+      "actualendTime": "2016-04-25T08:08:00.000Z",
+      "_id": "58132fab550dfb3b52b89fe8"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2016-04-24T16:36:00.000Z",
+      "actualStartTime": "2016-04-24T16:36:00.000Z",
+      "scheduledEndTime": "2016-05-24T16:36:00.000Z",
+      "actualendTime": null,
+      "_id": "58132fab550dfb3b52b89fe7"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-25T09:18:00.000Z",
+      "actualStartTime": "2016-04-25T09:18:00.000Z",
+      "scheduledEndTime": "2016-04-27T10:48:00.000Z",
+      "actualendTime": "2016-04-27T10:48:00.000Z",
+      "_id": "58132fab550dfb3b52b89fe6"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-04-29T19:31:00.000Z",
+      "actualStartTime": "2016-04-29T19:31:00.000Z",
+      "scheduledEndTime": "2016-05-01T12:33:00.000Z",
+      "actualendTime": "2016-05-01T12:33:00.000Z",
+      "_id": "58132fab550dfb3b52b89fe5"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-05-01T12:33:00.000Z",
+      "actualStartTime": "2016-05-01T12:33:00.000Z",
+      "scheduledEndTime": "2016-05-01T12:35:00.000Z",
+      "actualendTime": "2016-05-01T12:35:00.000Z",
+      "_id": "58132fab550dfb3b52b89fe4"
+    }
+  ],
+  "platforms": [
+    "AWS",
+    "iOS"
+  ],
+  "postingDate": "2016-04-24T16:31:00.000Z",
+  "prize": [
+    300
+  ],
+  "projectId": 9372,
+  "registrants": [
+    {
+      "handle": "seriyvolk83",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-24T16:42:00.000Z",
+      "submissionDate": "2016-05-01T12:25:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fe3"
+    },
+    {
+      "handle": "pirosl_tc",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-24T17:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fe2"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-25T01:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fe1"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-25T02:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fe0"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-25T03:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fdf"
+    },
+    {
+      "handle": "techyvish",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-25T18:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fde"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-25T23:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fdd"
+    },
+    {
+      "handle": "lnk.anton",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-26T06:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fdc"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-26T13:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fdb"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-26T16:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fda"
+    },
+    {
+      "handle": "phonechen",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-26T18:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fd9"
+    },
+    {
+      "handle": "huiqin.my",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-27T07:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fd8"
+    },
+    {
+      "handle": "JinkProject",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-28T03:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fd7"
+    },
+    {
+      "handle": "IvanLing",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-28T04:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fd6"
+    },
+    {
+      "handle": "Roman.Filippov",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-28T06:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fd5"
+    },
+    {
+      "handle": "ghz.rai",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-28T07:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fd4"
+    },
+    {
+      "handle": "opcode503",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-28T11:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fd3"
+    },
+    {
+      "handle": "gfnation",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-28T15:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fd2"
+    },
+    {
+      "handle": "gaurav1987pal",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-29T04:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fd1"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-29T11:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fd0"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-29T14:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fcf"
+    },
+    {
+      "handle": "albet.januar",
+      "reliability": "n/a",
+      "registrationDate": "2016-04-30T04:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fab550dfb3b52b89fce"
+    }
+  ],
+  "registrationEndDate": "2016-05-24T16:31:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-05-24T16:36:00.000Z",
+  "submissions": [
+    {
+      "handle": "seriyvolk83",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-04-24T19:33:00.000Z",
+      "_id": "58132fab550dfb3b52b89fed"
+    },
+    {
+      "handle": "seriyvolk83",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-04-25T09:18:00.000Z",
+      "_id": "58132fab550dfb3b52b89fec"
+    },
+    {
+      "handle": "seriyvolk83",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-05-01T12:25:00.000Z",
+      "_id": "58132fab550dfb3b52b89feb"
+    },
+    {
+      "handle": "seriyvolk83",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-04-29T19:30:00.000Z",
+      "_id": "58132fab550dfb3b52b89fea"
+    }
+  ],
+  "technology": [
+    "iOS"
+  ]
+}

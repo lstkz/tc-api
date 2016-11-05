@@ -1,0 +1,423 @@
+{
+  "_id": 30048490,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:14:35.768Z",
+  "appealsEndDate": "2015-01-26T03:32:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "GMail API Search and Delete Tool Performance Improvement",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></h2>\n\n<p><span style=\"font-family:lucida grande,helvetica,arial,sans-serif\">The Gmail API Search and Delete Tool is an administrative tool that can search for and delete messages in a Google Apps user&rsquo;s Gmail account.&nbsp; This application will also be responsible for OU based authorization and logging of applications actions.</span></p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Competition Task Overview</span></h2>\n\n<p>The Gmail API Search and Delete (SAD) Tool has been developed but needs to be restructured for scalability. &nbsp;Currently the application will run if there are hundreds of users in a Google Apps Domain, but currently will fail if there are thousands. There are 2 main issues we have found that must be resolved.&nbsp;</p>\n\n<ol>\n\t<li>User List Creation Look Up Optimization</li>\n\t<li>Message Retrieval Converted to Task Queues</li>\n</ol>\n\n<p>If you notice others, feel free to address them as you see fit. Bonus points for other changes that you make to improve efficiency and call out in your guide documentation.</p>\n\n<p>It is essential that all existing functionality is maintained and optimised.</p>\n\n<p>Following information points to areas that our team have identified as problem areas and is not meant to be a step by step process for addressing all performance and scaling issues.&nbsp;</p>\n\n<h2>1. User List Creation Look Up Optimization&nbsp;</h2>\n\n<p>The user list is a provided CSV file but needs to be sanitized and each user needs to be verified to be within the authorized user&#39;s OU and sub-OUs. This is currently done but the way in which it has been coded is not the most efficient for more than 500 users.</p>\n\n<ul>\n\t<li>File: UserActionServiceImpl.java\n\t<ul>\n\t\t<li>Function: public List&lt;UserAction&gt; searchUserActions(String searchTerm, String userEmail)</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>The function above and possibly others takes the list of provided users loops through the list and gets each user independently to check their OU against the authorized user&#39;s OU and sub-OUs. A more efficient way would be to:</p>\n\n<ol>\n\t<li>Get user list by OUs (Authorized user&#39;s OU and sub-OUs)</li>\n\t<li>Use above mega list of users to compare with the provided CSV.</li>\n\t<li>In the case of the special &quot;catch-all&quot; use the generated list of users in step 1.</li>\n</ol>\n\n<h3>1.1 User List Creation Look Up Queue</h3>\n\n<p>Currently the searchUserActions function is called from the AJAX (script.js) as part of a set of nested calls. The AJAX call to &quot;/userActions&quot; is mapped in &nbsp;HomeController.java to searchUserActions, as described in the previous requirement. In order to avoid timeout issues within App Engine the AJAX call to &quot;/userActions&quot; should be making a call to help function that will enqueue a searchUserActions call.</p>\n\n<h3>1.2 Modify List Creation to Begin /userActions/id/execute</h3>\n\n<p>Currently once the userActions command has returned, another nested AJAX call is made to /userActions/id/execute. This action is dependent on the results of the previous call to /userActions. Because of this, the last step in the successful completion of /userActions should be calling &nbsp;/userActions/id/execute</p>\n\n<h3>1.3 Action Execution Queue</h3>\n\n<p>Currently /userActions/id/execute maps to the executeUserAction in &nbsp;UserActionServiceImpl.java. This function does a number of things before calling a second function processEmailActions in UserActionServiceImpl.java. Within processEmailActions is a for loop that must be refactored so that each iteration of the loop can be added to <a href=\"https://cloud.google.com/appengine/docs/java/taskqueue/overview-push\">Google task queue</a>*</p>\n\n<p>Additional refactoring of the function to deal with the asynchronous return of the data will need to happen.</p>\n\n<h2>2 Search and Delete Queues</h2>\n\n<p>Within processEmailActions loops one of two functions is called: searchMessages or searchAndDeleteMessages both from EmailMessageServiceImpl.java. Both functions will require the implementation of <a href=\"https://cloud.google.com/appengine/docs/java/taskqueue/overview-push\">Google task queues</a>*.</p>\n\n<ol>\n\t<li>searchMessages: the function contains two loops. The while loop returns pages of messages IDs that match the search. After each page of messages the tool makes a call to the Gmail API to retrieve the individual messages, this code is contained within a for loop. The for loop calls fetchEmailMessage and appends the message details to an array of emailMessages. The code should be modified so that each email that must be returned is added to a queue so that the code can continue and page through additional results. This will require refactoring of how the messages are eventually stored.\n\t<ul>\n\t\t<li>Side note: add a flag to the creation of these tasks for future functionality. The flag will allow the code to decide to get the message details or not.</li>\n\t</ul>\n\t</li>\n\t<li>searchAndDeletesMessages: this function contains a single loop. A single call is made for each cycle through the loop. This will need to be refactor so that each deletion call can be enqueued instead of synchronously completed. Note that this function also calls searchMessages, this may impact how you refactor the searchMessages code.</li>\n</ol>\n\n<p><strong>* Google Task Queue Note: Use the processing rates to manage the queue to keep the <a href=\"https://developers.google.com/gmail/api/v1/reference/quota\">API limits</a> happy.</strong></p>\n\n<p><span style=\"color:rgb(255, 0, 0)\">Testing</span></p>\n\n<p>The appirio-dev3.com domain has ~2000 users now and you can use this domain in development phase.</p>\n\n<p>The winning submission will be tested in another domain which has more users. Winner will be granted access to that domain and should make sure the final fix submission code works in that domain.</p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Technology Overview</span></h2>\n\n<ul>\n\t<li>Java 7</li>\n\t<li>HTML</li>\n\t<li>JSP</li>\n\t<li>JavaScript</li>\n\t<li>OAuth 2</li>\n\t<li>JSON</li>\n\t<li><a href=\"https://cloud.google.com/appengine/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">Google App Engine</a></li>\n\t<li><a href=\"https://cloud.google.com/sql/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">Cloud SQL</a></li>\n\t<li><a href=\"https://developers.google.com/gmail/api/overview\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">Gmail API</a></li>\n\t<li><a href=\"https://developers.google.com/admin-sdk/directory/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">Google Admin Directory API</a></li>\n\t<li><a href=\"https://developers.google.com/drive/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">Google Drive API</a></li>\n\t<li><a href=\"http://www.springsource.org/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">Spring Framework 3.2.8</a></li>\n\t<li><a href=\"http://www.hibernate.org/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">Hibernate 4.3.6</a></li>\n\t<li><a href=\"http://jquery.com/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">jQuery 1.11.1</a></li>\n\t<li><a href=\"http://commons.apache.org/proper/commons-csv/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">Apache Commons CSV 1.0</a></li>\n\t<li><a href=\"http://sourceforge.net/projects/itext/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">iText 5.5.3</a></li>\n\t<li><a href=\"https://developers.google.com/discovery/libraries\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">google-api-java-client 1.18.0</a>&nbsp;&nbsp;</li>\n</ul>\n",
+  "digitalRunPoints": 630,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30048490",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2015-01-30T09:03:00.000Z",
+  "finalSubmissionGuidelines": "<ul>\n\t<li>Deployment Guide</li>\n\t<li>Source Code</li>\n\t<li>Deployed App Engine Project</li>\n</ul>\n",
+  "forumId": 27835,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=27835",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 23,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-17T10:19:00.000Z",
+      "actualStartTime": "2015-01-17T10:19:00.000Z",
+      "scheduledEndTime": "2015-01-17T10:21:00.000Z",
+      "actualendTime": "2015-01-17T10:21:00.000Z",
+      "_id": "58134f3b550dfb3b52c2d3c5"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-17T10:21:00.000Z",
+      "actualStartTime": "2015-01-17T10:21:00.000Z",
+      "scheduledEndTime": "2015-01-17T13:04:00.000Z",
+      "actualendTime": "2015-01-17T13:04:00.000Z",
+      "_id": "58134f3b550dfb3b52c2d3c4"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-17T13:04:00.000Z",
+      "actualStartTime": "2015-01-17T13:04:00.000Z",
+      "scheduledEndTime": "2015-01-19T13:05:00.000Z",
+      "actualendTime": "2015-01-19T13:05:00.000Z",
+      "_id": "58134f3b550dfb3b52c2d3c3"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-17T13:10:00.000Z",
+      "actualStartTime": "2015-01-17T13:10:00.000Z",
+      "scheduledEndTime": "2015-01-22T13:06:00.000Z",
+      "actualendTime": "2015-01-22T13:06:00.000Z",
+      "_id": "58134f3b550dfb3b52c2d3c2"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-22T13:06:00.000Z",
+      "actualStartTime": "2015-01-22T13:06:00.000Z",
+      "scheduledEndTime": "2015-01-22T16:03:00.000Z",
+      "actualendTime": "2015-01-22T16:03:00.000Z",
+      "_id": "58134f3b550dfb3b52c2d3c1"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-22T16:04:00.000Z",
+      "actualStartTime": "2015-01-22T16:04:00.000Z",
+      "scheduledEndTime": "2015-01-24T18:49:00.000Z",
+      "actualendTime": "2015-01-24T18:49:00.000Z",
+      "_id": "58134f3b550dfb3b52c2d3c0"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-24T18:49:00.000Z",
+      "actualStartTime": "2015-01-24T18:49:00.000Z",
+      "scheduledEndTime": "2015-01-25T18:50:00.000Z",
+      "actualendTime": "2015-01-25T18:50:00.000Z",
+      "_id": "58134f3b550dfb3b52c2d3bf"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-25T18:50:00.000Z",
+      "actualStartTime": "2015-01-25T18:50:00.000Z",
+      "scheduledEndTime": "2015-01-26T03:32:00.000Z",
+      "actualendTime": "2015-01-26T03:32:00.000Z",
+      "_id": "58134f3b550dfb3b52c2d3be"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-26T03:32:00.000Z",
+      "actualStartTime": "2015-01-26T03:32:00.000Z",
+      "scheduledEndTime": "2015-01-26T03:35:00.000Z",
+      "actualendTime": "2015-01-26T03:35:00.000Z",
+      "_id": "58134f3b550dfb3b52c2d3bd"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-26T03:35:00.000Z",
+      "actualStartTime": "2015-01-26T03:35:00.000Z",
+      "scheduledEndTime": "2015-01-28T15:14:00.000Z",
+      "actualendTime": "2015-01-28T15:14:00.000Z",
+      "_id": "58134f3b550dfb3b52c2d3bc"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-28T15:14:00.000Z",
+      "actualStartTime": "2015-01-28T15:14:00.000Z",
+      "scheduledEndTime": "2015-01-29T07:20:00.000Z",
+      "actualendTime": "2015-01-29T07:20:00.000Z",
+      "_id": "58134f3b550dfb3b52c2d3bb"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-11T09:00:00.000Z",
+      "actualStartTime": "2015-02-11T09:00:00.000Z",
+      "scheduledEndTime": "2015-02-16T09:01:00.000Z",
+      "actualendTime": "2015-02-16T09:01:00.000Z",
+      "_id": "58134f3b550dfb3b52c2d3ba"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-29T07:20:00.000Z",
+      "actualStartTime": "2015-01-29T07:20:00.000Z",
+      "scheduledEndTime": "2015-01-30T09:03:00.000Z",
+      "actualendTime": "2015-01-30T09:03:00.000Z",
+      "_id": "58134f3b550dfb3b52c2d3b9"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-30T09:03:00.000Z",
+      "actualStartTime": "2015-01-30T09:03:00.000Z",
+      "scheduledEndTime": "2015-02-11T09:00:00.000Z",
+      "actualendTime": "2015-02-11T09:00:00.000Z",
+      "_id": "58134f3b550dfb3b52c2d3b8"
+    }
+  ],
+  "platforms": [
+    "Google"
+  ],
+  "postingDate": "2015-01-17T13:04:00.000Z",
+  "prize": [
+    1400,
+    700
+  ],
+  "projectId": 8069,
+  "registrants": [
+    {
+      "handle": "kinfkong",
+      "reliability": "100%",
+      "registrationDate": "2015-01-17T13:58:00.000Z",
+      "submissionDate": "2015-01-22T11:29:00.000Z",
+      "rating": "1297",
+      "colorStyle": "color: #6666FF",
+      "_id": "58134f3b550dfb3b52c2d3b7"
+    },
+    {
+      "handle": "monumahiya",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-17T15:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3b550dfb3b52c2d3b6"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2015-01-17T15:35:00.000Z",
+      "submissionDate": null,
+      "rating": "1373",
+      "colorStyle": "color: #6666FF",
+      "_id": "58134f3b550dfb3b52c2d3b5"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-17T17:33:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58134f3b550dfb3b52c2d3b4"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-17T18:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3b550dfb3b52c2d3b3"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-17T19:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3b550dfb3b52c2d3b2"
+    },
+    {
+      "handle": "arpit2438735",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-17T19:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3b550dfb3b52c2d3b1"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-17T21:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3b550dfb3b52c2d3b0"
+    },
+    {
+      "handle": "ondrej.bozek",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-17T23:08:00.000Z",
+      "submissionDate": "2015-01-22T11:58:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3b550dfb3b52c2d3af"
+    },
+    {
+      "handle": "iCare",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-18T04:56:00.000Z",
+      "submissionDate": null,
+      "rating": "568",
+      "colorStyle": "color: #999999",
+      "_id": "58134f3b550dfb3b52c2d3ae"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "20%",
+      "registrationDate": "2015-01-19T12:05:00.000Z",
+      "submissionDate": null,
+      "rating": "927",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f3b550dfb3b52c2d3ad"
+    },
+    {
+      "handle": "sylar",
+      "reliability": "6%",
+      "registrationDate": "2015-01-18T05:52:00.000Z",
+      "submissionDate": null,
+      "rating": "960",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f3b550dfb3b52c2d3ac"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-18T05:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3b550dfb3b52c2d3ab"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2015-01-18T07:44:00.000Z",
+      "submissionDate": null,
+      "rating": "1055",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f3b550dfb3b52c2d3aa"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-18T09:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3b550dfb3b52c2d3a9"
+    },
+    {
+      "handle": "bannie2492",
+      "reliability": "66%",
+      "registrationDate": "2015-01-18T09:49:00.000Z",
+      "submissionDate": "2015-01-22T12:20:00.000Z",
+      "rating": "1088",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f3b550dfb3b52c2d3a8"
+    },
+    {
+      "handle": "Ninja91",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-18T12:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3b550dfb3b52c2d3a7"
+    },
+    {
+      "handle": "sparemax",
+      "reliability": "0%",
+      "registrationDate": "2015-01-18T12:37:00.000Z",
+      "submissionDate": null,
+      "rating": "1847",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58134f3b550dfb3b52c2d3a6"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2015-01-18T16:41:00.000Z",
+      "submissionDate": null,
+      "rating": "267",
+      "colorStyle": "color: #999999",
+      "_id": "58134f3b550dfb3b52c2d3a5"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "6%",
+      "registrationDate": "2015-01-19T09:52:00.000Z",
+      "submissionDate": null,
+      "rating": "1088",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f3b550dfb3b52c2d3a4"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-19T09:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f3b550dfb3b52c2d3a3"
+    },
+    {
+      "handle": "gauravs23",
+      "reliability": "33%",
+      "registrationDate": "2015-01-19T10:04:00.000Z",
+      "submissionDate": null,
+      "rating": "755",
+      "colorStyle": "color: #999999",
+      "_id": "58134f3b550dfb3b52c2d3a2"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2015-01-19T11:01:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58134f3b550dfb3b52c2d3a1"
+    }
+  ],
+  "registrationEndDate": "2015-01-19T13:05:00.000Z",
+  "reliabilityBonus": 280,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-01-22T13:06:00.000Z",
+  "submissions": [
+    {
+      "handle": "kinfkong",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 90.47,
+      "finalScore": 93.5,
+      "points": 409.5,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-01-22T11:29:00.000Z",
+      "_id": "58134f3b550dfb3b52c2d3c8"
+    },
+    {
+      "handle": "bannie2492",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 86.59,
+      "finalScore": 87.16,
+      "points": 157.5,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-01-22T12:20:00.000Z",
+      "_id": "58134f3b550dfb3b52c2d3c7"
+    },
+    {
+      "handle": "ondrej.bozek",
+      "placement": 3,
+      "screeningScore": 100,
+      "initialScore": 77.26,
+      "finalScore": 80.29,
+      "points": 63,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-01-22T11:58:00.000Z",
+      "_id": "58134f3b550dfb3b52c2d3c6"
+    }
+  ],
+  "technology": [
+    "Google API",
+    "Google App Engine",
+    "Java"
+  ]
+}

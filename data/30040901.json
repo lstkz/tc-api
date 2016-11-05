@@ -1,7 +1,7 @@
 {
   "_id": 30040901,
   "_isComplete": true,
-  "__v": 1,
+  "__v": 0,
   "_lastUpdate": "2016-10-27T17:46:46.921Z",
   "appealsEndDate": "2014-03-15T08:28:00.000Z",
   "challengeCommunity": "develop",
@@ -15,11 +15,6 @@
   "detailedRequirements": "<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Project Overview</span></h2>\n\n<p>NASA need to develop a software version of the Solution Mechanism Guide so that users can navigate a search form to a filtered subset of solution mechanisms that are a best fit for their specific needs based on the criteria they input (experience similar to finding a car rental or airline ticket online but more fun and NASA-y).</p>\n\n<p>In this challenge we will build the application models, controllers (API endpoints).</p>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Competition Task Overview</span></h2>\n\n<p>You will address the following in this challenge :</p>\n\n<ul>\n\t<li>Models :\n\t<ul>\n\t\t<li>&#39;SMG&#39; model :\n\t\t<ul>\n\t\t\t<li>Represents the main object in this application</li>\n\t\t\t<li>The fields are : name, description, example</li>\n\t\t\t<li>It has one to many relation with &#39;Charecterstic&#39; model, it will has several charecterstic fields</li>\n\t\t\t<li>It has one to many relation with &#39;Example&#39; model</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>&#39;Example&#39; model :\n\t\t<ul>\n\t\t\t<li>The frontend will have two ways to retrieve examples, eithe by viewing &#39;SMG&#39; or via a sperate page that list all examples.</li>\n\t\t\t<li>It has name field, description field (CkEditor) field</li>\n\t\t\t<li>An example can be used exactly by one &#39;SMG&#39;</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>&#39;Charecterstic&#39; model :\n\t\t<ul>\n\t\t\t<li>Represents the SMG characterstic</li>\n\t\t\t<li>It should have the fields : id name, description, type, sort</li>\n\t\t\t<li>a field can be associated with one ore more &#39;SMG&#39; model</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>&#39;CharectersticType&#39; model :\n\t\t<ul>\n\t\t\t<li>Each characterstic corresponds a web component (picklist, textfield, checkobx, ..etc), we use this association information to decide which component to render in frontend</li>\n\t\t\t<li>The fields : id, name, description, defaultValueId</li>\n\t\t\t<li>It has oneToMany association with &#39;Charecterstic&#39; model</li>\n\t\t\t<li>It has one-to-one association with &#39;CharectersticTypeValue&#39; used by defaultValueId field</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>&#39;CharectersticTypeValue&#39; model :\n\t\t<ul>\n\t\t\t<li>Represents the values of &#39;CharectersticType&#39;</li>\n\t\t\t<li>Fields are : name, description, value</li>\n\t\t\t<li>It has oneToMany association with &#39;CharectersticType&#39;, means that charecteristic type might have many values (i.e. pick list can have multiple 2 values)</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>&#39;SearchForm&#39; model :\n\t\t<ul>\n\t\t\t<li>Represents the search form component definition used in frontend, it will store the information about fields that will render in the form. The fields are simply &#39;characterstics&#39;. The form will be used to search the SMG records</li>\n\t\t\t<li>The fields are : name, description, active flag (there will be exactly one record who has flag set to true)</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>&#39;SearchFormField&#39; model :\n\t\t<ul>\n\t\t\t<li>Store association between &#39;SearchForm&#39; and &#39;Characterstic&#39; models</li>\n\t\t\t<li>In addition it will have &#39;sort&#39; field to display order of fields in the form</li>\n\t\t\t<li>It has one to many association with &#39;SearchForm&#39;</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>&#39;SearchFormFieldValue&#39; model :&nbsp;\n\t\t<ul>\n\t\t\t<li>As some of &#39;characterstic&#39; types has predefined value, we want to control which of these values are displayed in the search form</li>\n\t\t\t<li>It store association between &#39;SearchFormField&#39; and &#39;CharactersticTypeValues&#39;</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>&#39;HelpTopic&#39; Model :\n\t\t<ul>\n\t\t\t<li>Represents the help topics in the SMG.</li>\n\t\t\t<li>It has fields : name, description (as ckeditor content), image file.</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Use https://github.com/dresende/node-orm2</li>\n\t</ul>\n\t</li>\n\t<li>Controllers\n\t<ul>\n\t\t<li>Use winston module for logging, log method entries, exits, input params and errors</li>\n\t\t<li>Implement input parameter validations</li>\n\t\t<li>Implement validation between callbacks</li>\n\t\t<li>The controllers will directly use the node-orm2 module CRUD mothods to perform CRUD operations and searching on the models</li>\n\t\t<li>Each model should have the following API endpoints :\n\t\t<ul>\n\t\t\t<li>create (should support single or batch)</li>\n\t\t\t<li>update (should support single or batch)</li>\n\t\t\t<li>retrieve (should support retrieve all or by id)\n\t\t\t<ul>\n\t\t\t\t<li>Child entities should be included in the response</li>\n\t\t\t\t<li>For &#39;Example&#39; model : it should include a method to return examples by &#39;SMG&#39; id</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>delete (should support delete by id or batch of ids)</li>\n\t\t\t<li>For Models with child entities : add/update/remove child entities should be supported as separate endpoints and via the above methods that manipulate the parent object</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>Add search method to SMG API controller : the input parameter is search criteria which is a json object of set of (SearchFormField : SearchFormFieldValue) pairs</li>\n\t</ul>\n\t</li>\n\t<li>Use expressjs module</li>\n\t<li>All input/output should be in json format</li>\n\t<li>MySQL is the target database</li>\n\t<li>Create postman file for the API, <a href=\"https://chrome.google.com/webstore/detail/postman-rest-client/fdmmgilgnpjigdojojpjoooidkmcomcm?hl=en\">check here for more information</a></li>\n\t<li>We are using github and git as version control for the soruce code</li>\n\t<li>The application structure can be like this :\n\t<ul>\n\t\t<li>/root\n\t\t<ul>\n\t\t\t<li>.gitignore file : should ignore production files and some other folders/files</li>\n\t\t\t<li>.env_sample (we will use .env file but it should be excluded from the .git repo) : this file store the configuration attributes</li>\n\t\t\t<li>app.js</li>\n\t\t\t<li>config.js</li>\n\t\t\t<li>config/\n\t\t\t<ul>\n\t\t\t\t<li>configuration.js</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>sql\n\t\t\t<ul>\n\t\t\t\t<li>&nbsp;.. store the db scripts</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>model folder</li>\n\t\t\t<li>controller folder</li>\n\t\t\t<li>helper folder</li>\n\t\t\t<li>docs folder</li>\n\t\t\t<li>what else .. ?</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li>Attached in forums the Wireframe of the application, it will give you better idea of the flow and how the api will be used</li>\n\t<li>The application will be an HTML5 website hosted in sharepoint, the API will be used via Ajax in the hosted web app, so everything should be in json format</li>\n</ul>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Testing</span></h3>\n\n<p>postman rest api client will be used to test the api.</p>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Technology Overview</span>:</h2>\n\n<ul style=\"font-family: Arial, Helvetica, Verdana, sans-serif; font-size: 12px; line-height: 16px;\">\n\t<li>Node.js</li>\n\t<li>MySQL</li>\n\t<li>Express.js</li>\n\t<li>Rest</li>\n\t<li>Postman</li>\n</ul>\n\n<h2 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span style=\"color: rgb(255, 0, 0);\">Documentation Provided</span></h2>\n\n<p style=\"font-family: Arial, Helvetica, Verdana, sans-serif; font-size: 12px; line-height: 16px;\">Wireframes provided in forums.</p>\n",
   "digitalRunPoints": 630,
   "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30040901",
-  "event": {
-    "id": 3437,
-    "description": "2014 TopCoder(R) Open",
-    "shortDescription": "tco14"
-  },
   "finalFixEndDate": "2014-03-21T09:46:00.000Z",
   "finalSubmissionGuidelines": "<h2><strong><span style=\"color:#FF0000;\"><span style=\"line-height: 1.6em;\">Submission Deliverables</span></span></strong></h2>\n\n<p><span style=\"font-size:12px;\">Below is an overview of the deliverables:</span></p>\n\n<ul>\n\t<li><span style=\"font-size:12px;\">Fully Implemented REST API</span></li>\n\t<li><span style=\"font-size:12px;\">A complete and detailed deployment readme file</span></li>\n\t<li>Postman.json with all end points used by the API</li>\n</ul>\n\n<h2><span style=\"color:#FF0000;\"><strong>Final Submission</strong></span></h2>\n\n<p><span style=\"font-size:12px;\">For each member, the final submission should be uploaded to the Online Review Tool.</span></p>\n",
   "forumId": 21632,
@@ -28,6 +23,38 @@
   "numberOfCheckpointsPrizes": 0,
   "numberOfRegistrants": 26,
   "numberOfSubmissions": 2,
+  "postingDate": "2014-03-03T13:30:00.000Z",
+  "projectId": 6879,
+  "registrationEndDate": "2014-03-05T13:30:00.000Z",
+  "reliabilityBonus": 280,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-03-09T13:35:00.000Z",
+  "submissions": [
+    {
+      "handle": "Sky_",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 83.46,
+      "finalScore": 89.01,
+      "points": 441,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-03-09T11:35:00.000Z",
+      "_id": "58123d860659262e95dffb07"
+    },
+    {
+      "handle": "vvvpig",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 82.02,
+      "finalScore": 83.44,
+      "points": 189,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-03-09T13:02:00.000Z",
+      "_id": "58123d860659262e95dffb06"
+    }
+  ],
   "phases": [
     {
       "type": "Specification Submission",
@@ -174,15 +201,6 @@
       "_id": "58123d860659262e95dffaf6"
     }
   ],
-  "platforms": [
-    "NodeJS"
-  ],
-  "postingDate": "2014-03-03T13:30:00.000Z",
-  "prize": [
-    1400,
-    700
-  ],
-  "projectId": 6879,
   "registrants": [
     {
       "handle": "alfiya_Zi",
@@ -419,40 +437,22 @@
       "_id": "58123d860659262e95dffadc"
     }
   ],
-  "registrationEndDate": "2014-03-05T13:30:00.000Z",
-  "reliabilityBonus": 280,
-  "reviewScorecardId": 30001470,
-  "reviewType": null,
-  "screeningScorecardId": 30000412,
-  "submissionEndDate": "2014-03-09T13:35:00.000Z",
-  "submissions": [
-    {
-      "handle": "Sky_",
-      "placement": 1,
-      "screeningScore": 100,
-      "initialScore": 83.46,
-      "finalScore": 89.01,
-      "points": 441,
-      "submissionStatus": "Active",
-      "submissionDate": "2014-03-09T11:35:00.000Z",
-      "_id": "58123d860659262e95dffb07"
-    },
-    {
-      "handle": "vvvpig",
-      "placement": 2,
-      "screeningScore": 100,
-      "initialScore": 82.02,
-      "finalScore": 83.44,
-      "points": 189,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2014-03-09T13:02:00.000Z",
-      "_id": "58123d860659262e95dffb06"
-    }
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "prize": [
+    1400,
+    700
   ],
   "technology": [
     "Express",
     "MySQL",
     "Node.js",
     "REST"
+  ],
+  "platforms": [
+    "NodeJS"
   ]
 }

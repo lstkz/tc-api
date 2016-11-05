@@ -1,0 +1,384 @@
+{
+  "_id": 30043027,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:07:37.971Z",
+  "appealsEndDate": "2014-06-03T00:03:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "MyMediaShare  (PCDVR & Min Config Integration) - File Save Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></h2>\n\n<p><span style=\"font-size:12px\">We have built two separate apps for the client: My Media (PCDVR) and Media Share (Min Config).</span></p>\n\n<ul>\n\t<li><span style=\"font-size:12px\">���My Media is an app that allows users to store their media files (photos / videos / etc...) to the cloud</span></li>\n\t<li><span style=\"font-size:12px\">Media Share is an app that allows users to share their media files (photos / videos / etc..) to a device like TV so that others can see the shared media</span></li>\n</ul>\n\n<p><span style=\"font-size:12px\">Please register to see more details on how the apps work in the forum.</span></p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Competition Task Overview</span></h2>\n\n<p><span style=\"font-size:12px\">For this challenge, we&#39;d like to implement some basic integration between the two apps, and we&#39;ll only worry about photos in this challenge.</span></p>\n\n<ol>\n\t<li>The user will visit the Media Share page with AuthGuid as a URL parameter, the Media Share app needs to keep track of this parameter for each session</li>\n\t<li><span style=\"font-size:12px\">Whenever a photo is uploaded to the Media Share, it needs to save the photo to My Media using the AuthGuid passed as a parameter, which involes an OAuth call and a series of RESTFul calls as detailed below:</span>\n\t<ul>\n\t\t<li><span style=\"font-size:12px\">������Perform OAuth call, we did this in java before this time we need to do the same in Node.js. Here&#39;s how we did it in java:</span>\n\t\t<ul>\n\t\t\t<li><span style=\"font-size:12px\">���Include AuthGuid as a URL parameter</span></li>\n\t\t\t<li>OAuthConsumer consumer = new CommonsHttpOAuthConsumer(serviceKey,serviceSecret); // we&#39;ll provide key and secret in forum</li>\n\t\t\t<li>consumer.sign(request);</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li><span style=\"font-size:12px\">Check for the existence of a &quot;SharedMedia&quot; folder in the account:</span>\n\t\t<ul>\n\t\t\t<li><span style=\"font-size:12px\">The call will be something like this: ���</span>https://secure.api.comcast.net/ugc-qa1/albums?authguid=12345</li>\n\t\t\t<li>This call will return JSON listing the albums for the user, iterate through them to see if &quot;SharedMedia&quot; exists</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li><span style=\"font-size:12px\">If the folder doesn&#39;t exist, create it</span>\n\t\t<ul>\n\t\t\t<li><span style=\"font-size:12px\">���The call will be something like this:&nbsp;</span>https://secure.api.comcast.net/ugc-qa1/albums?authguid=12345&amp;name=SharedMedia</li>\n\t\t\t<li>The call will return JSON which will include the albumguid you&#39;ll need</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li><span style=\"font-size:12px\">Get a url with which to upload the actual file</span>\n\t\t<ul>\n\t\t\t<li><span style=\"font-size:12px\">���The call will be something like this:&nbsp;</span>https://secure.api.comcast.net/ugc-qa1/files?authguid=12345&amp;albumguid=fromstep2&amp;filename=afilename</li>\n\t\t\t<li>authguid is the AuthGuid passed from My Media</li>\n\t\t\t<li>albumguid is from the above step</li>\n\t\t\t<li>filename is the name of the file to be uploaded. We can create it as the date/time of the upload, for example:&nbsp;2014-05-21-15-43-31.png</li>\n\t\t\t<li>This call will return JSON which will include the fileguid that you&#39;ll need</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li><span style=\"font-size:12px\">Upload the file to the account</span>\n\t\t<ul>\n\t\t\t<li><span style=\"font-size:12px\">���The call will be something like this:&nbsp;</span>https://secure.api.comcast.net/ugc-qa1/files/fileguid?authguid=12345</li>\n\t\t\t<li>authguid is the AuthGuid passed from My Media</li>\n\t\t\t<li>fileguid is from the above step</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>At the end of the calls we should display a result message which says either &quot;Your file was saved!&quot; or &quot;There was a problem saving your file.&quot;</li>\n\t\t<li><span style=\"font-size:12px\">The RESTFul calls are detailed here:&nbsp;</span>http://162.150.10.54:8080/ugc-api-docs/</li>\n\t\t<li>We&#39;ll provide the list of AuthGuids you can use in challenge forum.</li>\n\t</ul>\n\t</li>\n\t<li><span style=\"font-size:12px\">Notes</span>\n\t<ul>\n\t\t<li><span style=\"font-size:12px\">������We do not need resumable uploads at this time</span></li>\n\t\t<li><span style=\"font-size:12px\">You can check the Android / iOS code we attached in the forum to see how upload was done in the apps</span></li>\n\t</ul>\n\t</li>\n</ol>\n\n<h3><span style=\"color:rgb(255, 0, 0)\">Verify Upload Result</span></h3>\n\n<p><span style=\"font-size:12px\">In order to verify if upload succeeds, you&#39;ll need to use the My Media Apps (either Android or iOS) and login with corresponding accounts to see if the photo is there.</span></p>\n\n<p><span style=\"font-size:12px\">We&#39;ll provide the mapping from AuthGuids to the accounts in the challenge forum.</span></p>\n\n<h3><span style=\"color:rgb(255, 0, 0)\">Security</span></h3>\n\n<p><span style=\"font-size:12px\">Do not put OAuth details / credentials as plain text in Javascript code, instead we should try to keep this encrypted and/or invisible from users of the web pages so they won&#39;t be able to use these and modify other&#39;s data.</span></p>\n\n<h3><span style=\"color:rgb(255, 0, 0)\">Errors</span></h3>\n\n<p><span style=\"font-size:12px\">Please produce meaningful logs for errors, especially errors during upload so we can easily see what&#39;s wrong when upload fails.</span></p>\n\n<h3><span style=\"color:rgb(255, 0, 0)\">Testing</span></h3>\n\n<p><span style=\"font-size:12px\">You need to provide manual demos to verify your implementation.</span></p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Technology Overview</span></h2>\n\n<ul>\n\t<li><span style=\"font-size:12px\">NodeJs</span></li>\n\t<li><span style=\"font-size:12px\">OAuth</span></li>\n\t<li><span style=\"font-size:12px\">Javascript</span></li>\n\t<li><span style=\"font-size:12px\">RESTFul</span></li>\n</ul>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Documentation Provided</span></h2>\n\n<p><span>Register to download documents from challenge forum.</span></p>\n",
+  "digitalRunPoints": 630,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30043027",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2014-06-04T02:40:00.000Z",
+  "finalSubmissionGuidelines": "<h2><strong><span style=\"color:rgb(255, 0, 0)\">Submission Deliverables</span></strong></h2>\n\n<p><span style=\"font-size:12px\">A complete list of deliverables can be viewed in the TopCoder Assembly competition Tutorial at: <a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials&nbsp;</a></span></p>\n\n<p><span style=\"font-size:12px\">Below is an overview of the deliverables:</span></p>\n\n<ul>\n\t<li><span style=\"font-size:12px\">Updated Media Share (Min Config) server code that handles saving of photos to My Media (PCDVR)</span></li>\n\t<li><span style=\"font-size:12px\">A complete and detailed deployment documented explaining how to deploy the application including configuration information.</span></li>\n</ul>\n\n<h2><span style=\"color:#FF0000\"><strong>Final Submission</strong></span></h2>\n\n<p><span style=\"font-size:12px\">For each member, the final submission should be uploaded to the Online Review Tool.</span></p>\n",
+  "forumId": 23215,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=23215",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 20,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-24T06:17:00.000Z",
+      "actualStartTime": "2014-05-24T06:17:00.000Z",
+      "scheduledEndTime": "2014-05-24T06:17:00.000Z",
+      "actualendTime": "2014-05-24T06:17:00.000Z",
+      "_id": "58133f89550dfb3b52bdec0a"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-24T06:17:00.000Z",
+      "actualStartTime": "2014-05-24T06:17:00.000Z",
+      "scheduledEndTime": "2014-05-24T12:23:00.000Z",
+      "actualendTime": "2014-05-24T12:23:00.000Z",
+      "_id": "58133f89550dfb3b52bdec09"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-24T19:06:00.000Z",
+      "actualStartTime": "2014-05-24T19:06:00.000Z",
+      "scheduledEndTime": "2014-05-26T19:06:00.000Z",
+      "actualendTime": "2014-05-26T19:06:00.000Z",
+      "_id": "58133f89550dfb3b52bdec08"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-24T19:11:00.000Z",
+      "actualStartTime": "2014-05-24T19:11:00.000Z",
+      "scheduledEndTime": "2014-05-30T19:06:00.000Z",
+      "actualendTime": "2014-05-30T19:06:00.000Z",
+      "_id": "58133f89550dfb3b52bdec07"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-30T19:06:00.000Z",
+      "actualStartTime": "2014-05-30T19:06:00.000Z",
+      "scheduledEndTime": "2014-05-31T01:58:00.000Z",
+      "actualendTime": "2014-05-31T01:58:00.000Z",
+      "_id": "58133f89550dfb3b52bdec06"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-31T01:58:00.000Z",
+      "actualStartTime": "2014-05-31T01:58:00.000Z",
+      "scheduledEndTime": "2014-06-02T11:12:00.000Z",
+      "actualendTime": "2014-06-02T11:12:00.000Z",
+      "_id": "58133f89550dfb3b52bdec05"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-02T11:12:00.000Z",
+      "actualStartTime": "2014-06-02T11:12:00.000Z",
+      "scheduledEndTime": "2014-06-02T16:59:00.000Z",
+      "actualendTime": "2014-06-02T16:59:00.000Z",
+      "_id": "58133f89550dfb3b52bdec04"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-02T16:59:00.000Z",
+      "actualStartTime": "2014-06-02T16:59:00.000Z",
+      "scheduledEndTime": "2014-06-03T00:03:00.000Z",
+      "actualendTime": "2014-06-03T00:03:00.000Z",
+      "_id": "58133f89550dfb3b52bdec03"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-03T00:03:00.000Z",
+      "actualStartTime": "2014-06-03T00:03:00.000Z",
+      "scheduledEndTime": "2014-06-03T00:09:00.000Z",
+      "actualendTime": "2014-06-03T00:09:00.000Z",
+      "_id": "58133f89550dfb3b52bdec02"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-03T00:09:00.000Z",
+      "actualStartTime": "2014-06-03T00:09:00.000Z",
+      "scheduledEndTime": "2014-06-03T23:04:00.000Z",
+      "actualendTime": "2014-06-03T23:04:00.000Z",
+      "_id": "58133f89550dfb3b52bdec01"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-03T23:04:00.000Z",
+      "actualStartTime": "2014-06-03T23:04:00.000Z",
+      "scheduledEndTime": "2014-06-04T01:28:00.000Z",
+      "actualendTime": "2014-06-04T01:28:00.000Z",
+      "_id": "58133f89550dfb3b52bdec00"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-04T02:41:00.000Z",
+      "actualStartTime": "2014-06-04T02:41:00.000Z",
+      "scheduledEndTime": "2014-06-09T02:41:00.000Z",
+      "actualendTime": "2014-06-09T02:41:00.000Z",
+      "_id": "58133f89550dfb3b52bdebff"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-04T01:28:00.000Z",
+      "actualStartTime": "2014-06-04T01:28:00.000Z",
+      "scheduledEndTime": "2014-06-04T02:40:00.000Z",
+      "actualendTime": "2014-06-04T02:40:00.000Z",
+      "_id": "58133f89550dfb3b52bdebfe"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-04T02:41:00.000Z",
+      "actualStartTime": "2014-06-04T02:41:00.000Z",
+      "scheduledEndTime": "2014-06-04T02:41:00.000Z",
+      "actualendTime": "2014-06-04T02:41:00.000Z",
+      "_id": "58133f89550dfb3b52bdebfd"
+    }
+  ],
+  "platforms": [
+    "NodeJS"
+  ],
+  "postingDate": "2014-05-24T19:06:00.000Z",
+  "prize": [
+    1400,
+    700
+  ],
+  "projectId": 7315,
+  "registrants": [
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-24T19:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f89550dfb3b52bdebfc"
+    },
+    {
+      "handle": "LieutenantRoger",
+      "reliability": "6%",
+      "registrationDate": "2014-05-24T21:58:00.000Z",
+      "submissionDate": null,
+      "rating": "804",
+      "colorStyle": "color: #999999",
+      "_id": "58133f89550dfb3b52bdebfb"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "0%",
+      "registrationDate": "2014-05-24T22:05:00.000Z",
+      "submissionDate": null,
+      "rating": "58",
+      "colorStyle": "color: #999999",
+      "_id": "58133f89550dfb3b52bdebfa"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-25T02:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f89550dfb3b52bdebf9"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-05-25T02:07:00.000Z",
+      "submissionDate": null,
+      "rating": "1135",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f89550dfb3b52bdebf8"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-05-25T03:53:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58133f89550dfb3b52bdebf7"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-25T05:55:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58133f89550dfb3b52bdebf6"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-25T06:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f89550dfb3b52bdebf5"
+    },
+    {
+      "handle": "cosherx",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-25T06:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f89550dfb3b52bdebf4"
+    },
+    {
+      "handle": "rajeshk87",
+      "reliability": "0%",
+      "registrationDate": "2014-05-25T11:26:00.000Z",
+      "submissionDate": null,
+      "rating": "600",
+      "colorStyle": "color: #999999",
+      "_id": "58133f89550dfb3b52bdebf3"
+    },
+    {
+      "handle": "iCare",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-25T13:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f89550dfb3b52bdebf2"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-25T15:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f89550dfb3b52bdebf1"
+    },
+    {
+      "handle": "cmax",
+      "reliability": "13%",
+      "registrationDate": "2014-05-25T15:59:00.000Z",
+      "submissionDate": null,
+      "rating": "885",
+      "colorStyle": "color: #999999",
+      "_id": "58133f89550dfb3b52bdebf0"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "26%",
+      "registrationDate": "2014-05-25T22:10:00.000Z",
+      "submissionDate": "2014-05-30T16:06:00.000Z",
+      "rating": "1017",
+      "colorStyle": "color: #00A900",
+      "_id": "58133f89550dfb3b52bdebef"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2014-05-26T12:30:00.000Z",
+      "submissionDate": null,
+      "rating": "765",
+      "colorStyle": "color: #999999",
+      "_id": "58133f89550dfb3b52bdebee"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-26T13:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f89550dfb3b52bdebed"
+    },
+    {
+      "handle": "michael_tang",
+      "reliability": "0%",
+      "registrationDate": "2014-05-26T13:33:00.000Z",
+      "submissionDate": null,
+      "rating": "497",
+      "colorStyle": "color: #999999",
+      "_id": "58133f89550dfb3b52bdebec"
+    },
+    {
+      "handle": "GFalcon",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-26T13:33:00.000Z",
+      "submissionDate": "2014-05-30T18:48:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133f89550dfb3b52bdebeb"
+    },
+    {
+      "handle": "flytoj2ee",
+      "reliability": "26%",
+      "registrationDate": "2014-05-26T15:35:00.000Z",
+      "submissionDate": null,
+      "rating": "1350",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133f89550dfb3b52bdebea"
+    },
+    {
+      "handle": "minghaotsai",
+      "reliability": "22%",
+      "registrationDate": "2014-05-26T16:06:00.000Z",
+      "submissionDate": null,
+      "rating": "1311",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133f89550dfb3b52bdebe9"
+    }
+  ],
+  "registrationEndDate": "2014-05-26T19:06:00.000Z",
+  "reliabilityBonus": 280,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-05-30T19:06:00.000Z",
+  "submissions": [
+    {
+      "handle": "GFalcon",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 94.03,
+      "finalScore": 94.03,
+      "points": 441,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-05-30T18:48:00.000Z",
+      "_id": "58133f89550dfb3b52bdec0c"
+    },
+    {
+      "handle": "pfilippi",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 92.12,
+      "finalScore": 92.12,
+      "points": 189,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-05-30T16:06:00.000Z",
+      "_id": "58133f89550dfb3b52bdec0b"
+    }
+  ],
+  "technology": [
+    "JavaScript",
+    "Node.js"
+  ]
+}

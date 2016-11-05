@@ -1,0 +1,344 @@
+{
+  "_id": 30050701,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:59:49.192Z",
+  "appealsEndDate": "2015-07-07T03:58:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Myyna NodeJS PDS Pins Generation",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2015-08-03T13:10:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -39044908,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\">The Planetary Data System (PDS <a href=\"http://pds.nasa.gov/\">http://pds.nasa.gov/</a>) is an archive of data from NASA&rsquo;s planetary missions. The mission data (called products) can be raw images, time-series data &nbsp;or text documents.</p>\n\n<p dir=\"ltr\">While this treasure trove of information is accessible to the public, utilization has been somewhat limited by barriers to entry such as required expertise on the domain, and familiarity with the data format.</p>\n\n<p dir=\"ltr\">The goal of this (PDS Storyboard) project is to develop a web application that will make the data easier to find and use by a wider range of people. PDS data is only as valuable as the ease of access and adoption &ndash; and NASA wants to make sure all this valuable mission data reaches a broader audience to further scientific discovery and research.</p>\n\n<p dir=\"ltr\">We are building a basic web application version. We are starting by reusing an open source web application called <a href=\"https://github.com/cubettech/myyna\">myyna</a>. The point is to create a <a href=\"https://www.pinterest.com/\">Pinterest-like</a> social web application that address the need to make PDS data more accessible, and foster greater use of the available resources through collaboration and ease of distribution of data and research. By making PDS data easily accessible, and providing a Pinterest-like collaboration tool, the goal is to advance research and utilization of the data. This new web application will be called the &ldquo;Planetary Data Storyboard&rdquo; (Or PDS).</p>\n\n<p dir=\"ltr\">We will customize Myyna web application to include the features we need to implement in the first version of this PDS Storyboard web application.</p>\n\n<h1 dir=\"ltr\">Challenge Overview</h1>\n\n<p dir=\"ltr\">We have a MySQL database in the cloud that store PDS raw images. We have a nodejs script that process these raw images and convert them into PNG images.</p>\n\n<p dir=\"ltr\">The goal of the challenge is to update the nodejs script that insert Myyna Pins for these PDS raw images.</p>\n\n<h1 dir=\"ltr\">Challenge Requirements</h1>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Information to access MySQL db on Ec2 VM :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Host IP : ec2-54-163-164-221.compute-1.amazonaws.com</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Port : 3306</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">username : joe</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">password : password</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">database : nasa_pds</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">The MySQL table store LROC images links :</p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">table name : map_image</p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\">image link stored in field : image_path</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Make the following changes to nodejs script :</p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Separately fetch MySQL rows from database (using the pagination configuration) and process the following :</p>\n\n\t\t<ul>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\">Search if pin with metadata id equals the row#id, if exist then skip to next item.</p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\">Insert new pin into myyna web app with placeholder image (make it configurable).</p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\">Insert the row fields in Pin model :</p>\n\n\t\t\t<ul>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\">id</p>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\">name</p>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\">mission_id</p>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\">image_path</p>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\">date</p>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\">center_longitude &nbsp;</p>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\">center_latitude &nbsp;&nbsp;</p>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\">illumination &nbsp;&nbsp;</p>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\">camera_angle &nbsp;&nbsp;</p>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\">camera_type &nbsp;&nbsp;&nbsp;</p>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\">product_type &nbsp;&nbsp;</p>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\">camera_spec</p>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\">pds (indicates that this pin is a pds product)</p>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\">completed (flag indicates if the pin ISIS image generation was processed and done)</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\">Update pin model to have a new field &lsquo;metadata&rsquo;, the metadata is a key/value pairs. The row fields above will be inserted as key/value into metadata.</p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\">Configure the myyna user id, board id, and category id to use to insert pins in configuration. Or any other needed configurations to insert into myyna pin models.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">For the image processing using ISIS flow,</p>\n\n\t\t<ul>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\">For each row, search if a corresponding pin exist in myyna db, if exists then check if completed = false, if it is true, then skip the item.</p>\n\n\t\t\t<ul>\n\t\t\t\t<li>\n\t\t\t\t<p dir=\"ltr\">Use metadata &ldquo;id/pds/completed&rdquo; keys to find the pin.</p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\">Flow will run ISIS script to convert image to png.</p>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\">When image is generated update the PIN to reference the correct set of images.</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Update documentation and README.</p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Include the nodejs script that generate images from ISIS in the storyboard_frontend module.</p>\n\n\t\t<ul>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\">place it in new folder : pds_generator</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Update Myyna frontend :</p>\n\n\t\t<ul>\n\t\t\t<li>\n\t\t\t<p dir=\"ltr\">In Pins Details page, below the description add new table that list the metadata key/value pairs if available (not null or not empty)&nbsp;</p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h1 dir=\"ltr\">General Notes</h1>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Update data generator script if needed.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Update readme with deployment and configuration information.</p>\n\t</li>\n</ul>\n\n<h1 dir=\"ltr\">Github Access</h1>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">README to setup ISIS <a href=\"https://github.com/topcoderinc/lmmp_api/blob/master/docs/How-To-Run-ISIS-Script.md\">https://github.com/topcoderinc/lmmp_api/blob/master/docs/How-To-Run-ISIS-Script.md</a></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">Post in challenge forums to get access to <a href=\"https://github.com/topcoderinc/lmmp_api\">https://github.com/topcoderinc/lmmp_api</a> if you don&rsquo;t already have it.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">We have cloned the Myyna github and placed it in gitlab, user the gitlab repository as basis for your work. &nbsp;<a href=\"https://gitlab.com/nasa-pds-storyboard/storyboard-frontend\">https://gitlab.com/nasa-pds-storyboard/storyboard-frontend</a></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\">You need to be logged in to view the repository.</p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h1 dir=\"ltr\">Deliverable</h1>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Patch file of changes.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Updated readme file with deployment and verification steps.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Text file for reviewers.</p>\n\t</li>\n</ul>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30050701",
+  "finalSubmissionGuidelines": "<p>.</p>\n",
+  "forumId": 29871,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=29871",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 23,
+  "numberOfSubmissions": 4,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2015-07-04T13:10:00.000Z",
+      "actualStartTime": "2015-07-04T13:10:00.000Z",
+      "scheduledEndTime": "2015-08-03T13:10:00.000Z",
+      "actualendTime": null,
+      "_id": "58132fa5550dfb3b52b897b2"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-07-05T22:42:00.000Z",
+      "actualStartTime": "2015-07-05T22:42:00.000Z",
+      "scheduledEndTime": "2015-07-06T15:02:00.000Z",
+      "actualendTime": "2015-07-06T15:02:00.000Z",
+      "_id": "58132fa5550dfb3b52b897b1"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2015-07-04T13:15:00.000Z",
+      "actualStartTime": "2015-07-04T13:15:00.000Z",
+      "scheduledEndTime": "2015-08-03T13:15:00.000Z",
+      "actualendTime": null,
+      "_id": "58132fa5550dfb3b52b897b0"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-07-06T19:24:00.000Z",
+      "actualStartTime": "2015-07-06T19:24:00.000Z",
+      "scheduledEndTime": "2015-07-07T00:08:00.000Z",
+      "actualendTime": "2015-07-07T00:08:00.000Z",
+      "_id": "58132fa5550dfb3b52b897af"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-07-07T01:39:00.000Z",
+      "actualStartTime": "2015-07-07T01:39:00.000Z",
+      "scheduledEndTime": "2015-07-07T03:58:00.000Z",
+      "actualendTime": "2015-07-07T03:58:00.000Z",
+      "_id": "58132fa5550dfb3b52b897ae"
+    }
+  ],
+  "platforms": [
+    "NodeJS"
+  ],
+  "postingDate": "2015-07-04T13:10:00.000Z",
+  "prize": [
+    300
+  ],
+  "projectId": 8870,
+  "registrants": [
+    {
+      "handle": "ChenXiaoTemp",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-05T03:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b897ad"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-04T13:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b897ac"
+    },
+    {
+      "handle": "kcxuab",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-04T13:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b897ab"
+    },
+    {
+      "handle": "Helstein",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-04T14:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b897aa"
+    },
+    {
+      "handle": "JStasio",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-04T14:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b897a9"
+    },
+    {
+      "handle": "victor.costa",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-04T15:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b897a8"
+    },
+    {
+      "handle": "nagyf",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-04T19:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b897a7"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-04T22:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b897a6"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-05T04:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b897a5"
+    },
+    {
+      "handle": "ecnu_haozi",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-05T12:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b897a4"
+    },
+    {
+      "handle": "kiril.kartunov",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-05T09:16:00.000Z",
+      "submissionDate": "2015-07-06T19:24:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b897a3"
+    },
+    {
+      "handle": "nickynine",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-05T09:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b897a2"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-05T13:53:00.000Z",
+      "submissionDate": "2015-07-07T03:53:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b897a1"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-05T16:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b897a0"
+    },
+    {
+      "handle": "phaniram",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-05T17:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b8979f"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-05T19:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b8979e"
+    },
+    {
+      "handle": "savon_cn",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-06T02:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b8979d"
+    },
+    {
+      "handle": "xkhaloda",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-06T05:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b8979c"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-06T07:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b8979b"
+    },
+    {
+      "handle": "DHEERAJSONI",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-06T10:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b8979a"
+    },
+    {
+      "handle": "D1at196",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-06T14:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b89799"
+    },
+    {
+      "handle": "TonyAdo",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-06T15:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b89798"
+    },
+    {
+      "handle": "rtriv",
+      "reliability": "n/a",
+      "registrationDate": "2015-07-07T00:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58132fa5550dfb3b52b89797"
+    }
+  ],
+  "registrationEndDate": "2015-08-03T13:10:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-08-03T13:15:00.000Z",
+  "submissions": [
+    {
+      "handle": "peakpado",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-07-05T22:42:00.000Z",
+      "_id": "58132fa5550dfb3b52b897b6"
+    },
+    {
+      "handle": "kiril.kartunov",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-07-06T19:24:00.000Z",
+      "_id": "58132fa5550dfb3b52b897b5"
+    },
+    {
+      "handle": "peakpado",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-07-07T01:39:00.000Z",
+      "_id": "58132fa5550dfb3b52b897b4"
+    },
+    {
+      "handle": "peakpado",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-07-07T03:53:00.000Z",
+      "_id": "58132fa5550dfb3b52b897b3"
+    }
+  ],
+  "technology": [
+    "MongoDB",
+    "MySQL"
+  ]
+}

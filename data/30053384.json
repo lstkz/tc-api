@@ -1,7 +1,7 @@
 {
   "_id": 30053384,
   "_isComplete": true,
-  "__v": 1,
+  "__v": 0,
   "_lastUpdate": "2016-10-27T17:51:13.161Z",
   "appealsEndDate": "2016-03-21T04:25:00.000Z",
   "challengeCommunity": "develop",
@@ -15,11 +15,6 @@
   "detailedRequirements": "<p>Topcoder recently developed a&nbsp;<a href=\"http://www.topcoder.com/challenge-details/30052933/?type=develop&amp;noncache=true\">Recommendation Engine</a>&nbsp;for a client by implementing &nbsp;&nbsp;Collaborative Filtering based on Apache Spark using a Python interface. &nbsp;We received a number of very impressive submissions. &nbsp;We&#39;ve also developed a <a href=\"http://www.topcoder.com/challenge-details/30053186/?type=develop&amp;noncache=true\">visualization</a> to provide intuitions about the viewing habits of our client&#39;s customers and to illustrate how programs are related by common groups of viewers. &nbsp; The set up for the recommendation engine and the accompany visualization is fairly complex but we&#39;ve &quot;dockerized&quot; it pretty well. &nbsp;Both the recommendation engine build on Python Spark, and the REST API which accompanies it are up and running and the NodeJS server which is hosting our application is up and running. &nbsp;There&#39;s just one problem. &nbsp;The NodeJS visualization code doesn&#39;t talk to the python-based REST API. &nbsp;There are some errors in the user interface -- No API Response -- but apart from that it isn&#39;t obvious what is causing the issue. &nbsp;Your assignment in this challenge is to resolve this issue. &nbsp; The code for this challenge can be found in the following repository:</p>\n\n<p>https://github.com/cloudspokes/recommendation_engine</p>\n\n<p>For the most part the configuration of the system is dockerized. &nbsp;Here are steps you should follow to get both the python recommendation engine and REST API up and running along with the NodeJS server:</p>\n\n<p>1. &nbsp;Install Docker it by following the appropriate instructions in the Docker website:</p>\n\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href=\"https://docs.docker.com/engine/installation/\">https://docs.docker.com/engine/installation/</a></p>\n\n<p>2. &nbsp;Navigate to the project root. &nbsp;Inside this folder, run the following command to build a docker image name pyrec:</p>\n\n<div>\n<p>$ docker build -t pyrec .</p>\n</div>\n\n<p>3. &nbsp;Start an interactive shell in the image. &nbsp;Note that the string &quot;56c4c54897c7&quot; below is the container id. &nbsp;This will change every time you create a new container. &nbsp;The -m 6g paramter indicates that you&#39;re starting a container with six gigabytes of RAM. &nbsp;<span>Note that if you run Docker from a Mac you&#39;ll actually be starting up a Virtual Machine which hosts your Docker containers. &nbsp;The -P parameter exposes the ports required to access the docker container from outside the container itself.&nbsp;</span></p>\n\n<div>\n<p>$ docker run -t -i -P -m 6g pyrec /bin/bash</p>\n\n<p>root@56c4c54897c7:/opt/pyrec#</p>\n</div>\n\n<p>4. &nbsp;You&#39;ll need 2 more shells to run our tests on a running server and start up NodeJS. On two other terminal window, exec a second bash session by running:</p>\n\n<div>\n<p>$ docker exec -t -i &lt;container_id&gt; /bin/bash</p>\n\n<p>root@56c4c54897c7:/opt/pyrec#</p>\n\n<p>Note on a Mac you can bring up a Docker Quickstart terminal from your Applications-&gt;Docker folder to access the Docker daemon. &nbsp;</p>\n\n<p><span>5. &nbsp;To start up the NodeJS server use one of the terminal windows you opened up previously. &nbsp;Navigate to the pyrec/pyrec-ui folder and the node start command. &nbsp;</span></p>\n\n<p dir=\"rtl\" style=\"text-align:left\"><span>root@56c4c54897c7:/opt/pyrec#&nbsp;</span><span>cd /opt/pyrec/pyrec-ui</span></p>\n</div>\n\n<p>root@56c4c54897c7:/opt/pyrec/pyrec-ui# npm start</p>\n\n<p>6. &nbsp;You&#39;re ready to start the verification of the system. &nbsp;From here you should refer to the verification steps in section 8 the docs/Deployment-Guide.doc and section 5 of the&nbsp;docs/Visualization Deployment-Guide.doc. &nbsp;<span>&nbsp;There are some API calls -- the ones using potential viewers -- that take some time to execute.</span></p>\n\n<p><span>7. &nbsp;Accessing the Docker containers from outside Docker using a web browser can be a little tricky on Mac environment. &nbsp;You can see all the docker-machine instances by executing the following command:</span></p>\n\n<p><span>Wards-MacBook-Pro:recommendation_engine Ward$ docker-machine ls</span><br />\n<span>NAME&nbsp; &nbsp; &nbsp; ACTIVE &nbsp; DRIVER &nbsp; &nbsp; &nbsp; STATE &nbsp; &nbsp; URL &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; SWARM &nbsp; DOCKER&nbsp; &nbsp; ERRORS</span></p>\n\n<p><span>default &nbsp; *&nbsp; &nbsp; &nbsp; &nbsp; virtualbox &nbsp; Running &nbsp; tcp://192.168.99.100:2376 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; v1.10.3&nbsp; &nbsp;</span></p>\n\n<p><span>8. &nbsp;Then you you need to find the port of the docker container. &nbsp;You can do this by using the following command:&nbsp;</span><br />\n<span>Wards-MacBook-Pro:recommendation_engine Ward$ docker ps</span><br />\n<span>CONTAINER ID&nbsp; &nbsp; &nbsp; &nbsp; IMAGE &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; COMMAND &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; CREATED &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; STATUS&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; PORTS &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NAMES</span></p>\n\n<p><span>8980286e22ea&nbsp; &nbsp; &nbsp; &nbsp; pyrec &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;/bin/bash&quot; &nbsp; &nbsp; &nbsp; &nbsp; 50 minutes ago&nbsp; &nbsp; &nbsp; Up 50 minutes &nbsp; &nbsp; &nbsp; 0.0.0.0:32770-&gt;3000/tcp &nbsp; loving_poitras</span></p>\n\n<p><span>9. &nbsp;In my case, I can access the Node.js app by combining the ip from the Docker Machine with the port from the container. &nbsp;The web app can be accessed at: &nbsp;</span></p>\n\n<p><span>http://192.168.99.100:32770</span><br />\n&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n",
   "digitalRunPoints": null,
   "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30053384",
-  "event": {
-    "id": 3446,
-    "description": "2016 TopCoder(R) Open",
-    "shortDescription": "tco16"
-  },
   "finalSubmissionGuidelines": "<p>1. &nbsp;You should use the existing code for this submission. &nbsp;You can find the existing code here: &nbsp;https://github.com/cloudspokes/recommendation_engine<br />\n2. &nbsp;Please request access to the repository by posting your github id in the forums.<br />\n3. &nbsp;You&#39;ll be given read-only access to the repository which will allow you <strong>fork</strong> it. &nbsp;Please do this. &nbsp;If you win the competition you&#39;ll be asked to submit a pull request.<br />\n4. &nbsp;Your solution will be verified using Docker.</p>\n",
   "forumId": 32348,
   "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=32348",
@@ -27,6 +22,26 @@
   "numberOfCheckpointsPrizes": 0,
   "numberOfRegistrants": 14,
   "numberOfSubmissions": 1,
+  "postingDate": "2016-03-19T23:28:00.000Z",
+  "projectId": 9454,
+  "registrationEndDate": "2016-04-18T23:28:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-04-18T23:33:00.000Z",
+  "submissions": [
+    {
+      "handle": "lanchongyizu",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-03-20T08:16:00.000Z",
+      "_id": "58123e91e0be5f30ae564d77"
+    }
+  ],
   "phases": [
     {
       "type": "Registration",
@@ -56,14 +71,6 @@
       "_id": "58123e91e0be5f30ae564d74"
     }
   ],
-  "platforms": [
-    "NodeJS"
-  ],
-  "postingDate": "2016-03-19T23:28:00.000Z",
-  "prize": [
-    400
-  ],
-  "projectId": 9454,
   "registrants": [
     {
       "handle": "LieutenantRoger",
@@ -192,23 +199,13 @@
       "_id": "58123e91e0be5f30ae564d66"
     }
   ],
-  "registrationEndDate": "2016-04-18T23:28:00.000Z",
-  "reviewScorecardId": 30001600,
-  "reviewType": "INTERNAL",
-  "screeningScorecardId": null,
-  "submissionEndDate": "2016-04-18T23:33:00.000Z",
-  "submissions": [
-    {
-      "handle": "lanchongyizu",
-      "placement": 1,
-      "screeningScore": null,
-      "initialScore": 100,
-      "finalScore": 100,
-      "points": 0,
-      "submissionStatus": "Active",
-      "submissionDate": "2016-03-20T08:16:00.000Z",
-      "_id": "58123e91e0be5f30ae564d77"
-    }
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "prize": [
+    400
   ],
   "technology": [
     "Data Science",
@@ -217,5 +214,8 @@
     "Node.js",
     "Python",
     "REST"
+  ],
+  "platforms": [
+    "NodeJS"
   ]
 }

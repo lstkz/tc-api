@@ -1,0 +1,511 @@
+{
+  "_id": 30054978,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T10:32:12.912Z",
+  "appealsEndDate": "2016-08-23T02:46:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "TCO - Augmented Reality Application Architecture",
+  "challengeType": "Architecture",
+  "checkpointSubmissionEndDate": "2016-08-14T19:00:00.000Z",
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span style=\"color:#FF0000\"><strong>Project Overview</strong></span></h2>\n\n<p>Fujitsu have an AR middleware called InterstageAR and they have a few apps built on top of it. One these apps is called Tenken where workers check assets in the factories. This Tenken app consists of two parts: a device specific mobile app and a web app built using Javascript app. The mobile app will load the web app from a remote server and run it on Fujitsu&rsquo;s custom web browser, the web app then relies on ar.js to interact with the mobile app which can be considered the AR middleware. In general, the dependency chain is like this:<br />\n<br />\nWeb app -&gt; ar.js -&gt; mobile app -&gt; real device<br />\n<br />\nOur vision is to get topcoder to build more apps on top of InterstageAR, but as a first step, we are trying do something that will make it easier for the community to work on this, which is the purpose of this project. Essentially we want to make it possible to run the web app locally without relying on the mobile app since the mobile app must run on a real device. In short the goal is to modify Tenken app, create new app using ar.js and high level api set.</p>\n\n<h2><span style=\"color:#FF0000\"><strong>Competition Task Overview</strong></span></h2>\n\n<p>In this challenge, we are trying to do the following:<br />\n1. Remove the dependency to run Tenken app (or other applications built on top of InterstageAR) from the actual mobile devices (like camera, GPS, etc&hellip;). These are currently implemented as specific JavaScript methods / API that call the native methods, so the plan is to wrap these methods that will return dummy data.<br />\n1.1. Tenken web app&rsquo;s source, setup instructions are hosted at a GitHub repository (link provided in forum).<br />\n1.2. Current application architecture overview is written in a google doc (link provided in forum).<br />\n<br />\n2. There are about 15 method sets that need to get wrapped (all are in ar.js), some of them are simple property return that we want to return configurable parameters. For the rest you&rsquo;ll probably need to think carefully how to encapsulate and fake the device so that building new application will be easy in future.<br />\n2.1. Methods that need to be decoupled and the requirement how to wrap those methods are written in a spreadsheet (link provided in forum)<br />\n2.2. There&rsquo;s also a call to some server API for caching (rows 12-14 of the spreadsheet), we want to get rid of that as well and replace it with local caching inside the local browser app.<br />\n2.3. Please note that all methods are callback functions, so that wrapping should be done in a way that registered callback methods will get the fake value.<br />\n<br />\n3. Right now the client&rsquo;s JavaScript methods are using &ldquo;low level api methods&rdquo; all in ar.js library. We need to refactor them to have more &ldquo;higher level api methods&rdquo; in JavaScript so that creating new app in the future will be easier to do.&nbsp;</p>\n\n<p><br />\n4. Right now the last screen of the app (once you have it running) has a camera view. You can use it to scan our demo markers to see data. We need to replace that with a &quot;photo view&quot; since after we get rid of the device dependency there will be no camera. Ideally the photo view is smart enough&nbsp;so that it can act like the same camera + ar contents view, it should have a way to show&nbsp;picture that has no AR marker, AR marker only, AR marker + AR contents, etc.<br />\n<br />\nThe challenge tasks will include the following:<br />\n1. Design the architecture on how the web app and ar.js should be modified to work locally and the high level APIs<br />\n2. Come up with a solution so Tenken web app can run locally (in Chrome/Firefox browser) without the dependency to actual devices: one of the document should be a list of Javascript methods to wrap written in this spreadsheet and architecture of each method implementation which should be following the column &ldquo;Method Wrapping Strategy&rdquo;<br />\n3. Provide PoC on 2 of the methods being decoupled<br />\n4. Provide detailed assembly spec for the developers. We plan to run an assembly after this architecture modify the Tenken web app so it can run locally without relying on the mobile app<br />\n5. Any other suggestions and designs to improve how to; (a) Manage source code/app in GitHub, (b) Easily develop/unit test applications in future, and (c) Build/Test and deployment process</p>\n\n<p><span style=\"color:#FF0000\"><strong>Checkpoint</strong></span></p>\n\n<p>We are awarding 4 prizes for checkpoint submissions, each of the top 4 checkpoint submissions picked by us will receive a prize of $200.<br />\n<br />\nCheckpoint submissions must cover the following:<br />\n1. Proof that you have successfully installed the app and ran it locally<br />\n2. Overview on the direction of your architecture<br />\n3. Details on you plan to implement the the BIG methods (lines 2 - 13 in the spreadsheet)<br />\n<br />\nPlease note that you will only get the checkpoint prize if you submit to the final round and pass review as well.</p>\n\n<p><span style=\"color:#FF0000\"><strong>Technology Overview</strong></span></p>\n\n<p>JavaScript<br />\nMobile<br />\nAR<br />\nHTML5</p>\n\n<h2><span style=\"color:#FF0000\"><strong>Documentation Provided</strong></span></h2>\n<span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:12px\">Register to download all documents from challenge forum.</span>",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30054978",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalFixEndDate": "2016-08-24T02:38:00.000Z",
+  "finalSubmissionGuidelines": "<h2><span style=\"color:#FF0000\"><strong>Submission Deliverables</strong></span></h2>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:12px\">1. TCUML containing all necessary diagrams</span></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:12px\">2. Assembly Specification(s)</span></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:12px\">3. JavaScript API Documentation using jsdoc3: </span><a href=\"https://github.com/jsdoc3/jsdoc\" style=\"text-decoration:none;\"><u>https://github.com/jsdoc3/jsdoc</u></a><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:12px\">. All JavaScript needs to comply with 4. jsdoc annotation and documentation</span></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:12px\">5. Application Design Specification</span></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:12px\">6. PoC implementation for 2 of the methods in ar.js</span></p>\n\n<h2><span style=\"color:#FF0000\"><strong>Submission Guidelines</strong></span></h2>\n<span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:12px\">For each member, the final submission should be uploaded via the challenge detail page on</span><span style=\"color:rgb(102, 102, 102); font-family:arial; font-size:12px\"> </span><a href=\"http://www.topcoder.com/\" style=\"text-decoration:none;\"><u>topcoder.com</u></a><span style=\"color:rgb(102, 102, 102); font-family:arial; font-size:12px\">.</span>",
+  "forumId": 33790,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33790",
+  "numberOfCheckpointSubmissions": 3,
+  "numberOfCheckpointsPrizes": 4,
+  "numberOfRegistrants": 34,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-10T17:08:00.000Z",
+      "actualStartTime": "2016-08-10T17:08:00.000Z",
+      "scheduledEndTime": "2016-08-10T17:09:00.000Z",
+      "actualendTime": "2016-08-10T17:09:00.000Z",
+      "_id": "5813292c550dfb3b52b5f0ff"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-10T17:09:00.000Z",
+      "actualStartTime": "2016-08-10T17:09:00.000Z",
+      "scheduledEndTime": "2016-08-10T17:12:00.000Z",
+      "actualendTime": "2016-08-10T17:12:00.000Z",
+      "_id": "5813292c550dfb3b52b5f0fe"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-10T18:17:00.000Z",
+      "actualStartTime": "2016-08-10T18:17:00.000Z",
+      "scheduledEndTime": "2016-08-14T19:00:00.000Z",
+      "actualendTime": "2016-08-14T19:00:00.000Z",
+      "_id": "5813292c550dfb3b52b5f0fd"
+    },
+    {
+      "type": "Checkpoint Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-10T18:22:00.000Z",
+      "actualStartTime": "2016-08-10T18:22:00.000Z",
+      "scheduledEndTime": "2016-08-14T19:00:00.000Z",
+      "actualendTime": "2016-08-14T19:00:00.000Z",
+      "_id": "5813292c550dfb3b52b5f0fc"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-10T18:22:00.000Z",
+      "actualStartTime": "2016-08-10T18:22:00.000Z",
+      "scheduledEndTime": "2016-08-20T01:17:00.000Z",
+      "actualendTime": "2016-08-20T01:17:00.000Z",
+      "_id": "5813292c550dfb3b52b5f0fb"
+    },
+    {
+      "type": "Checkpoint Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-14T19:00:00.000Z",
+      "actualStartTime": "2016-08-14T19:00:00.000Z",
+      "scheduledEndTime": "2016-08-15T04:19:00.000Z",
+      "actualendTime": "2016-08-15T04:19:00.000Z",
+      "_id": "5813292c550dfb3b52b5f0fa"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-20T01:17:00.000Z",
+      "actualStartTime": "2016-08-20T01:17:00.000Z",
+      "scheduledEndTime": "2016-08-20T12:36:00.000Z",
+      "actualendTime": "2016-08-20T12:36:00.000Z",
+      "_id": "5813292c550dfb3b52b5f0f9"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-20T12:36:00.000Z",
+      "actualStartTime": "2016-08-20T12:36:00.000Z",
+      "scheduledEndTime": "2016-08-21T18:01:00.000Z",
+      "actualendTime": "2016-08-21T18:01:00.000Z",
+      "_id": "5813292c550dfb3b52b5f0f8"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-21T18:01:00.000Z",
+      "actualStartTime": "2016-08-21T18:01:00.000Z",
+      "scheduledEndTime": "2016-08-22T18:01:00.000Z",
+      "actualendTime": "2016-08-22T18:01:00.000Z",
+      "_id": "5813292c550dfb3b52b5f0f7"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-22T18:01:00.000Z",
+      "actualStartTime": "2016-08-22T18:01:00.000Z",
+      "scheduledEndTime": "2016-08-23T02:46:00.000Z",
+      "actualendTime": "2016-08-23T02:46:00.000Z",
+      "_id": "5813292c550dfb3b52b5f0f6"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-23T02:46:00.000Z",
+      "actualStartTime": "2016-08-23T02:46:00.000Z",
+      "scheduledEndTime": "2016-08-23T02:59:00.000Z",
+      "actualendTime": "2016-08-23T02:59:00.000Z",
+      "_id": "5813292c550dfb3b52b5f0f5"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-23T02:59:00.000Z",
+      "actualStartTime": "2016-08-23T02:59:00.000Z",
+      "scheduledEndTime": "2016-08-24T02:38:00.000Z",
+      "actualendTime": "2016-08-24T02:38:00.000Z",
+      "_id": "5813292c550dfb3b52b5f0f4"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-24T02:38:00.000Z",
+      "actualStartTime": "2016-08-24T02:38:00.000Z",
+      "scheduledEndTime": "2016-08-26T04:19:00.000Z",
+      "actualendTime": "2016-08-26T04:19:00.000Z",
+      "_id": "5813292c550dfb3b52b5f0f3"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2016-08-26T04:19:00.000Z",
+      "actualStartTime": "2016-08-26T04:19:00.000Z",
+      "scheduledEndTime": "2016-08-31T04:19:00.000Z",
+      "actualendTime": "2016-08-31T04:19:00.000Z",
+      "_id": "5813292c550dfb3b52b5f0f2"
+    }
+  ],
+  "platforms": [
+    "Mobile",
+    "HTML"
+  ],
+  "postingDate": "2016-08-10T18:17:00.000Z",
+  "prize": [
+    1400,
+    700
+  ],
+  "projectId": 10456,
+  "registrants": [
+    {
+      "handle": "iversonLv",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-10T18:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0f1"
+    },
+    {
+      "handle": "g.prog",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-10T18:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0f0"
+    },
+    {
+      "handle": "Urmass",
+      "reliability": "40%",
+      "registrationDate": "2016-08-10T19:02:00.000Z",
+      "submissionDate": null,
+      "rating": "1276",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813292c550dfb3b52b5f0ef"
+    },
+    {
+      "handle": "veshu",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-10T19:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0ee"
+    },
+    {
+      "handle": "chtbharti",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-10T19:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0ed"
+    },
+    {
+      "handle": "avbngera",
+      "reliability": "100%",
+      "registrationDate": "2016-08-10T19:36:00.000Z",
+      "submissionDate": null,
+      "rating": "1134",
+      "colorStyle": "color: #00A900",
+      "_id": "5813292c550dfb3b52b5f0ec"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-10T20:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0eb"
+    },
+    {
+      "handle": "ShindouHikaru",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-10T23:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0ea"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-11T00:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0e9"
+    },
+    {
+      "handle": "TopG",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-11T01:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0e8"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "6%",
+      "registrationDate": "2016-08-11T02:16:00.000Z",
+      "submissionDate": "2016-08-14T18:41:00.000Z",
+      "rating": "749",
+      "colorStyle": "color: #999999",
+      "_id": "5813292c550dfb3b52b5f0e7"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "20%",
+      "registrationDate": "2016-08-11T02:56:00.000Z",
+      "submissionDate": null,
+      "rating": "1546",
+      "colorStyle": "color: #DDCC00",
+      "_id": "5813292c550dfb3b52b5f0e6"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-11T03:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0e5"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "50%",
+      "registrationDate": "2016-08-11T03:11:00.000Z",
+      "submissionDate": null,
+      "rating": "1064",
+      "colorStyle": "color: #00A900",
+      "_id": "5813292c550dfb3b52b5f0e4"
+    },
+    {
+      "handle": "Amith",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-11T03:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0e3"
+    },
+    {
+      "handle": "Amar365",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-11T06:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0e2"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-11T06:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0e1"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-11T07:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0e0"
+    },
+    {
+      "handle": "moagi.anela",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-11T12:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0df"
+    },
+    {
+      "handle": "chanchandrue",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-11T14:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0de"
+    },
+    {
+      "handle": "hirosima",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-11T14:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0dd"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-11T14:30:00.000Z",
+      "submissionDate": "2016-08-20T01:07:00.000Z",
+      "rating": "573",
+      "colorStyle": "color: #999999",
+      "_id": "5813292c550dfb3b52b5f0dc"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-11T18:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0db"
+    },
+    {
+      "handle": "_dp_singh",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-11T19:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0da"
+    },
+    {
+      "handle": "M.X",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-11T19:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0d9"
+    },
+    {
+      "handle": "albertwang",
+      "reliability": "66%",
+      "registrationDate": "2016-08-12T03:05:00.000Z",
+      "submissionDate": null,
+      "rating": "1938",
+      "colorStyle": "color: #DDCC00",
+      "_id": "5813292c550dfb3b52b5f0d8"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-12T05:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0d7"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-12T07:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0d6"
+    },
+    {
+      "handle": "YoshitakaMori",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-12T09:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0d5"
+    },
+    {
+      "handle": "sfaxiano",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-12T13:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0d4"
+    },
+    {
+      "handle": "JaydevMehta",
+      "reliability": "100%",
+      "registrationDate": "2016-08-13T11:06:00.000Z",
+      "submissionDate": "2016-08-20T01:14:00.000Z",
+      "rating": "1260",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813292c550dfb3b52b5f0d3"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-14T05:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0d2"
+    },
+    {
+      "handle": "phaniram",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-14T13:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0d1"
+    },
+    {
+      "handle": "binit92",
+      "reliability": "n/a",
+      "registrationDate": "2016-08-14T18:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813292c550dfb3b52b5f0d0"
+    }
+  ],
+  "registrationEndDate": "2016-08-14T19:00:00.000Z",
+  "reliabilityBonus": 280,
+  "reviewScorecardId": 30001463,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30001330,
+  "submissionEndDate": "2016-08-20T01:17:00.000Z",
+  "submissions": [
+    {
+      "handle": "JaydevMehta",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 85.85,
+      "finalScore": 88.85,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-08-20T01:14:00.000Z",
+      "_id": "5813292c550dfb3b52b5f101"
+    },
+    {
+      "handle": "sah2ed",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 82.21,
+      "finalScore": 87.38,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-08-20T01:07:00.000Z",
+      "_id": "5813292c550dfb3b52b5f100"
+    }
+  ],
+  "technology": [
+    "HTML5",
+    "JavaScript"
+  ]
+}

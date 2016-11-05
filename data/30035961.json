@@ -1,0 +1,516 @@
+{
+  "_id": 30035961,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T12:08:10.921Z",
+  "appealsEndDate": "2013-11-04T12:41:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "PDS - Import and Persistence Update - Assembly Contest",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><strong>1. Project Overview</strong></p>\n\n<p><img alt=\"\" src=\"http://apps.topcoder.com/wiki/download/attachments/70980039/ntl.png\" style=\"width: 130px; height: 108px;\" /></p>\n\n<p>NASA has&nbsp;recorded over 100 terabytes of images, telemetry, models and just about everything one can imagine from all the planetary missions from the past 30 years. The data stored is within NASA&#39;s Planetary Data System (PDS). And it is all available free at <a href=\"http://pds.nasa.gov\">http://pds.nasa.gov</a></p>\n\n<p><span style=\"line-height: 1.6em;\">However, while rich in depth and breadth, the PDS holdings have developed in a disparate fashion over the years with different architectures and formats at the various nodes. Consequently establishing a uniform approach to accessing data within the PDS is a significant challenge.</span></p>\n\n<p>Working with TopCoder and Harvard IQSS via the NASA Tournament Lab, PDS developed a data base of meta-data that allows user-friendly access to data held at the Small Bodies Node (SBN). As the next step, we would like to extend the import and persistence module to process the Cassini ISS datasets held at the Rings Node.</p>\n\n<p><strong style=\"line-height: 1.6em;\">2. Competition Task Overview</strong></p>\n\n<p><span style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\">In this competition you have to extend the current functionality of the import and persistence module so that it can support the Cassini ISS datasets. This includes extending the database to accommodated additional meta-data parameters, and modifying the API to populate the expanded database.</span></p>\n\n<p><span style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 13px; line-height: normal;\">Raw data volumes:&nbsp;</span><a href=\"http://pds-challenge.seti.org/volumes/COISS_2xxx/\" style=\"color: rgb(17, 85, 204); font-family: arial, sans-serif; font-size: 13px; line-height: normal;\" target=\"_blank\">http://pds-challenge.seti.org/<wbr />volumes/COISS_2xxx/</a><br style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 13px; line-height: normal;\" />\n<br style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 13px; line-height: normal;\" />\n<span style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 13px; line-height: normal;\">Supplemental tables of geometric metadata:&nbsp;</span><a href=\"http://pds-challenge.seti.org/supplemental_tables/COISS_2xxx/\" style=\"color: rgb(17, 85, 204); font-family: arial, sans-serif; font-size: 13px; line-height: normal;\" target=\"_blank\">http://pds-challenge.seti.org/<wbr />supplemental_tables/COISS_2xxx<wbr />/</a></p>\n\n<div style=\"background:#eee;border:1px solid #ccc;padding:5px 10px;\"><span style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\">There are different meta-data parameters in the Cassini ISS data labels (some are the same as in the SBN data, some are not in the SBN labels, and some of the parameters in the SBN data probably are not in the Cassini labels. There are 129 additional geometric meta-data parameters in the supplemental tables (moon summary 35, ring summary 59, saturn summary 35). And there are subtleties. For example the fifth column in the &quot;moon summary&quot; and &quot;saturn summary&quot; tables is MINIMUM_PLANETOCENTRIC_</span><span style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\">LATITUD</span><wbr style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\" /><span style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\">E. The database needs to accommodate both - they are distinct, not duplicates. One is the minimum value for the specified target moon (specified in column 4) and the other is the minimum value for the planet.</span></div>\n\n<p><strong style=\"line-height: 1.6em;\">2.1.1<strong>. Changes Required</strong></strong></p>\n\n<p><span style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\">The current code supports processing of raw data volumes at the SBN. However substantially more information is necessary to support the current PDS challenge. As per the current logic DataSetProcessorImpl#</span><span style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\">doProcess</span><wbr style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\" /><span style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\">ing method gets the data label file names from index/index.lbl and index/index.tab.&nbsp;Each data label file will be parsed and the meta-data it contains persisted to the database.</span><span style=\"line-height: 1.6em;\">&nbsp;More details can be obtained by referring the code in DataSetProcessorImpl.&nbsp;</span></p>\n\n<p><span style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\">For the Cassini data used in this challenge, additional meta-data, stored in supplemental tables is also required. Consequently, the code must be revised not only to accommodate the meta-data in the data label files, but to parse the meta-data from the supplemental tables.</span><br style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\" />\n<br style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\" />\n<span style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\">For each volume of data, (COISS_2001, COISS_2002, COISS_2003, etc.) there are four separate supplemental meta-data files (inventory, moon, ring, and saturn). Each table file has it&#39;s own label file describing the contents of the table.</span><br style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\" />\n<br style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\" />\n<span style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\">Consider COISS_2001, the supplemental meta-data for the inventory of targets within the image field of view is available here -&nbsp;</span><a href=\"http://pds-challenge.seti.org/supplemental_tables/COISS_2xxx/COISS_2001/COISS_2001_inventory.tab\" style=\"color: rgb(17, 85, 204); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\" target=\"_blank\">http://pds-challenge.seti.org/<wbr />supplemental_tables/COISS_2xxx<wbr />/COISS_2001/COISS_2001_invento<wbr />ry.tab</a><span style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\">. The label file for this table is COISS_2001_inventory.lbl which is available in the same folder. The contents in the .tab file are VolumeID, File specification path to the data product label file, Ring Observation ID and Target (this field recurs as many times as necessary). The &quot;file specification path to the data product label file&quot; means the location in the Raw data volume. The .tab file contains one row for each data file (image) in the raw volume.</span><br style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\" />\n<br style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\" />\n<span style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\">Similarly, again for COISS_2001, the &#39;moon summary&#39; supplemental meta-data is available here -&nbsp;</span><a href=\"http://pds-challenge.seti.org/supplemental_tables/COISS_2xxx/COISS_2001/COISS_2001_moon_summary.tab\" style=\"color: rgb(17, 85, 204); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\" target=\"_blank\">http://pds-challenge.seti.org/<wbr />supplemental_tables/COISS_2xxx<wbr />/COISS_2001/COISS_2001_moon_<wbr />summary.tab</a><span style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\">. This table contains 35 columns of meta-data relating to the moons of the Saturn system. The contents of the individual columns in the table file are described in the corresponding label file. This table contains one row for each moon in the field of view for each image. So any single image may have from zero to many rows depending on the image contents</span></p>\n\n<p><span style=\"line-height: 1.6em;\">Example, Line #1 in the tab file is as follows.</span></p>\n\n<pre style=\"color: rgb(0, 0, 0); line-height: normal; word-wrap: break-word; white-space: pre-wrap;\">\n&quot;COISS_2001&quot;,&quot;data/1454725799_1455008789/N1454725799_1.LBL &quot;,&quot;S/IMG/CO/ISS/1454725799/N&quot;,&quot;RHEA&quot;,&quot;HELENE&quot;,&quot;TELESTO&quot;</pre>\n\n<p><span style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.727272033691406px; line-height: normal;\">Absolute&nbsp;</span>file Specification Path to the data product label file will be&nbsp;<a href=\"http://pds-challenge.seti.org/volumes/COISS_2xxx/COISS_2001/data/1454725799_1455008789/N1454725799_1.LBL\">http://pds-challenge.seti.org/volumes/COISS_2xxx/COISS_2001/data/1454725799_1455008789/N1454725799_1.LBL</a>.&nbsp;<span style=\"line-height: 1.6em;\">This label file will have the pointers to the data objects (Images in our case).</span></p>\n\n<pre style=\"color: rgb(0, 0, 0); line-height: normal; word-wrap: break-word; white-space: pre-wrap;\">\n<strong style=\"color: rgb(51, 51, 51); font-family: sans-serif, Arial, Verdana, 'Trebuchet MS'; line-height: 1.6em;\">2.1.2. Source Code</strong>\n</pre>\n\n<p>SVN -&nbsp;<a href=\"https://coder.topcoder.com/tcs/clients/ntl-pds/assets/assembly/pds_projects/import_and_persistence\">https://coder.topcoder.com/tcs/clients/ntl-pds/assets/assembly/pds_projects/import_and_persistence</a></p>\n\n<p>Please go through the implementations in&nbsp;gov.nasa.pds.processors.impl and&nbsp;gov.nasa.pds.services.impl for understanding how dataset processing and persistence&nbsp;is performend for SBN dataset.</p>\n\n<p>Also you can go through the current architecture which is located <a href=\"https://coder.topcoder.com/tcs/clients/ntl-pds/assets/architecture\">here</a>.</p>\n\n<div style=\"background:#eee;border:1px solid #ccc;padding:5px 10px;\"><span style=\"color:#FF0000;\">Important - Do not break any existing functionality while updating the code.</span></div>\n\n<p><strong>2.1.2. Database</strong></p>\n\n<p>The new datasets might need DB schema updates. Make sure that you are strictly following 3NF.</p>\n\n<p><strong style=\"line-height: 1.6em;\">2.1.3 Application Management</strong></p>\n\n<p>Please follow the standards set by the existing code for the application management.</p>\n\n<p><em>2.1.3.1 Transactions</em></p>\n\n<p>The services will use Spring to manage their transactions. All modifying methods should provide transactional control.</p>\n\n<p><em style=\"font-size: 13px;\">2.1.3.2 Configuration</em></p>\n\n<p>The converter and all service implementations will use setter injection for configuration with the use of Spring.&nbsp;</p>\n\n<p><em style=\"font-size: 13px;\">2.1.3.3 Persistence</em></p>\n\n<p>This module will use JDBC queries to manage all data. It will use JdbcTemplate from the Spring framework.</p>\n\n<p><em style=\"font-size: 13px;\">2.1.3.4 Logging</em></p>\n\n<p>The services will log activity and exceptions using the Logging Wrapper in this component.<br />\nIt will log errors at Error level, and method entry/exit information at DEBUG level.&nbsp;It will log errors at Error level, potentially harmful situations at WARN level, and method entry/exit, input/output information at DEBUG level.</p>\n\n<p>Please follow the logging pattern in the current code.&nbsp;</p>\n\n<p><em style=\"font-size: 13px;\">2.1.3.5 Exception Handling</em></p>\n\n<p>The Base Exception component will be used as the top-level exception for all other exceptions thrown by the components.</p>\n\n<p><em style=\"font-size: 13px;\">2.1.3.6 Scalability</em></p>\n\n<p>With the use of object recycling and preloading during data reading, the application is quite scalable.&nbsp;<span style=\"line-height: 1.6em;\">Such services as validation preload all definitions that will be used for validation instead accessing the database each time.</span></p>\n\n<p>Object recycling means that each time a data file is loaded, the Table object is reused, this minimizing the creation of new objects.</p>\n\n<p><strong>3. Technology overview</strong></p>\n\n<ul>\n\t<li><span style=\"line-height: 1.6em;\">J2SE 1.6</span></li>\n\t<li><span style=\"line-height: 1.6em;\">Spring 3.0.5: </span><a href=\"http://www.springsource.org/\" style=\"line-height: 1.6em;\">http://www.springsource.org/</a></li>\n\t<li><span style=\"line-height: 1.6em;\">MySQL 5.5: </span><a href=\"http://www.mysql.com/\" style=\"line-height: 1.6em;\">http://www.mysql.com/</a></li>\n\t<li>Apache Ant 1.8.2: <a href=\"http://ant.apache.org/\">http://ant.apache.org/</a></li>\n</ul>\n",
+  "digitalRunPoints": 810,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30035961",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2013-11-06T08:53:00.000Z",
+  "finalSubmissionGuidelines": "<p><strong>Submission Deliverables</strong></p>\n\n<p>A complete list of deliverables can be found in the TopCoder Assembly competition Tutorial at:</p>\n\n<p><a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a></p>\n\n<ul>\n\t<li>Source code and configuration files.</li>\n\t<li>Deployment guide to configure and verify the application.</li>\n</ul>\n",
+  "forumId": 18741,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=18741",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 34,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-26T00:46:00.000Z",
+      "actualStartTime": "2013-10-26T00:46:00.000Z",
+      "scheduledEndTime": "2013-10-26T00:49:00.000Z",
+      "actualendTime": "2013-10-26T00:49:00.000Z",
+      "_id": "58133faa550dfb3b52be0385"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-26T00:49:00.000Z",
+      "actualStartTime": "2013-10-26T00:49:00.000Z",
+      "scheduledEndTime": "2013-10-26T02:55:00.000Z",
+      "actualendTime": "2013-10-26T02:55:00.000Z",
+      "_id": "58133faa550dfb3b52be0384"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-26T02:55:00.000Z",
+      "actualStartTime": "2013-10-26T02:55:00.000Z",
+      "scheduledEndTime": "2013-10-28T02:56:00.000Z",
+      "actualendTime": "2013-10-28T02:56:00.000Z",
+      "_id": "58133faa550dfb3b52be0383"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-10-26T03:02:00.000Z",
+      "actualStartTime": "2013-10-26T03:02:00.000Z",
+      "scheduledEndTime": "2013-11-01T03:01:00.000Z",
+      "actualendTime": "2013-11-01T03:01:00.000Z",
+      "_id": "58133faa550dfb3b52be0382"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-01T03:01:00.000Z",
+      "actualStartTime": "2013-11-01T03:01:00.000Z",
+      "scheduledEndTime": "2013-11-01T13:22:00.000Z",
+      "actualendTime": "2013-11-01T13:22:00.000Z",
+      "_id": "58133faa550dfb3b52be0381"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-01T13:22:00.000Z",
+      "actualStartTime": "2013-11-01T13:22:00.000Z",
+      "scheduledEndTime": "2013-11-03T10:54:00.000Z",
+      "actualendTime": "2013-11-03T10:54:00.000Z",
+      "_id": "58133faa550dfb3b52be0380"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-03T10:54:00.000Z",
+      "actualStartTime": "2013-11-03T10:54:00.000Z",
+      "scheduledEndTime": "2013-11-04T10:54:00.000Z",
+      "actualendTime": "2013-11-04T10:54:00.000Z",
+      "_id": "58133faa550dfb3b52be037f"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-04T10:54:00.000Z",
+      "actualStartTime": "2013-11-04T10:54:00.000Z",
+      "scheduledEndTime": "2013-11-04T12:41:00.000Z",
+      "actualendTime": "2013-11-04T12:41:00.000Z",
+      "_id": "58133faa550dfb3b52be037e"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-04T12:41:00.000Z",
+      "actualStartTime": "2013-11-04T12:41:00.000Z",
+      "scheduledEndTime": "2013-11-04T12:53:00.000Z",
+      "actualendTime": "2013-11-04T12:53:00.000Z",
+      "_id": "58133faa550dfb3b52be037d"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-04T12:53:00.000Z",
+      "actualStartTime": "2013-11-04T12:53:00.000Z",
+      "scheduledEndTime": "2013-11-05T08:51:00.000Z",
+      "actualendTime": "2013-11-05T08:51:00.000Z",
+      "_id": "58133faa550dfb3b52be037c"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-05T08:51:00.000Z",
+      "actualStartTime": "2013-11-05T08:51:00.000Z",
+      "scheduledEndTime": "2013-11-05T11:25:00.000Z",
+      "actualendTime": "2013-11-05T11:25:00.000Z",
+      "_id": "58133faa550dfb3b52be037b"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-07T02:52:00.000Z",
+      "actualStartTime": "2013-11-07T02:52:00.000Z",
+      "scheduledEndTime": "2013-11-12T02:52:00.000Z",
+      "actualendTime": "2013-11-12T02:52:00.000Z",
+      "_id": "58133faa550dfb3b52be037a"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-05T11:25:00.000Z",
+      "actualStartTime": "2013-11-05T11:25:00.000Z",
+      "scheduledEndTime": "2013-11-05T11:28:00.000Z",
+      "actualendTime": "2013-11-05T11:28:00.000Z",
+      "_id": "58133faa550dfb3b52be0379"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-05T11:28:00.000Z",
+      "actualStartTime": "2013-11-05T11:28:00.000Z",
+      "scheduledEndTime": "2013-11-06T04:37:00.000Z",
+      "actualendTime": "2013-11-06T04:37:00.000Z",
+      "_id": "58133faa550dfb3b52be0378"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-06T04:37:00.000Z",
+      "actualStartTime": "2013-11-06T04:37:00.000Z",
+      "scheduledEndTime": "2013-11-06T08:53:00.000Z",
+      "actualendTime": "2013-11-06T08:53:00.000Z",
+      "_id": "58133faa550dfb3b52be0377"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-06T08:53:00.000Z",
+      "actualStartTime": "2013-11-06T08:53:00.000Z",
+      "scheduledEndTime": "2013-11-07T02:52:00.000Z",
+      "actualendTime": "2013-11-07T02:52:00.000Z",
+      "_id": "58133faa550dfb3b52be0376"
+    }
+  ],
+  "platforms": [],
+  "postingDate": "2013-10-26T02:55:00.000Z",
+  "prize": [
+    1800,
+    900
+  ],
+  "projectId": 4482,
+  "registrants": [
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2013-10-27T08:06:00.000Z",
+      "submissionDate": null,
+      "rating": "889",
+      "colorStyle": "color: #999999",
+      "_id": "58133faa550dfb3b52be0375"
+    },
+    {
+      "handle": "ammasash",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-27T14:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faa550dfb3b52be0374"
+    },
+    {
+      "handle": "qs8848",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-27T13:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faa550dfb3b52be0373"
+    },
+    {
+      "handle": "KeSyren",
+      "reliability": "26%",
+      "registrationDate": "2013-10-26T02:56:00.000Z",
+      "submissionDate": null,
+      "rating": "915",
+      "colorStyle": "color: #00A900",
+      "_id": "58133faa550dfb3b52be0372"
+    },
+    {
+      "handle": "flytoj2ee",
+      "reliability": "26%",
+      "registrationDate": "2013-10-26T02:58:00.000Z",
+      "submissionDate": null,
+      "rating": "1243",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133faa550dfb3b52be0371"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "20%",
+      "registrationDate": "2013-10-26T03:00:00.000Z",
+      "submissionDate": null,
+      "rating": "896",
+      "colorStyle": "color: #999999",
+      "_id": "58133faa550dfb3b52be0370"
+    },
+    {
+      "handle": "brain_cn",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-26T04:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faa550dfb3b52be036f"
+    },
+    {
+      "handle": "KennyAlive",
+      "reliability": "93%",
+      "registrationDate": "2013-10-26T04:34:00.000Z",
+      "submissionDate": "2013-11-01T02:47:00.000Z",
+      "rating": "1255",
+      "colorStyle": "color: #6666FF",
+      "_id": "58133faa550dfb3b52be036e"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-26T04:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faa550dfb3b52be036d"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-26T04:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faa550dfb3b52be036c"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2013-10-26T06:49:00.000Z",
+      "submissionDate": null,
+      "rating": "829",
+      "colorStyle": "color: #999999",
+      "_id": "58133faa550dfb3b52be036b"
+    },
+    {
+      "handle": "scriptico",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-27T14:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faa550dfb3b52be036a"
+    },
+    {
+      "handle": "thientri",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-26T07:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faa550dfb3b52be0369"
+    },
+    {
+      "handle": "BLE",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-26T08:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faa550dfb3b52be0368"
+    },
+    {
+      "handle": "tongkunvwang",
+      "reliability": "0%",
+      "registrationDate": "2013-10-26T09:19:00.000Z",
+      "submissionDate": null,
+      "rating": "278",
+      "colorStyle": "color: #999999",
+      "_id": "58133faa550dfb3b52be0367"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "6%",
+      "registrationDate": "2013-10-26T10:54:00.000Z",
+      "submissionDate": null,
+      "rating": "1694",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58133faa550dfb3b52be0366"
+    },
+    {
+      "handle": "rawuza",
+      "reliability": "33%",
+      "registrationDate": "2013-10-26T11:01:00.000Z",
+      "submissionDate": null,
+      "rating": "951",
+      "colorStyle": "color: #00A900",
+      "_id": "58133faa550dfb3b52be0365"
+    },
+    {
+      "handle": "csy2012",
+      "reliability": "6%",
+      "registrationDate": "2013-10-26T13:27:00.000Z",
+      "submissionDate": null,
+      "rating": "245",
+      "colorStyle": "color: #999999",
+      "_id": "58133faa550dfb3b52be0364"
+    },
+    {
+      "handle": "vokie",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-26T14:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faa550dfb3b52be0363"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2013-10-26T15:16:00.000Z",
+      "submissionDate": null,
+      "rating": "1062",
+      "colorStyle": "color: #00A900",
+      "_id": "58133faa550dfb3b52be0362"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-26T19:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faa550dfb3b52be0361"
+    },
+    {
+      "handle": "ohyan07",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-26T23:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faa550dfb3b52be0360"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-27T07:56:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58133faa550dfb3b52be035f"
+    },
+    {
+      "handle": "sweetu",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-27T10:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faa550dfb3b52be035e"
+    },
+    {
+      "handle": "gondzo",
+      "reliability": "6%",
+      "registrationDate": "2013-10-27T11:36:00.000Z",
+      "submissionDate": null,
+      "rating": "781",
+      "colorStyle": "color: #999999",
+      "_id": "58133faa550dfb3b52be035d"
+    },
+    {
+      "handle": "icarusk",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-27T15:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faa550dfb3b52be035c"
+    },
+    {
+      "handle": "iRabbit",
+      "reliability": "33%",
+      "registrationDate": "2013-10-27T15:37:00.000Z",
+      "submissionDate": null,
+      "rating": "1511",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58133faa550dfb3b52be035b"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "20%",
+      "registrationDate": "2013-10-27T15:55:00.000Z",
+      "submissionDate": null,
+      "rating": "999",
+      "colorStyle": "color: #00A900",
+      "_id": "58133faa550dfb3b52be035a"
+    },
+    {
+      "handle": "amomsi",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-27T22:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faa550dfb3b52be0359"
+    },
+    {
+      "handle": "nouachi",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-27T22:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faa550dfb3b52be0358"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "6%",
+      "registrationDate": "2013-10-28T01:49:00.000Z",
+      "submissionDate": null,
+      "rating": "841",
+      "colorStyle": "color: #999999",
+      "_id": "58133faa550dfb3b52be0357"
+    },
+    {
+      "handle": "evilkyro1965",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-26T04:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faa550dfb3b52be0356"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "13%",
+      "registrationDate": "2013-10-26T11:34:00.000Z",
+      "submissionDate": null,
+      "rating": "703",
+      "colorStyle": "color: #999999",
+      "_id": "58133faa550dfb3b52be0355"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2013-10-27T22:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58133faa550dfb3b52be0354"
+    }
+  ],
+  "registrationEndDate": "2013-10-28T02:56:00.000Z",
+  "reliabilityBonus": 360,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2013-11-01T03:01:00.000Z",
+  "submissions": [
+    {
+      "handle": "KennyAlive",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 91.28,
+      "finalScore": 91.28,
+      "points": 810,
+      "submissionStatus": "Active",
+      "submissionDate": "2013-11-01T02:47:00.000Z",
+      "_id": "58133faa550dfb3b52be0386"
+    }
+  ],
+  "technology": [
+    "Java",
+    "MySQL",
+    "Spring"
+  ]
+}

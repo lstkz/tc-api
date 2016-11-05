@@ -1,7 +1,7 @@
 {
   "_id": 30052782,
   "_isComplete": true,
-  "__v": 1,
+  "__v": 0,
   "_lastUpdate": "2016-10-27T17:50:29.589Z",
   "appealsEndDate": "2016-02-01T04:15:00.000Z",
   "challengeCommunity": "develop",
@@ -15,11 +15,6 @@
   "detailedRequirements": "<h1>Watson Pattern Explorer Retrieve and Rank Flow</h1>\n\n<h2>Project overview</h2>\n\n<p>The goal is to produce a proof of concept pattern explorer application using Node RED technology. The application should take in data from the Watson Engagement Advisor Instance, run it through a series of processing steps and provide access to the processed data.</p>\n\n<p>In previous contests we have built a Natural language classifier flow and integrated it with the base UI application that allows a user to define new flows and trigger them with user supplied data.</p>\n\n<h2>Competition Task Overview</h2>\n\n<p>In this contest, we should build a flow that will train and test the Retrieve &amp; Rank service created in Bluemix.&nbsp;</p>\n\n<h3>Build a R&amp;R node</h3>\n\n<p>Develop a custom node that will handle comunication to an instance of Retrieve and Rank service</p>\n\n<p>http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/retrieve-rank/index.shtml</p>\n\n<p>The node should be able to train the ranker using the provided data, query the trained ranker,delete and list all rankers. Use&nbsp;<a href=\"https://github.com/watson-developer-cloud/node-sdk\">watson node sdk</a>&nbsp;to implement the functionalities instead of sending raw http requests to the R&amp;R service.</p>\n\n<h3>Build a custom flow</h3>\n\n<p>Develop a custom flow of a simple data processing pipeline. The flow will be similar to the NLC flow from the previous contest so you can reuse parts of it.&nbsp;It should consist of the following:</p>\n\n<ul>\n\t<li>Exposed http endpoint for triggering the flow</li>\n\t<li>Parsing input parameters</li>\n\t<li>Creating and populating SOLR collection with the supplied documents</li>\n\t<li>Training the Ranker with supplied ground truth data</li>\n\t<li>Testing the Ranker</li>\n\t<li>Persisting the processing results</li>\n\t<li>Sending processing status updates</li>\n</ul>\n\n<p>The endpoint should require the following parameters:</p>\n\n<ul>\n\t<li>jobID - the id of the processing job that will be used for identifying this particular job</li>\n\t<li>dataset to use for training and testing the R&amp;R service</li>\n\t<li>email address - to send results and status updates to</li>\n</ul>\n\n<p>Save the jobID and email address in the global context so it will be available later for persisting the results and logging.</p>\n\n<p>Split the dataset into train and test sets. Use the train dataset to train a Ranker instance. A function node can be used for splitting the dataset. When splitting the dataset, make sure that each document has enough labels in both train and test dataset, and that all relevance labels are well represented in both sets. See&nbsp;<a href=\"http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/retrieve-rank/training_data.shtml\">Training data quality standards</a>&nbsp;for more info on the data quality.</p>\n\n<p>In a loop check if the training is complete. When it is done, test the Ranker with the test set and report test accuracy as job result. Accuracy can be defined as a percentage of questions that have 2 highest labels returned in top 3 ranked answers. For example if a test question has relevance labels given in terms of pairs (answerID, label) as { (1000,1), (1200,2), (1400,3), (1600,3) }, two answers with top labels are 1400 and 1600. If the answer contains answers 1200,1600,1400,1000 than we can count the answer as ranked correctly. On the other hand if the answer was&nbsp;1200,1600,1000,1400 the question would count as ranked incorrectly (only one of the top 2 labels is in top 3 results)</p>\n\n<h3>Deliver the processing results</h3>\n\n<p>The results should be delivered as an email message and persisted to database. You can reuse this part of the flow from the NLC flow.</p>\n\n<p>The email with the final results should contain the following:</p>\n\n<p>Overall accuracy ( as defined earlier)</p>\n\n<p>Precission @ 10</p>\n\n<p>Discounted cumulative gain</p>\n\n<p>See&nbsp;<a href=\"https://en.wikipedia.org/wiki/Information_retrieval#Performance_and_correctness_measures\">this wikipedia page</a>&nbsp;for a formal definition of the above measures.</p>\n\n<h3>Send processing status updates</h3>\n\n<p>Add a status node in the flow to catch node status updates. Send these as a notification to the email address available in the global context. This is available in the NLC flow.</p>\n\n<h3>Error handling</h3>\n\n<p>Create a catch node in the flow to handle possible errors. Update the processing status to &ldquo;Failed&rdquo; if the error is fatal (breaks the flow), otherwise just log the error.&nbsp;This is available in the NLC flow.</p>\n\n<h2>Verification</h2>\n\n<p>Deploy the flow and the UI application. Create flow definition in the UI application and trigger it. Verify that the flow produces the required email messages and database changes. Make sure to verify the failure scenario too (for example error creating ranker service, invalid input data, etc).</p>\n\n<p>For the sample test data, you can use the Cranfield dataset available&nbsp;<a href=\"http://ir.dcs.gla.ac.uk/resources/test_collections/cran/\">here</a>. You will need to transform the input data to a more mangeable format first, don&#39;t use the raw data. The same dataset is used in the&nbsp;<a href=\"http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/retrieve-rank/get_start.shtml\">Getting Started Guide of the R&amp;R service</a>, so you can reuse the data available there.</p>\n\n<p>&nbsp;</p>\n",
   "digitalRunPoints": null,
   "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30052782",
-  "event": {
-    "id": 3446,
-    "description": "2016 TopCoder(R) Open",
-    "shortDescription": "tco16"
-  },
   "finalSubmissionGuidelines": "<p>The base source is available in the forums. Add the new R&amp;R node to the flow/app/nodes directory, and add all the necessary test data in the ui/test_data directory.</p>\n\n<p>Submit a zip file with all the deliverables.</p>\n",
   "forumId": 31792,
   "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=31792",
@@ -27,6 +22,37 @@
   "numberOfCheckpointsPrizes": 0,
   "numberOfRegistrants": 35,
   "numberOfSubmissions": 2,
+  "postingDate": "2016-01-22T16:00:00.000Z",
+  "projectId": 9434,
+  "registrationEndDate": "2016-01-27T16:00:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-01-28T15:59:00.000Z",
+  "submissions": [
+    {
+      "handle": "kondakovdmitry",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 90,
+      "finalScore": 94.38,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-01-28T14:49:00.000Z",
+      "_id": "58123e65e0be5f30ae5617d6"
+    },
+    {
+      "handle": "cjalmeida",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 92.5,
+      "finalScore": 92.5,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-01-28T13:18:00.000Z",
+      "_id": "58123e65e0be5f30ae5617d5"
+    }
+  ],
   "phases": [
     {
       "type": "Registration",
@@ -74,16 +100,6 @@
       "_id": "58123e65e0be5f30ae5617d0"
     }
   ],
-  "platforms": [
-    "NodeJS",
-    "IBM Bluemix"
-  ],
-  "postingDate": "2016-01-22T16:00:00.000Z",
-  "prize": [
-    1500,
-    750
-  ],
-  "projectId": 9434,
   "registrants": [
     {
       "handle": "Sky_",
@@ -401,36 +417,20 @@
       "_id": "58123e65e0be5f30ae5617ad"
     }
   ],
-  "registrationEndDate": "2016-01-27T16:00:00.000Z",
-  "reviewScorecardId": 30001610,
-  "reviewType": "COMMUNITY",
-  "screeningScorecardId": null,
-  "submissionEndDate": "2016-01-28T15:59:00.000Z",
-  "submissions": [
-    {
-      "handle": "kondakovdmitry",
-      "placement": 1,
-      "screeningScore": null,
-      "initialScore": 90,
-      "finalScore": 94.38,
-      "points": 0,
-      "submissionStatus": "Active",
-      "submissionDate": "2016-01-28T14:49:00.000Z",
-      "_id": "58123e65e0be5f30ae5617d6"
-    },
-    {
-      "handle": "cjalmeida",
-      "placement": 2,
-      "screeningScore": null,
-      "initialScore": 92.5,
-      "finalScore": 92.5,
-      "points": 0,
-      "submissionStatus": "Completed Without Win",
-      "submissionDate": "2016-01-28T13:18:00.000Z",
-      "_id": "58123e65e0be5f30ae5617d5"
-    }
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "prize": [
+    1500,
+    750
   ],
   "technology": [
     "Node.js"
+  ],
+  "platforms": [
+    "NodeJS",
+    "IBM Bluemix"
   ]
 }

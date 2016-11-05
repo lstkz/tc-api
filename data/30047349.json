@@ -1,0 +1,270 @@
+{
+  "_id": 30047349,
+  "_isComplete": true,
+  "__v": 2443,
+  "_lastUpdate": "2016-11-05T11:07:26.846Z",
+  "appealsEndDate": "2014-11-30T11:00:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "topcoder new community site - footer refactor (REPOST)",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Cancelled - Zero Submissions",
+  "detailedRequirements": "<p><span><span><span><span><span>Welcome to </span></span></span></span></span><strong><span>topcoder new community site - footer refactor</span></strong><span><span><span><span> challenge.</span><strong><span>&nbsp; </span></strong><span><span>The main goal of this challenge is to refactor footer section to AngularJS.</span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span style=\"color:#008000\"><strong>Challenge Description :</strong></span></span></span></span></span></span><br />\nWe need to rewrite and clean up <a href=\"https://gitlab.com/topcoderinc/tc-site/blob/TC-2014-10-23/wp-content/themes/tcs-responsive/footer.php\">footer.php</a> file as an Angular directive, and currently it contains 3 main parts below :<br />\n1.<span><span> </span></span>The feed of blog posts and tweets<br />\n2&nbsp; The registration modal<br />\n3. The login modal<br />\n4. Design Submission viewer<br />\n<br />\n<strong>1. The feed of blog posts and tweets</strong><br />\ntwitter feed : <a href=\"https://gitlab.com/topcoderinc/tc-site/blob/TC-2014-10-23/wp-content/themes/tcs-responsive/footer.php#L11\">https://gitlab.com/topcoderinc/tc-site/blob/TC-2014-10-23/wp-content/themes/tcs-responsive/footer.php#L11</a><br />\nblog :<strong> </strong><a href=\"https://gitlab.com/topcoderinc/tc-site/blob/TC-2014-10-23/wp-content/themes/tcs-responsive/footer.php#L57-74\">https://gitlab.com/topcoderinc/tc-site/blob/TC-2014-10-23/wp-content/themes/tcs-responsive/footer.php#L57-74</a> should load <a href=\"http://www.topcoder.com/feed/?post_type=blog\" target=\"_blank\">/feed/?post_type=blog</a></p>\n\n<p><strong>2.</strong> <strong>The registration modal</strong><br />\ncurrent code :<strong> </strong><a href=\"https://gitlab.com/topcoderinc/tc-site/blob/TC-2014-10-23/wp-content/themes/tcs-responsive/footer.php#L582-641\">https://gitlab.com/topcoderinc/tc-site/blob/TC-2014-10-23/wp-content/themes/tcs-responsive/footer.php#L582-641</a><br />\n<br />\n<strong>3. The login modal</strong><br />\ncurrent code : <a href=\"https://gitlab.com/topcoderinc/tc-site/blob/TC-2014-10-23/wp-content/themes/tcs-responsive/footer.php#L213-575\">https://gitlab.com/topcoderinc/tc-site/blob/TC-2014-10-23/wp-content/themes/tcs-responsive/footer.php#L213-575</a><br />\n<a href=\"http://www.topcoder.com/?action=showlogin\">http://www.topcoder.com/?action=showlogin</a> should trigger this modal window</p>\n\n<p><strong>4. Design Submission viewer</strong><br />\nHTML for design submission viewer should be relocated to challenge detail template. <a href=\"https://gitlab.com/topcoderinc/tc-site/blob/TC-2014-10-23/wp-content/themes/tcs-responsive/footer.php#L186-211\" target=\"_blank\">https://gitlab.com/topcoderinc/tc-site/blob/TC-2014-10-23/wp-content/themes/tcs-responsive/footer.php#L186-211</a><br />\n&nbsp;</p>\n\n<p><span><span><span><span><span><span style=\"color:#008000\"><strong>Refactor Requirements:</strong></span><br />\nModify the submitted code to the AngularJS styleguide </span></span></span></span></span><a href=\"https://gitlab.com/topcoderinc/angularjs-styleguide/tree/master\">https://gitlab.com/topcoderinc/angularjs-styleguide/tree/master</a><br />\nThis could be either 3 directives, or just 1. They should all be things we could just pull into an Angular app (which is what&#39;s going to happen -- they&#39;re going to be used by lots of different Angular apps). And please ensure footer will display correct content on All templates (home, challenge listing, blog, etc.)&nbsp;<br />\n<span>When creating directives, please don&#39;t just wrap jQuery in a veneer of Angular.</span></p>\n\n<p>single Footer App :</p>\n\n<ul>\n\t<li><span>services</span>\n\n\t<ul>\n\t\t<li><span>twitterFeedService</span>, and twitter_widget_id or any other vars should configured in config.json</li>\n\t\t<li>blogFeedService</li>\n\t\t<li>etc.</li>\n\t</ul>\n\t</li>\n\t<li><span>directives</span>\n\t<ul>\n\t\t<li>login-directives</li>\n\t\t<li>register-directives</li>\n\t\t<li>etc.</li>\n\t</ul>\n\t</li>\n\t<li><span>templates</span> (partials)\n\t<ul>\n\t\t<li>footer</li>\n\t\t<li>etc.</li>\n\t</ul>\n\t</li>\n\t<li><span>controller</span>s:\n\t<ul>\n\t\t<li>twitterFeedCtrl</li>\n\t\t<li>etc.</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>- Any inline javascript in footer.php (e.g. : Twitter Marketing Code and KISSmetrics) should be relocated to their own file.</p>\n\n<p>- Any new js/css files should be included in the Gruntfile.js as part of the build process. All tests must pass after the included files are minified.</p>\n\n<p><span><strong><span style=\"color:#008000\">Test Cases : </span></strong></span><br />\nPlease be sure this refactor and clean up will not break any existing functionality.<br />\n- Registration and Login flow<br />\n- <a href=\"http://www.topcoder.com/?action=showlogin\">http://www.topcoder.com/?action=showlogin</a> should trigger login modal window as existing<br />\n- <a href=\"http://www.topcoder.com/?action=callback\">http://www.topcoder.com/?action=callback</a> should trigger registration modal window<br />\n- Design submission Viewer should work fine as existing<br />\n- Challenges listings<br />\n- Register / Submit to a develop or Design challenge</p>\n\n<p>During development and review process, don&#39;t submit or register to any live challenges, so <span style=\"background-color:#FFFF00\">please ensure your installation has been pointed to QA env</span>, or see config.json.</p>\n\n<p><span><strong><span style=\"color:#008000\">Browsers Requirements : </span></strong><br />\n<span>- IE10<br />\n- IE11<br />\n- Latest Safari<br />\n- Latest Firefox<br />\n- Latest Chrome</span></span></p>\n\n<p><span style=\"color:#008000\"><strong>Deployment Guide</strong> :</span></p>\n\n<p><span>Local Setup : <a href=\"https://gitlab.com/topcoderinc/tc-site/blob/master/README.md#local-env-setup\">https://gitlab.com/topcoderinc/tc-site/blob/master/README.md#local-env-setup</a>, if you want to disable local minification, please configure it in <a href=\"https://gitlab.com/topcoderinc/tc-site/blob/master/config.json#L9-10\">config.json</a></span></p>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": 675,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30047349",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2014-12-01T23:00:00.000Z",
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<div class=\"previewMask\">\n<ol>\n\t<li><span><span><span><span>Please submit only PATCH files, reference :</span></span></span></span><a href=\"https://gitlab.com/topcoderinc/tc-site#challenge-submission-and-review\">https://gitlab.com/topcoderinc/tc-site#challenge-submission-and-review</a></li>\n\t<li><span><span><span><span>Any new js or css file must be included in the registry. learn about this in script and style registry section</span></span></span></span></li>\n\t<li><span><span><span><span>We will have winner to submit pull request once winner declared</span></span></span></span></li>\n</ol>\n</div>\n</div>\n",
+  "forumId": 26307,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=26307",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 11,
+  "numberOfSubmissions": 0,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-21T07:26:00.000Z",
+      "actualStartTime": "2014-11-21T07:26:00.000Z",
+      "scheduledEndTime": "2014-11-21T07:27:00.000Z",
+      "actualendTime": "2014-11-21T07:27:00.000Z",
+      "_id": "581dbd6e550dfb3b52be420a"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-21T07:27:00.000Z",
+      "actualStartTime": "2014-11-21T07:27:00.000Z",
+      "scheduledEndTime": "2014-11-21T09:51:00.000Z",
+      "actualendTime": "2014-11-21T09:51:00.000Z",
+      "_id": "581dbd6e550dfb3b52be4209"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-21T11:00:00.000Z",
+      "actualStartTime": "2014-11-21T11:00:00.000Z",
+      "scheduledEndTime": "2014-11-23T11:00:00.000Z",
+      "actualendTime": "2014-11-23T11:00:00.000Z",
+      "_id": "581dbd6e550dfb3b52be4208"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-21T11:05:00.000Z",
+      "actualStartTime": "2014-11-21T11:05:00.000Z",
+      "scheduledEndTime": "2014-11-26T11:00:00.000Z",
+      "actualendTime": "2014-11-26T11:00:00.000Z",
+      "_id": "581dbd6e550dfb3b52be4207"
+    },
+    {
+      "type": "Screening",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-11-26T11:00:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-11-26T23:00:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd6e550dfb3b52be4206"
+    },
+    {
+      "type": "Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-11-26T23:00:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-11-28T23:00:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd6e550dfb3b52be4205"
+    },
+    {
+      "type": "Appeals",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-11-28T23:00:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-11-29T23:00:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd6e550dfb3b52be4204"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-11-29T23:00:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-11-30T11:00:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd6e550dfb3b52be4203"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-11-30T11:00:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-11-30T23:00:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd6e550dfb3b52be4202"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-11-30T23:00:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-12-01T23:00:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd6e550dfb3b52be4201"
+    },
+    {
+      "type": "Final Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-12-01T23:00:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-12-02T11:00:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd6e550dfb3b52be4200"
+    },
+    {
+      "type": "Approval",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-12-02T11:00:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-12-07T11:00:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbd6e550dfb3b52be41ff"
+    },
+    {
+      "type": "Post-Mortem",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-26T11:01:00.000Z",
+      "actualStartTime": "2014-11-26T11:01:00.000Z",
+      "scheduledEndTime": "2014-11-27T11:01:00.000Z",
+      "actualendTime": "2014-11-27T11:01:00.000Z",
+      "_id": "581dbd6e550dfb3b52be41fe"
+    }
+  ],
+  "platforms": [
+    "Wordpress"
+  ],
+  "postingDate": "2014-11-21T11:00:00.000Z",
+  "prize": [
+    1500,
+    750
+  ],
+  "projectId": 6753,
+  "registrants": [
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-21T11:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd6e550dfb3b52be41fd"
+    },
+    {
+      "handle": "hyc",
+      "reliability": "50%",
+      "registrationDate": "2014-11-21T11:03:00.000Z",
+      "submissionDate": null,
+      "rating": "872",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd6e550dfb3b52be41fc"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-21T12:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd6e550dfb3b52be41fb"
+    },
+    {
+      "handle": "gmagniez",
+      "reliability": "6%",
+      "registrationDate": "2014-11-21T13:29:00.000Z",
+      "submissionDate": null,
+      "rating": "656",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd6e550dfb3b52be41fa"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-21T14:51:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd6e550dfb3b52be41f9"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-11-21T15:03:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd6e550dfb3b52be41f8"
+    },
+    {
+      "handle": "jordelca",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-21T15:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd6e550dfb3b52be41f7"
+    },
+    {
+      "handle": "Colinh84",
+      "reliability": "46%",
+      "registrationDate": "2014-11-22T09:17:00.000Z",
+      "submissionDate": null,
+      "rating": "1815",
+      "colorStyle": "color: #DDCC00",
+      "_id": "581dbd6e550dfb3b52be41f6"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2014-11-23T09:40:00.000Z",
+      "submissionDate": null,
+      "rating": "400",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd6e550dfb3b52be41f5"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-23T09:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbd6e550dfb3b52be41f4"
+    },
+    {
+      "handle": "iCare",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-23T10:25:00.000Z",
+      "submissionDate": null,
+      "rating": "568",
+      "colorStyle": "color: #999999",
+      "_id": "581dbd6e550dfb3b52be41f3"
+    }
+  ],
+  "registrationEndDate": "2014-11-23T11:00:00.000Z",
+  "reliabilityBonus": 300,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-11-26T11:00:00.000Z",
+  "submissions": [],
+  "technology": [
+    "Angular.js"
+  ]
+}

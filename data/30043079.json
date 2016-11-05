@@ -1,0 +1,357 @@
+{
+  "_id": 30043079,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T13:15:59.842Z",
+  "appealsEndDate": "2014-06-15T00:34:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Module Assembly - topcoder member profile Develop tab refactor - angular",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><span>The goal of this challenge is to refactor </span><strong>content-member-develop.php</strong><span> such that backend API requests are moved to an angular service instead from PHP.</span><br />\nCurrently http://www.topcoder.com/member-profile/{handle} - which is using Wordpress - render tabs content by PHP code (wordpress template) which cause performance issues.</p>\n\n<p>We&#39;ve already refactored member profile (member information,photo,quote,country,etc) section, and now we will advance to Develop tab of this member profile page.</p>\n\n<p><span><span style=\"color:#008000\"><strong>Big picture: What are we trying to do?</strong></span></span></p>\n\n<p><span>There will be series of challenges to refactor all of member profile pages. We want to remove all API calls to use angular/javascript instead of some calls happening in PHP and some in javascript in the current implementation. To check how the current page works: <a href=\"http://www.topcoder.com/member-profile/fireIce\">http://www.topcoder.com/member-profile/{handle}</a></span></p>\n\n<p><span><span style=\"color:#008000\"><strong>Scope:</strong></span></span></p>\n\n<ol>\n\t<li>Sub track tabs (Assembly, UI Prototype, etc), please only list available subtrack of a member like the current page works<br />\n\t<span>API </span> endpoint example <span>: <span><a href=\"http://api.topcoder.com/v2/develop/challengetypes\">http://api.topcoder.com/v2/develop/challengetypes</a></span></span><strong> </strong></li>\n\t<li><span>Rating Summary<strong> </strong></span><br />\n\t<span>API </span> endpoint example : <span><span><a href=\"http://api.topcoder.com/v2/users/FireIce/\">http://api.topcoder.com/v2/users/FireIce/ </a></span></span></li>\n\t<li><span>Develop statistic<br />\n\tAPI </span> endpoint example : <span><a href=\"http://api.topcoder.com/v2/users/FireIce/statistics/develop\">http://api.topcoder.com/v2/users/FireIce/statistics/develop</a></span></li>\n\t<li><span>Rating and Distribution<br />\n\tAPI </span> endpoint example : <span><a href=\"http://api.topcoder.com/v2/develop/statistics/fireIce/Assembly\">http://api.topcoder.com/v2/develop/statistics/fireIce/Assembly</a> , <a href=\"http://api.topcoder.com/v2/develop/statistics/hohosky/Specification\">http://api.topcoder.com/v2/develop/statistics/hohosky/Specification</a></span></li>\n</ol>\n\n<p>&nbsp;</p>\n\n<p><span style=\"color:#008000\"><strong>Expected Results :</strong></span><br />\n- Please see <a href=\"http://tcqa1.topcoder.com/member-profile/fireice/?tab=develop\">http://tcqa1.topcoder.com/member-profile/fireice/?tab=develop</a> to see how current AJAX based work, and we will refactor it to AngularJS<br />\n<span>-</span> Develop tab content will be loaded by AJAX like the current state, but this feature should be by AngularJS based<br />\n- Please show &quot;loading...&quot; text while content is being loaded. this will be similar to &quot;Downloads&quot; section of http://tcdev1.topcoder.com/challenge-details/30041860/?type=design#.U4crWnZTBdg<br />\n- Switching from a sub track to another track should be by AngularJS and should NOT reload page (ideally entire profile page is a single page app, with routes for switching individual tabs develop/design/data science and their corresponding subtracks)<br />\n- Graph view should also work fine<br />\n- Please ensure Detail Statistic (Inquiries,Submissions,Submission Rate,etc) display correct values<br />\n<span><span>- Please </span><span style=\"color:#FF0000\">exclude </span><span>badges section for now because it will be improved later. </span><span>Currently AJAX will also load badges section at right side, which cause performance issue. </span><br />\n-<span> Please be sure your submission and this </span></span>https://github.com/topcoderinc/tc-site/pull/318/files<span><span> </span></span>would have the same pattern</p>\n\n<p><br />\n<span><span style=\"color:#008000\"><strong>Refactor Requirements:</strong></span></span></p>\n\n<p><span>Modify the submitted code to the following structure and coding guidelines.</span></p>\n\n<p><span>1. Under /tcs-responsive create a new page <strong><span style=\"color:#006400\">ng</span></strong></span><span style=\"color:#008000\"><strong>-content-member-develop.php</strong></span><span> based of content-member-develop.php that will be new page using the refactored code. and be sure existing ng-page-member-profile.php includes this new page<br />\n2. Update all js code related to angular refactoring under js/app/member-profile<br />\n3. Organize html/js/css files under js/app/member- profile structure as below (adding files as necessary).&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>\n\n<ul>\n\t<li>\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-family:courier new,courier,monospace\"><tt><strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:13px\">m<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:13px\">ember-profile</span></span></strong></tt></span></span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span><span style=\"font-family:courier new,courier,monospace\"><tt><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:13px\">js/</span></tt></span></span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span><span style=\"font-family:courier new,courier,monospace\"><tt><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:13px\">module-member-profile.js</span></tt></span></span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span><span style=\"font-family:courier new,courier,monospace\"><tt><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:13px\">controllers-member-profile.js</span></tt></span></span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span><span style=\"font-family:courier new,courier,monospace\"><tt><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:13px\">directives-member-profile.js</span></tt></span></span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span><span style=\"font-family:courier new,courier,monospace\"><tt><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:13px\">filters-member-profile.js</span></tt></span></span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span><span style=\"font-family:courier new,courier,monospace\"><tt><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:13px\">services-member-profile.js</span></tt></span></span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span><span style=\"font-family:courier new,courier,monospace\"><tt><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:13px\">controllers/</span></tt></span></span></p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\"><span><span style=\"font-family:courier new,courier,monospace\"><tt><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:13px\">{reallybigcontroller}-member-profile.js</span></tt></span></span></p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span><span style=\"font-family:courier new,courier,monospace\"><tt><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:13px\">directive/</span></tt></span></span></p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\"><span><span style=\"font-family:courier new,courier,monospace\"><tt><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:13px\">{reallybigdirective}--member-profile.js</span></tt></span></span></p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span><span style=\"font-family:courier new,courier,monospace\"><tt><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:13px\">lib/ (if using any libs referred by profile pages)</span></tt></span></span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span><span style=\"font-family:courier new,courier,monospace\"><tt><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:13px\">{libname}/</span></tt></span></span></p>\n\n\t\t\t\t<ul>\n\t\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t\t<p dir=\"ltr\"><span><span style=\"font-family:courier new,courier,monospace\"><tt><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:13px\">files related to the {libname} </span></tt></span></span></p>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span><span style=\"font-family:courier new,courier,monospace\"><tt><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:13px\">partials/</span></tt></span></span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span><span style=\"font-family:courier new,courier,monospace\"><tt><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:13px\">*.html (any template files)</span></tt></span></span></p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\"><span><span style=\"font-family:courier new,courier,monospace\"><tt><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:13px\">demo/index.html (if you want to demonstrate use of the new services)</span></tt></span></span></li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p><span>&nbsp;</span></p>\n\n<p><span>4. Refactor the code create a proper single page angular app for member-profile, splitting the model/view/services accordingly. All view code in html should be under partials/ as templates as much as possible.&nbsp; Create logical controllers, services (for sharing data across controllers), directives to capture reusable ui behaviour. API calls should be under new angular service you will create called&nbsp; MemberProfileService</span></p>\n\n<p><span>5. For this challenge, badges, design and data science tabs will be <strong>out of scope</strong> because they will be enchanced later. </span></p>\n\n<p>&nbsp;</p>\n\n<p><span><span style=\"color:#008000\"><strong>Resources Provided:</strong></span><br />\n<span><span>- Latest theme and plugin available on github </span><a href=\"http://github.com/topcoderinc/tc-site/tree/starting-point-member-profile-refactor\">https://github.com/topcoderinc/tc-site/tree/</a></span></span><a href=\"http://github.com/topcoderinc/tc-site/tree/starting-point-member-profile-refactor\">starting-point-member-profile-refactor</a><span><span>, but we&#39;ll have winner to create PR to <a href=\"https://github.com/topcoderinc/tc-site/tree/dev\">dev branch</a> later<br />\n<span>- Latest xml is available on </span><a href=\"https://github.com/topcoderinc/tc-site-data\">https://github.com/topcoderinc/tc-site-data</a><br />\n<span>- </span></span>API doc : <a href=\"http://docs.tcapi.apiary.io/#get-%2Fv2%2Fuser%2Fprofile\">http://docs.tcapi.apiary.io/#get-%2Fv2%2Fuser%2Fprofile</a><br />\n<br />\n<span style=\"color:#008000\"><strong>Quick Installation guide:</strong></span><br />\n1. Activate theme and plugin<br />\n2. Import provided XML file<br />\n3. Set &quot;home&quot; as front page<br />\n4. Set permalink to %post_name%<br />\n5. Please install site on local.topcoder.com (add to hosts file), so your local site can read tcsso and tcjwt cookie<br />\n6.<strong> Please set </strong></span><strong>&quot;Member Profile Using AngularJS&quot;</strong><span><strong> as template of &quot;Member Profile&quot; Page, maybe provided XML file is out of date</strong><br />\n&nbsp;</span></p>\n",
+  "digitalRunPoints": 450,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30043079",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2014-06-15T14:36:00.000Z",
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<p dir=\"ltr\"><span>Please follow this <a href=\"https://github.com/topcoderinc/tc-site/blob/dev/README.md#recommend-workflow-for-working-on-a-challenge\">https://github.com/topcoderinc/tc-site/blob/dev/README.md#recommend-workflow-for-working-on-a-challenge</a></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:#ffffff; color:#444444; font-family:arial; font-size:13px\">Check out latest code from git hub from branch </span><span><span><a href=\"https://github.com/topcoderinc/tc-site/tree/dev\">https://github.com/topcoderinc/tc-site/tree/</a></span></span><a href=\"https://github.com/topcoderinc/tc-site/tree/starting-point-member-profile-refactor\">starting-point-member-profile-refactor</a><span style=\"background-color:#ffffff; color:#444444; font-family:arial; font-size:13px\">&nbsp;</span><span style=\"background-color:#ffffff; color:#444444; font-family:arial; font-size:13px\">and submit your code as zip files or as a pull request. </span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:#ffffff; color:#222222; font-family:arial; font-size:13px\">Look at the page template page_angular_example (</span><a href=\"https://github.com/topcoderinc/tc-site/blob/dev/wp-content/themes/tcs-responsive/page-angular-example.php\"><u>https://github.com/topcoderinc/tc-site/blob/</u></a></span><a href=\"https://github.com/topcoderinc/tc-site/blob/starting-point-member-profile-refactor/wp-content/themes/tcs-responsive/page-angular-example.php\">dev</a><span><a href=\"https://github.com/topcoderinc/tc-site/blob/dev/wp-content/themes/tcs-responsive/page-angular-example.php\"><u>/wp-content/themes/tcs-responsive/page-angular-example.php</u></a><span style=\"background-color:#ffffff; color:#222222; font-family:arial; font-size:13px\">) for integration into Wordpress page template. To try out this page in your dev instance of wpengine, you will want to create a new page using the template &ldquo;angular example&rdquo; and navigate to that page. If you are having issues, purge caches and reset JS/CSS registry under &ldquo;Appearance-&gt;Theme Options&rdquo;</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:#ffffff; color:#222222; font-family:arial; font-size:13px\">Here are some general rules to follow</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:#ffffff; color:#444444; font-family:arial; font-size:13px\">Read Me: </span><a href=\"https://github.com/topcoderinc/tc-site/blob/dev/README.md#angularjs\" style=\"text-decoration:none;\"><u>https://github.com/topcoderinc/tc-site/blob/dev/README.md#angularjs</u></a></span></p>\n\n<p><span>&nbsp;</span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:#ffffff; color:#222222; font-family:arial; font-size:13px\">root angular directory at tcs-responsive/js/app (</span></span><a href=\"https://github.com/topcoderinc/tc-site/tree/dev/wp-content/themes/tcs-responsive/js/app\">https://github.com/topcoderinc/tc-site/tree/dev/wp-content/themes/tcs-responsive/js/app</a><span><span style=\"background-color:#ffffff; color:#222222; font-family:arial; font-size:13px\">)</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:#ffffff; color:#222222; font-family:arial; font-size:13px\">Main application file: app.js (</span></span><a href=\"https://github.com/topcoderinc/tc-site/blob/dev/wp-content/themes/tcs-responsive/js/app/app.js\">https://github.com/topcoderinc/tc-site/blob/dev/wp-content/themes/tcs-responsive/js/app/app.js</a><span><span style=\"background-color:#ffffff; color:#222222; font-family:arial; font-size:13px\">)</span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:#ffffff; color:#222222; font-family:arial; font-size:13px\">Global level configuration</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:#ffffff; color:#222222; font-family:arial; font-size:13px\">setup main tc application</span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:#ffffff; color:#222222; font-family:arial; font-size:13px\">Organize code into logical directories</span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:#ffffff; color:#222222; font-family:arial; font-size:13px\">All challenge related code should be under the challenges folder</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:#ffffff; color:#222222; font-family:arial; font-size:13px\">Create new folders as needed (i.e members)</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:#ffffff; color:#222222; font-family:arial; font-size:13px\">Separate code into correct folders by type (controllers, services, filters, directives)</span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:#ffffff; color:#222222; font-family:arial; font-size:13px\">Use directives or templates to hold all html, preferable templates.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:#ffffff; color:#222222; font-family:arial; font-size:13px\">Controllers should be implemented by using the controller function on the main app object (the tc variable).&nbsp; example : </span><a href=\"https://github.com/topcoderinc/tc-site/blob/dev/wp-content/themes/tcs-responsive/js/app/challenges/controllers/challengeListingCtrl.js#L3\" style=\"text-decoration:none;\"><u>https://github.com/topcoderinc/tc-site/blob/dev/wp-content/themes/tcs-responsive/js/app/challenges/controllers/challengeListingCtrl.js#L3</u></a><span style=\"background-color:#ffffff; color:#222222; font-family:arial; font-size:13px\">)</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:#ffffff; color:#222222; font-family:arial; font-size:13px\">Services, filters and directives should all be their own modules <a href=\"http://(https://github.com/topcoderinc/tc-site/blob/dev/wp-content/themes/tcs-responsive/js/app/challenges/services/challengeService.js#L3\">(</a></span><a href=\"http://(https://github.com/topcoderinc/tc-site/blob/dev/wp-content/themes/tcs-responsive/js/app/challenges/services/challengeService.js#L3\"><u>https://github.com/topcoderinc/tc-site/blob/dev/wp-content/themes/tcs-responsive/js/app/challenges/services/challengeService.js#L3</u></a><span style=\"background-color:#ffffff; color:#222222; font-family:arial; font-size:13px\">)</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:#ffffff; color:#222222; font-family:arial; font-size:13px\">Services should use Restangular (</span><a href=\"https://github.com/mgonto/restangular\" style=\"text-decoration:none;\"><u>https://github.com/mgonto/restangular</u></a><span style=\"background-color:#ffffff; color:#222222; font-family:arial; font-size:13px\">)</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:#ffffff; color:#222222; font-family:arial; font-size:13px\">Tables should use ngGrid: </span><a href=\"http://angular-ui.github.io/ng-grid/\" style=\"text-decoration:none;\"><u>http://angular-ui.github.io/ng-grid/</u></a></span></p>\n\t</li>\n</ul>\n\n<p><span>&nbsp;</span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:#ffffff; color:#444444; font-family:arial; font-size:13px\">A video of your application using Jing or Youtube would be nice to have or link to live app is nice to have.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"font-size:14px\"><span style=\"color:rgb(0, 128, 0)\"><strong><span style=\"background-color:rgb(255, 255, 255); font-family:arial\">Additional Info</span></strong></span></span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:#ffffff; color:#444444; font-family:arial; font-size:13px\">Submissions using &nbsp;AngularJS/Bootstrap will be accepted.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:#ffffff; color:#444444; font-family:arial; font-size:13px\">Please </span><u>stick to </u><span style=\"background-color:#ffffff; color:#444444; font-family:arial; font-size:13px\">&nbsp;versions of angular already used in the project.</span></span></p>\n\n<p dir=\"ltr\"><span><strong><span style=\"background-color:#ffffff; color:#444444; font-family:arial; font-size:13px\">Reference:</span></strong></span></p>\n\n<p><span><span style=\"background-color:#ffffff; color:#444444; font-family:arial; font-size:13px\">Read Me: </span><a href=\"https://docs.angularjs.org/guide\" style=\"text-decoration:none;\"><u>https://github.com/topcoderinc/tc-site/blob/dev/README.md#angularjs<br />\nhttps://docs.angularjs.org/guide</u></a><br />\n<span style=\"background-color:#ffffff; color:#444444; font-family:arial; font-size:13px\">topcoder API doc : </span><a href=\"http://docs.tcapi.apiary.io/#userprofile\" style=\"text-decoration:none;\"><u>http://docs.tcapi.apiary.io/#userprofile</u></a></span></p>\n</div>\n",
+  "forumId": 23263,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=23263",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 19,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-04T13:33:00.000Z",
+      "actualStartTime": "2014-06-04T13:33:00.000Z",
+      "scheduledEndTime": "2014-06-04T13:33:00.000Z",
+      "actualendTime": "2014-06-04T13:33:00.000Z",
+      "_id": "58134f8f550dfb3b52c3141c"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-04T13:33:00.000Z",
+      "actualStartTime": "2014-06-04T13:33:00.000Z",
+      "scheduledEndTime": "2014-06-04T16:21:00.000Z",
+      "actualendTime": "2014-06-04T16:21:00.000Z",
+      "_id": "58134f8f550dfb3b52c3141b"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-04T16:21:00.000Z",
+      "actualStartTime": "2014-06-04T16:21:00.000Z",
+      "scheduledEndTime": "2014-06-08T16:21:00.000Z",
+      "actualendTime": "2014-06-08T16:21:00.000Z",
+      "_id": "58134f8f550dfb3b52c3141a"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-04T16:26:00.000Z",
+      "actualStartTime": "2014-06-04T16:26:00.000Z",
+      "scheduledEndTime": "2014-06-11T16:21:00.000Z",
+      "actualendTime": "2014-06-11T16:21:00.000Z",
+      "_id": "58134f8f550dfb3b52c31419"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-11T16:21:00.000Z",
+      "actualStartTime": "2014-06-11T16:21:00.000Z",
+      "scheduledEndTime": "2014-06-12T01:49:00.000Z",
+      "actualendTime": "2014-06-12T01:49:00.000Z",
+      "_id": "58134f8f550dfb3b52c31418"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-12T01:49:00.000Z",
+      "actualStartTime": "2014-06-12T01:49:00.000Z",
+      "scheduledEndTime": "2014-06-13T16:23:00.000Z",
+      "actualendTime": "2014-06-13T16:23:00.000Z",
+      "_id": "58134f8f550dfb3b52c31417"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-13T16:23:00.000Z",
+      "actualStartTime": "2014-06-13T16:23:00.000Z",
+      "scheduledEndTime": "2014-06-14T16:23:00.000Z",
+      "actualendTime": "2014-06-14T16:23:00.000Z",
+      "_id": "58134f8f550dfb3b52c31416"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-14T16:23:00.000Z",
+      "actualStartTime": "2014-06-14T16:23:00.000Z",
+      "scheduledEndTime": "2014-06-15T00:34:00.000Z",
+      "actualendTime": "2014-06-15T00:34:00.000Z",
+      "_id": "58134f8f550dfb3b52c31415"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-15T00:34:00.000Z",
+      "actualStartTime": "2014-06-15T00:34:00.000Z",
+      "scheduledEndTime": "2014-06-15T00:37:00.000Z",
+      "actualendTime": "2014-06-15T00:37:00.000Z",
+      "_id": "58134f8f550dfb3b52c31414"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-15T00:37:00.000Z",
+      "actualStartTime": "2014-06-15T00:37:00.000Z",
+      "scheduledEndTime": "2014-06-15T14:36:00.000Z",
+      "actualendTime": "2014-06-15T14:36:00.000Z",
+      "_id": "58134f8f550dfb3b52c31413"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-15T14:36:00.000Z",
+      "actualStartTime": "2014-06-15T14:36:00.000Z",
+      "scheduledEndTime": "2014-06-16T00:30:00.000Z",
+      "actualendTime": "2014-06-16T00:30:00.000Z",
+      "_id": "58134f8f550dfb3b52c31412"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-16T00:30:00.000Z",
+      "actualStartTime": "2014-06-16T00:30:00.000Z",
+      "scheduledEndTime": "2014-06-21T00:30:00.000Z",
+      "actualendTime": "2014-06-21T00:30:00.000Z",
+      "_id": "58134f8f550dfb3b52c31411"
+    }
+  ],
+  "platforms": [
+    "Wordpress"
+  ],
+  "postingDate": "2014-06-04T16:21:00.000Z",
+  "prize": [
+    1000,
+    500
+  ],
+  "projectId": 6753,
+  "registrants": [
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-04T16:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f8f550dfb3b52c31410"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-06-04T17:04:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58134f8f550dfb3b52c3140f"
+    },
+    {
+      "handle": "abcivashritt",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-04T17:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f8f550dfb3b52c3140e"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-04T19:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f8f550dfb3b52c3140d"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-05T06:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f8f550dfb3b52c3140c"
+    },
+    {
+      "handle": "Colinh84",
+      "reliability": "45%",
+      "registrationDate": "2014-06-05T06:48:00.000Z",
+      "submissionDate": null,
+      "rating": "1385",
+      "colorStyle": "color: #6666FF",
+      "_id": "58134f8f550dfb3b52c3140b"
+    },
+    {
+      "handle": "esteer",
+      "reliability": "33%",
+      "registrationDate": "2014-06-05T07:22:00.000Z",
+      "submissionDate": null,
+      "rating": "1156",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f8f550dfb3b52c3140a"
+    },
+    {
+      "handle": "ecnu_haozi",
+      "reliability": "40%",
+      "registrationDate": "2014-06-05T10:17:00.000Z",
+      "submissionDate": "2014-06-11T07:23:00.000Z",
+      "rating": "1462",
+      "colorStyle": "color: #6666FF",
+      "_id": "58134f8f550dfb3b52c31409"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-05T12:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f8f550dfb3b52c31408"
+    },
+    {
+      "handle": "dmessing2",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-05T19:40:00.000Z",
+      "submissionDate": "2014-06-05T19:41:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f8f550dfb3b52c31407"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-06-05T23:25:00.000Z",
+      "submissionDate": null,
+      "rating": "1135",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f8f550dfb3b52c31406"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "20%",
+      "registrationDate": "2014-06-06T00:25:00.000Z",
+      "submissionDate": null,
+      "rating": "1017",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f8f550dfb3b52c31405"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "0%",
+      "registrationDate": "2014-06-06T06:31:00.000Z",
+      "submissionDate": null,
+      "rating": "1457",
+      "colorStyle": "color: #6666FF",
+      "_id": "58134f8f550dfb3b52c31404"
+    },
+    {
+      "handle": "OlinaRuan",
+      "reliability": "0%",
+      "registrationDate": "2014-06-06T13:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f8f550dfb3b52c31403"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-07T04:22:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58134f8f550dfb3b52c31402"
+    },
+    {
+      "handle": "wsobolewski",
+      "reliability": "0%",
+      "registrationDate": "2014-06-07T13:22:00.000Z",
+      "submissionDate": null,
+      "rating": "975",
+      "colorStyle": "color: #00A900",
+      "_id": "58134f8f550dfb3b52c31401"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-08T12:16:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58134f8f550dfb3b52c31400"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2014-06-08T13:03:00.000Z",
+      "submissionDate": null,
+      "rating": "768",
+      "colorStyle": "color: #999999",
+      "_id": "58134f8f550dfb3b52c313ff"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-08T15:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58134f8f550dfb3b52c313fe"
+    }
+  ],
+  "registrationEndDate": "2014-06-08T16:21:00.000Z",
+  "reliabilityBonus": 200,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-06-11T16:21:00.000Z",
+  "submissions": [
+    {
+      "handle": "ecnu_haozi",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 98.13,
+      "finalScore": 98.13,
+      "points": 450,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-06-11T07:23:00.000Z",
+      "_id": "58134f8f550dfb3b52c3141e"
+    },
+    {
+      "handle": "dmessing2",
+      "placement": null,
+      "screeningScore": 0,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Failed Screening",
+      "submissionDate": "2014-06-05T19:41:00.000Z",
+      "_id": "58134f8f550dfb3b52c3141d"
+    }
+  ],
+  "technology": [
+    "Angular.js",
+    "PHP"
+  ]
+}

@@ -1,0 +1,335 @@
+{
+  "_id": 30054594,
+  "_isComplete": true,
+  "__v": 2168,
+  "_lastUpdate": "2016-11-05T11:03:41.854Z",
+  "appealsEndDate": "2016-07-01T16:00:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "TC Tasks - Challenge Service Updates",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Cancelled - Zero Submissions",
+  "detailedRequirements": "Challenge service is responsible for orchestrating the challenge workflow. Workflow varies based on challenge type. For every member registered for a submitter role there should be a &ldquo;submit&rdquo; task in the system with a pending state. Once a registered user makes a code submission for a code challenge through submission service, the submission service records the submission and fires an event (this part is out of scope and will be done externally).<br />\n<br />\nIn this challenge, we are going to make some updates to the existing challenge service to work with such events and also add new endpoint to challenge service:<br />\n<br />\n1. Challenge service should listen to the rabbitmq message fired by submission service. It should lookup the challenge task for that userId + challengeId and mark the &ldquo;submit&rdquo; task completed and record the submission id in a metadata field (json type). You can assume the event data will at least contain submission id, challengeId, userId and dates. If you feel more data fields are needed please let us know.<br />\n<br />\n2. For a non-competitive code challenge type - once a user submits, a review task should be created and assigned to a reviewer (challenge_registrants role reviewer) or creator of the challenge if no reviewer is registered.<br />\n<br />\n3. We will be adding other workflows overtime so make sure event handlers can be registered per challenge type.<br />\n<br />\n4. If there is another submission from the same user for the same challenge another entry should be made in the task table.<br />\n<br />\n5. Once the co-pilot / owner of the challenge is happy with the submission, they can mark the challenge complete. (new endpoint POST /v4/challenges/{id}/complete, this means adding a new complete.js code file to app/routes/challenges folder). The review task should be marked complete and the challenge status should be transitioned to &lsquo;completed&rsquo;. &lsquo;challenge.completed&rsquo; event should be fired as well.<br />\n<br />\n6. If processing of the event fails, the error or exception should be caught and logged. &lsquo;next()&rsquo; callback should be called with an error. Invoking the callback with an error will result in the message being added to an exception queue to be processed later. (Not in scope for this challenge - just call the callback with an error in this challenge).<br />\n<br />\n7. Please provide unit tests for the new endpoint (complete.spec.js) and new events.<br />\n<br />\n8. To test the events, you will need to use rabbitmq CLI to send messages.<br />\n<br />\n9. Please note that&nbsp;challenge service is one of the consumers of these events - since this helps run asynchronously, see app/events/challenges/index.js for an example of how it fires the event and also consumes the event.<br />\n<br />\nRegister to get access to the code in the challenge forum.",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30054594",
+  "finalSubmissionGuidelines": "<span style=\"font-size:12px\">Updated code that covers all the requirements.</span><br />\n<span style=\"font-size:12px\">Update the readme (if necessary) to explain how to deploy the application including configuration information</span><br />\n<span style=\"font-size:12px\">A separate verification guide with details on how the new features can be verified.</span>",
+  "forumId": 33421,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=33421",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 27,
+  "numberOfSubmissions": 0,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-22T03:00:00.000Z",
+      "actualStartTime": "2016-06-22T03:00:00.000Z",
+      "scheduledEndTime": "2016-06-28T04:00:00.000Z",
+      "actualendTime": "2016-06-28T04:00:00.000Z",
+      "_id": "581dbc8d550dfb3b52be08a2"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-06-22T03:05:00.000Z",
+      "actualStartTime": "2016-06-22T03:05:00.000Z",
+      "scheduledEndTime": "2016-06-28T04:00:00.000Z",
+      "actualendTime": "2016-06-28T04:00:00.000Z",
+      "_id": "581dbc8d550dfb3b52be08a1"
+    },
+    {
+      "type": "Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2016-06-28T04:00:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2016-06-30T04:00:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbc8d550dfb3b52be08a0"
+    },
+    {
+      "type": "Appeals",
+      "status": "Scheduled",
+      "scheduledStartTime": "2016-06-30T04:00:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2016-07-01T04:00:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbc8d550dfb3b52be089f"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2016-07-01T04:00:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2016-07-01T16:00:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbc8d550dfb3b52be089e"
+    }
+  ],
+  "platforms": [
+    "NodeJS"
+  ],
+  "postingDate": "2016-06-22T03:00:00.000Z",
+  "prize": [
+    600,
+    300
+  ],
+  "projectId": 9602,
+  "registrants": [
+    {
+      "handle": "Amith",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T04:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be089d"
+    },
+    {
+      "handle": "gthedreamer",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T03:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be089c"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T03:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be089b"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T04:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be089a"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T04:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be0899"
+    },
+    {
+      "handle": "Rushikesh.Deshp",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T04:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be0898"
+    },
+    {
+      "handle": "dianluxiaozi",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T05:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be0897"
+    },
+    {
+      "handle": "elwinwang1993",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T05:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be0896"
+    },
+    {
+      "handle": "gets0ul",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T08:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be0895"
+    },
+    {
+      "handle": "ecavalier313",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T10:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be0894"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T14:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be0893"
+    },
+    {
+      "handle": "XinScirpt",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T16:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be0892"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-22T19:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be0891"
+    },
+    {
+      "handle": "duxiaoyang",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-23T01:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be0890"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-23T01:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be088f"
+    },
+    {
+      "handle": "amanforindia",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-23T03:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be088e"
+    },
+    {
+      "handle": "code_now",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-23T06:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be088d"
+    },
+    {
+      "handle": "dineshm",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-23T07:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be088c"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-23T08:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be088b"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-23T09:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be088a"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-24T00:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be0889"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-24T05:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be0888"
+    },
+    {
+      "handle": "last_samurai",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-25T06:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be0887"
+    },
+    {
+      "handle": "naeem95m",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-25T17:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be0886"
+    },
+    {
+      "handle": "republic82",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-25T22:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be0885"
+    },
+    {
+      "handle": "itkankan",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-26T13:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be0884"
+    },
+    {
+      "handle": "preynal",
+      "reliability": "n/a",
+      "registrationDate": "2016-06-26T17:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8d550dfb3b52be0883"
+    }
+  ],
+  "registrationEndDate": "2016-06-28T04:00:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-06-28T04:00:00.000Z",
+  "submissions": [],
+  "technology": [
+    "Node.js"
+  ]
+}

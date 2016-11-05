@@ -1,0 +1,320 @@
+{
+  "_id": 30045046,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-10-28T09:54:39.733Z",
+  "appealsEndDate": "2014-08-23T16:59:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Serenity - Madison Data Model in PostgreSQL",
+  "challengeType": "Architecture",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p>&nbsp;</p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">Back by popular demand we are reintroducing dynamic scorecards to [topcoder]. &nbsp;For those who competed at Cloudspokes you may remember our dynamic scorecard initiative called Madison. &nbsp; Instead of generic score cards per technology, a challenge author would create requirements with values and those requirements became the scorecard. &nbsp;The Cloudspokes data model was confined to Salesforce, &nbsp;but now we will front this with PostgreSQL so we think we can make some improvements and add some functionality by leveraging some of the PostgreSQL data types and add some enhancements we have wanted for two years.</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">For this challenge we are only looking for some ideas on how we should implement the requirement/scorecard schema, and more specifically what are the pros and cons of some choices we need to make. &nbsp;The winning solution need not be more than a page or two document and maybe a quick ERD if you think it is necessary and a script to create the tables in PostgreSQL.</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">If you have ever competed at [topcoder] these concepts should not be new to you however we want to rethink what we have done in the past to see if we can provide a simpler model with more flexibility and get some new ideas from you, the consumer of this process. &nbsp; Attached is a conceptual model which should be used only convey the idea of the scorecard process and should not be taken literally as a data model, &nbsp;that is what you will produce. &nbsp;This conceptual model is a simplified version and not all fields are present but the important ones are, the datatypes of these fields have been intentionally &nbsp;left off for you to decide in your solution. &nbsp; &nbsp;At times in this requirement I may conject my ideas and if I do I looking for affirmation or opposition to them. &nbsp; &nbsp;I will describe the basic flow and requirements and then it is your turn to produce the data model, enough said, lets get started.</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">If you look at the Madison conceptual model you can assume the challenge author has created a challenge with both the overview and title, now it is time to articulate the requirements which will eventually become the scorecard template and later the scorecards. &nbsp; I define the scorecard template as simply as a group of requirements as they are related to a single challenge. &nbsp;And the scorecard itself as the template that also contains the scores for each requirements and the appeals and appeal responses. &nbsp; But more on that latter. &nbsp;First lets talk about the requirement builder.</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">Once the challenge author has started the skeleton of the challenge that will be presented with an interface that &nbsp;allows them to create new requirements or search for requirements that have been saved &nbsp;for reuse. &nbsp; The fields depicted in the image are broken into required fields and advanced fields. &nbsp; You can assume that the advanced fields are collapsed and are optional. &nbsp; The first mandatory field &nbsp;is type. [functional, technical, informational] and is a single radio button. &nbsp;A functional requirement describes what a submission should do, i.e create a search box. &nbsp; A technical requirement should describe how it should be done, i.e. &ldquo;use node.js or use angular version 1.2.1&rdquo; Both of these types of requirements will store a point value, articulated in the third mandatory field called Point Range (1-4, or 1-10, ect). &nbsp;However if the user set the type as informational it means that that requirement will not store a point value. &nbsp; For example they may create an information requirement that says &ldquo;email me to be added to the github team&rdquo;. &nbsp; You may argue that this does not belong in the requirements but the idea is that with the ability to save &lsquo;private&rsquo; requirements, &nbsp;the user could use this to recycle common information that has no effect on the score. &nbsp;The Body is simply the details of the requirement. &nbsp;&lsquo;Point range&rsquo; is simply a picklist used to generate the scorecard and calculate the total. &nbsp; If the user picks &lsquo;0-4&rsquo; the scorecard will &nbsp; allow the review to give the submitter a score from 0 to 4, for that requirement. &nbsp;The actual values of this range are not important at this point but you may consider adding boolean to this as well so the the requirement can also be used as a check list. &nbsp; I assume that this field is a string and values like 1-10, or boolean would be translated in the scorecard to the appropriate types but I leave that up to you, as you may want to store as a low range and a high range. &nbsp;please discuss this option in your solution.</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">Next we move to the optional fields. &nbsp; This is for the power user who wants be able to reuse the requirements, &nbsp;add a weights or get statistics on each requirement. &nbsp; &nbsp;The first optional field is &lsquo;tags&rsquo; which should be pretty self explanatory. &nbsp; Add one or more tags for searching purposes, examples. &nbsp;&lsquo;heroku&rsquo;, &lsquo;Salesforce&rsquo;, &lsquo;Kyles favorites&rsquo;, &lsquo;Project Serenity&rsquo; &lsquo;Visualforce best practices&rsquo;. &nbsp; If we are going to use tags this implies we &nbsp;are planning on reusing the requirement which leads us to the the next field. &nbsp; The ability to save the field to the library and make it private to the user or public to all. &nbsp; It seems like the PostgreSQL array object is well suited to this but I am not sure. &nbsp; This fast search type ahead when planning this field. &nbsp; In Salesforce or my old MySQL days we would have create a single row table for this however if the array datatype can be search just as fast it seems like a better candidate but I don&rsquo;t know, &nbsp; What is your opinion? &nbsp;Since we are adding tags it implies we would like to reuse this req. &nbsp;For this we would give the user the ability to save this requirement and flag it for public or private (just that user) reuse. &nbsp; The big question is do we save it anyway? &nbsp;or does it just go to the score card. &nbsp; For example: Cory creates a requirement that says &lsquo;make the icon green&rsquo; and saves it public. &nbsp; &nbsp;I decided to use it but change green to red but don&rsquo;t save it. &nbsp; Should it save anyway or just be translated to the scorecard with my change. &nbsp;I don&rsquo;t plan I using it again. &nbsp; Discuss the merits of this in your submission. &nbsp; Think about 10,000 challenges a year with 20 requirements each. &nbsp; How do you ensure you can still search by both the tag and a full text search without impacting performance if you are storing 200k new requirements a year? &nbsp; Maybe you store explicit save in one table and non-saves in another. &nbsp; &nbsp;What do you think? &nbsp;the next field is difficulty just think of a range, &nbsp;like move ratings 3 &frac12; stars, but in our case it is brains instead of stars. &nbsp;We won&rsquo;t use this field right away but the ideas is we can sum up the total complexity of a challenge and then compare it to other challenges. &nbsp;The final optional field is necessity. &nbsp; &nbsp;This is a field that we might not use right away but is a way to weight the requirements as &lsquo;must have&rsquo;, &nbsp;&lsquo;should have&rsquo;, &lsquo;nice to have&rsquo;, or &lsquo;optional&rsquo;. &nbsp; This is a way for the challenge author to tell the community which requirements they can live without and which are essential and everything in between. &nbsp;I think of this as a coefficient. &nbsp;&lsquo;Must have&rsquo; = 1.0, &lsquo;Should have&rsquo;=0.75, &lsquo;Nice to have&rsquo;=0.5 and &lsquo;Optional&rsquo; = 0.25. &nbsp; We can then multiply these coefficients to get a weighted score and will help the members determine where they should spend their time. &nbsp; These are only a sampling of the fields if you have additional thoughts we would love to hear them, so feel free to inject whatever you think is necessary.</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">Once the user has created all the requirements and saves the form it creates the scorecard template &nbsp;In traditional db terms this would be a join table of the requirements but we think using a JSON field on the challenge might be worth looking into. &nbsp;Please discuss the merits of this.</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">Once the challenge closes lets assume there are three submissions and three reviewers, or better yet 9 iterations of the scorecard template. &nbsp; Now we need to create 9 new objects so the scorecards can be filled out. &nbsp;&nbsp;</span></p>\n\n<p><br />\n<span style=\"font-family:courier new,courier,monospace\">Scorecard: &nbsp;The action of &nbsp;one or more submitters &nbsp;and one or more reviewers &nbsp;&lsquo;filling out&rsquo; the score &lsquo;value&rsquo; may be include in this collection or it may be in a separate model. &nbsp; This is one of my biggest questions. &nbsp;On one hand there is benefit &nbsp;to have the completed scores all in one place on the other hand this could make for a hot mess that is hard to unravel and calculate the final score. &nbsp; &nbsp;Much like the score value, for each requirement on the scorecard, an &rsquo;appeal&rsquo; and &lsquo;appeal response&rsquo; needs to be stored. &nbsp; You may notice that I used the word collection instead of table. &nbsp; This was intentional since I see this as a json table but would like you opinion. &nbsp; I use the terms scorecard template and scorecard to assume &nbsp;these are two separate objects/collections/tables but would love to hear your opinion. &nbsp; I am not particularly happy with those two terms and would be open to suggestions. &nbsp; If they we a survey we might use the terms questions and answers. &nbsp;Another very import consideration is some or all of this data will eventual roll up to Salesforce. &nbsp; &nbsp;If we use json fields we will need to store them as long text fields and won&rsquo;t be able to report on them. &nbsp;It is not required to report on them or maybe we expand them out when they go into Salesforce but I am also looking for a discussion on this.</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">Thanks and good luck, &nbsp; I am anxious to read your submissions.</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">Kyle</span></p>\n",
+  "digitalRunPoints": 495,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30045046",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2014-08-24T17:57:00.000Z",
+  "finalSubmissionGuidelines": "<p>Provide:</p>\n\n<p>1. &nbsp;A details document describing the data model of your design. &nbsp;REQUIRED</p>\n\n<p>2. &nbsp;A ERD if you think it is necessary. REQUIRED</p>\n\n<p>3. &nbsp;A script to create the tables in PostgreSQL. OPTIONAL but highly desired.</p>\n",
+  "forumId": 24886,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=24886",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 15,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-14T23:01:00.000Z",
+      "actualStartTime": "2014-08-14T23:01:00.000Z",
+      "scheduledEndTime": "2014-08-14T23:02:00.000Z",
+      "actualendTime": "2014-08-14T23:02:00.000Z",
+      "_id": "5813205f550dfb3b52b2bb44"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-14T23:02:00.000Z",
+      "actualStartTime": "2014-08-14T23:02:00.000Z",
+      "scheduledEndTime": "2014-08-15T02:05:00.000Z",
+      "actualendTime": "2014-08-15T02:05:00.000Z",
+      "_id": "5813205f550dfb3b52b2bb43"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-15T02:05:00.000Z",
+      "actualStartTime": "2014-08-15T02:05:00.000Z",
+      "scheduledEndTime": "2014-08-17T02:05:00.000Z",
+      "actualendTime": "2014-08-17T02:05:00.000Z",
+      "_id": "5813205f550dfb3b52b2bb42"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-15T02:10:00.000Z",
+      "actualStartTime": "2014-08-15T02:10:00.000Z",
+      "scheduledEndTime": "2014-08-21T02:04:00.000Z",
+      "actualendTime": "2014-08-21T02:04:00.000Z",
+      "_id": "5813205f550dfb3b52b2bb41"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-21T02:04:00.000Z",
+      "actualStartTime": "2014-08-21T02:04:00.000Z",
+      "scheduledEndTime": "2014-08-21T04:39:00.000Z",
+      "actualendTime": "2014-08-21T04:39:00.000Z",
+      "_id": "5813205f550dfb3b52b2bb40"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-21T04:39:00.000Z",
+      "actualStartTime": "2014-08-21T04:39:00.000Z",
+      "scheduledEndTime": "2014-08-22T16:20:00.000Z",
+      "actualendTime": "2014-08-22T16:20:00.000Z",
+      "_id": "5813205f550dfb3b52b2bb3f"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-22T16:20:00.000Z",
+      "actualStartTime": "2014-08-22T16:20:00.000Z",
+      "scheduledEndTime": "2014-08-23T16:20:00.000Z",
+      "actualendTime": "2014-08-23T16:20:00.000Z",
+      "_id": "5813205f550dfb3b52b2bb3e"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-23T16:20:00.000Z",
+      "actualStartTime": "2014-08-23T16:20:00.000Z",
+      "scheduledEndTime": "2014-08-23T16:59:00.000Z",
+      "actualendTime": "2014-08-23T16:59:00.000Z",
+      "_id": "5813205f550dfb3b52b2bb3d"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-23T16:59:00.000Z",
+      "actualStartTime": "2014-08-23T16:59:00.000Z",
+      "scheduledEndTime": "2014-08-23T17:11:00.000Z",
+      "actualendTime": "2014-08-23T17:11:00.000Z",
+      "_id": "5813205f550dfb3b52b2bb3c"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-23T17:11:00.000Z",
+      "actualStartTime": "2014-08-23T17:11:00.000Z",
+      "scheduledEndTime": "2014-08-24T17:57:00.000Z",
+      "actualendTime": "2014-08-24T17:57:00.000Z",
+      "_id": "5813205f550dfb3b52b2bb3b"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-24T17:57:00.000Z",
+      "actualStartTime": "2014-08-24T17:57:00.000Z",
+      "scheduledEndTime": "2014-08-24T18:03:00.000Z",
+      "actualendTime": "2014-08-24T18:03:00.000Z",
+      "_id": "5813205f550dfb3b52b2bb3a"
+    },
+    {
+      "type": "Approval",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-08-24T18:03:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-08-29T18:03:00.000Z",
+      "actualendTime": null,
+      "_id": "5813205f550dfb3b52b2bb39"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2014-08-15T02:05:00.000Z",
+  "prize": [
+    1100,
+    550
+  ],
+  "projectId": 7971,
+  "registrants": [
+    {
+      "handle": "AleaActaEst",
+      "reliability": "20%",
+      "registrationDate": "2014-08-15T02:26:00.000Z",
+      "submissionDate": "2014-08-21T02:01:00.000Z",
+      "rating": "603",
+      "colorStyle": "color: #999999",
+      "_id": "5813205f550dfb3b52b2bb38"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-15T03:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813205f550dfb3b52b2bb37"
+    },
+    {
+      "handle": "bannie2492",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-15T05:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813205f550dfb3b52b2bb36"
+    },
+    {
+      "handle": "xiaoruby",
+      "reliability": "0%",
+      "registrationDate": "2014-08-15T06:28:00.000Z",
+      "submissionDate": null,
+      "rating": "1133",
+      "colorStyle": "color: #00A900",
+      "_id": "5813205f550dfb3b52b2bb35"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-15T06:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813205f550dfb3b52b2bb34"
+    },
+    {
+      "handle": "callmekatootie",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-15T09:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813205f550dfb3b52b2bb33"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-15T12:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813205f550dfb3b52b2bb32"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "0%",
+      "registrationDate": "2014-08-15T13:11:00.000Z",
+      "submissionDate": null,
+      "rating": "1128",
+      "colorStyle": "color: #00A900",
+      "_id": "5813205f550dfb3b52b2bb31"
+    },
+    {
+      "handle": "argolite",
+      "reliability": "20%",
+      "registrationDate": "2014-08-15T14:01:00.000Z",
+      "submissionDate": null,
+      "rating": "675",
+      "colorStyle": "color: #999999",
+      "_id": "5813205f550dfb3b52b2bb30"
+    },
+    {
+      "handle": "Cagi",
+      "reliability": "0%",
+      "registrationDate": "2014-08-15T19:04:00.000Z",
+      "submissionDate": null,
+      "rating": "967",
+      "colorStyle": "color: #00A900",
+      "_id": "5813205f550dfb3b52b2bb2f"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-15T22:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813205f550dfb3b52b2bb2e"
+    },
+    {
+      "handle": "vangavroche",
+      "reliability": "60%",
+      "registrationDate": "2014-08-15T23:19:00.000Z",
+      "submissionDate": null,
+      "rating": "1750",
+      "colorStyle": "color: #DDCC00",
+      "_id": "5813205f550dfb3b52b2bb2d"
+    },
+    {
+      "handle": "sri02",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-16T02:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813205f550dfb3b52b2bb2c"
+    },
+    {
+      "handle": "chuxy111",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-16T04:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5813205f550dfb3b52b2bb2b"
+    },
+    {
+      "handle": "kurtrips",
+      "reliability": "13%",
+      "registrationDate": "2014-08-16T12:00:00.000Z",
+      "submissionDate": "2014-08-20T13:01:00.000Z",
+      "rating": "1272",
+      "colorStyle": "color: #6666FF",
+      "_id": "5813205f550dfb3b52b2bb2a"
+    }
+  ],
+  "registrationEndDate": "2014-08-17T02:05:00.000Z",
+  "reliabilityBonus": 220,
+  "reviewScorecardId": 30001463,
+  "reviewType": null,
+  "screeningScorecardId": 30001330,
+  "submissionEndDate": "2014-08-21T02:04:00.000Z",
+  "submissions": [
+    {
+      "handle": "kurtrips",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 92.33,
+      "finalScore": 92.5,
+      "points": 346.5,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-08-20T13:01:00.000Z",
+      "_id": "5813205f550dfb3b52b2bb46"
+    },
+    {
+      "handle": "AleaActaEst",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 90.33,
+      "finalScore": 91.5,
+      "points": 148.5,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-08-21T02:01:00.000Z",
+      "_id": "5813205f550dfb3b52b2bb45"
+    }
+  ],
+  "technology": [
+    "PostgreSQL"
+  ]
+}

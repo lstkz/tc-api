@@ -1,0 +1,410 @@
+{
+  "_id": 30042809,
+  "_isComplete": true,
+  "__v": 2267,
+  "_lastUpdate": "2016-11-05T11:03:42.516Z",
+  "appealsEndDate": "2014-05-22T16:40:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "EPA Android App and PM -  Data Management Module Architecture",
+  "challengeType": "Architecture",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2014-05-23T16:41:00.000Z",
+  "currentPhaseName": "Post-Mortem",
+  "currentPhaseRemainingTime": -77480478,
+  "currentStatus": "Cancelled - Failed Review",
+  "detailedRequirements": "<p><span><span><span style=\"color:#FF0000\"><span style=\"font-size:16px\"><strong>1. Project Overview</strong></span></span></span></span></p>\n\n<p><span><span><span><span>The EPA is a U.S. federal government agency devoted to safeguarding the environment. One of the EPA&#39;s great concerns is the </span></span></span>proliferation <span><span><span>of cyanobacterial harmful blooms (cyanoHABs) in the nation&#39;s lakes. The following resources provide information on what cyanoHABs are and how they threaten the environment.</span> </span></span></span></p>\n\n<ul style=\"list-style-type:square\">\n\t<li><span><span><span><span><a href=\"http://www2.epa.gov/nutrient-policy-data/cyanobacterial-harmful-algal-blooms-cyanohabs\">EPA: Cyanobacterial Harmful Blooms (CyanoHABs)</a></span></span></span></span></li>\n\t<li><span><span><span><span><a href=\"http://www.youtube.com/watch?v=CDOLdF0PnA0\">University of North Carolina: Cyanobacteria [video]</a></span></span></span></span></li>\n</ul>\n\n<p><span><span><span><span>The TopCoder project on cyanoHABs aims to develop an algorithm that will be deployed in an Android app with mapping and data visualization capabilities. The app will inform local and federal policy makers about locations where bloom events are likely to occur, allowing them to concentrate their efforts in those areas.</span></span></span></span></p>\n\n<p><span><span><span><span><span style=\"font-size:16px\"><span style=\"color:rgb(255, 0, 0)\"><strong>2. Contest Overview</strong></span></span></span></span></span></span></p>\n\n<p><strong>Welcome to first architecture in the series of four EPA Android App Architecture Contests. Each contest will run after the other and will be using the output of previous contest to build further. This is the best time to jump in and set up yourself for the series of 4 consecutive contests while working towards providing a complete system design for the EPA Android App.</strong></p>\n\n<p><span>In this contest, we are looking for you to design the module architecture for <strong>data management module </strong>system of EPA Android App. We want you to use all the available information architecture in form of wireframes, system architecture and application requirements specification to develop this module architecture. We will also provide access to the admin website that has been already developed and which will interact with this module. Finally, we will also provide you component design for a component that is required to be embedded into the data management module. </span></p>\n\n<div style=\"background:#eee;border:1px solid #ccc;padding:5px 10px;\"><span><img alt=\"enlightened\" src=\"https://www.topcoder.com/scripts/ckeditor/ckeditor/plugins/smiley/images/lightbulb.gif\" style=\"height:20px; width:20px\" title=\"enlightened\" /> <strong>Tips for Success:</strong></span></div>\n\n<div style=\"background:#eee;border:1px solid #ccc;padding:5px 10px;\">\n<ul>\n\t<li><span><span style=\"color:#008000\">Asking questions early and getting feedback is very important for the success of this competition. </span></span></li>\n\t<li><span><span style=\"color:#008000\">Ask questions if you feel anything is confusing, or if you have any questions on the provided resources.</span></span></li>\n</ul>\n</div>\n\n<p><span>&nbsp;</span></p>\n\n<p><span>Following is the description for each of functionality of data management module:</span></p>\n\n<p><span><strong>EPA Android App Data Management Module:</strong> This module will be responsible for doing all the data-processing tasks. There is a lot of data available in different formats - mostly geo-spatial data and hence it is required to be preprocessed before either sending it to front-end or sending to the back-end module for algorithm analysis. All the validation, conversion and standardization of data will be done in this module. In addition to other tasks, this module will also contain a component that will be used for data standardization.<strong> </strong>We have provided design document of the component.</span> This module will have a lot of data processing and I/O intensive tasks.</p>\n\n<p>Some key points to consider while designing architecture for this module:</p>\n\n<p>- It needs to fit the component which will be used for data standardization.</p>\n\n<p>- As mentioned above, this module will receive data in different formats (mostly tif and xls files) and this module will convert them into csv files based on some constraints. These constraints will be covered by the component but that component will be embedded as a part of this module.</p>\n\n<p>- This module will also validate the data that is received and see if that data is useful. For example, on cannot get any Geospatial information from jpg images. The images must be in GeoTiff format to be useful for data extraction.</p>\n\n<p>- This module will receive data only from admin website. It can either do it by polling a shared folder where the data will already be stored by admin website or it can directly get the data from admin website - storing in shared folder is preferable option.</p>\n\n<p>- This module will also convert heavy tif images into light-weight jpg/images after the component has already extracted data from those images. These converted light weight images will then be sent to backend which will then push it to front-end for display.</p>\n\n<p>- This module is also required to be performance conscious, specifically I/O performance.<br />\n<br />\n<span><span><span><span><span><strong><span style=\"color:#FF0000\"><span style=\"font-size:16px\">3. Data Details</span></span></strong></span></span></span></span></span></p>\n\n<p><span><span>We have two types of input data:</span></span></p>\n\n<ul>\n\t<li><span><span>Image Data : GeoTiff images which has geo-encoded information</span></span></li>\n\t<li><span><span>Text Data: Excel files containing data (both xls and xlsx formats) and dbf files containig metadata.</span></span></li>\n</ul>\n\n<p><span><span>The data is in very large amounts. <span>The images will always be GeoTiff. The data management module will have the component which will read all this data and convert into single canonical structure. The component design document will provide information about this process.</span></span></span></p>\n\n<p><span><span><span><span><span><strong><span style=\"color:#FF0000\"><span style=\"font-size:16px\">4. Technology Overview</span></span></strong></span></span></span></span></span></p>\n\n<p><span>1. The Android App front-end has been developed for Android 4.1-4.4 support using android developer tools. It also uses Google Maps Android API v2, AChartEngine 1.1.0 and ProgressWheel.</span></p>\n\n<p><span>2. The Data Standardization component (to be embedded in data management module) is developed in Java.</span></p>\n\n<p><span>3. The Admin Website is a CMS developed using Django framework 1.6.1, Python 2.7x and PIL 1.1.7.</span></p>\n\n<p><span><strong>4.</strong> <strong>We are open to use of any technology for the data management module as far as it does not limit any specific OS requirements. </strong></span></p>\n\n<p><span>5. We plan to host the data management module along with the admin website on a single (same) server - ex. Amazon EC2 Server.</span></p>\n\n<p><span>6. Open source software resources are welcome, but they must have third party support services available.</span> Please ask in forum when in doubt.</p>\n\n<p><strong>7.&nbsp; You are allowed to use any open source DB, data storage mechanisms for storing data at various stages.</strong></p>\n\n<p><span>8. Image data is being read using <span><span><a href=\"http://www.gdal.org/\">gdal Library.</a></span></span></span> You are welcome to suggest/use other libraries but remember the component for data conversion uses this library</p>\n\n<p><strong>9. Please note that the developers are not allowed to use any component from TC Catalog for this contest.</strong></p>\n\n<p>&nbsp;</p>\n\n<p><span><span><span><span><span><strong><span style=\"color:#FF0000\"><span style=\"font-size:16px\">4. Process Flow and Storage Considerations</span></span></strong></span></span></span></span></span></p>\n\n<p>- We will use three main storage modules: Temporary Storage, Shared Storage and Back-End Storage.</p>\n\n<p>- The admin website will upload all kinds of data and that data will be stored in the Temporary storage. Once admin website finishes uploading data, it will send a wake-up call to data management module (DMM) to process the newly uploaded data. This is to make sure that the data processing does not start while data is still uploading leading to dirty reads and corrupt processing.</p>\n\n<p>- Once DMM receives wake-up call, it will read data from Temporary storage and start data validation and data conversion.</p>\n\n<p>- For the data files which do not get validated, DMM will send an email to the admin listing about all the data files that failed to get validated.</p>\n\n<p>- For the data files which gets validated and processed correctly, the converted data output will be stored in Back-end Storage which will be further used by back-end module (to be developed in next contest).</p>\n\n<p>- Also, the original data files, whose conversion was successful, should be moved to shared storage and removed from Temporary folder. This is to ensure that Temporary storage always have new data yet to be processed.</p>\n\n<p><strong>Please Note:</strong> <span style=\"color:#0000CD\">Both the process flow and storage details are just high-level suggestion from our side. Architects are welcome and encouraged</span> <span style=\"color:#0000CD\">to suggest and propose any changes and updates as deemed necessary in this process flow. Also, architects are allowed to use any media for data storage like DB or files, etc. Please open a discussion in forum to clarify/confirm your ideas when in doubt.</span></p>\n\n<p><span><span><span><span><strong><span style=\"color:#FF0000\"><span style=\"font-size:16px\">5. Resources Provided</span></span></strong></span></span></span></span></p>\n\n<p><span><span><span><span>The following resources have been provided in the forums. You will be able to access it after registration:</span></span></span></span></p>\n\n<p><span>1.) Conceptualization Document</span></p>\n\n<p><span>2.) EPA Admin Website Prototype</span></p>\n\n<p><span>3.) EPA Android App Data Standardization Design Document.</span></p>\n\n<p>4.) System Design Specification</p>\n\n<p>5.) System Architecture TCUML</p>\n\n<p>6.) Application Requirements Specification and Use Case TCUML</p>\n\n<p><strong>Please Note: In case of</strong><strong> discrepancies, the System Architecture and ARS takes precedence over all other resources as they are the most update one. Please follow them and if there is still confusion, please ask in forums.</strong></p>\n",
+  "digitalRunPoints": 630,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30042809",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2014-05-24T04:40:00.000Z",
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<div style=\"background:#eee;border:1px solid #ccc;padding:5px 10px;\">\n<p><span><span><span>We want you to submit the following deliverables:</span></span></span></p>\n\n<ul>\n\t<li><span><span><span>Application Design Specification</span></span></span></li>\n\t<li><span><span><span>Sequence Diagrams</span></span></span></li>\n\t<li><span><span><span>Interface Diagrams</span></span></span></li>\n\t<li><span><span><span>ER Diagram</span></span></span></li>\n\t<li><span>Assembly Specifications</span></li>\n\t<li><span>Requirements Implementation Mapping</span></li>\n</ul>\n\n<p><span>You can refer <a href=\"http://apps.topcoder.com/wiki/display/tc/Module+Architecture+Tutorial+-+Deliverables\">here</a> to know more description on the templates and other details related to above mentioned required documents.</span></p>\n\n<p><span><span><span><span><strong>Please Note: </strong>For Section 508 compliance, this contest must follow the accessibility rules provided here: &nbsp;<a href=\"http://developer.android.com/guide/topics/ui/accessibility/index.html\" target=\"_blank\">http://developer.android.com/guide/topics/ui/accessibility/index.html</a></span></span></span></span></p>\n</div>\n</div>\n",
+  "forumId": 23028,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=23028",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 24,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-14T23:27:00.000Z",
+      "actualStartTime": "2014-05-14T23:27:00.000Z",
+      "scheduledEndTime": "2014-05-14T23:27:00.000Z",
+      "actualendTime": "2014-05-14T23:27:00.000Z",
+      "_id": "581dbc8e550dfb3b52be098a"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-14T23:27:00.000Z",
+      "actualStartTime": "2014-05-14T23:27:00.000Z",
+      "scheduledEndTime": "2014-05-15T03:36:00.000Z",
+      "actualendTime": "2014-05-15T03:36:00.000Z",
+      "_id": "581dbc8e550dfb3b52be0989"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-15T03:36:00.000Z",
+      "actualStartTime": "2014-05-15T03:36:00.000Z",
+      "scheduledEndTime": "2014-05-17T03:36:00.000Z",
+      "actualendTime": "2014-05-17T03:36:00.000Z",
+      "_id": "581dbc8e550dfb3b52be0988"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-15T03:41:00.000Z",
+      "actualStartTime": "2014-05-15T03:41:00.000Z",
+      "scheduledEndTime": "2014-05-20T03:36:00.000Z",
+      "actualendTime": "2014-05-20T03:36:00.000Z",
+      "_id": "581dbc8e550dfb3b52be0987"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-20T03:36:00.000Z",
+      "actualStartTime": "2014-05-20T03:36:00.000Z",
+      "scheduledEndTime": "2014-05-20T03:53:00.000Z",
+      "actualendTime": "2014-05-20T03:53:00.000Z",
+      "_id": "581dbc8e550dfb3b52be0986"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-20T03:53:00.000Z",
+      "actualStartTime": "2014-05-20T03:53:00.000Z",
+      "scheduledEndTime": "2014-05-21T17:52:00.000Z",
+      "actualendTime": "2014-05-21T17:52:00.000Z",
+      "_id": "581dbc8e550dfb3b52be0985"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-21T17:52:00.000Z",
+      "actualStartTime": "2014-05-21T17:52:00.000Z",
+      "scheduledEndTime": "2014-05-22T14:57:00.000Z",
+      "actualendTime": "2014-05-22T14:57:00.000Z",
+      "_id": "581dbc8e550dfb3b52be0984"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-22T14:57:00.000Z",
+      "actualStartTime": "2014-05-22T14:57:00.000Z",
+      "scheduledEndTime": "2014-05-22T16:40:00.000Z",
+      "actualendTime": "2014-05-22T16:40:00.000Z",
+      "_id": "581dbc8e550dfb3b52be0983"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-05-22T16:40:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-05-23T04:40:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbc8e550dfb3b52be0982"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-05-23T04:40:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-05-24T04:40:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbc8e550dfb3b52be0981"
+    },
+    {
+      "type": "Final Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-05-24T04:40:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-05-24T16:40:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbc8e550dfb3b52be0980"
+    },
+    {
+      "type": "Approval",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-05-24T16:40:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-05-29T16:40:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbc8e550dfb3b52be097f"
+    },
+    {
+      "type": "Post-Mortem",
+      "status": "Open",
+      "scheduledStartTime": "2014-05-22T16:41:00.000Z",
+      "actualStartTime": "2014-05-22T16:41:00.000Z",
+      "scheduledEndTime": "2014-05-23T16:41:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbc8e550dfb3b52be097e"
+    }
+  ],
+  "platforms": [
+    "Android"
+  ],
+  "postingDate": "2014-05-15T03:36:00.000Z",
+  "prize": [
+    1400,
+    700
+  ],
+  "projectId": 6243,
+  "registrants": [
+    {
+      "handle": "AleaActaEst",
+      "reliability": "13%",
+      "registrationDate": "2014-05-15T03:53:00.000Z",
+      "submissionDate": null,
+      "rating": "596",
+      "colorStyle": "color: #999999",
+      "_id": "581dbc8e550dfb3b52be097d"
+    },
+    {
+      "handle": "xiaoruby",
+      "reliability": "13%",
+      "registrationDate": "2014-05-15T05:41:00.000Z",
+      "submissionDate": null,
+      "rating": "1133",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbc8e550dfb3b52be097c"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-15T08:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8e550dfb3b52be097b"
+    },
+    {
+      "handle": "LieutenantRoger",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-15T08:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8e550dfb3b52be097a"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-15T08:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8e550dfb3b52be0979"
+    },
+    {
+      "handle": "argolite",
+      "reliability": "26%",
+      "registrationDate": "2014-05-15T09:24:00.000Z",
+      "submissionDate": "2014-05-20T03:32:00.000Z",
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "581dbc8e550dfb3b52be0978"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-05-15T09:53:00.000Z",
+      "submissionDate": null,
+      "rating": "541",
+      "colorStyle": "color: #999999",
+      "_id": "581dbc8e550dfb3b52be0977"
+    },
+    {
+      "handle": "sparemax",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-15T11:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8e550dfb3b52be0976"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "0%",
+      "registrationDate": "2014-05-15T11:47:00.000Z",
+      "submissionDate": null,
+      "rating": "1049",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbc8e550dfb3b52be0975"
+    },
+    {
+      "handle": "paolog",
+      "reliability": "25%",
+      "registrationDate": "2014-05-15T15:26:00.000Z",
+      "submissionDate": "2014-05-19T14:55:00.000Z",
+      "rating": "530",
+      "colorStyle": "color: #999999",
+      "_id": "581dbc8e550dfb3b52be0974"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "0%",
+      "registrationDate": "2014-05-15T18:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8e550dfb3b52be0973"
+    },
+    {
+      "handle": "Manoj85",
+      "reliability": "0%",
+      "registrationDate": "2014-05-15T21:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8e550dfb3b52be0972"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "0%",
+      "registrationDate": "2014-05-16T02:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8e550dfb3b52be0971"
+    },
+    {
+      "handle": "vivekthakur",
+      "reliability": "0%",
+      "registrationDate": "2014-05-16T02:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8e550dfb3b52be0970"
+    },
+    {
+      "handle": "chuxy111",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-16T12:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8e550dfb3b52be096f"
+    },
+    {
+      "handle": "krithivasan",
+      "reliability": "0%",
+      "registrationDate": "2014-05-16T05:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8e550dfb3b52be096e"
+    },
+    {
+      "handle": "emotionless",
+      "reliability": "0%",
+      "registrationDate": "2014-05-16T05:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8e550dfb3b52be096d"
+    },
+    {
+      "handle": "sangharsh",
+      "reliability": "0%",
+      "registrationDate": "2014-05-16T08:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8e550dfb3b52be096c"
+    },
+    {
+      "handle": "chandan047",
+      "reliability": "0%",
+      "registrationDate": "2014-05-16T13:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8e550dfb3b52be096b"
+    },
+    {
+      "handle": "ioio",
+      "reliability": "0%",
+      "registrationDate": "2014-05-16T13:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8e550dfb3b52be096a"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-16T16:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8e550dfb3b52be0969"
+    },
+    {
+      "handle": "justinwong0322",
+      "reliability": "0%",
+      "registrationDate": "2014-05-16T16:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8e550dfb3b52be0968"
+    },
+    {
+      "handle": "DanLazar",
+      "reliability": "0%",
+      "registrationDate": "2014-05-16T17:28:00.000Z",
+      "submissionDate": null,
+      "rating": "1124",
+      "colorStyle": "color: #00A900",
+      "_id": "581dbc8e550dfb3b52be0967"
+    },
+    {
+      "handle": "davinashreddy",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-16T18:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8e550dfb3b52be0966"
+    }
+  ],
+  "registrationEndDate": "2014-05-17T03:36:00.000Z",
+  "reliabilityBonus": 280,
+  "reviewScorecardId": 30001463,
+  "reviewType": null,
+  "screeningScorecardId": 30001330,
+  "submissionEndDate": "2014-05-20T03:36:00.000Z",
+  "submissions": [
+    {
+      "handle": "paolog",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 72.45,
+      "finalScore": 73.83,
+      "points": 630,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-05-19T14:55:00.000Z",
+      "_id": "581dbc8e550dfb3b52be098c"
+    },
+    {
+      "handle": "argolite",
+      "placement": null,
+      "screeningScore": 20,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Failed Screening",
+      "submissionDate": "2014-05-20T03:32:00.000Z",
+      "_id": "581dbc8e550dfb3b52be098b"
+    }
+  ],
+  "technology": [
+    "Other"
+  ]
+}

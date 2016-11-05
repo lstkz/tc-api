@@ -1,0 +1,160 @@
+{
+  "_id": 30043172,
+  "_isComplete": true,
+  "__v": 2129,
+  "_lastUpdate": "2016-11-05T11:03:40.681Z",
+  "appealsEndDate": "2014-06-24T03:59:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "At a glance Customer ScoreCard Visualization Code Challenge",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Cancelled - Zero Submissions",
+  "detailedRequirements": "<p><span style=\"color:rgb(255, 0, 0)\"><span style=\"font-size:14px\"><strong><big>Summary</big></strong></span></span></p>\n\n<p><span>Welcome! This contest is focused on implementing a design for an inline&nbsp;</span><a href=\"http://www.salesforce.com/us/developer/docs/pages/Content/pages_intro_what_is_it.htm\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); line-height: 1.6;\">visualforce</a><span>&nbsp;display within a&nbsp;</span><a href=\"http://www.salesforce.com/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); line-height: 1.6;\">salesforce</a><span>&nbsp;page, you need to code based on the given requirements - you will be coding a design within a small area inside of a salesforce page.</span></p>\n\n<p>We have a short deadline for this code which is why the challenge prizes are higher than the expected effort.</p>\n\n<p>This is a followup challenge to a design challenge that can be found&nbsp;<a href=\"http://www.topcoder.com/challenge-details/30043170/?type=design&amp;noncache=true\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">here</a>.</p>\n\n<p><span style=\"color:rgb(255, 0, 0)\"><span style=\"font-size:14px\"><strong><big>Project Guide</big></strong></span></span></p>\n\n<p>In this contest, we are looking to create the backend code to drive an inline visualforce display within salesforce as well as connect this code to a design created in a previous design contest (see above for link). This inline display will have information on key account details and will be shown in two places: 1) above the Account information on the Account page layout and 2) In a Salesforce Console for Service custom highlights panel.</p>\n\n<p><strong>Purpose behind this Project:</strong></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(33, 33, 33); font-family:arial\">Sales reps and Service reps need an &ldquo;At a Glance&rdquo; view of key account information that readily calls out issues and can be digested with a short glance (usually while speaking to a customer on the phone).</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(33, 33, 33); font-family:arial\">We want the reps to be able to see a visual representation of key account data, so that they can quickly identify any issues that needs their attention in the process.</span></span></p>\n\n<p><strong>Design to implement (PSD attached):</strong></p>\n\n<p><img alt=\"\" src=\"https://sites.google.com/a/appirio.com/wg-image-host/home/08.png\" style=\"float:left; margin-bottom:5px; margin-top:5px; width:100%\" /></p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p><strong>Key Information:</strong></p>\n\n<p>1. The final product must use responsive web design techniques to grow or shrink with the page width</p>\n\n<p>2. Fields on the Account object will drive the data visualization. Some new fields will be required to be created.</p>\n\n<p>3. Attached is a Layered PSD file from the winner of the Design Challenge - this file is to be used for the look and feel of the custom visualforce component</p>\n\n<p>4. Attached is an Object Metadata package to give you needed fields and objects</p>\n\n<p>5. The Max Height of the component is fixed at 115 pixel (this is the verical space on the page)</p>\n\n<p>6. There are no restrictions on the width (please see #1 again).</p>\n\n<p>7. Inside the Object Metadata package is a Custom App called Customer Service Console - use this to display the Scorecard in a Console</p>\n\n<p>&nbsp;</p>\n\n<p><strong>Requirements &amp;</strong>&nbsp;<strong>high level tasks:</strong></p>\n\n<p>1. Primary Contact gets pulled from Account.Primary_Contact__c (the name should hyperlink to the contact page - this would be the related contact where Contact.Primary_Indicator__c = true)</p>\n\n<p>2. Primary Phone gets pulled from&nbsp;Primary_Phone__c (the number should use the standard salesforce phone number handling so that it is click to dial enable)</p>\n\n<p>3. Primary Email gets pulled from&nbsp;Primary_Email__c (the email should use the standard salesforce email handling so that it is clickable to send an email)</p>\n\n<p>4. Lifecycle Notes - four states currently: Onboarding in Progress, Items Pending Fulfillment, At Risk Customer, and empty</p>\n\n<p style=\"margin-left:40px\">&bull;If none of the below conditions are met, display nothing in this space</p>\n\n<p style=\"margin-left:40px\">&bull;If multiple conditions below are met, use a fade to transistion between then every 2.5 seconds for 3 loops then end</p>\n\n<p style=\"margin-left:40px\">&bull;Onboarding in Progress is displayed if there is a Onboarding case record type where &nbsp;Case.Status does not equal Closed</p>\n\n<p style=\"margin-left: 80px;\">&bull;On-click, jump to Cases related list</p>\n\n<p style=\"margin-left:40px\">&bull;At Risk Customer is displayed if there is an At Risk Customer case record type where Case.Status does not equal Closed</p>\n\n<p style=\"margin-left: 80px;\">&bull;On-click, jump to Cases related list</p>\n\n<p style=\"margin-left:40px\">&bull;Items Pending Fulfillment is displayed if there are any related Fulfillment Item records where Fullfilment_Item__c.Status__c equals Open, In Progress, In Query, or Unassigned</p>\n\n<p style=\"margin-left: 80px;\">&bull;On-click, jump to Fulfillment Items related list</p>\n\n<p>5. Billing</p>\n\n<p style=\"margin-left:40px\">&bull;If Record Type = Account.CSS_Customer and Account.Delinquency_Indicator__c = false, then</p>\n\n<p style=\"margin-left:80px\">Amount will display a &quot;?&quot;, Billing Background Color will be Green, and Days will be populated with &quot;Last Payment Date:&quot; +&nbsp;Account.Last_Payment_Date__c</p>\n\n<p style=\"margin-left:40px\">&bull;If Record Type =&nbsp;Account.CSS_Customer and Account.Delinquency_Indicator__c = true, then</p>\n\n<p style=\"margin-left:80px\">Amount will display Account.CSS_CustomerAmountPastDue__c, Days will display Account.Months_PastDue__c + &quot;Months Past Due&quot; and&nbsp;</p>\n\n<p style=\"margin-left:80px\">If Account.Months_PastDue__c is 1 or less, Billing Background Color will be Yellow, If&nbsp;Account.Months_PastDue__c is greater than 1, Billing Background Color is Red</p>\n\n<p style=\"margin-left:40px\">&bull;If Record Type =&nbsp;Account.Local_Advertiser and Account.Days_Past_due__c = 0, then</p>\n\n<p style=\"margin-left:80px\">Amount will display Account.Amount_Due__c, Billing Background Color will be Green, and Days will be populated with &quot;Last Billed Date:&quot; +&nbsp;Account.Last_Billed_Date__c</p>\n\n<p style=\"margin-left:40px\">&bull;If Record Type =&nbsp;Account.Local_Advertiser and Account.Days_Past_due__c is 1 or greater, then</p>\n\n<p style=\"margin-left:80px\">Amount will display&nbsp;Account.Amount_Due__c, Days will display&nbsp;Account.Days_Past_due__c + &quot;Days Past Due&quot; and&nbsp;</p>\n\n<p style=\"margin-left:80px\">If&nbsp;Account.Days_Past_due__c is 30 or less, Billing Background Color will be Yellow,&nbsp;If&nbsp;Account.Days_Past_due__c is greater than 30, Billing Background Color is Red</p>\n\n<p>6. Open Cases</p>\n\n<p style=\"margin-left:40px\">&bull;On-click, jump to Cases related list</p>\n\n<p style=\"margin-left:40px\">&bull;Create a new field to hold Number of Open Cases which equals the number of related Cases that do not have Case.Status of Closed</p>\n\n<p style=\"margin-left:40px\">&bull;If Number of Open Cases is 2 or less, Cases Background Color is Green. If Number of Open Cases is greater than 2, then Cases Background Color is Red</p>\n\n<p style=\"margin-left:40px\">&bull;If Account.Waiting_for_Callback__c equals No, display Green Not Awaiting Callback. If Account.Waiting_for_Callback__c equals Yes, display Yellow Awaiting Callback</p>\n\n<p style=\"margin-left:40px\">&bull;Create a new field to track duration when&nbsp;Account.Waiting_for_Callback__c equals Yes. And&nbsp;If Account.Waiting_for_Callback__c equals Yes, display &quot;For&quot; + Day Waiting + &quot;Days&quot; in yellow</p>\n\n<p>7. Account</p>\n\n<p style=\"margin-left:40px\">&bull;Create new field called &quot;Customer Management Type&quot; with Three Picklist Values: MC2, SM, NA</p>\n\n<p style=\"margin-left:80px\">&bull;If&nbsp;&quot;Customer Management Type&quot; = MC2, then display MC^2 for Account Tier</p>\n\n<p style=\"margin-left:80px\">&bull;If&nbsp;&quot;Customer Management Type&quot; = SM, then display SM for Account Tier, else display the Icon found in the PSD</p>\n\n<p style=\"margin-left:40px\">&bull;For Latest NPS Score area</p>\n\n<p style=\"margin-left:80px\">&bull;If Account.Latest_NPS_score__c is between 0 - 6, display red Detractor</p>\n\n<p style=\"margin-left:80px\">&bull;If Account.Latest_NPS_score__c is 7 or 8, display yellow Passive</p>\n\n<p style=\"margin-left:80px\">&bull;If Account.Latest_NPS_score__c is 9 or 10, display green Promotor</p>\n\n<p style=\"margin-left:80px\">*If Account.Latest_NPS_score__c is null, display nothing</p>\n\n<p style=\"margin-left:80px\">&bull;On-click jump to &quot;Clicktools survey feedback&quot; related list (not included in metada)</p>\n\n<p style=\"margin-left:40px\">&bull;For Customer Life</p>\n\n<p style=\"margin-left:80px\">&bull;If Record Type = Account.CSS_Customer, calculate how much time has past between&nbsp;Account.CSS_CustomerInstallDate__c and today, then display &quot;Customer for&quot; + time in years + &quot;years&quot;</p>\n\n<p style=\"margin-left:80px\">&bull;If&nbsp;Record Type = Account.Local_Advertiser, calculate how much time has past between&nbsp;Account.Created_Date&nbsp;and today, then display &quot;Customer for&quot; + time in years + &quot;years&quot;</p>\n\n<p>8. Sales</p>\n\n<p style=\"margin-left:40px\">&bull;On-click, jump to Opporunities related list</p>\n\n<p style=\"margin-left:40px\">&bull;<span style=\"line-height:1.6\">For Open Opportunities, calculate the number of related Opportunities that do not have Oppotunity.StageName of either&nbsp;Stage 4 - Closed or&nbsp;Stage 4 - Closed/Rework</span></p>\n\n<p style=\"margin-left:40px\">&bull;If&nbsp;Record Type =&nbsp;Account.Local_Advertiser, calculate time difference between today and&nbsp;Account.Contract_End_Date__c then display this value in days + &quot;Days for Renewal&quot;</p>\n\n<p style=\"margin-left:40px\">&bull;If Record Type = Account.CSS_Customer, then display &quot;?&quot;</p>\n\n<p>&nbsp;</p>\n\n<p><strong>Notes on the PSD file:</strong></p>\n\n<p><img alt=\"\" src=\"https://sites.google.com/a/appirio.com/wg-image-host/home/Scorecard%20Legend.png\" style=\"float:left; margin-bottom:5px; margin-top:5px; width:100%\" /></p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30043172",
+  "finalSubmissionGuidelines": "<h3><strong>Submission details: &nbsp;&nbsp;</strong></h3>\n\n<div class=\"ng-binding\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif; border: 0px; font-size: 15px; vertical-align: baseline; outline: 0px; -webkit-backface-visibility: hidden; line-height: 18px; background-color: rgb(255, 255, 254);\">\n<ul>\n\t<li>Your code should have minimum resource usage i.e there should be minimum number of SOQL fired, number of DML, Lines of code, Query rows retieved etc.</li>\n\t<li>Your code should have near 100% test coverage.</li>\n\t<li>Provide an SRC package (Ant or Unmanaged Package or both) of your code.</li>\n\t<li>Provide a detailed document of your solution including details for installation and setup. &nbsp;&nbsp;</li>\n\t<li><span>Provide any details about governor limits or any other limitations to your solution.</span></li>\n\t<li><span>Provide a simple video of you solution in action. &nbsp;If English is not your first language feel free to annotate your video with text.</span></li>\n</ul>\n</div>\n",
+  "forumId": 23320,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=23320",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 7,
+  "numberOfSubmissions": 0,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-16T00:00:00.000Z",
+      "actualStartTime": "2014-06-16T00:00:00.000Z",
+      "scheduledEndTime": "2014-06-20T15:59:00.000Z",
+      "actualendTime": "2014-06-20T15:59:00.000Z",
+      "_id": "581dbc8c550dfb3b52be0686"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-06-16T00:05:00.000Z",
+      "actualStartTime": "2014-06-16T00:05:00.000Z",
+      "scheduledEndTime": "2014-06-20T15:59:00.000Z",
+      "actualendTime": "2014-06-20T15:59:00.000Z",
+      "_id": "581dbc8c550dfb3b52be0685"
+    },
+    {
+      "type": "Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-06-20T15:59:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-06-22T15:59:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbc8c550dfb3b52be0684"
+    },
+    {
+      "type": "Appeals",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-06-22T15:59:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-06-23T15:59:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbc8c550dfb3b52be0683"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-06-23T15:59:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-06-24T03:59:00.000Z",
+      "actualendTime": null,
+      "_id": "581dbc8c550dfb3b52be0682"
+    }
+  ],
+  "platforms": [
+    "Salesforce.com"
+  ],
+  "postingDate": "2014-06-16T00:00:00.000Z",
+  "prize": [
+    1750,
+    500
+  ],
+  "projectId": 7441,
+  "registrants": [
+    {
+      "handle": "Akharade",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-16T11:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8c550dfb3b52be0681"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-16T03:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8c550dfb3b52be0680"
+    },
+    {
+      "handle": "maruthi12g",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-16T07:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8c550dfb3b52be067f"
+    },
+    {
+      "handle": "sfdcdev11981",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-16T17:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8c550dfb3b52be067e"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-16T21:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8c550dfb3b52be067d"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-17T05:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8c550dfb3b52be067c"
+    },
+    {
+      "handle": "chok68",
+      "reliability": "n/a",
+      "registrationDate": "2014-06-17T09:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "581dbc8c550dfb3b52be067b"
+    }
+  ],
+  "registrationEndDate": "2014-06-20T15:59:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": null,
+  "screeningScorecardId": null,
+  "submissionEndDate": "2014-06-20T15:59:00.000Z",
+  "submissions": [],
+  "technology": [
+    "Apex",
+    "CSS",
+    "HTML5",
+    "Photoshop",
+    "Salesforce",
+    "Visualforce"
+  ]
+}
