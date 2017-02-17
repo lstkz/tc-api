@@ -1,0 +1,402 @@
+{
+  "_id": 30055905,
+  "_isComplete": true,
+  "__v": 2041,
+  "_lastUpdate": "2016-12-15T02:13:40.461Z",
+  "appealsEndDate": "2016-12-15T02:10:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Topcoder - Fixes For Message Service",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "Messaging service relies on Discourse for providing the functionality for topics / posts. There are a couple of problems that need to be resolved<br />\n<br />\n- Username sync<br />\n&nbsp;We create shadow user accounts in Discourse for all members. These accounts are created on-demand, when ..&nbsp;<br />\n&nbsp;1. When a user that doesn&#39;t exist in Discourse attempts to retrieve posts / topics and&nbsp;<br />\n&nbsp;2. Creating a topic if a project member doesn&#39;t already exist in discourse.&nbsp;<br />\n<br />\nDiscourse is very restrictive when it comes to usernames - special characters not are allowed, length needs to be b/w 2-15 characters and it must end with a letter or number. Topcoder usernames / handles are not as restrictive and this causes problems when creating users in Discourse. Our solution is to use userId instead of usernames when creating users in discourse. you are expected to go through all the code and ensure we are converting from username to userId where necessary. &nbsp;Following are the important pieces, but not limited to these.<br />\n<br />\n1. For the apis, it needs to passing <u>userId</u> instead of <u>username</u>, the same for response.&nbsp;<a href=\"https://github.com/appirio-tech/tc-message-service/blob/dev/swagger.yaml\">https://github.com/appirio-tech/tc-message-service/blob/dev/swagger.yaml</a><br />\n2. For sso logic (<a href=\"https://github.com/appirio-tech/tc-message-service/blob/dev/app/routes/sso/sso.js\">https://github.com/appirio-tech/tc-message-service/blob/dev/app/routes/sso/sso.js</a>), you should switch the logic for using handle and userId. as we are using userId now.<br />\n3. Tests should be updated correspondingly.<br />\n<br />\n- Handling @ mentions<br />\nUsing user id instead of handles in discourse will cause problems with @mentions in posts and will need to be handled appropriately. When creating posts, parse through the post body and convert any @handle to the appropriate userId before creating the topic in discourse. When retrieving posts we will need to convert @userId back to @handle along with the link.<br />\n<br />\n- One time script to update existing data<br />\nthe script should be run one time to update the existing data.<br />\n1) &nbsp;rename the existing columns in message service DB (createdAt -&gt; createdBy_old, updatedBy -&gt; updatedBy_old)<br />\n2) create new columns createdBy, updatedBy<br />\n3) Lookup handles through an API call to member service&nbsp;<br />\n4) update PostgresDb as well as make an API call to Discourse to update the userid there<br />\n<br />\n<u>About Local Setup</u><br />\nPlease check the <u>local</u> directory in the attached source code for detail steps to setup locally.&nbsp;",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30055905",
+  "finalSubmissionGuidelines": "- Code Changes For the fixes<br />\n- Verification Steps",
+  "forumId": 34654,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=34654",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 33,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-12-07T02:00:00.000Z",
+      "actualStartTime": "2016-12-07T02:00:00.000Z",
+      "scheduledEndTime": "2016-12-12T02:00:00.000Z",
+      "actualendTime": "2016-12-12T02:00:00.000Z",
+      "_id": "5851fc5410a1db09a4048b94"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-12-07T02:05:00.000Z",
+      "actualStartTime": "2016-12-07T02:05:00.000Z",
+      "scheduledEndTime": "2016-12-12T02:00:00.000Z",
+      "actualendTime": "2016-12-12T02:00:00.000Z",
+      "_id": "5851fc5410a1db09a4048b93"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-12-12T02:00:00.000Z",
+      "actualStartTime": "2016-12-12T02:00:00.000Z",
+      "scheduledEndTime": "2016-12-13T23:08:00.000Z",
+      "actualendTime": "2016-12-13T23:08:00.000Z",
+      "_id": "5851fc5410a1db09a4048b92"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-12-13T23:08:00.000Z",
+      "actualStartTime": "2016-12-13T23:08:00.000Z",
+      "scheduledEndTime": "2016-12-14T23:08:00.000Z",
+      "actualendTime": "2016-12-14T23:08:00.000Z",
+      "_id": "5851fc5410a1db09a4048b91"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-12-14T23:08:00.000Z",
+      "actualStartTime": "2016-12-14T23:08:00.000Z",
+      "scheduledEndTime": "2016-12-15T02:10:00.000Z",
+      "actualendTime": "2016-12-15T02:10:00.000Z",
+      "_id": "5851fc5410a1db09a4048b90"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2016-12-07T02:00:00.000Z",
+  "prize": [
+    1000,
+    400
+  ],
+  "projectId": 9512,
+  "registrants": [
+    {
+      "handle": "ananthhh",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-07T02:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b8f"
+    },
+    {
+      "handle": "NikhilKalige",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-07T03:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b8e"
+    },
+    {
+      "handle": "chubbchubbs",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-07T02:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b8d"
+    },
+    {
+      "handle": "ngoctay",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-07T02:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b8c"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-07T04:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b8b"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-07T05:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b8a"
+    },
+    {
+      "handle": "code_now",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-07T05:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b89"
+    },
+    {
+      "handle": "oa414",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-07T06:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b88"
+    },
+    {
+      "handle": "nauhil",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-07T07:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b87"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-07T07:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b86"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-07T07:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b85"
+    },
+    {
+      "handle": "Dobrokhvalov",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-07T08:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b84"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-07T09:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b83"
+    },
+    {
+      "handle": "jackyzhangjb",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-07T09:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b82"
+    },
+    {
+      "handle": "uttpal25993",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-07T10:56:00.000Z",
+      "submissionDate": "2016-12-10T22:27:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b81"
+    },
+    {
+      "handle": "jorje.b",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-07T12:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b80"
+    },
+    {
+      "handle": "gets0ul",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-07T12:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b7f"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-07T13:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b7e"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-07T13:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b7d"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-07T16:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b7c"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-08T09:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b7b"
+    },
+    {
+      "handle": "Yurii",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-08T18:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b7a"
+    },
+    {
+      "handle": "duxiaoyang",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-09T05:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b79"
+    },
+    {
+      "handle": "republic82",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-09T17:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b78"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-09T18:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b77"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-09T19:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b76"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-09T19:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b75"
+    },
+    {
+      "handle": "twds",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-10T06:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b74"
+    },
+    {
+      "handle": "j404",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-10T12:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b73"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-10T15:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b72"
+    },
+    {
+      "handle": "amber.j",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-11T06:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b71"
+    },
+    {
+      "handle": "chejianchao",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-11T18:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b70"
+    },
+    {
+      "handle": "wwxyxgy",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-12T00:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5851fc5410a1db09a4048b6f"
+    }
+  ],
+  "registrationEndDate": "2016-12-12T02:00:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-12-12T02:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "uttpal25993",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 96.88,
+      "finalScore": 96.88,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-12-10T22:27:00.000Z",
+      "_id": "5851fc5410a1db09a4048b95"
+    }
+  ],
+  "technology": [
+    "Docker",
+    "Node.js"
+  ]
+}

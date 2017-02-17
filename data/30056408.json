@@ -1,0 +1,505 @@
+{
+  "_id": 30056408,
+  "_isComplete": true,
+  "__v": 914,
+  "_lastUpdate": "2017-02-17T08:02:47.134Z",
+  "appealsEndDate": "2017-02-20T07:13:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "FAYA Automation Testing - Java Command Line Tool",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2017-02-18T19:13:00.000Z",
+  "currentPhaseName": "Review",
+  "currentPhaseRemainingTime": 126759,
+  "currentStatus": "Active",
+  "detailedRequirements": "The Fund Accounting Yield Application (FAYA) requires an automated way of validating functionality from an acceptance tester&rsquo;s point of view. The Test Automation tool should validate all calculated values that are saved to the FAYA Java Application database recently build by topcoder community.\n<h1>Challenge Overview</h1>\nThe goal of this challenge is to design and build a command line Java based Testing Tool and a FAYA_TEST Database. The FAYA Application comprises of 3 work streams &ndash; Money Market, Distribution Yield, SEC yield.<br />\n<br />\nThis diagram show you the high level overview of the tool components. Read requirements for more details.\n<div style=\"margin-left: 80px;\"><img alt=\"\" src=\"https://gitlab.com/sancus-community/backend/uploads/e69b3f992bc9fd7ac7dc7e32a9c7088f/faya-test-automation-tool.png\" style=\"height:565px; width:975px\" /></div>\n\n<h1>Challenge Requirements</h1>\n\n<h3><u>Logic and Flow Requirements</u></h3>\nHere is how the tool should work:<br />\n1. <strong>Load the Expected Results in to the FAYA_TEST database</strong><br />\n&nbsp; &nbsp;- This feature of the test tool will allow the customer to load expected results for a given business date in to the FAYA_TEST database<br />\n&nbsp; &nbsp;- The command line tool should accept arguments to specify what stream to load expected results, user should be able to specify a specific stream, or all of them.<br />\n&nbsp; &nbsp;- The logic should be re-runnable, meaning: if expected results already exist, it should just overwrite them<br />\n2. <strong>Compare the values in the FAYA Application database to the expected values in the FAYA_TEST database</strong><br />\n&nbsp; &nbsp;- This feature will allow the customer to compare values in the FAYA Application database to the expected values in the FAYA_TEST database<br />\n&nbsp; &nbsp;- The tool should accept arguments to allow for comparison of each of the three work streams or all of them<br />\n&nbsp; &nbsp;- Each time the tool is executed for same data, it should create a new set of compare results (do not overwrite the previous results).&nbsp;<br />\n&nbsp; &nbsp;- The time for which the comparisons were run should be saved in the FAYA_TEST database<br />\n&nbsp; &nbsp;- The results should be stored at both a record by record level and summary level<br />\n&nbsp; &nbsp;- Produce a report (CSV or XLS)<br />\n3. <strong>Reports</strong><br />\n&nbsp; &nbsp;- This feature will allow the customer to produce a simple report (CSV or XLS)<br />\n&nbsp; &nbsp;- A separate report for each of the three streams is required<br />\n&nbsp; &nbsp;- The report is automatically produced at the end of each comparison<br />\n&nbsp; &nbsp;- The report will contains the results at both a record by record level and at summary level. It is Ok to generate two files for that : Summary file, and detailed file.\n<h3><u>Loading Expected Results Requirement</u></h3>\nNote the following when loading expected results data :<br />\n<br />\n1. <strong>Money Market Funds</strong><br />\n&nbsp; &nbsp; The expected results for the Money Market stream will be in an Access DB. The client will provide a query to extract the data from the Access DB. The testing tool will need to populate the FAYA_TEST database with this data using the mapping provided by the client. The query includes final calculated data and data that was used for the calculation. All this data needs to be loaded in to the FAYA_TEST database by the Testing Tool. The list of tables / columns that need to be compared will be provided by the client. The data will be for a single calendar date<br />\n2. <strong>Distribution Funds</strong><br />\n&nbsp; &nbsp; The legacy systems generate two spreadsheets that contain the Distribution Yield data. These are the expected results. The Testing tool will need to load the data from these two spreadsheets in to the FAYA_TEST database. A field by field mapping will be provided by the client. The data will be for a single calendar date<br />\n3. <strong>SEC Funds</strong> &ndash; this is broken down in to 3 levels<br />\n&nbsp; &nbsp;1. &nbsp;<strong>Security Level</strong><br />\n&nbsp; &nbsp; &nbsp; - The legacy system produces a file called the &ldquo;modified PARMSY&rdquo; file which contains Position records. A Position is the same as a stock holding &nbsp; &nbsp; &nbsp;<br />\n&nbsp; &nbsp; &nbsp; - The format of the PARMSY file is a fixed width format, showing Position level detail<br />\n&nbsp; &nbsp; &nbsp; - Since a stock may be held by multiple Portfolios (funds), the Security information would occur multiple times in the PARMSY file. The Security level data need only be saved once, the information at a Security level would be the same across Position records where it is held<br />\n&nbsp; &nbsp; &nbsp; - The PARMSY file contains the input data that was used for the calculations and also the resulting calculations<br />\n&nbsp; &nbsp; &nbsp; - The testing tool will need to load the data that was used for the input and the calculated data from the PARMSY file in to the FAYA_TEST database &ndash; these values are the expected results<br />\n&nbsp; &nbsp;2. <strong>Position Level</strong><br />\n&nbsp; &nbsp; &nbsp; - Extract Position level information from the PARMSY file and load the data in to the FAYA_TEST database &ndash; these values are the expected results<br />\n&nbsp; &nbsp; &nbsp; - The testing tool will need to insert Position records if not present, or update it if present<br />\n&nbsp; &nbsp; 3. <strong>Portfolio and Class level</strong><br />\n&nbsp; &nbsp; &nbsp; - A CSV feed will be provided by the client along with a mapping of columns in the feed<br />\n&nbsp; &nbsp; &nbsp; - The Testing Tool will need to insert / update the data from the CSV feed in to the FAYA_TEST database &ndash; these values are the expected results\n<h3><u>Files and Queries used by the Tool</u></h3>\nYou are provided with files that contains sample data, and the queries you need to use to extract data, load data in FAYA_TEST, and to load data from FAYA application:<br />\n1. <strong>Money Market</strong><br />\n&nbsp; &nbsp;- The SQL Query to run against the Access Database is called <em>BridgeToolSQLExtraction.docx</em><br />\n&nbsp; &nbsp;- <em>Excel_to_DBMapping.xlsx&nbsp;</em>(MM CLASS AND FUND DATA) has the mapping for Excel to database table and column<br />\n&nbsp; &nbsp;- Using this query, we pulled 45 days of test data from the bridge tool. This document is called <em>qrySECYieldBackUpPull.xlsx</em><br />\n&nbsp; &nbsp;- This document specifically should be loaded into the testing tool to assist with testing - the data is aged between 6/7/2016 and 7/24/2016.<br />\n&nbsp; &nbsp;- The corresponding FAYA database query to be used for comparison is in the <em>MMClass_Fund_Data.sql</em> file (fund / portfolio level query), along with the <em>MMIncome</em>&nbsp;sheet in <em>MMandDistSampleData.xlsx</em>&nbsp;file (class level query).<br />\n2. <strong>Distribution Yield</strong><br />\n&nbsp; &nbsp;- The Data sheet is called <em>2016-07-31MonthendSECRatesandYieldsSummary</em><br />\n&nbsp; &nbsp;- Data from this sheet should be loaded into FAYA Test database<br />\n&nbsp; &nbsp;- <em>Excel_to_DBMapping.xlsx&nbsp;</em>(DIST CLASS AND FUND DATA) has the mapping for Excel to database table and column<br />\n&nbsp; &nbsp;- The corresponding FAYA database query is called <em>Dist_Class_fund_Data.sql</em>&nbsp;&ndash; to be executed from FAYA database after calculations<br />\n&nbsp; &nbsp;- Compare the results for the funds from excel sheet in step a with query from the previous step.<br />\n3. <strong>PARMSY file</strong><br />\n&nbsp; &nbsp;- Sample File layout and Data &nbsp;is provided within the file named <em>20160729parmsy.xlsx</em><br />\n&nbsp; &nbsp;- <em>Excel_to_DBMapping.xlsx (</em>PARMSY File) has the mapping for Excel to database table and column<br />\n&nbsp; &nbsp;- Load the <em>20160729parmsy.xlsx</em>&nbsp;into FAYA_Test Database<br />\n&nbsp; &nbsp;- The corresponding FAYA database query is in <em>PARMSY_QUERY.sql</em>, use the fetched fields to compare it with the PARMSY file data loaded in FAYA_TEST\n\n<h3><u>Reports</u></h3>\n- The reports generated will simply be pulled from the FAYA_TEST database and placed in xls/csv file.<br />\n- You can create a file for summary and file for detailed results.<br />\n- When tool finish executes, it should prompt the location of output files with the file name generated (use timestamp as part of the file name).\n<h3><u>Validation, Exception Handling and Logging Requirements</u></h3>\n- Add debug statements, try to address all important areas that should simplify debugging the tool<br />\n- Exception block should log enough contextual information to help understand the problem to fix it<br />\n- Perform basic validation<br />\n&nbsp; &nbsp;- When tool is executed it should check all configurations are valid prior to execution any logic<br />\n&nbsp; &nbsp;- Throw exceptions if input file formats are incorrect<br />\n&nbsp; &nbsp;- Prompt a manual to help user understand how to use the tool or when improper execution is running\n<h2>General Note</h2>\n- The validation is different for each of the three work streams due to different sets of calculations. The loading of expected results is different for each of the three work streams because of the different legacy processes involved for each work stream<br />\n- The client wants to run this comparison process every day during the production parallel phase.&nbsp;<br />\n- The tool should be configurable to point to the location of the feeds (expected results data), and be able to configure the Data Source for FAYA Application database and FAYA_TEST database.<br />\n- You need to provide test data to load FAYA Application, it should varies between matching and mismatching data so we can see how report will address it.<br />\n- Create seperate README file for how to setup and execute the tool. It should be placed under the tool folder.<br />\n- Use <strong>mybatis</strong> for DB interaction\n\n<h2>Source Code</h2>\n- Existing Source Code for FAYA Java Application is provided in challenge forums.<br />\n- You are not expected to use any of the existing code, you will only need to use the DDL and load it with test data.<br />\n- The folder name should be faya-test-tool, it should include all source code, and its own pom file.\n<h1>Technology Stack</h1>\n- Java 8<br />\n- Oracle 11g<br />\n- mybatis<br />\n-&nbsp;Log4j 1.2 http://logging.apache.org/log4j/1.2/&nbsp;",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30056408",
+  "event": {
+    "id": 3447,
+    "description": "2017 TopCoder(R) Open",
+    "shortDescription": "tco17"
+  },
+  "finalFixEndDate": "2017-02-21T19:13:00.000Z",
+  "finalSubmissionGuidelines": "<p><strong><span style=\"color:#FF0000\">Submission Deliverables</span></strong></p>\n\n<p><span style=\"font-size:12px\">Below is an overview of the deliverables:</span></p>\n\n<ul>\n\t<li><span style=\"font-size:12px\">- Fully Implemented Java Comand Line Testing Tool functionality defined by the requirements outlined in challenge specification.</span><br />\n\t<span style=\"font-size:12px\">- A complete and detailed deployment document (as a README file) explaining how to deploy the application including configuration information.</span></li>\n\t<br />\n\t&nbsp;\n</ul>\n\n<h2><span style=\"color:#FF0000\"><strong>Final Submission</strong></span></h2>\n\n<p><span style=\"font-size:12px\">For each member, the final submission should be uploaded via the challenge detail page on <a href=\"http://www.topcoder.com\">topcoder.com</a>.</span></p>\n",
+  "forumId": 35121,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=35121",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 38,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2017-02-10T12:56:00.000Z",
+      "actualStartTime": "2017-02-10T12:56:00.000Z",
+      "scheduledEndTime": "2017-02-10T12:58:00.000Z",
+      "actualendTime": "2017-02-10T12:58:00.000Z",
+      "_id": "58a6ae275d036c0bbdd5c6d4"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2017-02-10T12:58:00.000Z",
+      "actualStartTime": "2017-02-10T12:58:00.000Z",
+      "scheduledEndTime": "2017-02-10T14:01:00.000Z",
+      "actualendTime": "2017-02-10T14:01:00.000Z",
+      "_id": "58a6ae275d036c0bbdd5c6d3"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2017-02-10T14:01:00.000Z",
+      "actualStartTime": "2017-02-10T14:01:00.000Z",
+      "scheduledEndTime": "2017-02-13T14:02:00.000Z",
+      "actualendTime": "2017-02-13T14:02:00.000Z",
+      "_id": "58a6ae275d036c0bbdd5c6d2"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2017-02-10T14:07:00.000Z",
+      "actualStartTime": "2017-02-10T14:07:00.000Z",
+      "scheduledEndTime": "2017-02-15T14:02:00.000Z",
+      "actualendTime": "2017-02-15T14:02:00.000Z",
+      "_id": "58a6ae275d036c0bbdd5c6d1"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2017-02-15T14:02:00.000Z",
+      "actualStartTime": "2017-02-15T14:02:00.000Z",
+      "scheduledEndTime": "2017-02-16T00:49:00.000Z",
+      "actualendTime": "2017-02-16T00:49:00.000Z",
+      "_id": "58a6ae275d036c0bbdd5c6d0"
+    },
+    {
+      "type": "Review",
+      "status": "Open",
+      "scheduledStartTime": "2017-02-16T19:13:00.000Z",
+      "actualStartTime": "2017-02-16T19:13:00.000Z",
+      "scheduledEndTime": "2017-02-18T19:13:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae275d036c0bbdd5c6cf"
+    },
+    {
+      "type": "Appeals",
+      "status": "Scheduled",
+      "scheduledStartTime": "2017-02-18T19:13:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2017-02-19T19:13:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae275d036c0bbdd5c6ce"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2017-02-19T19:13:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2017-02-20T07:13:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae275d036c0bbdd5c6cd"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Scheduled",
+      "scheduledStartTime": "2017-02-20T07:13:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2017-02-20T19:13:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae275d036c0bbdd5c6cc"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Scheduled",
+      "scheduledStartTime": "2017-02-20T19:13:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2017-02-21T19:13:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae275d036c0bbdd5c6cb"
+    },
+    {
+      "type": "Final Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2017-02-21T19:13:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2017-02-22T07:13:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae275d036c0bbdd5c6ca"
+    },
+    {
+      "type": "Approval",
+      "status": "Scheduled",
+      "scheduledStartTime": "2017-02-22T07:13:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2017-02-27T07:13:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae275d036c0bbdd5c6c9"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2017-02-10T14:01:00.000Z",
+  "prize": [
+    1800,
+    900
+  ],
+  "projectId": 11378,
+  "registrants": [
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T14:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6c8"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "13%",
+      "registrationDate": "2017-02-10T14:25:00.000Z",
+      "submissionDate": null,
+      "rating": "1159",
+      "colorStyle": "color: #00A900",
+      "_id": "58a6ae275d036c0bbdd5c6c7"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "20%",
+      "registrationDate": "2017-02-10T14:41:00.000Z",
+      "submissionDate": "2017-02-15T08:59:00.000Z",
+      "rating": "948",
+      "colorStyle": "color: #00A900",
+      "_id": "58a6ae275d036c0bbdd5c6c6"
+    },
+    {
+      "handle": "wwxyxgy",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T14:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6c5"
+    },
+    {
+      "handle": "phoenix103",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T15:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6c4"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T15:04:00.000Z",
+      "submissionDate": null,
+      "rating": "716",
+      "colorStyle": "color: #999999",
+      "_id": "58a6ae275d036c0bbdd5c6c3"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T15:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6c2"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "0%",
+      "registrationDate": "2017-02-10T15:10:00.000Z",
+      "submissionDate": null,
+      "rating": "618",
+      "colorStyle": "color: #999999",
+      "_id": "58a6ae275d036c0bbdd5c6c1"
+    },
+    {
+      "handle": "spanhawk",
+      "reliability": "26%",
+      "registrationDate": "2017-02-10T15:12:00.000Z",
+      "submissionDate": null,
+      "rating": "773",
+      "colorStyle": "color: #999999",
+      "_id": "58a6ae275d036c0bbdd5c6c0"
+    },
+    {
+      "handle": "ljsf_cc",
+      "reliability": "100%",
+      "registrationDate": "2017-02-10T15:27:00.000Z",
+      "submissionDate": null,
+      "rating": "917",
+      "colorStyle": "color: #00A900",
+      "_id": "58a6ae275d036c0bbdd5c6bf"
+    },
+    {
+      "handle": "Sharathkumar92",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T16:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6be"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T16:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6bd"
+    },
+    {
+      "handle": "maymay",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T16:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6bc"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "0%",
+      "registrationDate": "2017-02-10T16:43:00.000Z",
+      "submissionDate": null,
+      "rating": "641",
+      "colorStyle": "color: #999999",
+      "_id": "58a6ae275d036c0bbdd5c6bb"
+    },
+    {
+      "handle": "gvir",
+      "reliability": "0%",
+      "registrationDate": "2017-02-10T16:45:00.000Z",
+      "submissionDate": null,
+      "rating": "1169",
+      "colorStyle": "color: #00A900",
+      "_id": "58a6ae275d036c0bbdd5c6ba"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T16:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6b9"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T17:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6b8"
+    },
+    {
+      "handle": "garntsev",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T18:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6b7"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T20:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6b6"
+    },
+    {
+      "handle": "graphit",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T20:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6b5"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T21:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6b4"
+    },
+    {
+      "handle": "demo.b",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T22:43:00.000Z",
+      "submissionDate": null,
+      "rating": "421",
+      "colorStyle": "color: #999999",
+      "_id": "58a6ae275d036c0bbdd5c6b3"
+    },
+    {
+      "handle": "ShindouHikaru",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-11T09:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6b2"
+    },
+    {
+      "handle": "jol",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-11T12:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6b1"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2017-02-11T12:56:00.000Z",
+      "submissionDate": null,
+      "rating": "1051",
+      "colorStyle": "color: #00A900",
+      "_id": "58a6ae275d036c0bbdd5c6b0"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-11T14:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6af"
+    },
+    {
+      "handle": "DHEERAJSONI",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-11T15:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6ae"
+    },
+    {
+      "handle": "anjeas4",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-11T20:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6ad"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "0%",
+      "registrationDate": "2017-02-11T21:35:00.000Z",
+      "submissionDate": null,
+      "rating": "142",
+      "colorStyle": "color: #999999",
+      "_id": "58a6ae275d036c0bbdd5c6ac"
+    },
+    {
+      "handle": "padegal12",
+      "reliability": "0%",
+      "registrationDate": "2017-02-11T22:27:00.000Z",
+      "submissionDate": null,
+      "rating": "693",
+      "colorStyle": "color: #999999",
+      "_id": "58a6ae275d036c0bbdd5c6ab"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-12T06:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6aa"
+    },
+    {
+      "handle": "Rushikesh.Deshp",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-12T09:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6a9"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-12T14:33:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58a6ae275d036c0bbdd5c6a8"
+    },
+    {
+      "handle": "do_great",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-13T02:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6a7"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-13T03:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6a6"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-13T07:53:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58a6ae275d036c0bbdd5c6a5"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-13T08:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c6a4"
+    },
+    {
+      "handle": "Cagi",
+      "reliability": "0%",
+      "registrationDate": "2017-02-13T12:58:00.000Z",
+      "submissionDate": null,
+      "rating": "1114",
+      "colorStyle": "color: #00A900",
+      "_id": "58a6ae275d036c0bbdd5c6a3"
+    }
+  ],
+  "registrationEndDate": "2017-02-13T14:02:00.000Z",
+  "reliabilityBonus": 360,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2017-02-15T14:02:00.000Z",
+  "submissions": [],
+  "technology": [
+    "Java",
+    "Oracle 10g"
+  ]
+}

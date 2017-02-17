@@ -1,0 +1,418 @@
+{
+  "_id": 30056138,
+  "_isComplete": true,
+  "__v": 2098,
+  "_lastUpdate": "2017-01-21T01:28:15.436Z",
+  "appealsEndDate": "2017-01-21T01:20:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Topcoder Direct - Fixes For Close Private Challenge Immediately",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "Previously In&nbsp;<a href=\"http://www.topcoder.com/challenge-details/30056015/?type=develop&amp;noncache=true\">Topcoder Direct - Close Private Challenge Immediately</a>, we have created initial implemenation, but we found several issues with current implemenation.&nbsp;<br />\n<br />\nThis challenge is going to fix them to make it work properly.<br />\n<br />\nWhen creating a private challenge and close it by assigning a member, and after online review&#39;s autopilot &nbsp;mark the challenge completed. we found several issues.<br />\n<br />\n1. &nbsp;The submission record does not have the placement or the prize_id set.<br />\n2. &nbsp;There is no project_results record getting generated. I&#39;m not sure if this happens after the review phase closes, or if autopilot does it when it closes the challenge.<br />\n3. &nbsp;There are no review for the submission<br />\n<br />\nSo for this challenge, we&#39;d like to improve it by integrating testing with online review.<br />\n<br />\nwe&#39;d like to add the logic like<br />\n<br />\n1. after the logic about uploading the fake submission,&nbsp;add logic to create review for fake submission, you can check <u>ContestSeviceFacadeBean.java</u>, there are similar logic.<br />\n2. mark the submission and review phases closed (already implemented).<br />\n3. wait and let the online review autopilot closes the challenge, verifying that the winner and payment are properly set, please check Online Review application and database.<br />\n4. add the logic to mark the challenge completed as following&nbsp;<br />\n<br />\n<span style=\"color:rgb(34, 34, 34); font-family:arial,sans-serif; font-size:12.8px\">Add these lines on <u>closeSoftwareContest</u></span><br />\ncontest.setProjectStatus(ProjectStatus.COMPLETED);<br />\nprojectManager.updateProject(contest, &quot;close contest&quot;, String.valueOf(tcSubject.getUserId()));<br />\n<br />\nand verify that autopilot can select the winner and payments properly, if yes, please add the above logic, if not, let&#39;s keep the current implementation to let autopilot to the post-completion jobs.<br />\n<br />\n5. For Private challenges, it is supported for F2F challenge type and Design F2 challenge type, please make sure the logic is working properly for both challenge type.<br />\n<br />\n<u>Local Setup</u><br />\n<br />\n- Please use the&nbsp;dev&nbsp;branch of&nbsp;<a href=\"https://github.com/appirio-tech/direct-app\">https://github.com/appirio-tech/direct-app</a>&nbsp;for development.<br />\n- Please check&nbsp;<a href=\"https://github.com/appirio-tech/tc-common-tutorials/blob/master/docker/direct-app/\">https://github.com/appirio-tech/tc-common-tutorials/blob/master/docker/direct-app/</a>&nbsp;for how to setup and run locally.<br />\n- Please follow&nbsp;<a href=\"https://github.com/appirio-tech/tc-common-tutorials/tree/master/docker/online_review\">https://github.com/appirio-tech/tc-common-tutorials/tree/master/docker/online_review</a>&nbsp;to build online review and autopilot docker images, and add the related services in <a href=\"https://github.com/appirio-tech/tc-common-tutorials/blob/master/docker/direct-app/docker-compose.yaml\">docker-compose.yaml&nbsp;</a>",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30056138",
+  "event": {
+    "id": 3447,
+    "description": "2017 TopCoder(R) Open",
+    "shortDescription": "tco17"
+  },
+  "finalSubmissionGuidelines": "- Code Changes For the functionality<br />\n- Verification Steps",
+  "forumId": 34878,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=34878",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 33,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-12T05:01:00.000Z",
+      "actualStartTime": "2017-01-12T05:01:00.000Z",
+      "scheduledEndTime": "2017-01-17T05:02:00.000Z",
+      "actualendTime": "2017-01-17T05:02:00.000Z",
+      "_id": "5882b92f90ca64469c55c51a"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-12T05:06:00.000Z",
+      "actualStartTime": "2017-01-12T05:06:00.000Z",
+      "scheduledEndTime": "2017-01-17T05:02:00.000Z",
+      "actualendTime": "2017-01-17T05:02:00.000Z",
+      "_id": "5882b92f90ca64469c55c519"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-17T05:02:00.000Z",
+      "actualStartTime": "2017-01-17T05:02:00.000Z",
+      "scheduledEndTime": "2017-01-19T06:05:00.000Z",
+      "actualendTime": "2017-01-19T06:05:00.000Z",
+      "_id": "5882b92f90ca64469c55c518"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-19T06:05:00.000Z",
+      "actualStartTime": "2017-01-19T06:05:00.000Z",
+      "scheduledEndTime": "2017-01-20T06:05:00.000Z",
+      "actualendTime": "2017-01-20T06:05:00.000Z",
+      "_id": "5882b92f90ca64469c55c517"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-20T06:05:00.000Z",
+      "actualStartTime": "2017-01-20T06:05:00.000Z",
+      "scheduledEndTime": "2017-01-21T01:20:00.000Z",
+      "actualendTime": "2017-01-21T01:20:00.000Z",
+      "_id": "5882b92f90ca64469c55c516"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2017-01-12T05:01:00.000Z",
+  "prize": [
+    600,
+    300
+  ],
+  "projectId": 7817,
+  "registrants": [
+    {
+      "handle": "Bende",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T10:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c515"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T05:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c514"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T05:22:00.000Z",
+      "submissionDate": "2017-01-17T00:38:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c513"
+    },
+    {
+      "handle": "gvir",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T05:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c512"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T05:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c511"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T06:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c510"
+    },
+    {
+      "handle": "ntsd",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T06:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c50f"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T07:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c50e"
+    },
+    {
+      "handle": "jayeshk26",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T08:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c50d"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T08:50:00.000Z",
+      "submissionDate": "2017-01-17T02:31:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c50c"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T08:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c50b"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T09:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c50a"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T14:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c509"
+    },
+    {
+      "handle": "cairi",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T14:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c508"
+    },
+    {
+      "handle": "ljsf_cc",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T15:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c507"
+    },
+    {
+      "handle": "hance",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-13T04:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c506"
+    },
+    {
+      "handle": "Rahul.A",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-13T05:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c505"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-13T06:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c504"
+    },
+    {
+      "handle": "Eugeunie22",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-13T15:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c503"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-13T07:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c502"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-13T08:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c501"
+    },
+    {
+      "handle": "wwxyxgy",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-13T09:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c500"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-13T13:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c4ff"
+    },
+    {
+      "handle": "stevelvovo",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-13T16:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c4fe"
+    },
+    {
+      "handle": "architm",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-13T21:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c4fd"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-14T00:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c4fc"
+    },
+    {
+      "handle": "sfaxiano",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-14T09:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c4fb"
+    },
+    {
+      "handle": "asun33",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-14T12:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c4fa"
+    },
+    {
+      "handle": "strangepleasure",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-14T14:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c4f9"
+    },
+    {
+      "handle": "rahulchawla95",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-14T20:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c4f8"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-16T00:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c4f7"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T00:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c4f6"
+    },
+    {
+      "handle": "oa414",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-16T11:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5882b92f90ca64469c55c4f5"
+    }
+  ],
+  "registrationEndDate": "2017-01-17T05:02:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2017-01-17T05:02:00.000Z",
+  "submissions": [
+    {
+      "handle": "deedee",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 92.5,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2017-01-17T00:38:00.000Z",
+      "_id": "5882b92f90ca64469c55c51c"
+    },
+    {
+      "handle": "Schpotsky",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 95,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2017-01-17T02:31:00.000Z",
+      "_id": "5882b92f90ca64469c55c51b"
+    }
+  ],
+  "technology": [
+    "Docker",
+    "Java"
+  ]
+}

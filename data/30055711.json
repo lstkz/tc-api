@@ -1,0 +1,339 @@
+{
+  "_id": 30055711,
+  "_isComplete": true,
+  "__v": 231,
+  "_lastUpdate": "2016-11-19T00:02:11.087Z",
+  "appealsEndDate": "2016-11-18T23:56:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "TCO Megahack - XML Parser",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2016-11-18T23:56:00.000Z",
+  "currentPhaseName": "Appeals",
+  "currentPhaseRemainingTime": -272,
+  "currentStatus": "Completed",
+  "detailedRequirements": "The objective of the Megahack is simple, the development of a search portal that allows users to perform a search against pending&nbsp;<a href=\"https://www.epa.gov/laws-regulations/regulations\">EPA laws and regulations</a>&nbsp;based on search criteria that aren&rsquo;t available today, and see if and how it is related to&nbsp;<a href=\"https://www.epa.gov/clean-air-act-overview\">Clean Air Act&nbsp;</a>enforcement as well as show linkages from the laws or regulations to programs that might be related.<br />\n<br />\n<strong>Contest Objective</strong>\n\n<p><span style=\"color:rgb(102, 102, 102); font-family:arial; font-size:12px\">In order to associate proposed rules with informative facts about them, like NAICS codes, program names, and the CFR (Code of Federal Regulations) that implement them, the EPA provides a dataset called LRS. &nbsp;LRS stand for Legislative Rules Service. &nbsp;This dataset contains lists of current legislation (laws), indexed by chapter, subchapter and section. &nbsp;This data also establishes relationships that associate these laws and chapters with other relevant information, like the Programs the EPA uses to regulate activity, the NAICS codes that associate a law with a specific type of industry, and other information.</span></p>\n\n<div>&nbsp;</div>\n<span style=\"color:rgb(102, 102, 102); font-family:arial; font-size:12px\">In this challenge your job is to create a parser on Node.js that will provide data that will be used in later contests to associate proposed rules (pulled from regulations.gov) with programs, codes and citations. &nbsp;Programs and codes will be used by the interface to provide drop-downs.</span><br />\n---Build a Nodejs module to parse LRS XML files (provided in forum)<br />\n---LRS data are SKOS (simple knowledge organization systems) xml files<br />\n<br />\n<strong>Requirements</strong><br />\n---Nodejs 6.x should be used<br />\n---Files should be parsed and stored in database (memory is fine) for easy query.&nbsp;\n<p><span style=\"color:rgb(102, 102, 102); font-family:arial; font-size:12px\">The XML files should be parsed such that users of the parser can:</span></p>\n\n<p><span style=\"font-size:12px\">1. Retrieve a list of NAICS codes</span></p>\n\n<p><span style=\"font-size:12px\">2. Retrieve a list of Program names, and the CFR citations associated with them</span></p>\n\n<p><span style=\"font-size:12px\">3. Retrieve a list of Laws, and the CRF citations associated with them</span></p>\n\n<ol>\n</ol>\n\n<p><span style=\"color:rgb(102, 102, 102); font-family:arial; font-size:12px\">Note that a likely use case of these lists will be to provide drop-down autocomplete lists for 1 and 2, so the ability to apply a unique filter will be useful.</span></p>\n\n<p><span style=\"color:rgb(102, 102, 102); font-family:arial; font-size:12px\">In order to assist you with understanding how the LRS files work the following tips are provided. &nbsp;Note the requirements are listed above.</span></p>\n\n<p><strong>1. Retrieve NAICS codes</strong></p>\n\n<address>NAICS: WHERE TO GET A LIST OF THEM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />\nThis file: NAICS2012_LRSRelationships_RDF-SKOS_20160825&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />\nCode Names: key on &lt;skos:prefLabel&gt;&nbsp;&nbsp; e.g. &lt;skos:prefLabel&gt;61111 Elementary and Secondary Schools&lt;/skos:prefLabel&gt;<br />\nCode: &lt;zthes:label&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; e.g. &lt;zthes:label&gt;61111&lt;/zthes:label&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />\nUse &lt;zthes:termID&gt; for linking&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; e.g. &lt;zthes:termID&gt;2944589&lt;/zthes:termID&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</address>\n\n<p><br />\n<strong>2) Retrieve Program and regulations associated</strong></p>\n\n<address>PROGRAMS: WHERE TO GET A LIST OF THEM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />\nEPAProgramProject_LRSRelationships_RDF-SKOS_20160825.xml key on &lt;skos:prefLabel&gt;THIS WILL BE THE PROGRAM NAME&lt;/skos:prefLabel&gt; to find your program names (like &quot;Brownfields&quot;)<br />\nUse that to get a list of Programs and their associated termID.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />\nMatch termID to &lt;skm:PC rdf:resource=&quot;#&lt;termId&gt;&quot; any &quot;CFR2015Title40...&quot; file to find regulations that are related to this program</address>\n\n<p><br />\n<strong>3) Retrieve Clean Air Act rules information</strong></p>\n\n<address>REGULATIONS: HOW TO FIND THEM IN LRS DATA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />\nThey&#39;re in the files labeled CFR2015Title40.....xml&nbsp; Ignore any that don&#39;t begin with &quot;CFR2015Title40&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />\nNote these files have more regulations than we care about.&nbsp;&nbsp;&nbsp;<br />\nWe care only about parts 50 through 98, which are spread across many of the XMLs volumes.&nbsp; Search them to find the right Parts.</address>\n\n<p><br />\nSince there is no Nodejs module to parse SKOS data, other options can be used. One example is a python skos library (<a href=\"https://github.com/geo-data/python-skos\">https://github.com/geo-data/python-skos</a>). This is just a suggestion, competitors a free to suggest other options.</p>\n<br />\n<strong>Reference Documents</strong><br />\n---Will be posted in the contest forum.",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30055711",
+  "finalSubmissionGuidelines": "<p>---A node module to be installed using NPM<br />\n---Github or Gitlab repository link with the source code. Add handles <strong>coderReview</strong> and <strong>rsial2</strong> as collaborators.<br />\n---Deployment and usage instructions should be included in a README.md file</p>\n",
+  "forumId": 34520,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=34520",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 21,
+  "numberOfSubmissions": 5,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-11-18T05:02:00.000Z",
+      "actualStartTime": "2016-11-18T05:02:00.000Z",
+      "scheduledEndTime": "2016-11-18T21:02:00.000Z",
+      "actualendTime": "2016-11-18T21:02:00.000Z",
+      "_id": "582f9683550dfb3b52d74c8f"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-11-18T05:07:00.000Z",
+      "actualStartTime": "2016-11-18T05:07:00.000Z",
+      "scheduledEndTime": "2016-11-18T21:02:00.000Z",
+      "actualendTime": "2016-11-18T21:02:00.000Z",
+      "_id": "582f9683550dfb3b52d74c8e"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-11-18T21:02:00.000Z",
+      "actualStartTime": "2016-11-18T21:02:00.000Z",
+      "scheduledEndTime": "2016-11-18T23:56:00.000Z",
+      "actualendTime": "2016-11-18T23:56:00.000Z",
+      "_id": "582f9683550dfb3b52d74c8d"
+    },
+    {
+      "type": "Appeals",
+      "status": "Open",
+      "scheduledStartTime": "2016-11-18T23:56:00.000Z",
+      "actualStartTime": "2016-11-18T23:56:00.000Z",
+      "scheduledEndTime": "2016-11-18T23:56:00.000Z",
+      "actualendTime": null,
+      "_id": "582f9683550dfb3b52d74c8c"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2016-11-18T23:56:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2016-11-18T23:56:00.000Z",
+      "actualendTime": null,
+      "_id": "582f9683550dfb3b52d74c8b"
+    }
+  ],
+  "platforms": [
+    "NodeJS"
+  ],
+  "postingDate": "2016-11-18T05:02:00.000Z",
+  "prize": [
+    800,
+    600,
+    300
+  ],
+  "projectId": 11328,
+  "registrants": [
+    {
+      "handle": "TMALBONPH",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T06:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582f9683550dfb3b52d74c8a"
+    },
+    {
+      "handle": "utkarshkukreti",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T05:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582f9683550dfb3b52d74c89"
+    },
+    {
+      "handle": "talesforce",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T05:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582f9683550dfb3b52d74c88"
+    },
+    {
+      "handle": "akinwale",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T05:25:00.000Z",
+      "submissionDate": "2016-11-18T19:57:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582f9683550dfb3b52d74c87"
+    },
+    {
+      "handle": "callmekatootie",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T05:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582f9683550dfb3b52d74c86"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T05:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582f9683550dfb3b52d74c85"
+    },
+    {
+      "handle": "ouyangki",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T06:14:00.000Z",
+      "submissionDate": "2016-11-18T21:00:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582f9683550dfb3b52d74c84"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T07:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582f9683550dfb3b52d74c83"
+    },
+    {
+      "handle": "oa414",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T08:46:00.000Z",
+      "submissionDate": "2016-11-18T20:59:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582f9683550dfb3b52d74c82"
+    },
+    {
+      "handle": "Dobrokhvalov",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T08:53:00.000Z",
+      "submissionDate": "2016-11-18T20:56:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582f9683550dfb3b52d74c81"
+    },
+    {
+      "handle": "soe",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T10:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582f9683550dfb3b52d74c80"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T10:47:00.000Z",
+      "submissionDate": "2016-11-18T19:41:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582f9683550dfb3b52d74c7f"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T10:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582f9683550dfb3b52d74c7e"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T12:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582f9683550dfb3b52d74c7d"
+    },
+    {
+      "handle": "code_now",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T12:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582f9683550dfb3b52d74c7c"
+    },
+    {
+      "handle": "bchops",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T12:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582f9683550dfb3b52d74c7b"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T12:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582f9683550dfb3b52d74c7a"
+    },
+    {
+      "handle": "Figer",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T13:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582f9683550dfb3b52d74c79"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T14:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582f9683550dfb3b52d74c78"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T17:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582f9683550dfb3b52d74c77"
+    },
+    {
+      "handle": "outdreamer",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T18:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582f9683550dfb3b52d74c76"
+    }
+  ],
+  "registrationEndDate": "2016-11-18T21:02:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-11-18T21:02:00.000Z",
+  "submissions": [
+    {
+      "handle": "akinwale",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": 86.25,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-11-18T19:57:00.000Z",
+      "_id": "582f9683550dfb3b52d74c94"
+    },
+    {
+      "handle": "Sky_",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": 95,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-11-18T19:41:00.000Z",
+      "_id": "582f9683550dfb3b52d74c93"
+    },
+    {
+      "handle": "Dobrokhvalov",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": 73.75,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-11-18T20:56:00.000Z",
+      "_id": "582f9683550dfb3b52d74c92"
+    },
+    {
+      "handle": "ouyangki",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": 92.5,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-11-18T21:00:00.000Z",
+      "_id": "582f9683550dfb3b52d74c91"
+    },
+    {
+      "handle": "oa414",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": 68.75,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-11-18T20:59:00.000Z",
+      "_id": "582f9683550dfb3b52d74c90"
+    }
+  ],
+  "technology": [
+    "API",
+    "Node.js"
+  ]
+}

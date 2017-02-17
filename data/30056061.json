@@ -1,0 +1,753 @@
+{
+  "_id": 30056061,
+  "_isComplete": true,
+  "__v": 3183,
+  "_lastUpdate": "2017-01-08T03:26:40.091Z",
+  "appealsEndDate": "2017-01-08T03:20:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Drone Series - Collision Avoidance Part 1",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><img alt=\"\" src=\"https://scontent.ford1-1.fna.fbcdn.net/v/t1.0-9/14717161_10154488333556101_5487997839680388224_n.png?oh=fd410a07763a52f126ae17433dc85340&amp;oe=58A1F9EB\" /></p>\n\n<h2>Intro</h2>\n\n<p>We have a specific endpoint that allows a drone to update its position ( PUT /drone/{id} ). The response of this endpoint is simply the drone object returned. We recently added a &nbsp;<em><strong>No Fly Zone</strong></em>&nbsp;search endpoint that allow you to pass in a point, polygon, or polyline and return an array of <strong><em>No Fly Zones</em></strong> your point, polygon, or polyline(mission) have violated. In other words if you pass in a point you will get an array of <strong><em>no flys zones</em></strong> that the point is inside of. Now we would like to combine the functionality of these two features and add some of this intelligent response to the drone location update. Once this is done we can add some intelligence to the drone client i.e. send an audible alarm or even land if it has violated a NFZ. See the NFZ postman collection for more details in how to use the NFZ search call. For this challenge you only care about &quot;Search NFZ with point&quot;. The primary objective of this challenge is to tell a drone (during its location update) that it has violated a <strong><em>no fly zone</em></strong>. The secondary objective of this challenge is to tell the drone the distance to the nearest drone so it can react accordingly.</p>\n\n<h2>Requirements</h2>\n\n<h3><strong>Objective 1:</strong></h3>\n\n<p>Modify the existing PUT /drone/{id} location update, so it also returns an array of no fly zones just like the search NFZ with Point ( /nfz/search ) endpoint does. Here is an example of the NFZ search call that should return 5 no fly zones.</p>\n\n<pre>\ncurl -X POST -H &quot;Content-Type: application/json&quot;  -d &#39;{\n  \n  &quot;isActive&quot;: true,\n  &quot;isPermanent&quot;: true,\n  &quot;geometry&quot;: {\n    &quot;type&quot;: &quot;Point&quot;,\n    &quot;coordinates&quot;: [\n      -87.99874,\n      41.8019\n    ]\n  }\n}&#39; &quot;http://kb-dsp-server-dev.herokuapp.com/api/v1/nfz/search&quot;\n\n</pre>\n\n<p>You may choose to simplify this response, for example: all the drone cares about is the total count if items in the array, not the actual point of the polygon. If the count is zero the drone has nothing to worry about. If it a non zero number the the drone needs to take an action (outside of the scope of this challenge). If you think it makes sense to create a new endpoint for this &#39;enhanced&#39; response or use a parameter ( something like ?returnnfz=true) to requested the &#39;enhanced&#39; return result that is fine. Please create a section in the readme called <strong>Smart Location Updates</strong> to describe your approach.</p>\n\n<h3><strong>Objective 2.</strong></h3>\n\n<p>The requirement for this objective are much looser since we don&#39;t know the cost of this query but here is the general idea: When a drone does its location update we would like to return the distance in meters to the next nearest drone. The purpose of this features is to notify the two drone pilots as well as the DSP that they are too close to each other before it is too late. You can take any approach you like: (1) a dynamic NFZ around each drone &nbsp;(2) a &#39;geo near&#39; query both seem like acceptable approaches. However a geo near query seems to have some added value to us, because the client can throttle its updates based on distance to the nearest drone, but this also may be a more expensive backend call. Please create a section in the Readme called <strong>Nearest Drone Updates</strong> that describes your approach.</p>\n\n<h2>Project Background</h2>\n\n<p>For this series we are creating a Drone Service Platform (DSP) which consist of a marketplace where customers can request drone services for providers/operators. Examples of the services would be drone delivery, mapping, monitoring and many other tasks. In addition to delivering drone services we will also provide a level of traffic management.</p>\n\n<h2>Other notable challenges in this series</h2>\n\n<ul>\n\t<li><a href=\"https://www.topcoder.com/challenge-details/30055562\">Maps React and REST</a><br />\n\t<a href=\"http://www.topcoder.com/challenge-details/30055599/?type=develop&amp;noncache=true\">React Map Mission Plan</a><br />\n\t<a href=\"https://www.topcoder.com/challenge-details/30055665\">Mission Plan fixes part 1</a><br />\n\t<a href=\"http://www.topcoder.com/challenge-details/30055646\">WEBAPI - Consumer to DSP API Product Catalog - swagger API design</a><br />\n\t<a href=\"https://www.topcoder.com/challenge-details/30055900\">Move Mission Planner to react frontend</a><br />\n\t<a href=\"https://www.topcoder.com/challenge-details/30055925\">Move Traffic Map to react frontend</a><br />\n\t<a href=\"https://www.topcoder.com/challenge-details/30055935\">No Fly Zone Polygons</a></li>\n</ul>\n\n<h1>Links</h1>\n\n<p><a href=\"http://github.com/topcoderinc/dsp-frontend\">front end src: topcoderinc/dsp-frontend</a> <a href=\"http://github.com/topcoderinc/dsp-server\">back end src: topcoderinc/dsp-server</a> <a href=\"http://kb-dsp-server-dev.herokuapp.com/api-docs/\">Live Heroku Dev backend: http://kb-dsp-server-dev.herokuapp.com/api/v1</a></p>\n\n<h2>&nbsp;</h2>\n\n<ol><br />\n\t<li>&nbsp;</li>\n</ol>\n\n<h4>Source: <a href=\"https://github.com/topcoderinc/dsp-server/issues/158\">Github Issue #158</a></h4>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30056061",
+  "finalSubmissionGuidelines": "<ul>\n\t<li>Ensure good test coverage on all modules POSTMAN is expected and other test suites are optional<br />\n\tUpload documentation for how to run your submission<br />\n\tUpdate the readme with your approach to the two objectives. &nbsp; Use this to explain usage to future developers.<br />\n\tUpload all your source code as a zip for review<br />\n\tWinner will be required to submit a pull request with their winning code.<br />\n\tPlease include a video with your submission. If you are not comfortable with spoken english feel free to annotate with text.</li>\n</ul>\n",
+  "forumId": 34809,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=34809",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 61,
+  "numberOfSubmissions": 10,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-12-26T22:36:00.000Z",
+      "actualStartTime": "2016-12-26T22:36:00.000Z",
+      "scheduledEndTime": "2017-01-02T22:36:00.000Z",
+      "actualendTime": "2017-01-02T22:36:00.000Z",
+      "_id": "5871b17090ca64469c7b9d35"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-12-26T22:42:00.000Z",
+      "actualStartTime": "2016-12-26T22:42:00.000Z",
+      "scheduledEndTime": "2017-01-02T22:37:00.000Z",
+      "actualendTime": "2017-01-02T22:37:00.000Z",
+      "_id": "5871b17090ca64469c7b9d34"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-02T22:37:00.000Z",
+      "actualStartTime": "2017-01-02T22:37:00.000Z",
+      "scheduledEndTime": "2017-01-06T22:31:00.000Z",
+      "actualendTime": "2017-01-06T22:31:00.000Z",
+      "_id": "5871b17090ca64469c7b9d33"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-06T22:31:00.000Z",
+      "actualStartTime": "2017-01-06T22:31:00.000Z",
+      "scheduledEndTime": "2017-01-07T22:31:00.000Z",
+      "actualendTime": "2017-01-07T22:31:00.000Z",
+      "_id": "5871b17090ca64469c7b9d32"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-07T22:31:00.000Z",
+      "actualStartTime": "2017-01-07T22:31:00.000Z",
+      "scheduledEndTime": "2017-01-08T03:20:00.000Z",
+      "actualendTime": "2017-01-08T03:20:00.000Z",
+      "_id": "5871b17090ca64469c7b9d31"
+    }
+  ],
+  "platforms": [
+    "Heroku"
+  ],
+  "postingDate": "2016-12-26T22:36:00.000Z",
+  "prize": [
+    1000,
+    900,
+    800
+  ],
+  "projectId": 11059,
+  "registrants": [
+    {
+      "handle": "hirosima",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T08:03:00.000Z",
+      "submissionDate": "2016-12-28T10:47:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d30"
+    },
+    {
+      "handle": "birdofpreyru",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-26T22:41:00.000Z",
+      "submissionDate": "2016-12-28T09:27:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d2f"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-26T22:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d2e"
+    },
+    {
+      "handle": "diogenesjcs",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-26T22:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d2d"
+    },
+    {
+      "handle": "ecavalier313",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T01:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d2c"
+    },
+    {
+      "handle": "Amith",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-26T23:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d2b"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-26T23:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d2a"
+    },
+    {
+      "handle": "ouyangki",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-26T23:51:00.000Z",
+      "submissionDate": "2016-12-29T14:13:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d29"
+    },
+    {
+      "handle": "BrandonWind",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T00:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d28"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T01:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d27"
+    },
+    {
+      "handle": "jackyzhangjb",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T01:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d26"
+    },
+    {
+      "handle": "maxceem",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T01:37:00.000Z",
+      "submissionDate": "2016-12-29T13:16:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d25"
+    },
+    {
+      "handle": "zsudraco",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T02:11:00.000Z",
+      "submissionDate": "2016-12-28T16:05:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d24"
+    },
+    {
+      "handle": "ShindouHikaru",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T02:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d23"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T02:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d22"
+    },
+    {
+      "handle": "ngoctay",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T02:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d21"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T02:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d20"
+    },
+    {
+      "handle": "veshu",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T02:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d1f"
+    },
+    {
+      "handle": "wwxyxgy",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T03:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d1e"
+    },
+    {
+      "handle": "Rushikesh.Deshp",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T03:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d1d"
+    },
+    {
+      "handle": "phoenix103",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T03:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d1c"
+    },
+    {
+      "handle": "amber.j",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T04:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d1b"
+    },
+    {
+      "handle": "Erona",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T04:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d1a"
+    },
+    {
+      "handle": "alnimatveev",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T05:26:00.000Z",
+      "submissionDate": "2016-12-29T08:31:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d19"
+    },
+    {
+      "handle": "gvir",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T06:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d18"
+    },
+    {
+      "handle": "oa414",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T07:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d17"
+    },
+    {
+      "handle": "graphit",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T08:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d16"
+    },
+    {
+      "handle": "anandr",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T09:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d15"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T09:27:00.000Z",
+      "submissionDate": "2016-12-29T09:02:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d14"
+    },
+    {
+      "handle": "btgd88",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T09:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d13"
+    },
+    {
+      "handle": "Bende",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T10:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d12"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T11:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d11"
+    },
+    {
+      "handle": "mishacucicea",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T11:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d10"
+    },
+    {
+      "handle": "cunhavictor",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T11:49:00.000Z",
+      "submissionDate": "2016-12-31T22:19:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d0f"
+    },
+    {
+      "handle": "Zarus",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T12:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d0e"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T14:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d0d"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T14:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d0c"
+    },
+    {
+      "handle": "ptarunn",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T15:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d0b"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T15:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d0a"
+    },
+    {
+      "handle": "faisalbasha1982",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T16:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d09"
+    },
+    {
+      "handle": "ecampbell565",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T16:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d08"
+    },
+    {
+      "handle": "mjarpitanand",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T16:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d07"
+    },
+    {
+      "handle": "m4risU",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T17:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d06"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-27T22:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d05"
+    },
+    {
+      "handle": "pteto",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-28T02:42:00.000Z",
+      "submissionDate": "2017-01-02T16:33:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d04"
+    },
+    {
+      "handle": "nickynine",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-28T07:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d03"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-28T10:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d02"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-28T12:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d01"
+    },
+    {
+      "handle": "billsedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-28T12:35:00.000Z",
+      "submissionDate": "2016-12-31T10:56:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9d00"
+    },
+    {
+      "handle": "Yurii",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-28T14:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9cff"
+    },
+    {
+      "handle": "talesforce",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-28T14:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9cfe"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-29T05:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9cfd"
+    },
+    {
+      "handle": "sfaxiano",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-29T09:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9cfc"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-29T09:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9cfb"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-29T15:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9cfa"
+    },
+    {
+      "handle": "Xiaofei.Hu",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-29T21:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9cf9"
+    },
+    {
+      "handle": "pcblues",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-30T05:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9cf8"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-30T17:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9cf7"
+    },
+    {
+      "handle": "balajincse",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-31T07:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9cf6"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-01T13:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9cf5"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-02T14:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5871b17090ca64469c7b9cf4"
+    }
+  ],
+  "registrationEndDate": "2017-01-02T22:36:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2017-01-02T22:37:00.000Z",
+  "submissions": [
+    {
+      "handle": "billsedison",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 97.5,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-12-31T10:56:00.000Z",
+      "_id": "5871b17090ca64469c7b9d3f"
+    },
+    {
+      "handle": "zsudraco",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 98.13,
+      "finalScore": 99.38,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-12-28T16:05:00.000Z",
+      "_id": "5871b17090ca64469c7b9d3e"
+    },
+    {
+      "handle": "Sky_",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 95.63,
+      "finalScore": 99.38,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-12-29T09:02:00.000Z",
+      "_id": "5871b17090ca64469c7b9d3d"
+    },
+    {
+      "handle": "birdofpreyru",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 95,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-12-28T09:27:00.000Z",
+      "_id": "5871b17090ca64469c7b9d3c"
+    },
+    {
+      "handle": "cunhavictor",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 95,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-12-31T22:19:00.000Z",
+      "_id": "5871b17090ca64469c7b9d3b"
+    },
+    {
+      "handle": "maxceem",
+      "placement": 6,
+      "screeningScore": null,
+      "initialScore": 93.75,
+      "finalScore": 93.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-12-29T13:16:00.000Z",
+      "_id": "5871b17090ca64469c7b9d3a"
+    },
+    {
+      "handle": "ouyangki",
+      "placement": 7,
+      "screeningScore": null,
+      "initialScore": 93.13,
+      "finalScore": 93.13,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-12-29T14:13:00.000Z",
+      "_id": "5871b17090ca64469c7b9d39"
+    },
+    {
+      "handle": "hirosima",
+      "placement": 8,
+      "screeningScore": null,
+      "initialScore": 85,
+      "finalScore": 85,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-12-28T10:47:00.000Z",
+      "_id": "5871b17090ca64469c7b9d38"
+    },
+    {
+      "handle": "alnimatveev",
+      "placement": 9,
+      "screeningScore": null,
+      "initialScore": 85,
+      "finalScore": 85,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-12-29T08:31:00.000Z",
+      "_id": "5871b17090ca64469c7b9d37"
+    },
+    {
+      "handle": "pteto",
+      "placement": 10,
+      "screeningScore": null,
+      "initialScore": 82.5,
+      "finalScore": 82.5,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2017-01-02T16:33:00.000Z",
+      "_id": "5871b17090ca64469c7b9d36"
+    }
+  ],
+  "technology": [
+    "Node.js"
+  ]
+}

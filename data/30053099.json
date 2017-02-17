@@ -1,0 +1,455 @@
+{
+  "_id": 30053099,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-11-30T08:34:31.150Z",
+  "appealsEndDate": "2016-03-09T08:56:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "SoftBank - Node.js Assembly Challenge 2 for Blockchain Based Service Prototype",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></h2>\n\n<p>SoftBank is a Japanese multinational telecommunications and Internetcorporation, with operations in broadband, e-commerce, Internet,technology services, and other businesses.</p>\n\n<p>A blockchain, widely known as the base technology of Bitcoin, is a distributed database that maintains a list of transactional data records hardened against tampering and revision.</p>\n\n<p>SoftBank is going to develop the new platform based on the blockchain technology and a variety of services on top of it.<br />\n- As a proof of concept, they are going to develop a prototype of Blockchain based Donation Service.<br />\n- In this service prototype, each donation is recorded into the blockchain and everyone can see how their money is&nbsp;distributed and used.<br />\n- Volunteers provide their computing resource to record the transaction in the blockchain.</p>\n\n<p><span style=\"color:rgb(0, 128, 0)\"><strong>Tips for Success:</strong>&nbsp;Asking questions early and getting PM&#39;s feedback is very important for the success of this challenge.</span></p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Competition Task Overview</span></h2>\n\n<p>In the <a href=\"http://www.topcoder.com/challenge-details/30052926/?type=develop&amp;noncache=true\">previous challenge</a> we have implemented some of the features from the prototype.</p>\n\n<p><span style=\"font-size:12px\">In this challenge we need to implement the remaining features / pages. Here are the details:</span></p>\n\n<ul>\n\t<li><strong>1. Integrate with Facebook API (We are not going to support Google+):&nbsp;</strong>\n\n\t<ul>\n\t\t<li>1.1.&nbsp;When you tap the login link, you do not need to show the sso select modal dialog, but just jump to the facebook auth page and then go back to our site.</li>\n\t\t<li>1.2.&nbsp;The user info should be stored in the mongodb user table.</li>\n\t\t<li>1.3.&nbsp;By default, the user record does not have organizationIndex column.</li>\n\t\t<li>1.4.&nbsp;When you set the value to the column and insert the corresponding record to the organizations table, that user will be an organization person and they can see the organization pages.</li>\n\t</ul>\n\t</li>\n\t<li><strong>2.&nbsp;Mining as a volunteer:</strong>\n\t<ul>\n\t\t<li>2.1.&nbsp;Since w3.js does not support mining start and stop, you need to <s>make a RPC call to make it happen.Updated.</s><span style=\"color:#FF0000\"> See the <a href=\"http://apps.topcoder.com/forums/?module=Thread&amp;threadID=878031&amp;mc=2\">forum link</a>.</span></li>\n\t\t<li>2.2.&nbsp;You will probably need to use websocket to track the real time mining status.</li>\n\t\t<li>2.3.&nbsp;You may stop mining when you leave the page.</li>\n\t\t<li>2.4.&nbsp;The mining result should be shown when you finish mining. You can also see the mining statistics in the volunteer history tab of the user page.</li>\n\t\t<li>2.5.&nbsp;You should probably need to store the mining history in the database.</li>\n\t\t<li>2.6.&nbsp;Mining count should be the count of the mining successes.</li>\n\t\t<li>2.7.&nbsp;You can just compare the mining time for the miner rank.</li>\n\t\t<li>2.8.&nbsp;You can calculate achieved point from mining time + mining count * 100.</li>\n\t\t<li>2.9.&nbsp;You may calculate it real time as long as it finishes in several seconds.</li>\n\t</ul>\n\t</li>\n\t<li><strong>3. &quot;Distribute / Transfer&quot;, &quot;Transfer trace&quot; by organizations and &quot;Donation trace&quot; by donor:</strong>\n\t<ul>\n\t\t<li>3.1.&nbsp;The organization person can distribute the donated money to another project or spend (transfer) the money in their organization.</li>\n\t\t<li>3.2. The distribution label is &quot;Distribute to other organization&quot;, but replace it with &quot;Distribute to other project&quot; and show the active project list.</li>\n\t\t<li>3.3. When you project the money, call the contract method sendProjectCoins to your organization address and then fundProject to another project.</li>\n\t\t<li>3.4.&nbsp;When you spend (transfer) the money, call the contract method sendProjectCoins to your organization and then withDraw.</li>\n\t\t<li>3.5. &quot;Transfer trace&quot; page shows what organizations the donated money are distributed to and how much is used in the organization.</li>\n\t\t<li>3.6. &quot;Donation trace&quot; page should show the almost same information as &quot;Transfer trace&quot;. See the prototype html and revise the current implementation.</li>\n\t</ul>\n\t</li>\n\t<li><strong>4.&nbsp;Graphs in the organization page</strong>\n\t<ul>\n\t\t<li>4.1.&nbsp;There are graphs in the organization page. They are implemented with JavaScript, but values are dummy.</li>\n\t\t<li>4.2.&nbsp;We would like to use the actual values for them. We may probably need to calculate on mongodb.</li>\n\t\t<li>4.3.&nbsp;Since this is the prototype, you do not need to write a calculation batch but the real time calculation is fine.</li>\n\t</ul>\n\t</li>\n\t<li><strong>5. Add the logout link at the right top of the user page.</strong>&nbsp;<br />\n\tIt should call something like /api/v1/logout internally and navigate to the landing page.</li>\n\t<li><strong>6.&nbsp;Call issueCoin automatically when the user makes a donation.</strong><br />\n\tCurrently you need to call /api/v1/user/issueCoin before you make a donation. We would like to call issueCoin automatically when you make a donation. You may need to wait 10 or more seconds waiting for minings. It is fine.</li>\n</ul>\n\n<h2><span style=\"font-size:20px\"><span style=\"color:rgb(255, 0, 0)\">Browsers Requirements</span></span></h2>\n\n<p>Mobile&nbsp;versions</p>\n\n<ul>\n\t<li>- iPhone 5, 6, 6 Plus, 6s, 6s Plus Safari Browsers</li>\n\t<li>- Android versions 4.4+ Default Browsers</li>\n</ul>\n\n<p>Desktop versions on Windows &amp; Mac - (you only need to implement pages for the charity organization)</p>\n\n<ul>\n\t<li>- IE 11+ Browsers</li>\n\t<li>- Latest Chrome Browsers</li>\n\t<li>- Latest Safari Browsers</li>\n</ul>\n\n<p><span style=\"color:rgb(0, 128, 0)\">Note - please&nbsp;include actual browsers you have tested in the submission document/readme file.</span></p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30053099",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalFixEndDate": "2016-03-17T11:12:00.000Z",
+  "finalSubmissionGuidelines": "<h2><strong><span style=\"color:rgb(255, 0, 0)\">Submission Deliverables</span></strong></h2>\n\n<p><span style=\"font-size:12px\">A complete list of deliverables can be viewed in the TopCoder Assembly competition Tutorial at:&nbsp;<a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials&nbsp;</a></span></p>\n\n<p><span style=\"font-size:12px\">Below is an overview of the deliverables:</span></p>\n\n<ul>\n\t<li><span style=\"font-size:12px\">Full code that covers all requirements.</span></li>\n\t<li><span style=\"font-size:12px\">A complete and detailed deployment document explaining how to deploy the application including configuration information.</span></li>\n</ul>\n\n<h2><span style=\"color:rgb(255, 0, 0)\"><strong>Final Submission</strong></span></h2>\n\n<p><span style=\"font-size:12px\">For each member, the final submission should be uploaded via the challenge detail page on&nbsp;<a href=\"http://www.topcoder.com\">topcoder.com</a>.</span></p>\n",
+  "forumId": 32089,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=32089",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 28,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-29T13:10:00.000Z",
+      "actualStartTime": "2016-02-29T13:10:00.000Z",
+      "scheduledEndTime": "2016-02-29T13:11:00.000Z",
+      "actualendTime": "2016-02-29T13:11:00.000Z",
+      "_id": "583e8f1710a1db09a46bf17e"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-29T13:11:00.000Z",
+      "actualStartTime": "2016-02-29T13:11:00.000Z",
+      "scheduledEndTime": "2016-02-29T15:00:00.000Z",
+      "actualendTime": "2016-02-29T15:00:00.000Z",
+      "_id": "583e8f1710a1db09a46bf17d"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-29T15:00:00.000Z",
+      "actualStartTime": "2016-02-29T15:00:00.000Z",
+      "scheduledEndTime": "2016-03-02T15:21:00.000Z",
+      "actualendTime": "2016-03-02T15:21:00.000Z",
+      "_id": "583e8f1710a1db09a46bf17c"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-29T15:05:00.000Z",
+      "actualStartTime": "2016-02-29T15:05:00.000Z",
+      "scheduledEndTime": "2016-03-05T14:58:00.000Z",
+      "actualendTime": "2016-03-05T14:58:00.000Z",
+      "_id": "583e8f1710a1db09a46bf17b"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-05T14:58:00.000Z",
+      "actualStartTime": "2016-03-05T14:58:00.000Z",
+      "scheduledEndTime": "2016-03-06T02:42:00.000Z",
+      "actualendTime": "2016-03-06T02:42:00.000Z",
+      "_id": "583e8f1710a1db09a46bf17a"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-06T02:42:00.000Z",
+      "actualStartTime": "2016-03-06T02:42:00.000Z",
+      "scheduledEndTime": "2016-03-07T22:31:00.000Z",
+      "actualendTime": "2016-03-07T22:31:00.000Z",
+      "_id": "583e8f1710a1db09a46bf179"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-07T22:31:00.000Z",
+      "actualStartTime": "2016-03-07T22:31:00.000Z",
+      "scheduledEndTime": "2016-03-08T22:31:00.000Z",
+      "actualendTime": "2016-03-08T22:31:00.000Z",
+      "_id": "583e8f1710a1db09a46bf178"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-08T22:31:00.000Z",
+      "actualStartTime": "2016-03-08T22:31:00.000Z",
+      "scheduledEndTime": "2016-03-09T08:56:00.000Z",
+      "actualendTime": "2016-03-09T08:56:00.000Z",
+      "_id": "583e8f1710a1db09a46bf177"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-09T08:56:00.000Z",
+      "actualStartTime": "2016-03-09T08:56:00.000Z",
+      "scheduledEndTime": "2016-03-09T15:58:00.000Z",
+      "actualendTime": "2016-03-09T15:58:00.000Z",
+      "_id": "583e8f1710a1db09a46bf176"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-09T15:58:00.000Z",
+      "actualStartTime": "2016-03-09T15:58:00.000Z",
+      "scheduledEndTime": "2016-03-10T05:00:00.000Z",
+      "actualendTime": "2016-03-10T05:00:00.000Z",
+      "_id": "583e8f1710a1db09a46bf175"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-10T05:00:00.000Z",
+      "actualStartTime": "2016-03-10T05:00:00.000Z",
+      "scheduledEndTime": "2016-03-10T12:31:00.000Z",
+      "actualendTime": "2016-03-10T12:31:00.000Z",
+      "_id": "583e8f1710a1db09a46bf174"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-10T12:31:00.000Z",
+      "actualStartTime": "2016-03-10T12:31:00.000Z",
+      "scheduledEndTime": "2016-03-14T14:49:00.000Z",
+      "actualendTime": "2016-03-14T14:49:00.000Z",
+      "_id": "583e8f1710a1db09a46bf173"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-14T14:50:00.000Z",
+      "actualStartTime": "2016-03-14T14:50:00.000Z",
+      "scheduledEndTime": "2016-03-17T11:12:00.000Z",
+      "actualendTime": "2016-03-17T11:12:00.000Z",
+      "_id": "583e8f1710a1db09a46bf172"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-17T11:13:00.000Z",
+      "actualStartTime": "2016-03-17T11:13:00.000Z",
+      "scheduledEndTime": "2016-03-17T13:08:00.000Z",
+      "actualendTime": "2016-03-17T13:08:00.000Z",
+      "_id": "583e8f1710a1db09a46bf171"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2016-03-17T13:08:00.000Z",
+      "actualStartTime": "2016-03-17T13:08:00.000Z",
+      "scheduledEndTime": "2016-03-23T02:49:00.000Z",
+      "actualendTime": "2016-03-23T02:49:00.000Z",
+      "_id": "583e8f1710a1db09a46bf170"
+    }
+  ],
+  "platforms": [
+    "NodeJS"
+  ],
+  "postingDate": "2016-02-29T15:00:00.000Z",
+  "prize": [
+    1800,
+    900
+  ],
+  "projectId": 9401,
+  "registrants": [
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2016-02-29T16:42:00.000Z",
+      "submissionDate": null,
+      "rating": "462",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1710a1db09a46bf16f"
+    },
+    {
+      "handle": "vvvpig",
+      "reliability": "93%",
+      "registrationDate": "2016-02-29T23:22:00.000Z",
+      "submissionDate": "2016-03-05T11:08:00.000Z",
+      "rating": "1407",
+      "colorStyle": "color: #6666FF",
+      "_id": "583e8f1710a1db09a46bf16e"
+    },
+    {
+      "handle": "moulyg",
+      "reliability": "0%",
+      "registrationDate": "2016-02-29T15:24:00.000Z",
+      "submissionDate": null,
+      "rating": "848",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1710a1db09a46bf16d"
+    },
+    {
+      "handle": "SAbdulRahuman",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-29T15:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1710a1db09a46bf16c"
+    },
+    {
+      "handle": "isv",
+      "reliability": "13%",
+      "registrationDate": "2016-02-29T16:40:00.000Z",
+      "submissionDate": null,
+      "rating": "1061",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f1710a1db09a46bf16b"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-29T16:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1710a1db09a46bf16a"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-29T16:46:00.000Z",
+      "submissionDate": null,
+      "rating": "717",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1710a1db09a46bf169"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "0%",
+      "registrationDate": "2016-02-29T16:50:00.000Z",
+      "submissionDate": null,
+      "rating": "618",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1710a1db09a46bf168"
+    },
+    {
+      "handle": "avbngera",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-29T17:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1710a1db09a46bf167"
+    },
+    {
+      "handle": "fultonm",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-29T18:41:00.000Z",
+      "submissionDate": null,
+      "rating": "830",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1710a1db09a46bf166"
+    },
+    {
+      "handle": "e06widu",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-01T01:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1710a1db09a46bf165"
+    },
+    {
+      "handle": "evilkyro1965",
+      "reliability": "0%",
+      "registrationDate": "2016-03-01T02:43:00.000Z",
+      "submissionDate": null,
+      "rating": "744",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1710a1db09a46bf164"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "0%",
+      "registrationDate": "2016-03-01T03:09:00.000Z",
+      "submissionDate": null,
+      "rating": "1374",
+      "colorStyle": "color: #6666FF",
+      "_id": "583e8f1710a1db09a46bf163"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-01T03:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1710a1db09a46bf162"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-01T04:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1710a1db09a46bf161"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-01T05:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1710a1db09a46bf160"
+    },
+    {
+      "handle": "PeterBest",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-01T06:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1710a1db09a46bf15f"
+    },
+    {
+      "handle": "karthiks416",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-01T06:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1710a1db09a46bf15e"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "6%",
+      "registrationDate": "2016-03-01T07:36:00.000Z",
+      "submissionDate": null,
+      "rating": "1044",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f1710a1db09a46bf15d"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-01T10:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1710a1db09a46bf15c"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-01T12:36:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1710a1db09a46bf15b"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-01T16:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1710a1db09a46bf15a"
+    },
+    {
+      "handle": "moagi.anela",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-01T17:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1710a1db09a46bf159"
+    },
+    {
+      "handle": "sapila",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-01T20:10:00.000Z",
+      "submissionDate": null,
+      "rating": "720",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1710a1db09a46bf158"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-02T01:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1710a1db09a46bf157"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "0%",
+      "registrationDate": "2016-03-02T05:46:00.000Z",
+      "submissionDate": null,
+      "rating": "1032",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f1710a1db09a46bf156"
+    },
+    {
+      "handle": "frozenfx",
+      "reliability": "0%",
+      "registrationDate": "2016-03-02T09:20:00.000Z",
+      "submissionDate": null,
+      "rating": "1844",
+      "colorStyle": "color: #DDCC00",
+      "_id": "583e8f1710a1db09a46bf155"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-03-02T10:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1710a1db09a46bf154"
+    }
+  ],
+  "registrationEndDate": "2016-03-02T15:21:00.000Z",
+  "reliabilityBonus": 360,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2016-03-05T14:58:00.000Z",
+  "submissions": [
+    {
+      "handle": "vvvpig",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 91.46,
+      "finalScore": 97.82,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-03-05T11:08:00.000Z",
+      "_id": "583e8f1710a1db09a46bf17f"
+    }
+  ],
+  "technology": [
+    "JavaScript",
+    "MongoDB",
+    "Node.js"
+  ]
+}

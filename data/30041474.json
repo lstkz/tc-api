@@ -1,0 +1,390 @@
+{
+  "_id": 30041474,
+  "_isComplete": true,
+  "__v": 16539,
+  "_lastUpdate": "2017-02-17T08:02:40.937Z",
+  "appealsEndDate": "2014-04-07T13:05:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Estimates Data Module Refactor - Separate Configuration and Data",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Cancelled - Zero Submissions",
+  "detailedRequirements": "<div class=\"previewMask\">\n<h2><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Project Overview</span></span></h2>\n\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"line-height: 1.6em;\">We have an existing HTML/Bootstrap/AngularJS application, &quot;Estimates&quot;, that allows the user to create an Estimate for a project they are scoping out. &nbsp;It allows the user to enter Scope line items and build a Timeline using a resource list and rate-card. &nbsp;The backend data storage used is Salesforce.com but we have implemented a library that intercepts all REST API calls and directs them to Firebase.com.</span></span></span></span></p>\n\n<p>The goals for the estimator project are provided here to help guide the team in making choices about future direction of the project.</p>\n\n<ol>\n\t<li>Load data into Salesforce for reporting and comparison purposes.</li>\n\t<li>Increase consistency for estimation within and across practices.</li>\n</ol>\n\n<h2><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Challenge Task Overview</span></h2>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">For this series of challegnes, we are expecting to refactor out the data model used in Estimates, to&nbsp;</span>allow the team to meet all the CMC Estimates original project goals through the full realization of requested stakeholder features.</p>\n\n<p>To understanding the high level requirements, please check</p>\n\n<ul>\n\t<li>the attached CMCEstimates-DataModelDiscussion.pdf</li>\n\t<li>and screencast\n\t<ul>\n\t\t<li>http://screencast.com/t/L6Avx0b68Y</li>\n\t\t<li>http://screencast.com/t/x59jIhsIsNHf</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>For this challenge, we will take the first step to refactor out - <strong>Separate Configuration and Template Data</strong>.</p>\n\n<p>Currently, when creating a new CMC Estimate a user is allowed to choose an estimate-type of &ldquo;salesforce&rdquo;, &ldquo;salesforce cdm&rdquo;, or &ldquo;workday&rdquo; which loads up both template data and application configuration. The template data and application configuration are stored in the same data<br />\nstructure today which has several limitations. One, only a single data template is supported for each configuration. Two, application configuration is saved with data causing new features of the configuration to not be applied to old records already saved.</p>\n\n<p>We&#39;d like to separate them,</p>\n\n<ol>\n\t<li>Configuration of the application shall be stored in JSON files on the webserver. These configurations shall initially align with current estimate types to drive functionality of the application. These configurations shall be loaded at runtime and shall not differ between records in the system. One estimate type will have one JSON file for configuration, and it will be same for all estimates, <span style=\"color:#FF0000;\">no copy needed</span>.</li>\n\t<li>\n\t<p>The data that is currently stored in <u>Scope.json</u> should be stored in a different object called <strong>CMC_Story__c</strong> &nbsp;(completely different like how the <u>Attachment </u>object is there today). &nbsp;The &quot;functional areas&quot; on the left part of the Scope tab screen were previously configuration data but now should be stored in <strong>CMC_Component__c</strong> object.</p>\n\t</li>\n\t<li>\n\t<p>Each row in the right part of the scope tab screen should be created a single <strong>CMC_Story__c</strong> record in Firebase. &nbsp;Each functional area sub tab on the left of the Scope tab (Sales Cloud, Service Cloud, etc) shall represent a <strong>CMC_Component__c</strong> record in Firebase.</p>\n\t</li>\n\t<li>\n\t<p>This is very similar to the mapping that was done in the Cloudspokes contest<a href=\"https://www.cloudspokes.com/challenges/3052\"> Initialize Work Manager</a>&nbsp;except that instead of just mapping and creating the objects via a button click the application shall always store the data in <strong>CMC_Story__c</strong> and <strong>CMC_Component__c</strong>.&nbsp; The code for initialize work manager can be found included in <u>overview-controller-estimates.js $scope.initWorkMgr()</u> function.</p>\n\t</li>\n</ol>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><u><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Coding Guideline</span></span></u></span></p>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Follow the new coding requirements document provided in the zip (attached in forum).</span></p>\n\n<h3><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">SETUP</span></span></span></h3>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span class=\"small_info_spec\">Download the .zip file with the code. &nbsp;Extract. &nbsp;launch on a local webserver.<br />\n&nbsp;<br />\nFirebase Setup:<br />\n1. &nbsp;Go to <a href=\"http://www.firebase.com\">www.firebase.com</a> and sign up if not already done. &nbsp;Create a firebase. &nbsp;Copy it&#39;s url.&nbsp;<br />\n2. &nbsp;Import firebase_start.json (attached in forum) to your firebase for some starter data.<br />\n3. &nbsp;Edit cmc/src/wm/estimates/index.html line 21 to go to your firebase url you copied in step 1 above.<br />\n&nbsp;<br />\nLaunch webserver (any web server, apache, tomcat etc) and navigate browser to:<br />\n<a href=\"http://localhost/cmc/wm/estimates/index.html\">http://localhost/cmc/wm/estimates/index.html</a></span></span></span></p>\n</div>\n</div>\n</div>\n\n<p>&nbsp;</p>\n\n<div class=\"bottom_spec\">&nbsp;</div>\n",
+  "digitalRunPoints": 720,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30041474",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2014-04-09T01:05:00.000Z",
+  "finalSubmissionGuidelines": "<ul>\n\t<li>Changed files to meet the requirements.</li>\n\t<li>Detail Description Document about your changes.</li>\n</ul>\n",
+  "forumId": 21871,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=21871",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 24,
+  "numberOfSubmissions": 0,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-03-26T01:16:00.000Z",
+      "actualStartTime": "2014-03-26T01:16:00.000Z",
+      "scheduledEndTime": "2014-03-26T01:16:00.000Z",
+      "actualendTime": "2014-03-26T01:16:00.000Z",
+      "_id": "58a6ae205d036c0bbdd5bd9b"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-03-26T01:16:00.000Z",
+      "actualStartTime": "2014-03-26T01:16:00.000Z",
+      "scheduledEndTime": "2014-03-26T03:33:00.000Z",
+      "actualendTime": "2014-03-26T03:33:00.000Z",
+      "_id": "58a6ae205d036c0bbdd5bd9a"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-03-26T13:00:00.000Z",
+      "actualStartTime": "2014-03-26T13:00:00.000Z",
+      "scheduledEndTime": "2014-03-28T13:00:00.000Z",
+      "actualendTime": "2014-03-28T13:00:00.000Z",
+      "_id": "58a6ae205d036c0bbdd5bd99"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-03-26T13:05:00.000Z",
+      "actualStartTime": "2014-03-26T13:05:00.000Z",
+      "scheduledEndTime": "2014-04-03T13:05:00.000Z",
+      "actualendTime": "2014-04-03T13:05:00.000Z",
+      "_id": "58a6ae205d036c0bbdd5bd98"
+    },
+    {
+      "type": "Screening",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-04-03T13:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-04-04T01:05:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae205d036c0bbdd5bd97"
+    },
+    {
+      "type": "Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-04-04T01:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-04-06T01:05:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae205d036c0bbdd5bd96"
+    },
+    {
+      "type": "Appeals",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-04-06T01:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-04-07T01:05:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae205d036c0bbdd5bd95"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-04-07T01:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-04-07T13:05:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae205d036c0bbdd5bd94"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-04-07T13:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-04-08T01:05:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae205d036c0bbdd5bd93"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-04-08T01:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-04-09T01:05:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae205d036c0bbdd5bd92"
+    },
+    {
+      "type": "Final Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-04-09T01:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-04-09T13:05:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae205d036c0bbdd5bd91"
+    },
+    {
+      "type": "Approval",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-04-09T13:05:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-04-14T13:05:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae205d036c0bbdd5bd90"
+    },
+    {
+      "type": "Post-Mortem",
+      "status": "Closed",
+      "scheduledStartTime": "2014-04-03T13:06:00.000Z",
+      "actualStartTime": "2014-04-03T13:06:00.000Z",
+      "scheduledEndTime": "2014-04-07T04:13:00.000Z",
+      "actualendTime": "2014-04-07T04:13:00.000Z",
+      "_id": "58a6ae205d036c0bbdd5bd8f"
+    }
+  ],
+  "platforms": [
+    "HTML",
+    "Other"
+  ],
+  "postingDate": "2014-03-26T13:00:00.000Z",
+  "prize": [
+    1600,
+    800
+  ],
+  "projectId": 7169,
+  "registrants": [
+    {
+      "handle": "utkarshkukreti",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-26T13:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae205d036c0bbdd5bd8e"
+    },
+    {
+      "handle": "gfhuertac",
+      "reliability": "37%",
+      "registrationDate": "2014-03-26T13:16:00.000Z",
+      "submissionDate": null,
+      "rating": "903",
+      "colorStyle": "color: #00A900",
+      "_id": "58a6ae205d036c0bbdd5bd8d"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-03-26T13:31:00.000Z",
+      "submissionDate": null,
+      "rating": "803",
+      "colorStyle": "color: #999999",
+      "_id": "58a6ae205d036c0bbdd5bd8c"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "20%",
+      "registrationDate": "2014-03-26T13:38:00.000Z",
+      "submissionDate": null,
+      "rating": "1569",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58a6ae205d036c0bbdd5bd8b"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-26T13:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae205d036c0bbdd5bd8a"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-03-26T13:54:00.000Z",
+      "submissionDate": null,
+      "rating": "1135",
+      "colorStyle": "color: #00A900",
+      "_id": "58a6ae205d036c0bbdd5bd89"
+    },
+    {
+      "handle": "cosherx",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-26T14:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae205d036c0bbdd5bd88"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "13%",
+      "registrationDate": "2014-03-26T14:29:00.000Z",
+      "submissionDate": null,
+      "rating": "1049",
+      "colorStyle": "color: #00A900",
+      "_id": "58a6ae205d036c0bbdd5bd87"
+    },
+    {
+      "handle": "murugan38",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-26T14:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae205d036c0bbdd5bd86"
+    },
+    {
+      "handle": "ibraaaa",
+      "reliability": "13%",
+      "registrationDate": "2014-03-26T15:53:00.000Z",
+      "submissionDate": null,
+      "rating": "769",
+      "colorStyle": "color: #999999",
+      "_id": "58a6ae205d036c0bbdd5bd85"
+    },
+    {
+      "handle": "jol",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-26T16:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae205d036c0bbdd5bd84"
+    },
+    {
+      "handle": "esteer",
+      "reliability": "50%",
+      "registrationDate": "2014-03-26T16:33:00.000Z",
+      "submissionDate": null,
+      "rating": "1005",
+      "colorStyle": "color: #00A900",
+      "_id": "58a6ae205d036c0bbdd5bd83"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-26T21:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae205d036c0bbdd5bd82"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-27T03:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae205d036c0bbdd5bd81"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-27T07:03:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58a6ae205d036c0bbdd5bd80"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-27T07:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae205d036c0bbdd5bd7f"
+    },
+    {
+      "handle": "raj88iitr",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-27T10:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae205d036c0bbdd5bd7e"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2014-03-27T11:44:00.000Z",
+      "submissionDate": null,
+      "rating": "1373",
+      "colorStyle": "color: #6666FF",
+      "_id": "58a6ae205d036c0bbdd5bd7d"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "18%",
+      "registrationDate": "2014-03-27T13:48:00.000Z",
+      "submissionDate": null,
+      "rating": "1305",
+      "colorStyle": "color: #6666FF",
+      "_id": "58a6ae205d036c0bbdd5bd7c"
+    },
+    {
+      "handle": "lovefreya",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-28T04:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae205d036c0bbdd5bd7b"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-27T16:06:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58a6ae205d036c0bbdd5bd7a"
+    },
+    {
+      "handle": "albertwang",
+      "reliability": "81%",
+      "registrationDate": "2014-03-28T06:28:00.000Z",
+      "submissionDate": null,
+      "rating": "1892",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58a6ae205d036c0bbdd5bd79"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2014-03-28T11:09:00.000Z",
+      "submissionDate": null,
+      "rating": "882",
+      "colorStyle": "color: #999999",
+      "_id": "58a6ae205d036c0bbdd5bd78"
+    },
+    {
+      "handle": "sweetu",
+      "reliability": "n/a",
+      "registrationDate": "2014-03-28T12:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae205d036c0bbdd5bd77"
+    }
+  ],
+  "registrationEndDate": "2014-03-28T13:00:00.000Z",
+  "reliabilityBonus": 320,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-04-03T13:05:00.000Z",
+  "submissions": [],
+  "technology": [
+    "HTML",
+    "JSON",
+    "JavaScript"
+  ]
+}

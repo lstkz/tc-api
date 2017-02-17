@@ -1,0 +1,348 @@
+{
+  "_id": 30032657,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-11-30T08:35:20.779Z",
+  "appealsEndDate": "2013-02-22T04:10:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "REPOST!! Release Assembly - TV and Movie Rating Game Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><strong>1.&nbsp;&nbsp; Project Overview</strong></p>\n\n<p>The client for this project, Hercules Corp, develops search, browse, and recommendation technologies for TV shows and movies. These technologies are designed to help customers (who use Hercules Corp&#39;s consumer products) find TV shows and movies they are interested in.</p>\n\n<p>Hercules Corp needs a way to test and evaluate different ranking algorithms they create. The goal of this project is to build an application to assist in this process.</p>\n\n<p>The idea is to build two applications, a TV and Movies Rating game and a Business User Console application. The new TV and Movie Rating game will be a single web-based application that allows users to rate TV shows and movies based on three different game variations: Recommendations, Metadata, and Browse. The Business User Console will allow business users to view the results of experiments, and to create and manage experiments.</p>\n\n<p>The purpose of this contest is to fix bugs in the apps and make them ready for release.</p>\n\n<p><strong>2.&nbsp;&nbsp; Competition Task Overview</strong></p>\n\n<p>This contest is responsible of fixing the following issues:</p>\n\n<ul>\n\t<li>[Game Bug]&nbsp;If I just rated a title, don&#39;t show (or give me the option of rating) the same title again when I go back to the pick again screen. If I&#39;ve just compared two sets of recommendations for a given seed, that seed should disappear. It&#39;s been counted and shouldn&#39;t be counted again. Likewise, if I&#39;ve already rated two sets of metadata for a given seed. For the Browse game, once I&#39;ve compared the results for SeedNum 1, I should never see BrowseNum 1A or 1B again. <span style=\"font-family: Arial, Helvetica, Verdana, sans-serif; font-size: 13px; line-height: 16px;\">When a user has finished rating all the options for a given filter, the user should receive a message that there&#39;s nothing left to rate within their year, genre, airtime, etc. The message should offer then the user the opportunity to choose a new year, genre, airtime, etc. or to start back at the beginning. If the user has finished rating every possible option in the experiment, the user should receive a message congratulating her and telling her thanks, and that she can now close the game.</span>&nbsp;To fix this, we need reworking the front-end to remember the choices and send them to back-end, also logic when there are no new data anymore. Needs changing back-end to skip already used choices.</li>\n\t<li><span style=\"font-size: 13px;\">[Game Bug]</span><span style=\"line-height: 1.6em;\">&nbsp;When a movie or TV image is missing, display a default missing-image image. The accompanying metadata for that movie or TV show should still be displayed on hover over even if the image is missing. This seems to be because imdb server is blocking the application.&nbsp;</span><span style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">In production, we won&#39;t be using IMDB images, so this shouldn&#39;t be a problem. But a nice enhancement would be for the game to default to the no-image image when it is having trouble loading the specified image.</span></li>\n\t<li><span style=\"font-size: 13px;\">[Game Bug]</span>&nbsp;When a seed only has one set of associated recommendations (for example Option A, but no Option B), a default message should be displayed in place of the missing recommendations. The default message should say something like &quot;Only one set of recommendations is available for [Seed Title].&quot; Of course, the default message should not be selectable as the winning option. To fix this, this should be checked in back-end and not even send such data to user (simply select other seed). Also, we should probably also check this in BUC, so there will not be such data.&nbsp;<span style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">It would be preferable for the BUC to at least warn the business user if there is no Option B for any given Option A, but I don&#39;t think the BUC should prevent it from happening. In those cases where the business user decides to go ahead with no Option B, then the game interface should replace the missing Option B with a message saying that there is only one set of results.</span></li>\n\t<li><span style=\"font-size: 13px;\">[Game Bug]</span> &quot;Get a New Set&quot; link should refresh the options of seeds to choose from, not take the user back to the start.</li>\n\t<li><span style=\"font-size: 13px;\">[Business User Console Bug]</span><span style=\"font-size: 13px;\">&nbsp;https://apps.topcoder.com/bugs/browse/HSSD-32 (Uploading of large files)</span></li>\n\t<li><span style=\"font-size: 13px;\">[Business User Console Bug]</span>&nbsp;On the Experiment results page, the layout of the Individual Results section looks screwy.</li>\n\t<li>[Business User Console Bug]&nbsp;When setting up a new experiment, if I choose &quot;Until there is a clear winner&quot; option, I shouldn&#39;t have to manually enter the statistical significance percentage. The statistical significance should be automatically derived by the app based on how many seeds there are to be rated for a given experiment, and how many wins each option will need in order to be considered a clear winner. I&#39;m not a stats expert, but for example I would expect something like the following: 1Where an experiment has lots of seeds to be rated, the margin for victory would probably be smaller. Where an experiment has only a few seeds to be rated, the margin for victory would probably be larger. In either case, victory would be established by one option having more votes or wins than the other option. How many more votes or wins would be necessary is a function of how many head-to-head comparisons there are.</li>\n\t<li>[<span style=\"font-size: 13px;\">Business User Console Bug]</span>&nbsp;When populating experiment data, if I get an error message telling me that I need to put data into Row 364 (for example), each row should have a row number so that I can find my error and fix it. Better yet, the error should be highlighted by the app so I can find it and fix it very easily.</li>\n\t<li><span style=\"font-size: 13px;\">[Business User Console Bug]</span><span style=\"line-height: 1.6em;\"> After I copied an experiment that already had experimental data in it, I didn&#39;t have the option of clicking Next. I only had the option to upload more experimental data.</span></li>\n</ul>\n\n<p><strong><span style=\"line-height: 1.6em;\">?Note the winner will be responsible of deploying this to our VM.</span></strong></p>\n\n<p><strong>3.&nbsp;&nbsp; Testing</strong></p>\n\n<p>We&#39;ll setup the winning submission on VM and have it tested. The winner will be responsible of making sure all the issues mentioned in section 2 are correctly fixed.</p>\n\n<p><strong>4.&nbsp;&nbsp; Technology Overview</strong></p>\n\n<ul>\n\t<li>J2EE 1.5</li>\n\t<li>J2SE 1.6</li>\n\t<li>JavaScript</li>\n\t<li>JQuery 1.8</li>\n\t<li>Spring 3.1</li>\n\t<li>SimpleCaptcha 1.2</li>\n\t<li>Quartz 2.1.6</li>\n\t<li>Apache Log4j 1.2.6</li>\n\t<li>Tomcat 6.0</li>\n\t<li>MySQL 5.1.42</li>\n\t<li>HTML5</li>\n</ul>\n\n<p><strong>5.&nbsp;&nbsp; Documentation Provided</strong></p>\n\n<p>All documents can be downloaded from the contest forum.</p>\n\n<p><strong>6.&nbsp;&nbsp; Payment</strong></p>\n\n<p>1st place: $1,300<br />\n2nd place: $650</p>\n\n<p><strong>7.&nbsp;&nbsp; Competitor Restrictions</strong></p>\n\n<p>CCA is required.</p>\n",
+  "digitalRunPoints": 585,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30032657",
+  "event": {
+    "id": 3436,
+    "description": "2013 TopCoder(R) Open",
+    "shortDescription": "tco13"
+  },
+  "finalFixEndDate": "2013-02-25T21:53:00.000Z",
+  "finalSubmissionGuidelines": "<p>A complete list of deliverables can be viewed in the TopCoder Assembly competition Tutorial at:</p>\n\n<p><span class=\"nobr\"><a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorial\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorial<sup><img align=\"absmiddle\" alt=\"\" border=\"0\" class=\"rendericon\" height=\"7\" src=\"http://apps.topcoder.com/wiki/images/icons/linkext7.gif\" width=\"7\" /></sup></a></span></p>\n",
+  "forumId": 17012,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=17012",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 16,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-02-12T13:53:00.000Z",
+      "actualStartTime": "2013-02-12T13:53:00.000Z",
+      "scheduledEndTime": "2013-02-12T13:54:00.000Z",
+      "actualendTime": "2013-02-12T13:54:00.000Z",
+      "_id": "583e8f4810a1db09a46c1e90"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-02-12T13:54:00.000Z",
+      "actualStartTime": "2013-02-12T13:54:00.000Z",
+      "scheduledEndTime": "2013-02-12T14:39:00.000Z",
+      "actualendTime": "2013-02-12T14:39:00.000Z",
+      "_id": "583e8f4810a1db09a46c1e8f"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2013-02-13T01:00:00.000Z",
+      "actualStartTime": "2013-02-13T01:00:00.000Z",
+      "scheduledEndTime": "2013-02-15T01:00:00.000Z",
+      "actualendTime": "2013-02-15T01:00:00.000Z",
+      "_id": "583e8f4810a1db09a46c1e8e"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-02-13T01:05:00.000Z",
+      "actualStartTime": "2013-02-13T01:05:00.000Z",
+      "scheduledEndTime": "2013-02-19T01:05:00.000Z",
+      "actualendTime": "2013-02-19T01:05:00.000Z",
+      "_id": "583e8f4810a1db09a46c1e8d"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2013-02-19T01:05:00.000Z",
+      "actualStartTime": "2013-02-19T01:05:00.000Z",
+      "scheduledEndTime": "2013-02-19T11:58:00.000Z",
+      "actualendTime": "2013-02-19T11:58:00.000Z",
+      "_id": "583e8f4810a1db09a46c1e8c"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-02-19T11:58:00.000Z",
+      "actualStartTime": "2013-02-19T11:58:00.000Z",
+      "scheduledEndTime": "2013-02-21T03:02:00.000Z",
+      "actualendTime": "2013-02-21T03:02:00.000Z",
+      "_id": "583e8f4810a1db09a46c1e8b"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2013-02-21T03:02:00.000Z",
+      "actualStartTime": "2013-02-21T03:02:00.000Z",
+      "scheduledEndTime": "2013-02-22T03:02:00.000Z",
+      "actualendTime": "2013-02-22T03:02:00.000Z",
+      "_id": "583e8f4810a1db09a46c1e8a"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2013-02-22T03:02:00.000Z",
+      "actualStartTime": "2013-02-22T03:02:00.000Z",
+      "scheduledEndTime": "2013-02-22T04:10:00.000Z",
+      "actualendTime": "2013-02-22T04:10:00.000Z",
+      "_id": "583e8f4810a1db09a46c1e89"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2013-02-22T04:10:00.000Z",
+      "actualStartTime": "2013-02-22T04:10:00.000Z",
+      "scheduledEndTime": "2013-02-22T04:29:00.000Z",
+      "actualendTime": "2013-02-22T04:29:00.000Z",
+      "_id": "583e8f4810a1db09a46c1e88"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-02-22T04:29:00.000Z",
+      "actualStartTime": "2013-02-22T04:29:00.000Z",
+      "scheduledEndTime": "2013-02-24T13:00:00.000Z",
+      "actualendTime": "2013-02-24T13:00:00.000Z",
+      "_id": "583e8f4810a1db09a46c1e87"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-02-24T13:00:00.000Z",
+      "actualStartTime": "2013-02-24T13:00:00.000Z",
+      "scheduledEndTime": "2013-02-24T23:24:00.000Z",
+      "actualendTime": "2013-02-24T23:24:00.000Z",
+      "_id": "583e8f4810a1db09a46c1e86"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2013-02-26T00:46:00.000Z",
+      "actualStartTime": "2013-02-26T00:46:00.000Z",
+      "scheduledEndTime": "2013-03-03T00:46:00.000Z",
+      "actualendTime": "2013-03-03T00:46:00.000Z",
+      "_id": "583e8f4810a1db09a46c1e85"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-02-24T23:24:00.000Z",
+      "actualStartTime": "2013-02-24T23:24:00.000Z",
+      "scheduledEndTime": "2013-02-25T21:53:00.000Z",
+      "actualendTime": "2013-02-25T21:53:00.000Z",
+      "_id": "583e8f4810a1db09a46c1e84"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-02-25T21:53:00.000Z",
+      "actualStartTime": "2013-02-25T21:53:00.000Z",
+      "scheduledEndTime": "2013-02-26T00:46:00.000Z",
+      "actualendTime": "2013-02-26T00:46:00.000Z",
+      "_id": "583e8f4810a1db09a46c1e83"
+    }
+  ],
+  "platforms": [],
+  "postingDate": "2013-02-13T01:00:00.000Z",
+  "prize": [
+    1300,
+    650
+  ],
+  "projectId": 5048,
+  "registrants": [
+    {
+      "handle": "woodjhon",
+      "reliability": "n/a",
+      "registrationDate": "2013-02-13T03:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f4810a1db09a46c1e82"
+    },
+    {
+      "handle": "JeffreySun",
+      "reliability": "25%",
+      "registrationDate": "2013-02-13T03:43:00.000Z",
+      "submissionDate": null,
+      "rating": "639",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f4810a1db09a46c1e81"
+    },
+    {
+      "handle": "dezl",
+      "reliability": "n/a",
+      "registrationDate": "2013-02-13T05:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f4810a1db09a46c1e80"
+    },
+    {
+      "handle": "rrr_guru",
+      "reliability": "n/a",
+      "registrationDate": "2013-02-13T06:24:00.000Z",
+      "submissionDate": null,
+      "rating": "613",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f4810a1db09a46c1e7f"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "6%",
+      "registrationDate": "2013-02-13T06:32:00.000Z",
+      "submissionDate": null,
+      "rating": "1304",
+      "colorStyle": "color: #6666FF",
+      "_id": "583e8f4810a1db09a46c1e7e"
+    },
+    {
+      "handle": "TrePe",
+      "reliability": "66%",
+      "registrationDate": "2013-02-13T07:37:00.000Z",
+      "submissionDate": "2013-02-19T00:55:00.000Z",
+      "rating": "983",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f4810a1db09a46c1e7d"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2013-02-13T08:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f4810a1db09a46c1e7c"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2013-02-13T08:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f4810a1db09a46c1e7b"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2013-02-13T10:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f4810a1db09a46c1e7a"
+    },
+    {
+      "handle": "luckvin",
+      "reliability": "n/a",
+      "registrationDate": "2013-02-13T12:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f4810a1db09a46c1e79"
+    },
+    {
+      "handle": "besabestin",
+      "reliability": "n/a",
+      "registrationDate": "2013-02-13T14:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f4810a1db09a46c1e78"
+    },
+    {
+      "handle": "zhengli.cs",
+      "reliability": "n/a",
+      "registrationDate": "2013-02-14T08:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f4810a1db09a46c1e77"
+    },
+    {
+      "handle": "sweetu",
+      "reliability": "n/a",
+      "registrationDate": "2013-02-14T19:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f4810a1db09a46c1e76"
+    },
+    {
+      "handle": "thientri",
+      "reliability": "n/a",
+      "registrationDate": "2013-02-14T23:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f4810a1db09a46c1e75"
+    },
+    {
+      "handle": "an_ant",
+      "reliability": "20%",
+      "registrationDate": "2013-02-13T03:14:00.000Z",
+      "submissionDate": null,
+      "rating": "1299",
+      "colorStyle": "color: #6666FF",
+      "_id": "583e8f4810a1db09a46c1e74"
+    },
+    {
+      "handle": "csy2012",
+      "reliability": "6%",
+      "registrationDate": "2013-02-15T00:57:00.000Z",
+      "submissionDate": "2013-02-18T23:21:00.000Z",
+      "rating": "525",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f4810a1db09a46c1e73"
+    }
+  ],
+  "registrationEndDate": "2013-02-15T01:00:00.000Z",
+  "reliabilityBonus": 260,
+  "reviewScorecardId": 30001210,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2013-02-19T01:05:00.000Z",
+  "submissions": [
+    {
+      "handle": "TrePe",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 85.78,
+      "finalScore": 92.45,
+      "points": 409.5,
+      "submissionStatus": "Active",
+      "submissionDate": "2013-02-19T00:55:00.000Z",
+      "_id": "583e8f4810a1db09a46c1e92"
+    },
+    {
+      "handle": "csy2012",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 75.21,
+      "finalScore": 75.21,
+      "points": 175.5,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2013-02-18T23:21:00.000Z",
+      "_id": "583e8f4810a1db09a46c1e91"
+    }
+  ],
+  "technology": [
+    "HTML5",
+    "Java",
+    "MySQL",
+    "Spring"
+  ]
+}

@@ -1,8 +1,8 @@
 {
   "_id": 30040907,
   "_isComplete": true,
-  "__v": 2212,
-  "_lastUpdate": "2016-11-05T11:06:16.809Z",
+  "__v": 24012,
+  "_lastUpdate": "2017-02-17T08:04:11.967Z",
   "appealsEndDate": "2014-03-10T14:05:00.000Z",
   "challengeCommunity": "develop",
   "challengeName": "Module Assembly - TopCoder Competition Engine - Connecting Web Socket Listener and Main Listener",
@@ -10,7 +10,7 @@
   "checkpointSubmissionEndDate": null,
   "currentPhaseEndDate": "2014-03-07T15:25:00.000Z",
   "currentPhaseName": "Post-Mortem",
-  "currentPhaseRemainingTime": -84141592,
+  "currentPhaseRemainingTime": -93112606,
   "currentStatus": "Cancelled - Zero Submissions",
   "detailedRequirements": "<p><span><span contenteditable=\"false\" style=\"height: 0px; padding: 0px; margin: 0px; display: block; z-index: 9999; color: rgb(255, 255, 255); font-size: 0px; line-height: 0px; position: absolute; border-top: 1px dashed rgb(255, 0, 0); -moz-user-select: none; left: 0px; right: 0px; top: 0px;\"><span style=\"width:0px;height:0px;padding:0px;margin:0px;display:block;z-index:9999;color:#fff;position:absolute;font-size: 0px;line-height:0px;border-color:transparent;display:block;border-style:solid;right:0px;border-right-color:#ff0000;border-width:0 8px 8px 0;top:0px\">&nbsp;</span><span style=\"width:0px;height:0px;padding:0px;margin:0px;display:block;z-index:9999;color:#fff;position:absolute;font-size: 0px;line-height:0px;border-color:transparent;display:block;border-style:solid;left:0px;border-left-color:#ff0000;border-width:0 0 8px 8px;top:0px\">&nbsp;</span><span contenteditable=\"false\" style=\"width:0px;height:0px;padding:0px;margin:0px;display:block;z-index:9999;color:#fff;position:absolute;font-size: 0px;line-height:0px;height:17px;width:17px;right:17px;background:url(https://www.topcoder.com/scripts/ckeditor/ckeditor/plugins/magicline/images/icon.png) center no-repeat #ff0000;cursor:pointer;top:-1px;-moz-border-radius:0px 0px 2px 2px;border-radius:0px 0px 2px 2px\" title=\"Insert paragraph here\">&crarr;</span></span></span></p>\n\n<div class=\"previewMask\">\n<h1><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Project Overview</span></span></h1>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Currently, TopCoder Competition Engine used a customized way for communication between the client side (Arena Applet) and the backend listeners. We are planning to implement a Web-based Arena based Web Socket protocol.</span></p>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Previously, we have run contests to build a standalone web socket listener, which provides a good solution by using the combination of <a href=\"http://socket.io/\">socket.io</a> (web client)&nbsp; and <a href=\"http://netty.io/\">netty.io</a> (server side).&nbsp;</span></p>\n\n<p>But we found some problems, like data sharing, chat between arena applet and new web based arena.</p>\n\n<h1><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color:#FF0000;\">Competition Task Overview</span></span></h1>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"font-size:12px;\">This contest is going to explore the way to make the web socket listener and main listener&nbsp; connected.</span></span></p>\n\n<p><span class=\"small_info_spec\"><span style=\"font-size:12px;\">so messages like chat, can be delivered with each other.</span></span></p>\n\n<h3><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><strong><span style=\"font-size:12px;\"><span style=\"color:#0000FF;\">Make the Web Socket Listener connect to Main Listener</span></span></strong></span></h3>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">We&#39;d like to reuse all useful logic in the main listener, so we&#39;d like to make the web socket listener connect to the main listener.</span></p>\n\n<p><span class=\"small_info_spec\">the web socket listener will be a lightweight layer to support web socket, and transfer data from/to the main listener.</span></p>\n\n<p><span class=\"small_info_spec\">We&#39;d like a general extensiable solution, so we can support more messages in the future.</span></p>\n\n<p><span class=\"small_info_spec\">Please consider the extensibilty as a major part for this contest.</span></p>\n\n<p><span style=\"color:#FF0000;\">Currently, Admin Listener is connected to Main listener for data exchange and broadcast, you can learn and implement similar logic.</span></p>\n\n<p><span style=\"color:#0000FF;\">User Session Management</span></p>\n\n<p>Currently, the web socket listener and main listener manages its own connections based on user, this is fine, but we&#39;d like control the user can login with one client.</p>\n\n<p>So, we&#39;d like the listener can send messages to each other about user login, and logout the previous user with same handle.</p>\n\n<p>Following is the case.</p>\n\n<p>a). same user login twice in arena applet, only one session is allowed (already implemented)</p>\n\n<p>b). same user login twice in socket.io arena demo, only one session is allowed, tell the demo about the user be off.</p>\n\n<p>c). user login&nbsp;through arena applet, then login through socket.io arena demo, the previous login in arena applet will be closed.</p>\n\n<p>d). user login socket.io arena demo first, the login through arena applet, the preivous login through socket.io arena demo;&#39;</p>\n<span style=\"color:#0000FF;\">Broadcast</span>\n\n<h3><span style=\"font-size:12px;\">Through Admin tool, the contest admins can broadcast for some important message, like system reboot, advertise for event sponsor for active users.</span></h3>\n\n<p><span class=\"small_info_spec\">To play with the functionality, you can login as Admin Tool, select Actions -&gt; Send broadcasts -&gt; Global... to trigger it.</span></p>\n\n<p>We&#39;d like the web socket listener can recieve same messages from main listener, and broadcast to connections connected to it.</p>\n\n<h3 style=\"font-family: Arial, Helvetica, Verdana, sans-serif; padding: 0px; margin: 0px; font-weight: bold;\"><span class=\"small_info_spec\" id=\"rswDetailedRequirements\"><span style=\"color: rgb(255, 0, 0);\">Arena VM</span></span></h3>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">Before asking your own VM, you need to have a public key on your profile before asking for the VM.</span></p>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">You can find more details on how to generate a key <span class=\"nobr\"><a href=\"http://apps.topcoder.com/wiki/display/projects/Generate+SSH+Key\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/projects/Generate+SSH+Key</a></span> and how to connect using it <span class=\"nobr\"><a href=\"http://apps.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key</a></span>.</span></p>\n\n<p><span class=\"small_info_spec\" id=\"rswDetailedRequirements\">To use the Arena VM, please follow <span class=\"nobr\"><a href=\"http://apps.topcoder.com/wiki/display/docs/Competition+Engine+VM+Setup\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/docs/Competition+Engine+VM+Setup</a></span></span></p>\n</div>\n",
   "digitalRunPoints": 630,
@@ -36,7 +36,7 @@
       "actualStartTime": "2014-02-28T14:11:00.000Z",
       "scheduledEndTime": "2014-02-28T14:11:00.000Z",
       "actualendTime": "2014-02-28T14:11:00.000Z",
-      "_id": "581dbd28550dfb3b52be38b2"
+      "_id": "58a6ae7b5d036c0bbdd5dd4d"
     },
     {
       "type": "Specification Review",
@@ -45,7 +45,7 @@
       "actualStartTime": "2014-02-28T14:11:00.000Z",
       "scheduledEndTime": "2014-02-28T16:13:00.000Z",
       "actualendTime": "2014-02-28T16:13:00.000Z",
-      "_id": "581dbd28550dfb3b52be38b1"
+      "_id": "58a6ae7b5d036c0bbdd5dd4c"
     },
     {
       "type": "Registration",
@@ -54,7 +54,7 @@
       "actualStartTime": "2014-03-01T14:00:00.000Z",
       "scheduledEndTime": "2014-03-03T14:00:00.000Z",
       "actualendTime": "2014-03-03T14:00:00.000Z",
-      "_id": "581dbd28550dfb3b52be38b0"
+      "_id": "58a6ae7b5d036c0bbdd5dd4b"
     },
     {
       "type": "Submission",
@@ -63,7 +63,7 @@
       "actualStartTime": "2014-03-01T14:05:00.000Z",
       "scheduledEndTime": "2014-03-06T14:05:00.000Z",
       "actualendTime": "2014-03-06T14:05:00.000Z",
-      "_id": "581dbd28550dfb3b52be38af"
+      "_id": "58a6ae7b5d036c0bbdd5dd4a"
     },
     {
       "type": "Screening",
@@ -72,7 +72,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2014-03-07T02:05:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd28550dfb3b52be38ae"
+      "_id": "58a6ae7b5d036c0bbdd5dd49"
     },
     {
       "type": "Review",
@@ -81,7 +81,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2014-03-09T02:05:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd28550dfb3b52be38ad"
+      "_id": "58a6ae7b5d036c0bbdd5dd48"
     },
     {
       "type": "Appeals",
@@ -90,7 +90,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2014-03-10T02:05:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd28550dfb3b52be38ac"
+      "_id": "58a6ae7b5d036c0bbdd5dd47"
     },
     {
       "type": "Appeals Response",
@@ -99,7 +99,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2014-03-10T14:05:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd28550dfb3b52be38ab"
+      "_id": "58a6ae7b5d036c0bbdd5dd46"
     },
     {
       "type": "Aggregation",
@@ -108,7 +108,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2014-03-11T02:05:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd28550dfb3b52be38aa"
+      "_id": "58a6ae7b5d036c0bbdd5dd45"
     },
     {
       "type": "Final Fix",
@@ -117,7 +117,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2014-03-12T02:05:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd28550dfb3b52be38a9"
+      "_id": "58a6ae7b5d036c0bbdd5dd44"
     },
     {
       "type": "Final Review",
@@ -126,7 +126,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2014-03-12T14:05:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd28550dfb3b52be38a8"
+      "_id": "58a6ae7b5d036c0bbdd5dd43"
     },
     {
       "type": "Approval",
@@ -135,7 +135,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2014-03-17T14:05:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd28550dfb3b52be38a7"
+      "_id": "58a6ae7b5d036c0bbdd5dd42"
     },
     {
       "type": "Post-Mortem",
@@ -144,7 +144,7 @@
       "actualStartTime": "2014-03-06T14:05:00.000Z",
       "scheduledEndTime": "2014-03-07T15:25:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd28550dfb3b52be38a6"
+      "_id": "58a6ae7b5d036c0bbdd5dd41"
     }
   ],
   "platforms": [
@@ -164,7 +164,7 @@
       "submissionDate": null,
       "rating": "800",
       "colorStyle": "color: #999999",
-      "_id": "581dbd28550dfb3b52be38a5"
+      "_id": "58a6ae7b5d036c0bbdd5dd40"
     },
     {
       "handle": "dexy",
@@ -173,7 +173,7 @@
       "submissionDate": null,
       "rating": "1280",
       "colorStyle": "color: #6666FF",
-      "_id": "581dbd28550dfb3b52be38a4"
+      "_id": "58a6ae7b5d036c0bbdd5dd3f"
     },
     {
       "handle": "codercat",
@@ -182,7 +182,7 @@
       "submissionDate": null,
       "rating": "838",
       "colorStyle": "color: #999999",
-      "_id": "581dbd28550dfb3b52be38a3"
+      "_id": "58a6ae7b5d036c0bbdd5dd3e"
     },
     {
       "handle": "muzehyun",
@@ -191,7 +191,7 @@
       "submissionDate": null,
       "rating": "807",
       "colorStyle": "color: #999999",
-      "_id": "581dbd28550dfb3b52be38a2"
+      "_id": "58a6ae7b5d036c0bbdd5dd3d"
     },
     {
       "handle": "alfiya_Zi",
@@ -200,7 +200,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd28550dfb3b52be38a1"
+      "_id": "58a6ae7b5d036c0bbdd5dd3c"
     },
     {
       "handle": "phead",
@@ -209,7 +209,7 @@
       "submissionDate": null,
       "rating": "514",
       "colorStyle": "color: #999999",
-      "_id": "581dbd28550dfb3b52be38a0"
+      "_id": "58a6ae7b5d036c0bbdd5dd3b"
     },
     {
       "handle": "testXuSanping",
@@ -218,7 +218,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd28550dfb3b52be389f"
+      "_id": "58a6ae7b5d036c0bbdd5dd3a"
     },
     {
       "handle": "sunbinbrother",
@@ -227,7 +227,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd28550dfb3b52be389e"
+      "_id": "58a6ae7b5d036c0bbdd5dd39"
     },
     {
       "handle": "panoptimum",
@@ -236,7 +236,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd28550dfb3b52be389d"
+      "_id": "58a6ae7b5d036c0bbdd5dd38"
     },
     {
       "handle": "Luca",
@@ -245,7 +245,7 @@
       "submissionDate": null,
       "rating": "1373",
       "colorStyle": "color: #6666FF",
-      "_id": "581dbd28550dfb3b52be389c"
+      "_id": "58a6ae7b5d036c0bbdd5dd37"
     },
     {
       "handle": "gondzo",
@@ -254,7 +254,7 @@
       "submissionDate": null,
       "rating": "388",
       "colorStyle": "color: #999999",
-      "_id": "581dbd28550dfb3b52be389b"
+      "_id": "58a6ae7b5d036c0bbdd5dd36"
     },
     {
       "handle": "vinoh",
@@ -263,7 +263,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd28550dfb3b52be389a"
+      "_id": "58a6ae7b5d036c0bbdd5dd35"
     },
     {
       "handle": "gjw99",
@@ -272,7 +272,7 @@
       "submissionDate": null,
       "rating": "1135",
       "colorStyle": "color: #00A900",
-      "_id": "581dbd28550dfb3b52be3899"
+      "_id": "58a6ae7b5d036c0bbdd5dd34"
     },
     {
       "handle": "lovefreya",
@@ -281,7 +281,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd28550dfb3b52be3898"
+      "_id": "58a6ae7b5d036c0bbdd5dd33"
     },
     {
       "handle": "Ritesh999",
@@ -290,7 +290,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd28550dfb3b52be3897"
+      "_id": "58a6ae7b5d036c0bbdd5dd32"
     },
     {
       "handle": "notpad",
@@ -299,7 +299,7 @@
       "submissionDate": null,
       "rating": "849",
       "colorStyle": "color: #999999",
-      "_id": "581dbd28550dfb3b52be3896"
+      "_id": "58a6ae7b5d036c0bbdd5dd31"
     },
     {
       "handle": "flytoj2ee",
@@ -308,7 +308,7 @@
       "submissionDate": null,
       "rating": "1197",
       "colorStyle": "color: #00A900",
-      "_id": "581dbd28550dfb3b52be3895"
+      "_id": "58a6ae7b5d036c0bbdd5dd30"
     },
     {
       "handle": "arch_angel",
@@ -317,7 +317,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd28550dfb3b52be3894"
+      "_id": "58a6ae7b5d036c0bbdd5dd2f"
     },
     {
       "handle": "sah2ed",
@@ -326,7 +326,7 @@
       "submissionDate": null,
       "rating": "1221",
       "colorStyle": "color: #6666FF",
-      "_id": "581dbd28550dfb3b52be3893"
+      "_id": "58a6ae7b5d036c0bbdd5dd2e"
     },
     {
       "handle": "poundinc_tc",
@@ -335,7 +335,7 @@
       "submissionDate": null,
       "rating": "323",
       "colorStyle": "color: #999999",
-      "_id": "581dbd28550dfb3b52be3892"
+      "_id": "58a6ae7b5d036c0bbdd5dd2d"
     },
     {
       "handle": "Standlove",
@@ -344,7 +344,7 @@
       "submissionDate": null,
       "rating": "1657",
       "colorStyle": "color: #DDCC00",
-      "_id": "581dbd28550dfb3b52be3891"
+      "_id": "58a6ae7b5d036c0bbdd5dd2c"
     },
     {
       "handle": "nitinjaiswal",
@@ -353,7 +353,7 @@
       "submissionDate": null,
       "rating": "446",
       "colorStyle": "color: #999999",
-      "_id": "581dbd28550dfb3b52be3890"
+      "_id": "58a6ae7b5d036c0bbdd5dd2b"
     }
   ],
   "registrationEndDate": "2014-03-03T14:00:00.000Z",

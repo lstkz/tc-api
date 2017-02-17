@@ -1,0 +1,1214 @@
+{
+  "_id": 30056294,
+  "_isComplete": true,
+  "__v": 2817,
+  "_lastUpdate": "2017-02-13T10:48:05.981Z",
+  "appealsEndDate": "2017-02-11T15:28:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Lines and Curves Detection in 2D images - Fujitsu Object Matching Challenge Series 1",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2>Background</h2>\n\n<p>Fujitsu has an application that matches CAD data (blueprint) with the actual manufactured product to inspect if the product is built correctly - as shown below.<br />\n<img alt=\"\" src=\"https://s3-ap-northeast-1.amazonaws.com/challengespecpics/FUJITSU_BP_MATCHING1_PIC1.png\" style=\"width:400px\" /><br />\nSince this application is built as Windows desktop application, the client wants Topcoder community to build Web based system using browser as UI.<br />\n&nbsp;</p>\n\n<h2>Overall Objective</h2>\n\n<p>The customer wants Topcoder community to create a prototype which implements the core features of the existing application with Web technology in multiple challenges.<br />\nThe following diagram shows an illustration of the prototype:<br />\n<img alt=\"\" src=\"https://s3-ap-northeast-1.amazonaws.com/challengespecpics/FUJITSU_BP_MATCHING1_PIC2.png\" style=\"border-style:solid; border-width:1px; width:400px\" /></p>\nThe client is offering the following goals:<br />\n1. Algorithm and API to detect lines/curves in 2D images\n<div style=\"margin-left:40px\">- 2D image is a photo of a real product.</div>\n2. Algorithm and API to detect lines/curves in 3D model\n\n<div style=\"margin-left:40px\">- The model is a blueprint of the product.<br />\n- The format is Wavefront obj.</div>\n3. Algorithm and API to calculate transformation matrix of 3D model to match 2D image\n\n<div style=\"margin-left:40px\">- This uses results of 1. and 2. as input and produces matrix of transition/rotation/scaling.</div>\n4. UI to show the overlaid image of 2D image and transformed 3D model\n\n<div style=\"margin-left:40px\">- This should be a browser app.</div>\n\n<div>&nbsp;</div>\n\n<h2>Goal of this challenge</h2>\n\n<div>The client is interested in matching a 2D image and a 3D model. One of the fundamental steps is to detect the line segments and curves for the later key-point matching process.<br />\n<strong>Input:</strong></div>\n\n<div style=\"margin-left:40px\">1. A JPEG image</div>\n\n<div><strong>Output:</strong></div>\n\n<div style=\"margin-left:40px\">1. [Recommended] A file containing all line segments. Each segment is&nbsp; described by 4 numerical values. &ldquo;x1 y1 x2 y2&rdquo;, separated by a single space.<br />\n2. [Recommended] A file containing all curve segments. Each curve is approximated by a sequence of line segments. &ldquo;x1 y1 x2 y2 x3 y3 &hellip; xn yn&rdquo;.<br />\n3. [Required] A JPEG image with lines and curves highlighted.</div>\n\n<div><br />\nThe output format of the first two files is flexible. You can also propose your own output format but you need to carefully document it.<br />\n<em>(Eventually, the algorithm will be provided as Web API. From a point of this view, JSON is preferable for output format. But it&rsquo;s super optional.)</em><br />\n<br />\nNote that the only the lines and curves being useful to the later matching process are important to us.</div>\n\n<div style=\"margin-left:40px\"><span style=\"font-size:11px\">Lines/Curves Detection</span><br />\n<img alt=\"\" src=\"https://s3-ap-northeast-1.amazonaws.com/challengespecpics/FUJITSU_BP_MATCHING1_PIC3.png\" style=\"width:300px\" /><br />\n<span style=\"font-size:11px\">Subsequent Matching Process (Later contest)</span><br />\n<span style=\"color:#0000FF\"><img alt=\"\" src=\"https://s3-ap-northeast-1.amazonaws.com/challengespecpics/FUJITSU_BP_MATCHING1_PIC4.png\" style=\"width:300px\" /></span></div>\n\n<div>&nbsp;</div>\n\n<h3>Examples</h3>\n\n<div>Three examples showing results of the line detection by <strong>the existing application</strong> are as follows. <strong>The full set of example images can be downloaded from the attachment of this contest.</strong><br />\n<br />\nExample #1</div>\n\n<div style=\"margin-left:40px\">(input)<br />\n<img alt=\"\" src=\"https://s3-ap-northeast-1.amazonaws.com/challengespecpics/FUJITSU_BP_MATCHING1_PIC5.jpg\" style=\"height:225px; width:300px\" /><br />\n(output)<br />\n<img alt=\"\" src=\"https://s3-ap-northeast-1.amazonaws.com/challengespecpics/FUJITSU_BP_MATCHING1_PIC6.png\" style=\"border-style:solid; border-width:1px; width:380px\" /></div>\n\n<div><br />\nExample #2</div>\n\n<div style=\"margin-left:40px\">(input)<br />\n<img alt=\"\" src=\"https://s3-ap-northeast-1.amazonaws.com/challengespecpics/FUJITSU_BP_MATCHING1_PIC7.jpg\" style=\"height:225px; width:300px\" /><br />\n(output)<br />\n<img alt=\"\" src=\"https://s3-ap-northeast-1.amazonaws.com/challengespecpics/FUJITSU_BP_MATCHING1_PIC8.png\" style=\"border-style:solid; border-width:1px; height:200px; width:380px\" /></div>\n\n<div><br />\nExample #3</div>\n\n<div style=\"margin-left:40px\">(input)<br />\n<img alt=\"\" src=\"https://s3-ap-northeast-1.amazonaws.com/challengespecpics/FUJITSU_BP_MATCHING1_PIC9.jpg\" style=\"height:225px; width:300px\" /><br />\n(output)</div>\n\n<div style=\"margin-left:40px\"><img alt=\"\" src=\"https://s3-ap-northeast-1.amazonaws.com/challengespecpics/FUJITSU_BP_MATCHING1_PIC10.png\" style=\"border-style:solid; border-width:1px; height:199px; width:380px\" /></div>\n\n<div><br />\n<span style=\"color:#FF0000\">There are a few caveats in the above examples as follows:</span><br />\n(a) Curves are not detected in the examples because the application does not support it. The most concerned item in the requirements is to detect curves.</div>\n\n<div style=\"margin-left:40px\"><span style=\"color:#0000FF\"><img alt=\"\" src=\"https://s3-ap-northeast-1.amazonaws.com/challengespecpics/FUJITSU_BP_MATCHING1_PIC11.png\" style=\"border-style:solid; border-width:1px; height:132px; width:251px\" /></span></div>\n\n<div>(b) Some lines are apparently noises. Obviously, less noise is the higher quality.\n<div style=\"margin-left:40px\"><span style=\"color:#0000FF\"><img alt=\"\" src=\"https://s3-ap-northeast-1.amazonaws.com/challengespecpics/FUJITSU_BP_MATCHING1_PIC12.png\" style=\"border-style:solid; border-width:1px; height:131px; width:250px\" /></span></div>\n(c) Some lines shows insufficient detection.\n\n<div style=\"margin-left:40px\"><span style=\"color:#0000FF\"><img alt=\"\" src=\"https://s3-ap-northeast-1.amazonaws.com/challengespecpics/FUJITSU_BP_MATCHING1_PIC13.png\" style=\"border-style:solid; border-width:1px; height:132px; width:250px\" /></span></div>\n(d) Some short lines are detected on an edge. It&rsquo;s better an entire edge is detected as one solid line.\n\n<div style=\"margin-left:40px\"><span style=\"color:#0000FF\"><img alt=\"\" src=\"https://s3-ap-northeast-1.amazonaws.com/challengespecpics/FUJITSU_BP_MATCHING1_PIC14.png\" style=\"border-style:solid; border-width:1px; height:132px; width:250px\" /></span></div>\n&nbsp;\n\n<h2>Judging Criteria</h2>\n\n<h3>The submissions will be evaluated from different aspects:</h3>\n\n<h3>1. Quality (60% = 20% + 30% + 10%)</h3>\n\n<div style=\"margin-left:40px\">- (Training Accuracy) Does it work perfectly on the public examples? (20%)<br />\n- (Testing Accuracy) Does it work reasonably well on the private testing images? (30%)<br />\n- (Robustness) Can your model work smoothly on different images with the same parameters (e.g., some thresholds)? Or, can your model automatically set the parameters (e.g., some thresholds) based on the input image? (10%)</div>\n\n<h3>2.&nbsp;&nbsp; &nbsp;Readability (20%)</h3>\n\n<div style=\"margin-left:40px\">- Your solution should be documented well, including the algorithms, codes, scripts, and deployment instructions.<br />\n- If you have your own format to save the lines and curves, try to justify your choice.<br />\n- Self contained. For example, all technical terms should be well-defined.</div>\n\n<h3>3.&nbsp;&nbsp; &nbsp;Innovativity (20%)</h3>\n\n<div style=\"margin-left:40px\">- Innovative algorithms and models are encouraged.</div>\n&nbsp;\n\n<h2>Requirements to Win a Prize</h2>\nFinal Submission:\n\n<div style=\"margin-left:40px\">- Achieve a passing score in the top 2. See the <strong>&ldquo;Judging Criteria&rdquo;</strong> section above.<br />\n- Submit all codes &amp; scripts, which can repeat your results and apply to new images.<br />\n- Submit a document up to 5 pages (2-4 pages are recommended) in word or PDF format to describe details of your algorithms, default parameter values if there is any in your model, your resources, your thought process, all useful links, and justify how your solution satisfies our judging criteria and goals.<br />\n- You are encouraged to submit the results based on the public examples.</div>\n\n<h2><br />\nEvaluation Criteria</h2>\nYou will be judged on the quality of your ideas, the quality of your description of the ideas, and how much benefit it can provide for the client.&nbsp; The winner will be chosen by the most logical and convincing reasoning as to how and why the idea presented will meet the objective.<br />\nNote that, this contest will be judged subjectively by the client and Topcoder. However, the following criteria will largely be the basis for the judgement: (check Judging Criteria for more details)\n<div style=\"margin-left:40px\">- Quality = 60%<br />\n- Readability = 20%<br />\n- Innovativity = 20%</div>\n\n<h2><br />\nLicenses &amp; Attribution</h2>\nThird-party assets used to build your item must be properly licensed or free for commercial use. MIT, some modified BSD, Apache 2 licenses are ok, but if a library is not commercial friendly you need to get our approval first.<br />\nSufficient information regarding third-party assets must be present in your documentation. This includes the author, license info and a direct link to the asset online.<br />\n&nbsp;\n<h2>Additional Information</h2>\nThis contest is <strong>not rated</strong>.<br />\n&nbsp;\n<h2>Q&amp;A</h2>\nFeel free to ask questions by posting in the contest forum.<br />\n<br />\n&nbsp;</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30056294",
+  "finalSubmissionGuidelines": "<div>Your final submission should at least contain the following files.<br />\n- All codes &amp; scripts to repeat your results and apply to new images.<br />\n- A document up to 5 pages (2-4 pages are recommended) in word or PDF format.&nbsp;</div>\n\n<div style=\"margin-left:40px\">1. Instructions about how to deploy your solution on a linux machine, including all dependencies.<br />\n2. Detailed descriptions of your algorithms and justifications of your choice.<br />\n3. Instructions about the parameters in your solution and how to tune these parameters, if there is any.<br />\n4. The formats of output files, if you have invented any new and more convienent ones.</div>\n",
+  "forumId": 35003,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=35003",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 115,
+  "numberOfSubmissions": 7,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-27T14:00:00.000Z",
+      "actualStartTime": "2017-01-27T14:00:00.000Z",
+      "scheduledEndTime": "2017-02-05T13:59:00.000Z",
+      "actualendTime": "2017-02-05T13:59:00.000Z",
+      "_id": "58a18ee65d036c0bbd53e09d"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-27T14:05:00.000Z",
+      "actualStartTime": "2017-01-27T14:05:00.000Z",
+      "scheduledEndTime": "2017-02-05T14:00:00.000Z",
+      "actualendTime": "2017-02-05T14:00:00.000Z",
+      "_id": "58a18ee65d036c0bbd53e09c"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2017-02-05T14:00:00.000Z",
+      "actualStartTime": "2017-02-05T14:00:00.000Z",
+      "scheduledEndTime": "2017-02-10T04:43:00.000Z",
+      "actualendTime": "2017-02-10T04:43:00.000Z",
+      "_id": "58a18ee65d036c0bbd53e09b"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2017-02-10T04:44:00.000Z",
+      "actualStartTime": "2017-02-10T04:44:00.000Z",
+      "scheduledEndTime": "2017-02-11T04:45:00.000Z",
+      "actualendTime": "2017-02-11T04:45:00.000Z",
+      "_id": "58a18ee65d036c0bbd53e09a"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2017-02-11T04:45:00.000Z",
+      "actualStartTime": "2017-02-11T04:45:00.000Z",
+      "scheduledEndTime": "2017-02-11T15:28:00.000Z",
+      "actualendTime": "2017-02-11T15:28:00.000Z",
+      "_id": "58a18ee65d036c0bbd53e099"
+    }
+  ],
+  "platforms": [
+    "Linux"
+  ],
+  "postingDate": "2017-01-27T14:00:00.000Z",
+  "prize": [
+    1000,
+    500
+  ],
+  "projectId": 12112,
+  "registrants": [
+    {
+      "handle": "AleaActaEst",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T14:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e098"
+    },
+    {
+      "handle": "adolia",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T14:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e097"
+    },
+    {
+      "handle": "wwxyxgy",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T14:50:00.000Z",
+      "submissionDate": "2017-02-05T08:04:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e096"
+    },
+    {
+      "handle": "gvir",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T14:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e095"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T15:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e094"
+    },
+    {
+      "handle": "rajrkrish",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T15:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e093"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T15:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e092"
+    },
+    {
+      "handle": "QBitCoding",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T16:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e091"
+    },
+    {
+      "handle": "ryuutama",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T16:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e090"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T16:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e08f"
+    },
+    {
+      "handle": "bic-user",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T16:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e08e"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T16:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e08d"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T16:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e08c"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T17:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e08b"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T17:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e08a"
+    },
+    {
+      "handle": "vg249",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T17:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e089"
+    },
+    {
+      "handle": "PeterBest",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T17:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e088"
+    },
+    {
+      "handle": "Ksys",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T17:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e087"
+    },
+    {
+      "handle": "wesamadel",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T17:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e086"
+    },
+    {
+      "handle": "Kaumad",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T17:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e085"
+    },
+    {
+      "handle": "orirmi",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T17:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e084"
+    },
+    {
+      "handle": "piperid",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T17:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e083"
+    },
+    {
+      "handle": "binarysurface",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T17:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e082"
+    },
+    {
+      "handle": "diogenesjcs",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T17:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e081"
+    },
+    {
+      "handle": "mhaytmyr",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T18:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e080"
+    },
+    {
+      "handle": "howard_roark",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T18:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e07f"
+    },
+    {
+      "handle": "earl",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T18:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e07e"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T18:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e07d"
+    },
+    {
+      "handle": "hsamogh",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T18:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e07c"
+    },
+    {
+      "handle": "hajmoh",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T18:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e07b"
+    },
+    {
+      "handle": "demo.b",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T18:49:00.000Z",
+      "submissionDate": "2017-02-05T13:11:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e07a"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T18:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e079"
+    },
+    {
+      "handle": "sscirg",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T19:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e078"
+    },
+    {
+      "handle": "SavinovAlex",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T19:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e077"
+    },
+    {
+      "handle": "asr1986",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T19:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e076"
+    },
+    {
+      "handle": "tbirdal",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T20:20:00.000Z",
+      "submissionDate": "2017-02-05T13:53:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e075"
+    },
+    {
+      "handle": "steven.huet",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T20:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e074"
+    },
+    {
+      "handle": "ksanju",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T20:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e073"
+    },
+    {
+      "handle": "kaushal91",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T21:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e072"
+    },
+    {
+      "handle": "sachith500",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T21:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e071"
+    },
+    {
+      "handle": "franc",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-27T22:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e070"
+    },
+    {
+      "handle": "NikhilKalige",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T00:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e06f"
+    },
+    {
+      "handle": "DineshDina",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T00:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e06e"
+    },
+    {
+      "handle": "Megal",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T01:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e06d"
+    },
+    {
+      "handle": "mans8081",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T01:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e06c"
+    },
+    {
+      "handle": "artcorpse",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T01:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e06b"
+    },
+    {
+      "handle": "smatsumoto",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T01:51:00.000Z",
+      "submissionDate": "2017-02-05T12:17:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e06a"
+    },
+    {
+      "handle": "akr.coder",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T02:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e069"
+    },
+    {
+      "handle": "Erona",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T02:41:00.000Z",
+      "submissionDate": "2017-02-05T13:56:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e068"
+    },
+    {
+      "handle": "snowkid",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T02:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e067"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T02:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e066"
+    },
+    {
+      "handle": "gsk967",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T05:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e065"
+    },
+    {
+      "handle": "hawkeye20101",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T05:28:00.000Z",
+      "submissionDate": "2017-02-04T13:37:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e064"
+    },
+    {
+      "handle": "anishine",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T05:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e063"
+    },
+    {
+      "handle": "talesforce",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T06:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e062"
+    },
+    {
+      "handle": "ankurv857",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T07:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e061"
+    },
+    {
+      "handle": "voalge",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T08:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e060"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T11:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e05f"
+    },
+    {
+      "handle": "samlighty",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T12:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e05e"
+    },
+    {
+      "handle": "nisha18",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T13:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e05d"
+    },
+    {
+      "handle": "Sharathkumar92",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T13:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e05c"
+    },
+    {
+      "handle": "faisalbasha1982",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T14:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e05b"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T14:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e05a"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T14:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e059"
+    },
+    {
+      "handle": "JaydevMehta",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T14:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e058"
+    },
+    {
+      "handle": "K0stIa",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T16:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e057"
+    },
+    {
+      "handle": "rserranop",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T17:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e056"
+    },
+    {
+      "handle": "elffikk",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-28T19:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e055"
+    },
+    {
+      "handle": "smudge",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-29T00:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee65d036c0bbd53e054"
+    },
+    {
+      "handle": "ybkr007",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-29T05:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e053"
+    },
+    {
+      "handle": "Vivek.Kumar.P",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-29T11:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e052"
+    },
+    {
+      "handle": "morozil_nik",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-29T11:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e051"
+    },
+    {
+      "handle": "deidia",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-29T12:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e050"
+    },
+    {
+      "handle": "praveenv98",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-29T13:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e04f"
+    },
+    {
+      "handle": "Vinayaka.Raj",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-29T15:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e04e"
+    },
+    {
+      "handle": "kruntuid",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-29T16:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e04d"
+    },
+    {
+      "handle": "intelpen",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-29T17:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e04c"
+    },
+    {
+      "handle": "motata",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-29T20:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e04b"
+    },
+    {
+      "handle": "daft300punk",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-29T22:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e04a"
+    },
+    {
+      "handle": "ombocorp",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-30T00:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e049"
+    },
+    {
+      "handle": "vasanthkalingeri",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-30T02:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e048"
+    },
+    {
+      "handle": "moshu",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-30T06:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e047"
+    },
+    {
+      "handle": "helium_2",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-30T09:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e046"
+    },
+    {
+      "handle": "Jonrobin",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-30T15:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e045"
+    },
+    {
+      "handle": "FatKidsWinAtCSa",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-30T20:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e044"
+    },
+    {
+      "handle": "sanjeev-mk",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-30T20:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e043"
+    },
+    {
+      "handle": "shangjingbo",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-30T22:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e042"
+    },
+    {
+      "handle": "nehagv2325",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-31T05:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e041"
+    },
+    {
+      "handle": "harimp",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-31T06:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e040"
+    },
+    {
+      "handle": "PhiCode",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-31T09:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e03f"
+    },
+    {
+      "handle": "republic82",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-31T16:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e03e"
+    },
+    {
+      "handle": "chok68",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-31T17:17:00.000Z",
+      "submissionDate": "2017-02-05T11:38:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e03d"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-31T19:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e03c"
+    },
+    {
+      "handle": "henriqdp",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-31T21:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e03b"
+    },
+    {
+      "handle": "lupoplon",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-31T22:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e03a"
+    },
+    {
+      "handle": "HaralEcl",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-31T22:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e039"
+    },
+    {
+      "handle": "amoxibos",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-01T09:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e038"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-01T13:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e037"
+    },
+    {
+      "handle": "cemgoktug",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-01T14:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e036"
+    },
+    {
+      "handle": "Arindam_Dutta",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-01T15:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e035"
+    },
+    {
+      "handle": "stevelvovo",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-01T19:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e034"
+    },
+    {
+      "handle": "thelinuxmaniac",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-01T20:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e033"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-01T23:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e032"
+    },
+    {
+      "handle": "afrhu",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-02T04:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e031"
+    },
+    {
+      "handle": "deas",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-02T09:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e030"
+    },
+    {
+      "handle": "madbn",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-02T13:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e02f"
+    },
+    {
+      "handle": "ketzjs09",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-02T17:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e02e"
+    },
+    {
+      "handle": "YDD9",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-03T02:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e02d"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-03T06:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e02c"
+    },
+    {
+      "handle": "johngroves",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-03T20:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e02b"
+    },
+    {
+      "handle": "matspi",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-03T22:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e02a"
+    },
+    {
+      "handle": "samnolen",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-04T07:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e029"
+    },
+    {
+      "handle": "Xmastah",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-04T12:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e028"
+    },
+    {
+      "handle": "parametric",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-04T19:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e027"
+    },
+    {
+      "handle": "Garrett.Griffin",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-05T08:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a18ee55d036c0bbd53e026"
+    }
+  ],
+  "registrationEndDate": "2017-02-05T13:59:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2017-02-05T14:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "smatsumoto",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2017-02-05T12:17:00.000Z",
+      "_id": "58a18ee65d036c0bbd53e0a4"
+    },
+    {
+      "handle": "chok68",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 97.5,
+      "finalScore": 97.5,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2017-02-05T11:38:00.000Z",
+      "_id": "58a18ee65d036c0bbd53e0a3"
+    },
+    {
+      "handle": "hawkeye20101",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 95,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2017-02-04T13:37:00.000Z",
+      "_id": "58a18ee65d036c0bbd53e0a2"
+    },
+    {
+      "handle": "wwxyxgy",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 95,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2017-02-05T08:04:00.000Z",
+      "_id": "58a18ee65d036c0bbd53e0a1"
+    },
+    {
+      "handle": "demo.b",
+      "placement": 5,
+      "screeningScore": null,
+      "initialScore": 95,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2017-02-05T13:11:00.000Z",
+      "_id": "58a18ee65d036c0bbd53e0a0"
+    },
+    {
+      "handle": "tbirdal",
+      "placement": 6,
+      "screeningScore": null,
+      "initialScore": 95,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2017-02-05T13:53:00.000Z",
+      "_id": "58a18ee65d036c0bbd53e09f"
+    },
+    {
+      "handle": "Erona",
+      "placement": 7,
+      "screeningScore": null,
+      "initialScore": 95,
+      "finalScore": 95,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2017-02-05T13:56:00.000Z",
+      "_id": "58a18ee65d036c0bbd53e09e"
+    }
+  ],
+  "technology": [
+    "C++",
+    "Data Science",
+    "Java",
+    "JavaScript",
+    "Python"
+  ],
+  "event": {
+    "id": 3447,
+    "description": "2017 TopCoder(R) Open",
+    "shortDescription": "tco17"
+  }
+}

@@ -1,0 +1,394 @@
+{
+  "_id": 30042228,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-11-30T08:35:43.945Z",
+  "appealsEndDate": "2014-05-15T18:32:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Module Assembly - LATAM Data Loader",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p>&nbsp;</p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></h2>\n\n<p><span style=\"font-size:12px\">This project should load Latam data from excel files to SQL Server 2008.</span></p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Competition Task Overview</span></h2>\n\n<p>This challenge should develop a Java data loader tool to load latam excel data file into SQL Server 2008 Databases.</p>\n\n<p>It should use POI to read excel files and use MS SQL Server JDBC Driver to insert the data into SQL Server 2008.</p>\n\n<p><strong><span style=\"color:#FF0000\">Target DB Tables:</span></strong></p>\n\n<p>All tables should have an auto generated column &quot;ID&quot; and all below columns are varchar.</p>\n\n<ul>\n\t<li>CHeader\n\t<ul>\n\t\t<li>CHeaderID</li>\n\t\t<li>FilePath</li>\n\t\t<li>COMBINED_ID</li>\n\t\t<li>DDESCRIPTION</li>\n\t\t<li>NO_TRIAL</li>\n\t\t<li>DESIGN</li>\n\t\t<li>DATE_RUN</li>\n\t</ul>\n\t</li>\n\t<li>Unit\n\t<ul>\n\t\t<li>CHeaderID</li>\n\t\t<li>THeaderID</li>\n\t\t<li>Column</li>\n\t\t<li>Unit</li>\n\t</ul>\n\t</li>\n\t<li>CData\n\t<ul>\n\t\t<li>CDataID</li>\n\t\t<li>CHeaderID</li>\n\t\t<li>ENTRY</li>\n\t\t<li>CK</li>\n\t\t<li>MATCH_VALUE</li>\n\t\t<li>MATERIAL_ID</li>\n\t\t<li>ABBR_CODE</li>\n\t\t<li>HIGHNAME</li>\n\t\t<li>TRIAL_ID</li>\n\t\t<li>YGSMN</li>\n\t\t<li>... (any other related columns in excel file should have the mapping column in Database)</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>Edit tab: ignore first 2 columns, column LINE1, LINE2, LINE3, LINE4, M<br />\nuLoc tab: ignore first 2 columns, column YGSMN (or other trait names), column RANK</p>\n\n<ul>\n\t<li>THeader\n\t<ul>\n\t\t<li>THeaderID</li>\n\t\t<li>FilePath</li>\n\t\t<li>TRIAL_ID</li>\n\t\t<li>DESCRIPTION</li>\n\t\t<li>LOCATION</li>\n\t\t<li>PLANTED</li>\n\t\t<li>HARVESTED</li>\n\t\t<li>LAST_RUN</li>\n\t\t<li>NO_REP</li>\n\t\t<li>DESIGN</li>\n\t</ul>\n\t</li>\n\t<li>TData\n\t<ul>\n\t\t<li>TDataID</li>\n\t\t<li>THeaderID</li>\n\t\t<li>ENT</li>\n\t\t<li>CK</li>\n\t\t<li>MAT_ID</li>\n\t\t<li>ENT_DESC</li>\n\t\t<li>ABBREVIATED_CODE</li>\n\t\t<li>HIGHNAME</li>\n\t\t<li>PLOT_ID</li>\n\t\t<li>YGSMN</li>\n\t\t<li>...&nbsp;(any other related columns in excel file should have the mapping column in Database)</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>Edit tab: ignore first 2 columns, column ID1, ID2, ID3, ID4, MAT LOT, M</p>\n\n<p><span style=\"color:#FF0000\">Process</span></p>\n\n<p>The loader will look at each file under CL FORMAT and TL FORMAT&#39;s subfolders and load each one into the data schema. &nbsp;If successful, print out path/filename + # of records loaded, otherwise print out path/filename and message. &nbsp;Print exactly one line for each file.</p>\n\n<p>For CL formats, look for an Edit tab to load, otherwise look for a uLoc tab to load. &nbsp;When none exists, just print out a message. &nbsp;For TL formats, look for an Edit tab to load, otherwise print out a message.</p>\n\n<p>Edit tabs are similar except that CL and TL have different headers. &nbsp;To extract header take the text between the header name/colon and the next header name and trim that. &nbsp;Then look for each column name and match that with the ones from the CData/TData table. &nbsp;If there is a column that does not exist (and not on the ignore list), print that out so that it can be investigated and added to the schema and we will rerun the loader to capture those. &nbsp;The line under the column headers are usually the units (if the ENTRY/ENT column is empty) then load that into the Unit table. &nbsp;Then load each line into CData and TData until the last ENTRY/ENT record. &nbsp;Ignore lines with TRIAL_ID = MEAN for CL FORMAT and PLOT_ID = Mean for TL FORMAT.</p>\n\n<p>uLoc tabs are a little different to load. &nbsp;Process it until the YGSMN (or other trait names) column, if there is a unit load it but don&#39;t load data in that column as it&#39;s mean value. &nbsp;For the next couple of columns the column name is the TRIAL_ID so we need to load one record for each different TRIAL_ID with the value as YGSMN. &nbsp;If there are multiple data sheets in the uLoc tab they are for different traits, then we need to combine the same variety/TRIAL_ID into the same record. &nbsp;There is no need to load additional headers as they will be the same as the first one.</p>\n\n<p>There are sometimes more lines after the last ENTRY/ENT, just ignore. &nbsp;For TL FORMAT there may be multiple data sheets in the Edit tab (not sure if that exists for CL but might just handle the same). &nbsp;In that case we need to load each sheet under a new header record. &nbsp;This can be noticed in column B where the ID changes.</p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"color:rgb(255, 0, 0)\">Testing</span></p>\n\n<p>The data loader output for all files must be provided. The submission without this will fail in screening.</p>\n\n<h2><span style=\"color:rgb(255, 0, 0); font-size:13px\">Documentation Provided</span></h2>\n\n<p>All excel data files will be provided.</p>\n",
+  "digitalRunPoints": 540,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30042228",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2014-05-16T15:51:00.000Z",
+  "finalSubmissionGuidelines": "<ul>\n\t<li>Source File</li>\n\t<li>Configuration File</li>\n\t<li>Deployment Guide</li>\n\t<li>Import Log</li>\n</ul>\n",
+  "forumId": 22611,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=22611",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 23,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-07T09:16:00.000Z",
+      "actualStartTime": "2014-05-07T09:16:00.000Z",
+      "scheduledEndTime": "2014-05-07T09:16:00.000Z",
+      "actualendTime": "2014-05-07T09:16:00.000Z",
+      "_id": "583e8f5f10a1db09a46c3364"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-07T09:16:00.000Z",
+      "actualStartTime": "2014-05-07T09:16:00.000Z",
+      "scheduledEndTime": "2014-05-07T12:54:00.000Z",
+      "actualendTime": "2014-05-07T12:54:00.000Z",
+      "_id": "583e8f5f10a1db09a46c3363"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-07T12:54:00.000Z",
+      "actualStartTime": "2014-05-07T12:54:00.000Z",
+      "scheduledEndTime": "2014-05-09T12:54:00.000Z",
+      "actualendTime": "2014-05-09T12:54:00.000Z",
+      "_id": "583e8f5f10a1db09a46c3362"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-07T12:59:00.000Z",
+      "actualStartTime": "2014-05-07T12:59:00.000Z",
+      "scheduledEndTime": "2014-05-12T12:54:00.000Z",
+      "actualendTime": "2014-05-12T12:54:00.000Z",
+      "_id": "583e8f5f10a1db09a46c3361"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-12T12:54:00.000Z",
+      "actualStartTime": "2014-05-12T12:54:00.000Z",
+      "scheduledEndTime": "2014-05-12T17:43:00.000Z",
+      "actualendTime": "2014-05-12T17:43:00.000Z",
+      "_id": "583e8f5f10a1db09a46c3360"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-12T17:43:00.000Z",
+      "actualStartTime": "2014-05-12T17:43:00.000Z",
+      "scheduledEndTime": "2014-05-14T18:32:00.000Z",
+      "actualendTime": "2014-05-14T18:32:00.000Z",
+      "_id": "583e8f5f10a1db09a46c335f"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-14T18:32:00.000Z",
+      "actualStartTime": "2014-05-14T18:32:00.000Z",
+      "scheduledEndTime": "2014-05-15T18:32:00.000Z",
+      "actualendTime": "2014-05-15T18:32:00.000Z",
+      "_id": "583e8f5f10a1db09a46c335e"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-15T18:32:00.000Z",
+      "actualStartTime": "2014-05-15T18:32:00.000Z",
+      "scheduledEndTime": "2014-05-15T18:32:00.000Z",
+      "actualendTime": "2014-05-15T18:32:00.000Z",
+      "_id": "583e8f5f10a1db09a46c335d"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-15T18:32:00.000Z",
+      "actualStartTime": "2014-05-15T18:32:00.000Z",
+      "scheduledEndTime": "2014-05-16T03:26:00.000Z",
+      "actualendTime": "2014-05-16T03:26:00.000Z",
+      "_id": "583e8f5f10a1db09a46c335c"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-16T03:27:00.000Z",
+      "actualStartTime": "2014-05-16T03:27:00.000Z",
+      "scheduledEndTime": "2014-05-16T15:51:00.000Z",
+      "actualendTime": "2014-05-16T15:51:00.000Z",
+      "_id": "583e8f5f10a1db09a46c335b"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-16T15:51:00.000Z",
+      "actualStartTime": "2014-05-16T15:51:00.000Z",
+      "scheduledEndTime": "2014-05-16T17:14:00.000Z",
+      "actualendTime": "2014-05-16T17:14:00.000Z",
+      "_id": "583e8f5f10a1db09a46c335a"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-05-16T17:14:00.000Z",
+      "actualStartTime": "2014-05-16T17:14:00.000Z",
+      "scheduledEndTime": "2014-05-21T17:14:00.000Z",
+      "actualendTime": "2014-05-21T17:14:00.000Z",
+      "_id": "583e8f5f10a1db09a46c3359"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2014-05-07T12:54:00.000Z",
+  "prize": [
+    1200,
+    600
+  ],
+  "projectId": 7589,
+  "registrants": [
+    {
+      "handle": "wsobolewski",
+      "reliability": "0%",
+      "registrationDate": "2014-05-08T03:04:00.000Z",
+      "submissionDate": null,
+      "rating": "975",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f5f10a1db09a46c3358"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "0%",
+      "registrationDate": "2014-05-07T12:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5f10a1db09a46c3357"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-05-07T13:05:00.000Z",
+      "submissionDate": null,
+      "rating": "810",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f5f10a1db09a46c3356"
+    },
+    {
+      "handle": "OlinaRuan",
+      "reliability": "0%",
+      "registrationDate": "2014-05-07T13:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5f10a1db09a46c3355"
+    },
+    {
+      "handle": "suno1234",
+      "reliability": "46%",
+      "registrationDate": "2014-05-07T13:08:00.000Z",
+      "submissionDate": null,
+      "rating": "869",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f5f10a1db09a46c3354"
+    },
+    {
+      "handle": "LazyChild",
+      "reliability": "100%",
+      "registrationDate": "2014-05-07T13:33:00.000Z",
+      "submissionDate": "2014-05-12T09:09:00.000Z",
+      "rating": "1364",
+      "colorStyle": "color: #6666FF",
+      "_id": "583e8f5f10a1db09a46c3353"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2014-05-07T16:20:00.000Z",
+      "submissionDate": null,
+      "rating": "1373",
+      "colorStyle": "color: #6666FF",
+      "_id": "583e8f5f10a1db09a46c3352"
+    },
+    {
+      "handle": "dezl",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-07T16:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5f10a1db09a46c3351"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-07T17:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5f10a1db09a46c3350"
+    },
+    {
+      "handle": "Dagnu",
+      "reliability": "0%",
+      "registrationDate": "2014-05-07T18:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5f10a1db09a46c334f"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-07T19:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5f10a1db09a46c334e"
+    },
+    {
+      "handle": "forest84",
+      "reliability": "14%",
+      "registrationDate": "2014-05-08T00:46:00.000Z",
+      "submissionDate": null,
+      "rating": "876",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f5f10a1db09a46c334d"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "0%",
+      "registrationDate": "2014-05-08T00:45:00.000Z",
+      "submissionDate": null,
+      "rating": "490",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f5f10a1db09a46c334c"
+    },
+    {
+      "handle": "arthurjlp",
+      "reliability": "0%",
+      "registrationDate": "2014-05-08T02:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5f10a1db09a46c334b"
+    },
+    {
+      "handle": "jol",
+      "reliability": "0%",
+      "registrationDate": "2014-05-08T02:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5f10a1db09a46c334a"
+    },
+    {
+      "handle": "padegal12",
+      "reliability": "0%",
+      "registrationDate": "2014-05-08T02:24:00.000Z",
+      "submissionDate": null,
+      "rating": "693",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f5f10a1db09a46c3349"
+    },
+    {
+      "handle": "sri02",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-08T05:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5f10a1db09a46c3348"
+    },
+    {
+      "handle": "mrhck",
+      "reliability": "0%",
+      "registrationDate": "2014-05-08T09:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5f10a1db09a46c3347"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-08T14:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5f10a1db09a46c3346"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "13%",
+      "registrationDate": "2014-05-08T17:12:00.000Z",
+      "submissionDate": "2014-05-12T12:51:00.000Z",
+      "rating": "1050",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f5f10a1db09a46c3345"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-05-09T00:31:00.000Z",
+      "submissionDate": null,
+      "rating": "1135",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f5f10a1db09a46c3344"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-09T08:17:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f5f10a1db09a46c3343"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2014-05-09T10:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5f10a1db09a46c3342"
+    }
+  ],
+  "registrationEndDate": "2014-05-09T12:54:00.000Z",
+  "reliabilityBonus": 240,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-05-12T12:54:00.000Z",
+  "submissions": [
+    {
+      "handle": "LazyChild",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 88.67,
+      "finalScore": 88.67,
+      "points": 540,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-05-12T09:09:00.000Z",
+      "_id": "583e8f5f10a1db09a46c3366"
+    },
+    {
+      "handle": "yedtoss",
+      "placement": null,
+      "screeningScore": 0,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Failed Screening",
+      "submissionDate": "2014-05-12T12:51:00.000Z",
+      "_id": "583e8f5f10a1db09a46c3365"
+    }
+  ],
+  "technology": [
+    "JDBC",
+    "Java",
+    "SQL Server"
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "_id": 30056555,
+  "_isComplete": true,
+  "__v": 33,
+  "_lastUpdate": "2017-02-17T08:02:52.190Z",
+  "appealsEndDate": "2017-02-25T16:25:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Hercules Fog Recorder - MPEG Dash recording (old codebase)",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2017-02-22T04:25:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": 419074,
+  "currentStatus": "Active",
+  "detailedRequirements": "<div>\n<p>The Hercules Player is an application that allows customers to download videos to their computer or device for offline playback, along with streaming playback of videos for online playback.</p>\n\n<p>The Hercules Fog project has stripped out some key portions of the Hercules Player application into a new test application for downloading videos from a server, modifying the manifest, and then playing back on various mobile and TV devices.</p>\n\n<p>The current implementation is C++ and will run on:</p>\n\n<ul>\n\t<li>Windows<br />\n\tLinux<br />\n\tMac</li>\n</ul>\n\n<p>Currently, the codebase works only with HLS / M3U8 streams.&nbsp; This challenge will add support for MPEG Dash / MPD streams.</p>\n\n<div>This work has already been done in a branch (new_build), but this challenge will focus on the original codebase.<br />\n<br />\nNote that we won&#39;t add any new dependencies to the original codebase, so we won&#39;t be using anything done in new_build, like libboost or any of those libraries. &nbsp;The Windows build can be difficult to get working, so please post in the forum if you have issues. &nbsp;Linux and Mac are easier to build, just follow the README in Git.<br />\n<br />\n<strong>Requirements</strong><br />\n<br />\nThe main goal of this challenge is to support the existing REST API for *only* live TV recordings. This will only be for configured bitrates. Bitrate switching will come later, along with all the other smaller pieces of functionality, like the &ldquo;tsb&rdquo; endpoint, and culling. For this challenge, the scope is as follows:<br />\n&bull; Start an MPD recording through /tsb<br />\n&bull; Playback a recording<br />\n&bull; Delete a recording<br />\n<br />\nNormal recording (/recording endpoint), VOD recording, culling, and logging associated with MPD are not in scope. Adaptive bitrate downloading for MPD is not in scope.\n<div>\n<p><strong>MPEG Dash format</strong>&nbsp;<br />\n<br />\nA sample manifest from a client system will be available in the forum. You won&rsquo;t be able to download it directly because the URL isn&rsquo;t public, but it will show an example of what we will eventually be supporting.<br />\n<br />\nYou can find details on the format here:<br />\n<br />\n&bull; http://www.encoding.com/mpeg-dash/<br />\n&bull; https://en.wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP<br />\n&bull; https://www.brendanlong.com/the-structure-of-an-mpeg-dash-mpd.html<br />\n&bull; http://standards.iso.org/ittf/PubliclyAvailableStandards/c065274_ISO_IEC_23009-1_2014.zip<br />\n<br />\n<strong>Sample player</strong><br />\n<br />\nThis site is what will be used by reviewers to test playback:<br />\n<br />\n<a href=\"http://mediapm.edgesuite.net/dash/public/support-player/current/index.html\">http://mediapm.edgesuite.net/dash/public/support-player/current/index.html</a><br />\n<br />\nIt is expected that reviewers will need to run Google Chrome with web security disabled to get around XSS / CORS issues when playing back from a Fog recorded URL. Feel free to use any of the live test streams there for testing, but please use at least one with video so we can ensure video *and* audio are working properly.<br />\n<br />\n<strong>Manifest rewrite</strong><br />\n<br />\nFor a live recording, the Fog application will load the remote URL manifest on a regular basis and will look for new fragments to add to the queue for downloading. The new MPD implementation should do the same, ensuring that it keeps up with the live recording, and ensuring that the manifest published by the recorder for playing back the recording contains all downloaded fragments for playback. The folder structure of the downloaded segments should roughly match what we do with the current HLS implementation, where we have the main manifest and then multiple &ldquo;subManifest*&rdquo; folders with the individual fragments.<br />\n<br />\n<strong>Bitrates</strong>&nbsp;<br />\n<br />\nThe current HLS implementation can be configured for a single bitrate or multiple bitrates. The MPEG Dash implementation should be the same, where the recorder can download one or more bitrate streams simultaneously. Implementation You will want to implement the following additions to the codebase:<br />\n<br />\n&bull; Extend BaseDownloader for a &ldquo;DashDownload&rdquo; class, similar to what is done for HLSDownload<br />\n&bull; Make MediaPlaylistDownload a generic class &bull; Extend MediaPlaylistDownload for two implementations:<br />\n&bull; HLSPlaylistDownload<br />\n&bull; DashPlaylistDownload<br />\n&bull; Add code in the RecordingManager to detect the type of the URL - either by extension (.mpd vs. .m3u8) or by the MIME type of the manifest file. Dash MIME type is application/dash+xml<br />\n&bull; Update FogRecording to work with both HLSDownload and DashDownload Right now MediaPlaylistDownload is targeted at just HLS, but we need to make it generic for any manifest type and then add concrete implementations for both HLS and Dash.<br />\n<br />\n<strong>How to test</strong><br />\n<br />\nTesting for HLS will be documented in the forum. Testing for MPD will be similar, but we will use the player documented above instead of the viper player for HLS.<br />\n<br />\nSteps include:<br />\n<br />\n1. Start an MPD recording<br />\n2. Get the playback URL from the &ldquo;/recordings&rdquo; endpoint<br />\n3. Put the playback URL into the test player<br />\n4. Start playback For validation, we want to make sure that playback is smooth and that the MPD segments are served properly to the player.<br />\n<br />\n<strong>HLS</strong><br />\n<br />\nAfter the changes, the HLS implementation should still work as normal, including the things not in scope for Dash, like logging, &ldquo;recording&rdquo; endpoint, adaptive bitrate, culling, etc&hellip;<br />\n<br />\n<span style=\"background-color:rgb(252, 252, 252); color:rgb(14, 34, 51); font-family:source sans pro,arial,helvetica,sans-serif; font-size:14px\">Your code must be submitted as a Git patch file:</span><br />\n<br />\n<a href=\"https://ariejan.net/2009/10/26/how-to-create-and-apply-a-patch-with-git/\" style=\"padding: 0px; margin: 0px; color: rgb(255, 138, 0); background-color: rgb(252, 252, 252); text-decoration: none; outline: none; font-family: &quot;Source Sans Pro&quot;, Arial, Helvetica, sans-serif; font-size: 14px;\" target=\"_blank\">https://ariejan.net/2009/10/26/how-to-create-and-apply-a-patch-with-git/</a><br />\n<br />\n<span style=\"background-color:rgb(252, 252, 252); color:rgb(14, 34, 51); font-family:source sans pro,arial,helvetica,sans-serif; font-size:14px\">Base your patch file against commit hash&nbsp;</span>9cdcac21e04f98f00ffdd92ce40d1e8a507592a4<span style=\"background-color:rgb(252, 252, 252); color:rgb(14, 34, 51); font-family:source sans pro,arial,helvetica,sans-serif; font-size:14px\">.</span><br />\n<br />\n<span style=\"background-color:rgb(252, 252, 252); color:rgb(14, 34, 51); font-family:source sans pro,arial,helvetica,sans-serif; font-size:14px\">Please make sure to test your patch before submission!</span></p>\n\n<div>&nbsp;</div>\n</div>\n\n<p>&nbsp;</p>\n</div>\n</div>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30056555",
+  "finalSubmissionGuidelines": "Please see above",
+  "forumId": 35265,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=35265",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 6,
+  "numberOfSubmissions": 0,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2017-02-17T04:25:00.000Z",
+      "actualStartTime": "2017-02-17T04:25:00.000Z",
+      "scheduledEndTime": "2017-02-22T04:25:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae2c5d036c0bbdd5cc28"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2017-02-17T04:30:00.000Z",
+      "actualStartTime": "2017-02-17T04:30:00.000Z",
+      "scheduledEndTime": "2017-02-22T04:25:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae2c5d036c0bbdd5cc27"
+    },
+    {
+      "type": "Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2017-02-22T04:25:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2017-02-24T04:25:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae2c5d036c0bbdd5cc26"
+    },
+    {
+      "type": "Appeals",
+      "status": "Scheduled",
+      "scheduledStartTime": "2017-02-24T04:25:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2017-02-25T04:25:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae2c5d036c0bbdd5cc25"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2017-02-25T04:25:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2017-02-25T16:25:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae2c5d036c0bbdd5cc24"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2017-02-17T04:25:00.000Z",
+  "prize": [
+    1500,
+    750
+  ],
+  "projectId": 11869,
+  "registrants": [
+    {
+      "handle": "nghi85",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-17T05:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae2c5d036c0bbdd5cc23"
+    },
+    {
+      "handle": "billsedison",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-17T05:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae2c5d036c0bbdd5cc22"
+    },
+    {
+      "handle": "spa46",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-17T05:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae2c5d036c0bbdd5cc21"
+    },
+    {
+      "handle": "jiangliwu",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-17T05:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae2c5d036c0bbdd5cc20"
+    },
+    {
+      "handle": "NikhilKalige",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-17T06:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae2c5d036c0bbdd5cc1f"
+    },
+    {
+      "handle": "freegod",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-17T07:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae2c5d036c0bbdd5cc1e"
+    }
+  ],
+  "registrationEndDate": "2017-02-22T04:25:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2017-02-22T04:25:00.000Z",
+  "submissions": [],
+  "technology": [
+    "C++"
+  ]
+}

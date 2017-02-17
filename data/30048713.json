@@ -1,8 +1,8 @@
 {
   "_id": 30048713,
   "_isComplete": true,
-  "__v": 2419,
-  "_lastUpdate": "2016-11-05T11:04:53.891Z",
+  "__v": 24697,
+  "_lastUpdate": "2017-02-17T08:06:49.551Z",
   "appealsEndDate": "2015-03-13T06:56:00.000Z",
   "challengeCommunity": "develop",
   "challengeName": "SunShot - Clearly Energy - Ruby Data Model and Application",
@@ -10,7 +10,7 @@
   "checkpointSubmissionEndDate": null,
   "currentPhaseEndDate": "2015-03-10T06:58:00.000Z",
   "currentPhaseName": "Post-Mortem",
-  "currentPhaseRemainingTime": -52373130,
+  "currentPhaseRemainingTime": -61344383,
   "currentStatus": "Cancelled - Zero Submissions",
   "detailedRequirements": "<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:21px\">Challenge Overview</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The goal of the challenge is to aggregate consumption data with heterogeneous granularity across time into systematic intervals. These intervals are then either multiplied with a relevant tariff value then summed into daily totals, or directly summed into daily totals. The simplest example would be to sum hourly data into daily totals, subject to data completeness checks and multiply them with a single tariff number.</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:21px\">Challenge Requirements</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">You are developing a Ruby based gem in this challenge that uses timeseries data (electricity and natural gas) already retrieved via GreenButty Ruby Gem Library that consumes GreenButton REST API. The data is stored in the GreenButton wrapper class (the gem library developed in previous challenge and provided in challenge forums). The information about how to aggregate the data will be provided as a JSON object described below.</span></p>\n\n<p dir=\"ltr\"><u>General Notes</u></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">All input and output dates are in local time.</span></p>\n\t</li>\n</ul>\n\n<h4 dir=\"ltr\"><span><u>OAuth 2.0 and GreenButton API Endpoints</u></span></h4>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">You need to pass OAuth 2.0 access token when communicating with the GreenButton Ruby Gem. This gem accepts an access token be passed as input to the download data function, this access token is used by GreenButton Ruby Gem to interact with <a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/\">GreenButton REST API</a>.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Sandbox has OAuth server turned-off so you will be using a predefined-tokens listed in </span><a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/\" style=\"text-decoration:none;\"><u>this page</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> for testing purpose.</span></span></p>\n\n<p dir=\"ltr\"><u>Expected SDK Usage</u></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Sample usage would look like this:</span></p>\n\n<p dir=\"ltr\"><em>require &lsquo;bucketize&rsquo;</em></p>\n\n<p dir=\"ltr\"><em>bkt = gb.consumption_by_date(&rsquo;20-Feb-2015&rsquo;, tariff)</em></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">where tariff is a JSON formatted object</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The returned bkt is a collection of [gb_data_description_id, ruby date, value] items</span></p>\n\n<p dir=\"ltr\"><strong>Example 1</strong><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">: given the following tariff structure:</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">tariff = {</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">{utility_id:1, rate_class:R, start_date:nil, end_date:nil, time_start:1, time_end: 24, day_of_week:[1,2,3,4,5,6,7], kwh_low:0, kwh_high:1000,tariff:10},</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">{utility_id:1, rate_class:R, start_date:nil, end_date:nil, time_start:1, time_end: 24, day_of_week:[1,2,3,4,5,6,7], kwh_low:1000, kwh_high: nil ,tariff:20 }</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">}</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">bkt = gb.cost_from_month_start(&lsquo;February&rsquo;, tariff)</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The consumption intervals should be summed by day and multiplied with the appropriate tariff </span><em>but</em><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> as long as the consumption for the month is less than or equal to 1000kwh, the appropriate tariff is 10, beyond 1000kwh in a month, the tariff jumps to 20.</span></p>\n\n<p dir=\"ltr\"><strong>Example 2: </strong><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">given the following tariff structure</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">tariff = {</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">{utility_id:1, rate_class:R, start_date:nil, end_date:nil, time_start:1, time_end:12, day_of_week:[1,2,3,4], kwh_low:nil, kwh_high:nil, tariff:5},</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">{utility_id:1, rate_class:R, start_date:nil, end_date:nil,time_start:1, time_end:12, day_of_week:[5,6,7], kwh_low:nil, kwh_high:nil, tariff:7},</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">{utility_id:1, rate_class:R, start_date:nil, end_date:nil,time_start:13, time_end:24, day_of_week:[1,2,3,4], kwh_low:nil, kwh_high:nil, tariff:10},</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">{utility_id:1, rate_class:R, start_date:nil, end_date:nil,time_start:13, time_end:24, day_of_week:[5,6,7], kwh_low:nil, kwh_high:nil,tariff:12}</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">}</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">bkt = gb.cost_date_range(&rsquo;05-February-2015&rsquo;,&rsquo;15-February-2015&rsquo;, tariff)</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">daily costs should be calculated by summing the underlying consumption data into totals for the hour groups, and using the appropriate tariff based off of the day of the week.</span></p>\n\n<h4 dir=\"ltr\"><u>Bucketize Module specification</u></h4>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The gem should have a single module </span><strong>Bucketize</strong><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> with the following methods:</span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">consumption_from_month_start(month, tariff)</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">input parameters : </span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">month - required</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">tariff - the following are required fields : </span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">utility_id</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">rate_class</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">time_start</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">time_end</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">day_of_week &ndash; array, Monday is 1, Sunday is 7</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">kwh_low</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">kwh_high</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">tariff</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">sample input :</span><br />\n\t\t\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">tariff = {</span><br />\n\t\t\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">{utility_id:1, rate_class: &lsquo;R&rsquo;, start_date:nil, end_date:nil, time_start:1, time_end: 24, day_of_week:[1,2,3,4,5,6,7], kwh_low:0, kwh_high:1000,tariff:10},</span><br />\n\t\t\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">{utility_id:1, rate_class: &lsquo;R&rsquo;, start_date:nil, end_date:nil, time_start:1, time_end: 24, day_of_week:[1,2,3,4,5,6,7], kwh_low:1000, kwh_high: nil ,tariff:20 }}</span></p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">access token - this is needed to be passed to the ruby greenbutton gem</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">subscriptionURI - this is needed to be passed to the ruby geenbutton gem</span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">logic :</span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The consumption intervals should be summed by the hours of the day relevant to the tariff, here all hours, and summed to daily values.</span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">returns &nbsp;a collection of [gb_data_description_id, ruby date, value] items.</span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">consumption_by_date(date, tariff)</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">input parameters : </span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">date - required</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">tariff - the following are required fields : </span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">utility_id</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">rate_class</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">time_start</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">time_end</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">tariff</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">sample input : </span><br />\n\t\t\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">tariff = {</span><br />\n\t\t\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">{utility_id:1, rate_class: &lsquo;R&rsquo;, start_date:nil, end_date:nil, time_start:1, time_end: 3, day_of_week:nil, kwh_low:nil, kwh_high:nil,tariff:10}, </span><br />\n\t\t\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">{utility_id:1, rate_class: &lsquo;R&rsquo;, start_date:nil, end_date:nil, time_start:4, time_end: 24, day_of_week:nil, kwh_low:nil, kwh_high: nil ,tariff:20 }}</span></p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">access token - this is needed to be passed to the ruby greenbutton gem</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">subscriptionURI - this is needed to be passed to the ruby greenbutton gem</span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">logic :</span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The consumption is calculated by summing the consumption data in totals of hours groups and summed to daily values.</span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">returns : </span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">a collection of [gb_data_description_id, ruby date, value] items</span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">consumption_date_range(date1, date2, tariff)</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">input parameters : </span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">date1 - required</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">date2 - required</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">tariff</span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">utility_id</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">rate_class</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">time_start</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">time_end</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">day_of_week</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">tariff</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">sample input :</span><br />\n\t\t\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">tariff = {{utility_id:1,rate_class: &lsquo;R&rsquo;,start_date:nil, end_date:nil, time_start:1, time_end:12, day_of_week:[1,2,3,4], kwh_low:nil, kwh_high:nil, tariff:5},</span><br />\n\t\t\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">{utility_id:1, rate_class: &lsquo;R&rsquo;,start_date:nil, end_date:nil,time_start:1, time_end:12, day_of_week:[5,6,7], kwh_low:nil, kwh_high:nil, tariff:7},</span><br />\n\t\t\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">{utility_id:1, rate_class: &lsquo;R&rsquo;,start_date:nil, end_date:nil,time_start:13, time_end:24, day_of_week:[1,2,3,4], kwh_low:nil, kwh_high:nil, tariff:10},</span><br />\n\t\t\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">{utility_id:1, rate_class: &lsquo;R&rsquo;,start_date:nil, end_date:nil,time_start:13, time_end:24, day_of_week:[5,6,7], kwh_low:nil, kwh_high:nil,tariff:12}}</span></p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">access token - this is needed to be passed to the ruby greenbutton gem</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">subscriptionURI - this is needed to be passed to the ruby greenbutton gem</span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">logic :</span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">daily consumption should be calculated by summing the consumption data into totals for the hour groups. These hour groups are summed to daily values.</span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">returns a collection of [gb_data_description_id, ruby date, value] items</span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">cost_from_month_start(month, tariff)</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">input parameters : </span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">month - required</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">tariff - the following are required fields : </span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">utility_id</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">rate_class</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">time_start</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">time_end</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">day_of_week &ndash; array, Monday is 1, Sunday is 7</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">kwh_low</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">kwh_high</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">tariff</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">sample : </span><br />\n\t\t\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">tariff = {</span><br />\n\t\t\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">{utility_id:1, start_date:nil, end_date:nil, time_start:1, time_end: 24, day_of_week:[1,2,3,4,5,6,7], kwh_low:0, kwh_high:1000,tariff:10},</span><br />\n\t\t\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">{utility_id:1, start_date:nil, end_date:nil, time_start:1, time_end: 24, day_of_week:[1,2,3,4,5,6,7], kwh_low:1000, kwh_high: nil ,tariff:20 }}</span></p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">access token - this is needed to be passed to the ruby greenbutton gem</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">subscriptionURI - this is needed to be passed to the ruby greenbutton gem</span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">logic :</span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The consumption intervals should be summed by the hours of the day relevant to the tariff, here all hours, &nbsp;and summed to daily values. Daily consumption values are multiplied with the appropriate tariff for the day of the week to get costs, here all days. Tariff selection varies depending on the consumption total since when beginning of the month falls, here tariff = 10 between 0 and 1000, then 20 above that.</span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">returns a collection of [gb_data_description_id, ruby date, cost] items.</span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">cost_by_date(date,tariff)</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">input parameters : </span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">date - required</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">tariff - the following are required fields : </span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">utility_id</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">rate_class</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">time_start</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">time_end</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">tariff</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">sample input : </span><br />\n\t\t\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">tariff = {</span><br />\n\t\t\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">{utility_id:1, rate_class:R,start_date:nil, end_date:nil, time_start:1, time_end: 3, day_of_week:nil, kwh_low:nil, kwh_high:nil,tariff:10} </span><br />\n\t\t\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">}</span></p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">access token - this is needed to be passed to the ruby greenbutton gem</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">subscriptionURI - this is needed to be passed to the ruby greenbutton gem</span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">logic :</span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The consumption is calculated by summing the consumption data in totals of hours groups and summed to daily values. Daily cost values are multiplied with the appropriate tariff for the day of the week, here all days. </span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">returns : </span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">a collection of [gb_data_description_id, ruby date, cost] items</span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">cost_date_range(date1, date2, tariff)</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">input parameters : </span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">date1 - required</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">date2 - required</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">tariff</span></p>\n\n\t\t\t<ul>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">utility_id</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">rate_class</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">time_start</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">time_end</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">day_of_week</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">tariff</span></p>\n\t\t\t\t</li>\n\t\t\t\t<li dir=\"ltr\">\n\t\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">sample input :</span><br />\n\t\t\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">tariff = {{utility_id:1,rate_class:R,start_date:nil, end_date:nil, time_start:1, time_end:12, day_of_week:[1,2,3,4], kwh_low:nil, kwh_high:nil, tariff:5},</span><br />\n\t\t\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">{utility_id:1, rate_class:R,start_date:nil, end_date:nil,time_start:1, time_end:12, day_of_week:[5,6,7], kwh_low:nil, kwh_high:nil, tariff:7},</span><br />\n\t\t\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">{utility_id:1, rate_class:R,start_date:nil, end_date:nil,time_start:13, time_end:24, day_of_week:[1,2,3,4], kwh_low:nil, kwh_high:nil, tariff:10},</span><br />\n\t\t\t\t<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">{utility_id:1, rate_class:R,start_date:nil, end_date:nil,time_start:13, time_end:24, day_of_week:[5,6,7], kwh_low:nil, kwh_high:nil,tariff:12}}</span></p>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">access token - this is needed to be passed to the ruby greenbutton gem</span></p>\n\t\t\t</li>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">subscriptionURI - this is needed to be passed to the ruby greenbutton gem</span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">logic :</span></p>\n\n\t\t<ul>\n\t\t\t<li dir=\"ltr\">\n\t\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Daily cost should be calculated by summing the cost data into totals for the hour groups, and using the appropriate tariff based off of the day of the week and hour group.</span></p>\n\t\t\t</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">returns a collection of [gb_data_description_id, ruby date, cost] items</span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><u>Data Validation</u></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">As part of the data aggregation process:</span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">Check for zero/null/NaN values in the data and filter them, and apply the following gaps logic to these values if applicable.</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">15 minutes and hourly data:</span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">data gaps of duration less than 4 hours should be handled via interpolation</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">data gaps of greater than 4 hours should return an error code</span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><u>Abstracting</u></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Please make sure to create mixin to include the common code/functionality.</span></p>\n\n<p dir=\"ltr\"><u>Setting Up the Gem</u></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Use</span><a href=\"http://bundler.io/\" style=\"text-decoration:none;\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> </span><u>Bundler</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> to take care of gem dependencies.</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">A standard folder structure would look like this :</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">��������� Gemfile</span><br />\n<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">��������� LICENSE.txt</span><br />\n<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">��������� README.md</span><br />\n<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">��������� Rakefile</span><br />\n<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">��������� benzinator.gemspec</span><br />\n<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">��������� lib</span><br />\n<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&nbsp;&nbsp;��������� bucketize</span><br />\n<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&nbsp;&nbsp;��� &nbsp;&nbsp;��������� version.rb</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;��������� &lt;class-name&gt;.rb</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;��������� model</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;��������� &lt;model-name&gt;.rb</span><br />\n<span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">&nbsp;&nbsp;��������� bucketize.rb (the module entry point)</span></p>\n\n<p dir=\"ltr\"><u>Writing Tests</u></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">All of your code should be test covered (</span><a href=\"http://rspec.info/\" style=\"text-decoration:none;\"><u>RSpec</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> preferred).</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Please refer to the provided GreenButton Ruby Gem library to understand how to use the <a href=\"http://energyos.github.io/OpenESPI-GreenButton-API-Documentation/API/\">GreenButton Sandbox</a> or local sample data to test your solution.</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">If you see any problem with sandbox stopped behaving normally, post in challenge forums, and we will reset it (Sandbox).</span></p>\n\n<p dir=\"ltr\"><u>Documentation</u></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Because other programmers will be working with your code, and incorporating it into their projects, all functions must be documented in detail in the code (</span><a href=\"https://rubygems.org/gems/tomdoc\" style=\"text-decoration:none;\"><u>TomDoc</u></a><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\"> preferred - In order to generate HTML properly you will need to use <a href=\"https://github.com/rubyworks/yard-tomdoc\">Yard TomDoc</a>)</span></p>\n\n<p dir=\"ltr\"><u>Coding Standard</u></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Follows coding standards listed here:</span></p>\n\n<p dir=\"ltr\"><a href=\"https://github.com/copycopter/style-guide\" style=\"text-decoration:none;\"><u>https://github.com/copycopter/style-guide</u></a></p>\n\n<p dir=\"ltr\"><u>Readme</u></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Provide a detailed readme file using Markdown language with following information :</span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Overview</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Setup Prerequisites</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">How to install</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Usage Example</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Reference this Ruby Gem&#39;s Documentation</span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Any details about any limitations of your solution.</span></p>\n\t</li>\n</ul>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">Please note, we&#39;re judging this competition not just on the code, but also on the quality of the documentation, </span><span style=\"background-color:transparent; color:#ff0000; font-family:arial; font-size:15px\">test coverage</span><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">, and ease of use.</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:21px\">Documents</span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:arial; font-size:15px\">The GreenButton Ruby Wrapper Gem library is provided in the challenge forums.</span></p>\n\n<p dir=\"ltr\"><u>Appendix B: The Utility Tariff Class</u></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong>utility</strong></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><strong>utility_tariff</strong></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">A subclass of utility to handle the tariff details</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">This holds the tariff structure</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">Attributes are:</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">Utility_id</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">Rate_class</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">Start_date [can be blank]</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">End_date [can be blank]</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">time_start &ndash; in local time &nbsp;- defaults to 1</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">time_end &ndash; in local time &ndash; defaults to 24</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">day_of_week &ndash; array, Monday is 1, Sunday is 7</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">kwh_low [can be blank]</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">kwh_high [can be blank]</span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"background-color:transparent; color:#000000; font-family:trebuchet ms; font-size:15px\">tariff</span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n",
   "digitalRunPoints": 675,
@@ -36,7 +36,7 @@
       "actualStartTime": "2015-03-03T18:58:00.000Z",
       "scheduledEndTime": "2015-03-03T19:00:00.000Z",
       "actualendTime": "2015-03-03T19:00:00.000Z",
-      "_id": "581dbcd5550dfb3b52be1a57"
+      "_id": "58a6af195d036c0bbdd60f79"
     },
     {
       "type": "Specification Review",
@@ -45,7 +45,7 @@
       "actualStartTime": "2015-03-03T19:00:00.000Z",
       "scheduledEndTime": "2015-03-03T20:51:00.000Z",
       "actualendTime": "2015-03-03T20:51:00.000Z",
-      "_id": "581dbcd5550dfb3b52be1a56"
+      "_id": "58a6af195d036c0bbdd60f78"
     },
     {
       "type": "Registration",
@@ -54,7 +54,7 @@
       "actualStartTime": "2015-03-03T20:51:00.000Z",
       "scheduledEndTime": "2015-03-06T20:50:00.000Z",
       "actualendTime": "2015-03-06T20:50:00.000Z",
-      "_id": "581dbcd5550dfb3b52be1a55"
+      "_id": "58a6af195d036c0bbdd60f77"
     },
     {
       "type": "Submission",
@@ -63,7 +63,7 @@
       "actualStartTime": "2015-03-03T20:56:00.000Z",
       "scheduledEndTime": "2015-03-09T06:56:00.000Z",
       "actualendTime": "2015-03-09T06:56:00.000Z",
-      "_id": "581dbcd5550dfb3b52be1a54"
+      "_id": "58a6af195d036c0bbdd60f76"
     },
     {
       "type": "Screening",
@@ -72,7 +72,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2015-03-09T18:56:00.000Z",
       "actualendTime": null,
-      "_id": "581dbcd5550dfb3b52be1a53"
+      "_id": "58a6af195d036c0bbdd60f75"
     },
     {
       "type": "Review",
@@ -81,7 +81,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2015-03-11T18:56:00.000Z",
       "actualendTime": null,
-      "_id": "581dbcd5550dfb3b52be1a52"
+      "_id": "58a6af195d036c0bbdd60f74"
     },
     {
       "type": "Appeals",
@@ -90,7 +90,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2015-03-12T18:56:00.000Z",
       "actualendTime": null,
-      "_id": "581dbcd5550dfb3b52be1a51"
+      "_id": "58a6af195d036c0bbdd60f73"
     },
     {
       "type": "Appeals Response",
@@ -99,7 +99,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2015-03-13T06:56:00.000Z",
       "actualendTime": null,
-      "_id": "581dbcd5550dfb3b52be1a50"
+      "_id": "58a6af195d036c0bbdd60f72"
     },
     {
       "type": "Aggregation",
@@ -108,7 +108,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2015-03-13T18:56:00.000Z",
       "actualendTime": null,
-      "_id": "581dbcd5550dfb3b52be1a4f"
+      "_id": "58a6af195d036c0bbdd60f71"
     },
     {
       "type": "Final Fix",
@@ -117,7 +117,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2015-03-14T18:56:00.000Z",
       "actualendTime": null,
-      "_id": "581dbcd5550dfb3b52be1a4e"
+      "_id": "58a6af195d036c0bbdd60f70"
     },
     {
       "type": "Final Review",
@@ -126,7 +126,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2015-03-15T06:56:00.000Z",
       "actualendTime": null,
-      "_id": "581dbcd5550dfb3b52be1a4d"
+      "_id": "58a6af195d036c0bbdd60f6f"
     },
     {
       "type": "Approval",
@@ -135,7 +135,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2015-03-20T06:56:00.000Z",
       "actualendTime": null,
-      "_id": "581dbcd5550dfb3b52be1a4c"
+      "_id": "58a6af195d036c0bbdd60f6e"
     },
     {
       "type": "Post-Mortem",
@@ -144,7 +144,7 @@
       "actualStartTime": "2015-03-09T06:58:00.000Z",
       "scheduledEndTime": "2015-03-10T06:58:00.000Z",
       "actualendTime": null,
-      "_id": "581dbcd5550dfb3b52be1a4b"
+      "_id": "58a6af195d036c0bbdd60f6d"
     }
   ],
   "platforms": [
@@ -164,7 +164,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbcd5550dfb3b52be1a4a"
+      "_id": "58a6af195d036c0bbdd60f6c"
     },
     {
       "handle": "halbcoder",
@@ -173,7 +173,7 @@
       "submissionDate": null,
       "rating": "671",
       "colorStyle": "color: #999999",
-      "_id": "581dbcd5550dfb3b52be1a49"
+      "_id": "58a6af195d036c0bbdd60f6b"
     },
     {
       "handle": "ahmed.seddiq",
@@ -182,7 +182,7 @@
       "submissionDate": null,
       "rating": "1003",
       "colorStyle": "color: #00A900",
-      "_id": "581dbcd5550dfb3b52be1a48"
+      "_id": "58a6af195d036c0bbdd60f6a"
     },
     {
       "handle": "atry",
@@ -191,7 +191,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbcd5550dfb3b52be1a47"
+      "_id": "58a6af195d036c0bbdd60f69"
     },
     {
       "handle": "phead",
@@ -200,7 +200,7 @@
       "submissionDate": null,
       "rating": "514",
       "colorStyle": "color: #999999",
-      "_id": "581dbcd5550dfb3b52be1a46"
+      "_id": "58a6af195d036c0bbdd60f68"
     },
     {
       "handle": "gjw99",
@@ -209,7 +209,7 @@
       "submissionDate": null,
       "rating": "1055",
       "colorStyle": "color: #00A900",
-      "_id": "581dbcd5550dfb3b52be1a45"
+      "_id": "58a6af195d036c0bbdd60f67"
     },
     {
       "handle": "sunbinbrother",
@@ -218,7 +218,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbcd5550dfb3b52be1a44"
+      "_id": "58a6af195d036c0bbdd60f66"
     },
     {
       "handle": "IvaDobreva",
@@ -227,7 +227,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbcd5550dfb3b52be1a43"
+      "_id": "58a6af195d036c0bbdd60f65"
     },
     {
       "handle": "michael_tang",
@@ -236,7 +236,7 @@
       "submissionDate": null,
       "rating": "497",
       "colorStyle": "color: #999999",
-      "_id": "581dbcd5550dfb3b52be1a42"
+      "_id": "58a6af195d036c0bbdd60f64"
     },
     {
       "handle": "poundinc_tc",
@@ -245,7 +245,7 @@
       "submissionDate": null,
       "rating": "323",
       "colorStyle": "color: #999999",
-      "_id": "581dbcd5550dfb3b52be1a41"
+      "_id": "58a6af195d036c0bbdd60f63"
     },
     {
       "handle": "Gando19850304",
@@ -254,7 +254,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbcd5550dfb3b52be1a40"
+      "_id": "58a6af195d036c0bbdd60f62"
     },
     {
       "handle": "thestarkey",
@@ -263,7 +263,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbcd5550dfb3b52be1a3f"
+      "_id": "58a6af195d036c0bbdd60f61"
     },
     {
       "handle": "genycopedison",
@@ -272,7 +272,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbcd5550dfb3b52be1a3e"
+      "_id": "58a6af195d036c0bbdd60f60"
     },
     {
       "handle": "monumahiya",
@@ -281,7 +281,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbcd5550dfb3b52be1a3d"
+      "_id": "58a6af195d036c0bbdd60f5f"
     },
     {
       "handle": "blu3fox",
@@ -290,7 +290,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbcd5550dfb3b52be1a3c"
+      "_id": "58a6af195d036c0bbdd60f5e"
     },
     {
       "handle": "SePulTribe",
@@ -299,7 +299,7 @@
       "submissionDate": null,
       "rating": "267",
       "colorStyle": "color: #999999",
-      "_id": "581dbcd5550dfb3b52be1a3b"
+      "_id": "58a6af195d036c0bbdd60f5d"
     },
     {
       "handle": "Luca",
@@ -308,7 +308,7 @@
       "submissionDate": null,
       "rating": "1404",
       "colorStyle": "color: #6666FF",
-      "_id": "581dbcd5550dfb3b52be1a3a"
+      "_id": "58a6af195d036c0bbdd60f5c"
     },
     {
       "handle": "muzehyun",
@@ -317,7 +317,7 @@
       "submissionDate": null,
       "rating": "672",
       "colorStyle": "color: #999999",
-      "_id": "581dbcd5550dfb3b52be1a39"
+      "_id": "58a6af195d036c0bbdd60f5b"
     },
     {
       "handle": "Cagi",
@@ -326,7 +326,7 @@
       "submissionDate": null,
       "rating": "1114",
       "colorStyle": "color: #00A900",
-      "_id": "581dbcd5550dfb3b52be1a38"
+      "_id": "58a6af195d036c0bbdd60f5a"
     },
     {
       "handle": "M_Sudharshan",
@@ -335,7 +335,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbcd5550dfb3b52be1a37"
+      "_id": "58a6af195d036c0bbdd60f59"
     },
     {
       "handle": "linuxgeek",
@@ -344,7 +344,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbcd5550dfb3b52be1a36"
+      "_id": "58a6af195d036c0bbdd60f58"
     },
     {
       "handle": "winstips",
@@ -353,7 +353,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbcd5550dfb3b52be1a35"
+      "_id": "58a6af195d036c0bbdd60f57"
     },
     {
       "handle": "mhykol",
@@ -362,7 +362,7 @@
       "submissionDate": null,
       "rating": "618",
       "colorStyle": "color: #999999",
-      "_id": "581dbcd5550dfb3b52be1a34"
+      "_id": "58a6af195d036c0bbdd60f56"
     }
   ],
   "registrationEndDate": "2015-03-06T20:50:00.000Z",

@@ -1,0 +1,661 @@
+{
+  "_id": 30052851,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-11-14T16:15:18.089Z",
+  "appealsEndDate": "2016-02-18T16:33:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Styx Access Control - Mustering Fixes - iOS",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2016-02-29T18:29:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -22369488,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong><span style=\"color:#000000\">INTRODUCTION</span></strong></span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">In this challenge we&rsquo;ll be updating the existing truPortal iPad app to correct issues and update functionality resulting from internal testing of the app. Mustering is a real-time account or listing of the credentials/persons that have &ldquo;scanned in&rdquo; on selected readers since a defined event has occurred.</span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>REQUIREMENTS</strong></span></span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">You&rsquo;ll be updating the provided Xcode project to correct the items outlined below.</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><strong>1. Remove elapsed time</strong></span><span style=\"background-color:transparent; color:rgb(0, 0, 0)\"> from navigation display and reports &ndash; we do not track elapsed time on the panel. This would only represent elapsed time on the iPad which would be misleading.</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><strong>2. &ldquo;Reported by&rdquo;</strong></span><span style=\"background-color:transparent; color:rgb(0, 0, 0)\"> was added to the mustering main report screen. &nbsp;However, we lost &nbsp;&ldquo;Reader Location&rdquo; &ndash; please add back</span></span></span></p>\n\n<p><strong><span style=\"color:#000000\">3. Mustering Integration</span>:</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\"> If &ldquo;UpdateMusteringPersonStatus&rdquo; call fails, it may mean that other GUI has updated the data in the meantime (revision increased). In such a case &ldquo;this&rdquo; GUI should resynchronize (see &ldquo;periodic check for updates&rdquo; sequence) and retry call to &ldquo;UpdateMusteringPersonStatus&rdquo; with updated revision number.</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Current implementation Synchronizes all Person statuses (using GetMusteringInformationAsJSON) first and then updates the Person&rsquo;s Mustering status (UpdateMusteringPersonStatus). This actually should be:</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">a. Update the Person&rsquo;s Mustering status first (UpdateMusteringPersonStatus)</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">b. If update fails, check the error code -&gt; if the error code is about &ldquo;bad revision&rdquo;</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">&nbsp;&nbsp; &nbsp;1. The app should synchronize Person statuses (using GetMusteringInformationAsJSON) and retry to update Person&rsquo;s Mustering status (UpdateMusteringPersonStatus). This loop should be done infinitely (till either UpdateMusteringPersonStatus succeeds or error code is &lsquo;bad revision&rsquo;.)</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">&nbsp;&nbsp; &nbsp;2. Else app should report error to user.</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Bad revision error codes are as follows:</span></span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">#define REVISION_REQUIRES_RESYNC 1064</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">#define ACS_SUBSYSTEM 0x02</span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">&ldquo;startedAt&rdquo; field in result shows the status of mustering. If the value changed, then the other GUI stopped or stopped/started mustering again. &nbsp;In such a case &ldquo;this&rdquo; GUI should react accordingly.</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">This feature is not implemented. Current implementation uses &ldquo;startedAt&rdquo; only to know whether Mustering is enabled or not.</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><strong>4. Mustering Integration:</strong></span><span style=\"background-color:transparent; color:rgb(0, 0, 0)\"> &nbsp;Request From 0 To 499 (first call) : take persons data AND also remember the values from response: Size=size, CurrentRevision=revision</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Current implementation uses revision param to fetch mustering users incrementally but size param should be used instead.</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><strong>5. Mustering Integration:</strong></span><span style=\"background-color:transparent; color:rgb(0, 0, 0)\"> &nbsp;Do the sequence after the start of mustering, or after GUI start when mustering is already enabled.</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">When a mustering start is detected (already started by flex client), App doesn&rsquo;t start loading of mustering users (using GetMusteringInformationAsJSON) i.e., it doesn&rsquo;t start polling.</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:#000000\"><strong>6. Defect Corrections</strong></span><span style=\"background-color:transparent; color:rgb(0, 0, 0)\"> &ndash; please correct the defect list (Excel file) located in the forums. &nbsp;Some items in this list are duplicates of those outlined in more detail above.</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>RESOURCES</strong></span></span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">In the challenge forums you&rsquo;ll find:</span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>Source Code</strong></span></span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">This is the latest codebase for the iPad app. &nbsp;Use this Xcode project to do your development and final submission.</span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>Mustering Requirements Document</strong></span></span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">This document provides an overview of Mustering, use cases and general requirements for implementing functionality.</span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>Mustering API Appendix</strong></span></span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">This document provides further information on the GetMusteringInformationAsJSON web services call and how to interact with it within the app.</span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>Defect List</strong></span></span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">This is an Excel file listing minor defects in addition to those outlined in more detail above.</span></p>\n\n<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>User Accounts/Resources</strong></span></span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">Access URLs, user accounts, etc. are provided for testing purposes.</span></p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30052851",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"color:rgb(0, 0, 0)\">-- Updated Xcode 7.2 project with all screens and functionality as outlined above</span></span></span><br />\n<span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- Code must compile against iOS SDK 9.2 with a deployment target of iOS 7.0</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- Develop for iPad size classes, with all orientations supported</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- Use XIBs for all views</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- All added resources/code must be localized</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- All code must be written in Objective-C and be well commented</span><br />\n<span style=\"color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- Upload your source project as a zip</span></p>\n\n<p dir=\"ltr\">&nbsp;</p>\n",
+  "forumId": 31854,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=31854",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 59,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-17T00:10:00.000Z",
+      "actualStartTime": "2016-02-17T00:10:00.000Z",
+      "scheduledEndTime": "2016-02-17T08:48:00.000Z",
+      "actualendTime": "2016-02-17T08:48:00.000Z",
+      "_id": "5829e316550dfb3b52329805"
+    },
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2016-01-30T18:29:00.000Z",
+      "actualStartTime": "2016-01-30T18:29:00.000Z",
+      "scheduledEndTime": "2016-02-29T18:29:00.000Z",
+      "actualendTime": null,
+      "_id": "5829e316550dfb3b52329804"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-12T14:39:00.000Z",
+      "actualStartTime": "2016-02-12T14:39:00.000Z",
+      "scheduledEndTime": "2016-02-15T19:21:00.000Z",
+      "actualendTime": "2016-02-15T19:21:00.000Z",
+      "_id": "5829e316550dfb3b52329803"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2016-01-30T18:37:00.000Z",
+      "actualStartTime": "2016-01-30T18:37:00.000Z",
+      "scheduledEndTime": "2016-02-29T18:37:00.000Z",
+      "actualendTime": null,
+      "_id": "5829e316550dfb3b52329802"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-02-17T18:48:00.000Z",
+      "actualStartTime": "2016-02-17T18:48:00.000Z",
+      "scheduledEndTime": "2016-02-18T16:33:00.000Z",
+      "actualendTime": "2016-02-18T16:33:00.000Z",
+      "_id": "5829e316550dfb3b52329801"
+    }
+  ],
+  "platforms": [
+    "iOS"
+  ],
+  "postingDate": "2016-01-30T18:29:00.000Z",
+  "prize": [
+    800
+  ],
+  "projectId": 9059,
+  "registrants": [
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-11T04:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b52329800"
+    },
+    {
+      "handle": "TheLoneRanger14",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-11T19:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297ff"
+    },
+    {
+      "handle": "albetjanuar",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T01:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297fe"
+    },
+    {
+      "handle": "alokkulkarni",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T06:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297fd"
+    },
+    {
+      "handle": "zoheb86",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-12T20:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297fc"
+    },
+    {
+      "handle": "sapreet",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T04:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297fb"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-13T14:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297fa"
+    },
+    {
+      "handle": "Raywilliams01",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-14T13:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297f9"
+    },
+    {
+      "handle": "prokiller61",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-14T14:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297f8"
+    },
+    {
+      "handle": "kkcoder00",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-14T18:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297f7"
+    },
+    {
+      "handle": "Seoni",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-15T02:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297f6"
+    },
+    {
+      "handle": "evsei.vladmr",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-16T11:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297f5"
+    },
+    {
+      "handle": "underfox",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-16T18:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297f4"
+    },
+    {
+      "handle": "sqrt49",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-17T23:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297f3"
+    },
+    {
+      "handle": "kinfkong",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-30T23:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297f2"
+    },
+    {
+      "handle": "mobious.one",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-31T00:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297f1"
+    },
+    {
+      "handle": "duxiaoyang",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-31T01:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297f0"
+    },
+    {
+      "handle": "JinkProject",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-31T02:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297ef"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-31T02:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297ee"
+    },
+    {
+      "handle": "MuraliKorukonda",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-31T05:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297ed"
+    },
+    {
+      "handle": "hash3r",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-31T10:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297ec"
+    },
+    {
+      "handle": "phonechen",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-31T11:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297eb"
+    },
+    {
+      "handle": "herodolphin",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-31T12:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297ea"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-31T14:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297e9"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-31T14:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297e8"
+    },
+    {
+      "handle": "N1k1tung",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-31T15:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297e7"
+    },
+    {
+      "handle": "lalit.ctae",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-31T20:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297e6"
+    },
+    {
+      "handle": "sinana",
+      "reliability": "n/a",
+      "registrationDate": "2016-01-31T22:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297e5"
+    },
+    {
+      "handle": "albet.januar",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-01T02:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297e4"
+    },
+    {
+      "handle": "tombohm",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-01T07:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297e3"
+    },
+    {
+      "handle": "m4risU",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-01T09:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297e2"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-01T14:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297e1"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-01T16:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297e0"
+    },
+    {
+      "handle": "baik78",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-01T18:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297df"
+    },
+    {
+      "handle": "Ewheels",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-02T05:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297de"
+    },
+    {
+      "handle": "Dex9325",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-02T17:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297dd"
+    },
+    {
+      "handle": "Gangbaolede.Li",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-02T17:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297dc"
+    },
+    {
+      "handle": "warrington",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-03T05:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297db"
+    },
+    {
+      "handle": "CrazyCoderLZB",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-03T05:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297da"
+    },
+    {
+      "handle": "Vivianw",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-03T06:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297d9"
+    },
+    {
+      "handle": "winterflame",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-03T08:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297d8"
+    },
+    {
+      "handle": "sLytheriNe",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-03T11:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297d7"
+    },
+    {
+      "handle": "maxdmayhew",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-03T17:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297d6"
+    },
+    {
+      "handle": "prastowo.arie",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-03T22:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297d5"
+    },
+    {
+      "handle": "vincent.yl.chen",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-03T23:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297d4"
+    },
+    {
+      "handle": "sylar",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-04T03:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297d3"
+    },
+    {
+      "handle": "Dhwanilk",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-04T10:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297d2"
+    },
+    {
+      "handle": "karmakarkoushik",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-04T10:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297d1"
+    },
+    {
+      "handle": "AnushaAmith",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-05T05:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297d0"
+    },
+    {
+      "handle": "sujith1406",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-05T14:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297cf"
+    },
+    {
+      "handle": "pirosl_tc",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-05T22:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297ce"
+    },
+    {
+      "handle": "general7078",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-06T09:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297cd"
+    },
+    {
+      "handle": "paragdulam",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-07T20:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297cc"
+    },
+    {
+      "handle": "sonersoysal",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-09T12:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297cb"
+    },
+    {
+      "handle": "dosuken123_123",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-10T10:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297ca"
+    },
+    {
+      "handle": "sandyr39",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-10T12:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297c9"
+    },
+    {
+      "handle": "pvmagacho",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-10T15:09:00.000Z",
+      "submissionDate": "2016-02-17T18:48:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297c8"
+    },
+    {
+      "handle": "haylayf",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-10T23:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297c7"
+    },
+    {
+      "handle": "Charles.Packer",
+      "reliability": "n/a",
+      "registrationDate": "2016-02-11T00:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e316550dfb3b523297c6"
+    }
+  ],
+  "registrationEndDate": "2016-02-29T18:29:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-02-29T18:37:00.000Z",
+  "submissions": [
+    {
+      "handle": "pvmagacho",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-02-12T14:38:00.000Z",
+      "_id": "5829e316550dfb3b52329808"
+    },
+    {
+      "handle": "pvmagacho",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-02-17T00:10:00.000Z",
+      "_id": "5829e316550dfb3b52329807"
+    },
+    {
+      "handle": "pvmagacho",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-02-17T18:48:00.000Z",
+      "_id": "5829e316550dfb3b52329806"
+    }
+  ],
+  "technology": [
+    "Objective C"
+  ]
+}

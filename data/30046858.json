@@ -1,0 +1,454 @@
+{
+  "_id": 30046858,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-11-30T08:34:34.261Z",
+  "appealsEndDate": "2015-01-25T03:47:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "QIR .NET Web App - Model, Exception, Authorization, and Notification Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2>1.0 - Challenge Overview</h2>\n\n<p>Welcome to the&nbsp;<strong>QIR .NET Web App - Model, Exception, Authorization, and Notification Assembly</strong>&nbsp;challenge! In this challenge, you will need to build the data models and tables, exceptions and a part of backend services and stored procedures that the new&nbsp;QIR .NET App will use (based on the architecture design).</p>\n\n<p>NOTE: This is part 1 of a series of assembly challenges for this project! &nbsp;</p>\n\n<h2>1.1 - Project Overview</h2>\n\n<p>The client for this project has an existing system called Quality Incident Reporting (QIR) application.&nbsp; This existing application was created using SharePoint and is used for creating and managing quality incident records. &nbsp;The goal for this project is to build a new Quality Incident Reporting&nbsp;application&nbsp;using .NET (based on the&nbsp;existing QIR application).</p>\n\n<p>This assembly will provide the data models, exceptions, authorization, email notifications services and pages, relevant stored procedures these services use and relevant request handlers these pages use.</p>\n\n<h2>1.2 - Competition Task Overview</h2>\n\n<p>A complete list of deliverables can be found in the TopCoder Assembly competition Tutorial at:&nbsp;<a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a></p>\n\n<p><strong>Note</strong>: Extensive implementation notes are provided at method documentation on UML Class Diagrams. Please follow them for implementation.</p>\n\n<p><strong>Note</strong>: Please read the whole Application Design Specification first. All the details not mentioned in this specification are provided in that document.</p>\n\n<p>1.2.1&nbsp;&nbsp; &nbsp;<strong>Model Classes</strong><br />\nThis assembly is responsible for implementing all model classes on class diagram &quot;Model Class Diagram&quot;.&nbsp;</p>\n\n<p>1.2.2 &nbsp; &nbsp;<strong>Database Tables</strong><br />\nThis assembly is also responsible for creating/updating tables in the database as per provided ERD.</p>\n\n<p>1.2.3 &nbsp; &nbsp;<strong>Exceptions</strong><br />\nThis assembly is responsible for implementing all exceptions on class diagram &quot;Exceptions Class Diagram&quot;.</p>\n\n<p>1.2.4 &nbsp; &nbsp;<strong>Backend Services</strong><br />\nThis assembly is responsible for implementing the following services on class diagram &quot;Backend Services Class Diagram&quot;:<br />\n&nbsp;&nbsp; &nbsp;1) BaseService<br />\n&nbsp;&nbsp; &nbsp;2) RoleService<br />\n&nbsp;&nbsp; &nbsp;3) PersonService<br />\n&nbsp;&nbsp; &nbsp;4) EmailTemplateService<br />\n&nbsp;&nbsp; &nbsp;5) DepartmentNotificationListService<br />\n&nbsp;&nbsp; &nbsp;6) NotificationPersonService<br />\n&nbsp;&nbsp; &nbsp;7) EmailService</p>\n\n<p>1.2.5 &nbsp; &nbsp;<strong>Stored Procedures</strong><br />\nThis assembly is responsible for implementing all stored procedures used by the above-mentioned services.</p>\n\n<p>1.2.6 &nbsp; &nbsp;<strong>Dept Notification Lists Page (deptNofiticationListsPage.aspx)</strong></p>\n\n<p>Code Behind: ViewScheduleOption2Page<br />\nWireframe: manage_dept_notification_lists</p>\n\n<p>- When any department is selected GetRegionByDeptRequestHandler AJAX request is made to get all regions by this department. These regions from AJAX response are populated into &ldquo;Select Region&rdquo; drop down list.<br />\n- When any region is selected GetDeptNotificationListsByDeptRegionRequestHandler AJAX request is made to get all dept notification lists by this department and region (both parameters are passed). The grid view is populated with AJAX response<br />\n- We will use GridView to render the table of these regions. We need to prepare Region data (as per the code entity) for the data provider.<br />\n- Roles values are retrieved on page load (see #PageLoad impl notes).<br />\n- When &ldquo;&hellip;&rdquo; button is clicked a modal popup appears for user selection. It will make SearchPersonsRequestHandler AJAX request to get user by keyword asynchronously.<br />\n- When an update on the grid is made (Dept Notification list item is added and edited) it is handled by #GridUpdate method in the page code behind.<br />\n- The &ldquo;Clear&rdquo; button erases all values entered by user in a draft of new entity. No interaction with the server side takes place.</p>\n\n<p>1.2.7 &nbsp; &nbsp;<strong>Email Templates Page (emailTemplatesPage.aspx)</strong></p>\n\n<p>Code Behind: EmailTemplatesPage<br />\nWireframe: manage_email_templates</p>\n\n<p>- This page is rendered on page load. Clicking &ldquo;Delete&rdquo; link button against the template delete it (handled by #Delete method of the page).<br />\n- By clicking &ldquo;Add new template&rdquo; a modal popup appears with the form for the template.<br />\n- By clicking &ldquo;Edit&rdquo; link button a modal popup appears populated with the draft of the template (handled by #Edit method).<br />\n- Subject or body variables come from EmailTemplate.SubjectVars and EmailTemplate.BodyVars.<br />\n- If &ldquo;Cancel&rdquo; button is clicked the popup closes, nothing is saved (for both creating and editing mode).<br />\n- Saving a template is handled by #Save_Click method.</p>\n\n<p>1.2.8 &nbsp; &nbsp;<strong>Manage Roles Page (manageRolesPage.aspx)</strong></p>\n\n<p>Code Behind: ManageRolesPage<br />\nWireframe: none</p>\n\n<p>- Roles values are retrieved on page load (see #PageLoad impl notes).<br />\n- When any role is selected GetUsersByRoleRequestHandler AJAX request is made to get all users by this role. &nbsp;The grid view is populated with AJAX response. We will use GridView to render the table of these users (name, lanID and roles). We need to prepare User data (name, lanID and roles) for the data provider.<br />\n- When any role is clicked GetRoleOfUserRequestHandler AJAX request is made to get all roles by this person. Then a small popup against the user appears populated with roles from AJAX response. There is a checkbox against each role, if user has the role the checkbox is TRUE. Admin manipulates these checkboxes and clicks &ldquo;Save user roles&rdquo; button which is handled with the namesake method of the page. It accepts person&rsquo;s ID and their set of roles.<br />\n- If &ldquo;Cancel&rdquo; button is clicked the popup closes, nothing is saved.</p>\n\n<p>1.2.9 &nbsp; &nbsp;<strong>Request Handlers</strong><br />\nThis assembly is responsible for implementing all HTTP Request handlers used by the above-mentioned pages.</p>\n\n<p>1.2.10 &nbsp; &nbsp;<strong>Scheduled Jobs for Email Notification</strong><br />\nThe scheduled jobs for sending email notifications must be implemented within this assembly (see ADS 1.3.19 for details).</p>\n\n<p>&nbsp;</p>\n\n<h2>1.3 - Technology Overview</h2>\n\n<p>- Windows Server 2008 R2<br />\n- MS SQL Server 2012<br />\n- IIS 7<br />\n- C# 4.0<br />\n- .NET Framework 4.0<br />\n- ASP.NET Web Form<br />\n- jQuery 1.11.1 http://jquery.com<br />\n- Infragistics Ultimate 2014 Vol. 1 -&nbsp;<a href=\"http://www.infragistics.com/\">http://www.infragistics.com/</a></p>\n\n<p>&nbsp;</p>\n\n<p><strong>Browser Requirements:</strong><br />\nYour submission must works on browser in the list below:<br />\n- IE8+<br />\n- Safari latest version on Mac &amp; Windows<br />\n- Firefox latest version on Mac &amp; Windows<br />\n- Chrome latest version on Mac &amp; Windows</p>\n\n<p>&nbsp;</p>\n\n<h2>1.4 - Documentation Provided</h2>\n\n<p>Documentation and Applications that will be provided to registered members:</p>\n\n<table style=\"line-height:16px\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<th><strong>Document Name</strong></th>\n\t\t\t<th><strong>&nbsp; &nbsp;Document Description &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</strong></th>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Application Design Specification</td>\n\t\t\t<td>&nbsp; &nbsp;Architecture documentation attached</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Class Diagrams</td>\n\t\t\t<td>&nbsp; &nbsp;Architecture documentation attached</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Sequence Diagrams</td>\n\t\t\t<td>&nbsp; &nbsp;Architecture documentation attached</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>ERD</td>\n\t\t\t<td>&nbsp; &nbsp;Architecture documentation attached</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>UI Prototype</td>\n\t\t\t<td>&nbsp; &nbsp;HTML / CSS / JS prototype attached</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>qualityincidents_scripts_20141112.sql.txt</td>\n\t\t\t<td>&nbsp; &nbsp;Script to create the existing database with stored procs</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Quality Incident Report Enhancements - Dec 19 2014.xlsx</td>\n\t\t\t<td>&nbsp; &nbsp;Excel file with latest requirements (form fields, access levels, classifications, root causes, etc)</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<h2>&nbsp;</h2>\n\n<h2>1.5 - Testing</h2>\n\n<p>Please include unit tests to verify your application successfully meets the requirements of the project. &nbsp;You should provide functional tests.</p>\n",
+  "digitalRunPoints": 720,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30046858",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2015-02-01T08:59:00.000Z",
+  "finalSubmissionGuidelines": "<p>- Completed code for the application (see architecture documentation and section 1.2 of this challenge spec above)<br />\n- A complete and detailed deployment documented explaining how to deploy the application including configuration information.<br />\n- Tests to verify your application successfully meets the requirements of the project.</p>\n\n<p>A complete list of deliverables can be found in the TopCoder Assembly competition Tutorial at:&nbsp;<a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a></p>\n",
+  "forumId": 26405,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=26405",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 24,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-14T04:16:00.000Z",
+      "actualStartTime": "2015-01-14T04:16:00.000Z",
+      "scheduledEndTime": "2015-01-14T04:17:00.000Z",
+      "actualendTime": "2015-01-14T04:17:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf735"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-14T04:17:00.000Z",
+      "actualStartTime": "2015-01-14T04:17:00.000Z",
+      "scheduledEndTime": "2015-01-14T14:19:00.000Z",
+      "actualendTime": "2015-01-14T14:19:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf734"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-15T17:01:00.000Z",
+      "actualStartTime": "2015-01-15T17:01:00.000Z",
+      "scheduledEndTime": "2015-01-17T17:01:00.000Z",
+      "actualendTime": "2015-01-17T17:01:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf733"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-15T17:06:00.000Z",
+      "actualStartTime": "2015-01-15T17:06:00.000Z",
+      "scheduledEndTime": "2015-01-21T17:02:00.000Z",
+      "actualendTime": "2015-01-21T17:02:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf732"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-21T17:02:00.000Z",
+      "actualStartTime": "2015-01-21T17:02:00.000Z",
+      "scheduledEndTime": "2015-01-22T03:31:00.000Z",
+      "actualendTime": "2015-01-22T03:31:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf731"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-22T03:31:00.000Z",
+      "actualStartTime": "2015-01-22T03:31:00.000Z",
+      "scheduledEndTime": "2015-01-23T21:32:00.000Z",
+      "actualendTime": "2015-01-23T21:32:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf730"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-23T21:32:00.000Z",
+      "actualStartTime": "2015-01-23T21:32:00.000Z",
+      "scheduledEndTime": "2015-01-24T21:32:00.000Z",
+      "actualendTime": "2015-01-24T21:32:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf72f"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-24T21:32:00.000Z",
+      "actualStartTime": "2015-01-24T21:32:00.000Z",
+      "scheduledEndTime": "2015-01-25T03:47:00.000Z",
+      "actualendTime": "2015-01-25T03:47:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf72e"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-25T03:47:00.000Z",
+      "actualStartTime": "2015-01-25T03:47:00.000Z",
+      "scheduledEndTime": "2015-01-25T04:00:00.000Z",
+      "actualendTime": "2015-01-25T04:00:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf72d"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-25T04:00:00.000Z",
+      "actualStartTime": "2015-01-25T04:00:00.000Z",
+      "scheduledEndTime": "2015-01-30T07:03:00.000Z",
+      "actualendTime": "2015-01-30T07:03:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf72c"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-30T07:03:00.000Z",
+      "actualStartTime": "2015-01-30T07:03:00.000Z",
+      "scheduledEndTime": "2015-01-30T12:30:00.000Z",
+      "actualendTime": "2015-01-30T12:30:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf72b"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-01T13:55:00.000Z",
+      "actualStartTime": "2015-02-01T13:55:00.000Z",
+      "scheduledEndTime": "2015-02-06T13:56:00.000Z",
+      "actualendTime": "2015-02-06T13:56:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf72a"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-30T12:30:00.000Z",
+      "actualStartTime": "2015-01-30T12:30:00.000Z",
+      "scheduledEndTime": "2015-01-31T11:27:00.000Z",
+      "actualendTime": "2015-01-31T11:27:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf729"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-31T11:27:00.000Z",
+      "actualStartTime": "2015-01-31T11:27:00.000Z",
+      "scheduledEndTime": "2015-01-31T13:19:00.000Z",
+      "actualendTime": "2015-01-31T13:19:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf728"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-31T13:19:00.000Z",
+      "actualStartTime": "2015-01-31T13:19:00.000Z",
+      "scheduledEndTime": "2015-02-01T08:59:00.000Z",
+      "actualendTime": "2015-02-01T08:59:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf727"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-01T08:59:00.000Z",
+      "actualStartTime": "2015-02-01T08:59:00.000Z",
+      "scheduledEndTime": "2015-02-01T13:55:00.000Z",
+      "actualendTime": "2015-02-01T13:55:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf726"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-01-15T17:01:00.000Z",
+  "prize": [
+    1600,
+    800
+  ],
+  "projectId": 8093,
+  "registrants": [
+    {
+      "handle": "kondakovdmitry",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-15T21:07:00.000Z",
+      "submissionDate": "2015-01-21T17:00:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1a10a1db09a46bf725"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-15T17:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1a10a1db09a46bf724"
+    },
+    {
+      "handle": "gvir",
+      "reliability": "33%",
+      "registrationDate": "2015-01-15T17:45:00.000Z",
+      "submissionDate": null,
+      "rating": "1285",
+      "colorStyle": "color: #6666FF",
+      "_id": "583e8f1a10a1db09a46bf723"
+    },
+    {
+      "handle": "shankarkamble",
+      "reliability": "100%",
+      "registrationDate": "2015-01-15T19:08:00.000Z",
+      "submissionDate": null,
+      "rating": "1185",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f1a10a1db09a46bf722"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-15T19:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1a10a1db09a46bf721"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-15T20:26:00.000Z",
+      "submissionDate": null,
+      "rating": "717",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf720"
+    },
+    {
+      "handle": "PavithraSV",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-15T21:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1a10a1db09a46bf71f"
+    },
+    {
+      "handle": "DerekLoveCC",
+      "reliability": "33%",
+      "registrationDate": "2015-01-15T22:47:00.000Z",
+      "submissionDate": null,
+      "rating": "646",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf71e"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2015-01-16T00:09:00.000Z",
+      "submissionDate": null,
+      "rating": "1088",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f1a10a1db09a46bf71d"
+    },
+    {
+      "handle": "pnomarev",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-16T00:23:00.000Z",
+      "submissionDate": null,
+      "rating": "473",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf71c"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "6%",
+      "registrationDate": "2015-01-16T01:19:00.000Z",
+      "submissionDate": null,
+      "rating": "819",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf71b"
+    },
+    {
+      "handle": "ilovecode",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-16T01:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1a10a1db09a46bf71a"
+    },
+    {
+      "handle": "liuliquan",
+      "reliability": "100%",
+      "registrationDate": "2015-01-16T02:05:00.000Z",
+      "submissionDate": "2015-01-21T15:41:00.000Z",
+      "rating": "1588",
+      "colorStyle": "color: #DDCC00",
+      "_id": "583e8f1a10a1db09a46bf719"
+    },
+    {
+      "handle": "vvvpig",
+      "reliability": "93%",
+      "registrationDate": "2015-01-16T03:02:00.000Z",
+      "submissionDate": "2015-01-21T11:49:00.000Z",
+      "rating": "1358",
+      "colorStyle": "color: #6666FF",
+      "_id": "583e8f1a10a1db09a46bf718"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-16T07:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1a10a1db09a46bf717"
+    },
+    {
+      "handle": "vokie",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-16T08:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1a10a1db09a46bf716"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-16T12:08:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf715"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2015-01-16T12:19:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf714"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-16T14:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1a10a1db09a46bf713"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2015-01-16T17:58:00.000Z",
+      "submissionDate": null,
+      "rating": "267",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf712"
+    },
+    {
+      "handle": "demo.b",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-16T22:58:00.000Z",
+      "submissionDate": null,
+      "rating": "421",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf711"
+    },
+    {
+      "handle": "dilip.thapa",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-17T10:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1a10a1db09a46bf710"
+    },
+    {
+      "handle": "net_buster",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-17T12:12:00.000Z",
+      "submissionDate": null,
+      "rating": "659",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf70f"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "0%",
+      "registrationDate": "2015-01-17T13:19:00.000Z",
+      "submissionDate": null,
+      "rating": "580",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf70e"
+    }
+  ],
+  "registrationEndDate": "2015-01-17T17:01:00.000Z",
+  "reliabilityBonus": 320,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-01-21T17:02:00.000Z",
+  "submissions": [
+    {
+      "handle": "vvvpig",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 86.31,
+      "finalScore": 86.46,
+      "points": 503.99999999999994,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-01-21T11:49:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf738"
+    },
+    {
+      "handle": "liuliquan",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 74.58,
+      "finalScore": 76.38,
+      "points": 216,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-01-21T15:41:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf737"
+    },
+    {
+      "handle": "kondakovdmitry",
+      "placement": null,
+      "screeningScore": 0,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Failed Screening",
+      "submissionDate": "2015-01-21T17:00:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf736"
+    }
+  ],
+  "technology": [
+    ".NET",
+    "ASP.NET",
+    "C#",
+    "IIS",
+    "SQL Server",
+    "Windows Server",
+    "jQuery"
+  ]
+}

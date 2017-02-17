@@ -1,0 +1,411 @@
+{
+  "_id": 30048739,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-12-13T10:13:00.744Z",
+  "appealsEndDate": "2015-02-25T08:08:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Module Assembly - TopCoder Competition Engine - Update Logic for Processing ChangeRoundRequest",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span style=\"color:rgb(255, 0, 0); font-family:arial,helvetica,verdana,sans-serif\">Project Overview</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span style=\"font-family:sans-serif,arial,verdana,trebuchet ms\">TopCoder Competition Engine is a system used for Single Round Matches (SRM) and Marathon Matches (MM). </span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<p><span><u>About Source Code Change</u></span></p>\n\n<p><span>Recently, we have migrated all source code for TopCoder Competition Engine from svn to github repositories, please check <a href=\"https://github.com/appirio-tech/arena-web/wiki/Source-Code-Repositories-for-TopCoder-Competition-Engine\">https://github.com/appirio-tech/arena-web/wiki/Source-Code-Repositories-for-TopCoder-Competition-Engine</a> for details.</span></p>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span style=\"color:rgb(255, 0, 0); font-size:13px\">Competition Task Overview</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<p><span>Currently, for web socket listener, it can process <u>ChangeRoundRequest </u>and </span><u>LoadRoundRequest</u> from Web Arena to activiate matches.</p>\n\n<p>but there is a problem to do that, unless we first make the user login through admin listener.</p>\n\n<p>If you check <u>com.topcoder.server.listener.WebSocketConnector</u>, we get around it by doing login for admin user, like</p>\n\n<pre>\n<em>// login to admin tool if this is a admin user, so that we can do round operation\n</em>String[] userInfo = CoreServices.<em>getUserInfoBySSO</em>(lr.getSSO());\n<strong>if </strong>(userInfo != <strong>null</strong>) {\n    User user = CoreServices.<em>getUser</em>(userInfo[<span style=\"color:#0000ff\">0</span>], <strong>false</strong>);\n    <strong>if </strong>(user != <strong>null </strong>&amp;&amp; user.isLevelTwoAdmin()) {\n        <strong>try </strong>{\n            LoginResponse response = <strong>adminServices</strong>.\n                    processLoginRequest(<strong>new </strong>BackEndLoginRequest(cid, userInfo[<span style=\"color:#0000ff\">0</span>], userInfo[<span style=\"color:#0000ff\">1</span>].toCharArray()));\n            ListenerMain.<em>info</em>(response.toString());\n            <strong>this</strong>.write(cid, response);\n        } <strong>catch </strong>(Exception e) {\n            <strong>this</strong>.write(cid, <strong>new </strong>PopUpGenericResponse(<strong>&quot;Login Admin Error&quot;</strong>,\n                    <strong>&quot;Error occured while processing your request&quot;</strong>, ContestConstants.<em>GENERIC</em>,\n                    ContestConstants.<em>LABEL</em>));\n            ListenerMain.<em>error</em>(e);\n        }\n    }\n}</pre>\n\n<p>But since we are adding new Web Arena Super role to do match activiation, we&#39;d like to revise the logic for backend.</p>\n\n<ol>\n\t<li>When calling<span style=\"background-color:#e4e4ff\"> processChangeRoundRequest</span>, we&#39;d like to not require user login first.</li>\n\t<li>but we do need to check permissions.\n\t<ul>\n\t\t<li>admin is able to change/load any round</li>\n\t\t<li>web arena super role can only able to change/load the round created by himself.</li>\n\t</ul>\n\t</li>\n\t<li>Remove the login logic for admin user in WebSocketConnector</li>\n</ol>\n\n<p><u>Clear Use Case to Cover</u></p>\n\n<ol>\n\t<li>login web arena as heffan(admin) or ksmith (web arena super role)</li>\n\t<li>navigate to Match Management Page by clicking the icon in the Top Nav</li>\n\t<li>Create a Match by using Create Wizard</li>\n\t<li>Assign Problems</li>\n\t<li>Set Terms</li>\n\t<li>First Click the Change button, then Load button.</li>\n\t<li>After that, the Matches can be see in Active Matches Widget.</li>\n</ol>\n\n<p><u>About Web Arena</u></p>\n\n<p>You can following the guide in <a href=\"https://github.com/appirio-tech/arena-web/wiki\">wiki</a> to setup it in your own environment, currently, CentOS, Windows, Ubuntu and Mac OS are supported officially.</p>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span style=\"color:#FF0000\">About VMs</span></span></span></span></span></span></span></span> </span> </span></span></span></span></span></p>\n\n<p><span><strong><span><span><span><span><span><span><span><span><span><span><span><span>Before asking your own VM, you need to have a public key on your profile before asking for the VM.</span></span></span></span></span></span></span></span></span></span></span></span></strong></span></p>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span>You can find more details on how to generate a key <span><a href=\"http://apps.topcoder.com/wiki/display/projects/Generate+SSH+Key\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/projects/Generate+SSH+Key</a></span> and how to connect using it <span><a href=\"http://apps.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key</a></span>.</span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<p>All Arena related code can be found at /home/apps/dev account, please login as <u>apps</u> account.</p>\n</div>\n</div>\n</div>\n</div>\n",
+  "digitalRunPoints": 450,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30048739",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2015-03-03T16:24:00.000Z",
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<ul>\n\t<li><span>Code changes for backend, so we can change and load rounds through Web Arena</span></li>\n\t<li><span>Clear Deployment and verification guide.</span></li>\n</ul>\n</div>\n",
+  "forumId": 28065,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=28065",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 21,
+  "numberOfSubmissions": 5,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-30T10:43:00.000Z",
+      "actualStartTime": "2015-01-30T10:43:00.000Z",
+      "scheduledEndTime": "2015-01-30T10:44:00.000Z",
+      "actualendTime": "2015-01-30T10:44:00.000Z",
+      "_id": "584fc9ac10a1db09a4633c39"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-30T10:44:00.000Z",
+      "actualStartTime": "2015-01-30T10:44:00.000Z",
+      "scheduledEndTime": "2015-01-30T12:34:00.000Z",
+      "actualendTime": "2015-01-30T12:34:00.000Z",
+      "_id": "584fc9ac10a1db09a4633c38"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-30T14:01:00.000Z",
+      "actualStartTime": "2015-01-30T14:01:00.000Z",
+      "scheduledEndTime": "2015-02-01T14:01:00.000Z",
+      "actualendTime": "2015-02-01T14:01:00.000Z",
+      "_id": "584fc9ac10a1db09a4633c37"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-30T14:07:00.000Z",
+      "actualStartTime": "2015-01-30T14:07:00.000Z",
+      "scheduledEndTime": "2015-02-04T14:02:00.000Z",
+      "actualendTime": "2015-02-04T14:02:00.000Z",
+      "_id": "584fc9ac10a1db09a4633c36"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-04T14:02:00.000Z",
+      "actualStartTime": "2015-02-04T14:02:00.000Z",
+      "scheduledEndTime": "2015-02-05T01:30:00.000Z",
+      "actualendTime": "2015-02-05T01:30:00.000Z",
+      "_id": "584fc9ac10a1db09a4633c35"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-05T01:30:00.000Z",
+      "actualStartTime": "2015-02-05T01:30:00.000Z",
+      "scheduledEndTime": "2015-02-23T15:32:00.000Z",
+      "actualendTime": "2015-02-23T15:32:00.000Z",
+      "_id": "584fc9ac10a1db09a4633c34"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-23T15:33:00.000Z",
+      "actualStartTime": "2015-02-23T15:33:00.000Z",
+      "scheduledEndTime": "2015-02-24T15:33:00.000Z",
+      "actualendTime": "2015-02-24T15:33:00.000Z",
+      "_id": "584fc9ac10a1db09a4633c33"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-24T15:33:00.000Z",
+      "actualStartTime": "2015-02-24T15:33:00.000Z",
+      "scheduledEndTime": "2015-02-25T08:08:00.000Z",
+      "actualendTime": "2015-02-25T08:08:00.000Z",
+      "_id": "584fc9ac10a1db09a4633c32"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-25T08:08:00.000Z",
+      "actualStartTime": "2015-02-25T08:08:00.000Z",
+      "scheduledEndTime": "2015-02-25T08:48:00.000Z",
+      "actualendTime": "2015-02-25T08:48:00.000Z",
+      "_id": "584fc9ac10a1db09a4633c31"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-25T08:48:00.000Z",
+      "actualStartTime": "2015-02-25T08:48:00.000Z",
+      "scheduledEndTime": "2015-03-03T16:24:00.000Z",
+      "actualendTime": "2015-03-03T16:24:00.000Z",
+      "_id": "584fc9ac10a1db09a4633c30"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-03T16:24:00.000Z",
+      "actualStartTime": "2015-03-03T16:24:00.000Z",
+      "scheduledEndTime": "2015-03-04T01:41:00.000Z",
+      "actualendTime": "2015-03-04T01:41:00.000Z",
+      "_id": "584fc9ac10a1db09a4633c2f"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-04T01:41:00.000Z",
+      "actualStartTime": "2015-03-04T01:41:00.000Z",
+      "scheduledEndTime": "2015-03-05T06:27:00.000Z",
+      "actualendTime": "2015-03-05T06:27:00.000Z",
+      "_id": "584fc9ac10a1db09a4633c2e"
+    }
+  ],
+  "platforms": [
+    "HTML",
+    "Other"
+  ],
+  "postingDate": "2015-01-30T14:01:00.000Z",
+  "prize": [
+    1000,
+    500
+  ],
+  "projectId": 7377,
+  "registrants": [
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-30T14:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ac10a1db09a4633c2d"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "0%",
+      "registrationDate": "2015-01-30T14:19:00.000Z",
+      "submissionDate": "2015-02-04T13:51:00.000Z",
+      "rating": "1725",
+      "colorStyle": "color: #DDCC00",
+      "_id": "584fc9ac10a1db09a4633c2c"
+    },
+    {
+      "handle": "rajeshk87",
+      "reliability": "0%",
+      "registrationDate": "2015-01-30T14:22:00.000Z",
+      "submissionDate": null,
+      "rating": "577",
+      "colorStyle": "color: #999999",
+      "_id": "584fc9ac10a1db09a4633c2b"
+    },
+    {
+      "handle": "MonicaMuranyi",
+      "reliability": "80%",
+      "registrationDate": "2015-01-30T14:28:00.000Z",
+      "submissionDate": "2015-02-04T13:21:00.000Z",
+      "rating": "1197",
+      "colorStyle": "color: #00A900",
+      "_id": "584fc9ac10a1db09a4633c2a"
+    },
+    {
+      "handle": "peakpado",
+      "reliability": "20%",
+      "registrationDate": "2015-01-30T14:52:00.000Z",
+      "submissionDate": null,
+      "rating": "1120",
+      "colorStyle": "color: #00A900",
+      "_id": "584fc9ac10a1db09a4633c29"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-30T16:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ac10a1db09a4633c28"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "26%",
+      "registrationDate": "2015-01-30T16:53:00.000Z",
+      "submissionDate": "2015-02-04T13:57:00.000Z",
+      "rating": "1333",
+      "colorStyle": "color: #6666FF",
+      "_id": "584fc9ac10a1db09a4633c27"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-30T17:25:00.000Z",
+      "submissionDate": null,
+      "rating": "717",
+      "colorStyle": "color: #999999",
+      "_id": "584fc9ac10a1db09a4633c26"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-30T18:00:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "584fc9ac10a1db09a4633c25"
+    },
+    {
+      "handle": "duxiaoyang",
+      "reliability": "40%",
+      "registrationDate": "2015-01-31T01:09:00.000Z",
+      "submissionDate": null,
+      "rating": "1226",
+      "colorStyle": "color: #6666FF",
+      "_id": "584fc9ac10a1db09a4633c24"
+    },
+    {
+      "handle": "MiG-29",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-31T02:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ac10a1db09a4633c23"
+    },
+    {
+      "handle": "notpad",
+      "reliability": "33%",
+      "registrationDate": "2015-01-31T02:15:00.000Z",
+      "submissionDate": "2015-02-04T13:38:00.000Z",
+      "rating": "1303",
+      "colorStyle": "color: #6666FF",
+      "_id": "584fc9ac10a1db09a4633c22"
+    },
+    {
+      "handle": "xjtufreeman",
+      "reliability": "66%",
+      "registrationDate": "2015-01-31T08:27:00.000Z",
+      "submissionDate": "2015-02-03T09:38:00.000Z",
+      "rating": "1230",
+      "colorStyle": "color: #6666FF",
+      "_id": "584fc9ac10a1db09a4633c21"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2015-01-31T10:00:00.000Z",
+      "submissionDate": null,
+      "rating": "1055",
+      "colorStyle": "color: #00A900",
+      "_id": "584fc9ac10a1db09a4633c20"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-31T22:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ac10a1db09a4633c1f"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-01T04:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ac10a1db09a4633c1e"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "0%",
+      "registrationDate": "2015-02-01T07:12:00.000Z",
+      "submissionDate": null,
+      "rating": "927",
+      "colorStyle": "color: #00A900",
+      "_id": "584fc9ac10a1db09a4633c1d"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-01T09:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ac10a1db09a4633c1c"
+    },
+    {
+      "handle": "Trapti333",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-01T09:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ac10a1db09a4633c1b"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-01T09:55:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "584fc9ac10a1db09a4633c1a"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-01T13:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ac10a1db09a4633c19"
+    }
+  ],
+  "registrationEndDate": "2015-02-01T14:01:00.000Z",
+  "reliabilityBonus": 200,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-02-04T14:02:00.000Z",
+  "submissions": [
+    {
+      "handle": "MonicaMuranyi",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 97.13,
+      "finalScore": 97.64,
+      "points": 252.00000000000003,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-02-04T13:21:00.000Z",
+      "_id": "584fc9ac10a1db09a4633c3e"
+    },
+    {
+      "handle": "dexy",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 96.11,
+      "finalScore": 96.62,
+      "points": 90,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-02-04T13:51:00.000Z",
+      "_id": "584fc9ac10a1db09a4633c3d"
+    },
+    {
+      "handle": "xjtufreeman",
+      "placement": 3,
+      "screeningScore": 100,
+      "initialScore": 89.98,
+      "finalScore": 91,
+      "points": 45,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-02-03T09:38:00.000Z",
+      "_id": "584fc9ac10a1db09a4633c3c"
+    },
+    {
+      "handle": "panoptimum",
+      "placement": 4,
+      "screeningScore": 100,
+      "initialScore": 88.36,
+      "finalScore": 89.11,
+      "points": 36,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-02-04T13:57:00.000Z",
+      "_id": "584fc9ac10a1db09a4633c3b"
+    },
+    {
+      "handle": "notpad",
+      "placement": 5,
+      "screeningScore": 100,
+      "initialScore": 88.67,
+      "finalScore": 88.67,
+      "points": 27,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-02-04T13:38:00.000Z",
+      "_id": "584fc9ac10a1db09a4633c3a"
+    }
+  ],
+  "technology": [
+    "Angular.js",
+    "CSS",
+    "HTML",
+    "JavaScript"
+  ]
+}

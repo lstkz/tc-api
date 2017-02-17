@@ -1,0 +1,394 @@
+{
+  "_id": 30044052,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-11-30T08:35:46.593Z",
+  "appealsEndDate": "2014-07-18T10:40:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Hercules University Web Site - Monitoring site release assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": "2014-07-12T13:00:00.000Z",
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p>The Hercules Player University apps are a suite of applications (web, iOS, and Android) that allow students on various Universities to get their content delivered over the IP network.&nbsp; This content includes linear (live TV) and &ldquo;on demand&rdquo; content from various providers.</p>\n\n<p>This application is in production and working as expected.&nbsp; We are maintaining it and adding new features.</p>\n\n<p>This assembly will focus on a subset of features that aren&#39;t seen by the customer for monitoring the channels played back by the app. &nbsp;The client has the site deployed on an internal server and the app loops a set of configured channels, giving a report when done of the channels that succeeded and failed.</p>\n\n<p>This assembly will add some more professional UI features, along with some additional features for the client to define the configuration and get more information about the monitoring.</p>\n\n<h2>Monitoring</h2>\n\n<p>For each channel played, we will track this information, downloadable in a CSV file once the monitoring run is complete:</p>\n\n<ul>\n\t<li>Channel number</li>\n\t<li>Channel callsign</li>\n\t<li>Timestamp</li>\n\t<li>Playback time (5 seconds, 10 seconds, etc...)</li>\n\t<li>Success or Failure</li>\n\t<li>If failure, the major and minor code of the error received</li>\n</ul>\n\n<h2>New UI</h2>\n\n<p>A new set of storyboards has been provided that will need to be converted to HTML as part of this assembly. &nbsp;The UI should react well for large and small monitors. &nbsp;The settings icon should be gray whenever the settings screen is *not* shown, and blue when the settings screen is enabled.</p>\n\n<h3>01-Settings</h3>\n\n<p>This screen will be shown when the user presses the gear in the upper left, and will be the default screen shown when the user logs in. &nbsp;This page allows the user to select the options for the monitoring run, including:</p>\n\n<ul>\n\t<li>Time per channel - the time that each channel is played before switching to the next one</li>\n\t<li>Channel list - the list of channels to use during the monitoring run</li>\n\t<li>Repeat - whether or not to continuously loop through the selected channels</li>\n\t<li>Stop on failures - whether or not to immediately stop the monitoring run when a failure is complete</li>\n\t<li>Notifications - whether or not to pop up a JS alert when playback fails</li>\n\t<li>Sounds Enabled - whether or not to make a noise when playback fils for a channel</li>\n</ul>\n\n<p>The &quot;Save&quot; button should say &quot;Start&quot;.</p>\n\n<p>On this page, the runtime statistics should be hidden and not displayable because there are no details to display yet.</p>\n\n<h3>02-Channel-settings</h3>\n\n<p>This page is shown when the user clicks &quot;Select&quot; for the channel option on the settings page. &nbsp;Ignore the &quot;number of seconds per channel&quot; option on this screen - we will focus on the channel list here. &nbsp;The list will include the channel number, call sign, and image. &nbsp;The storyboard also shows the current show, but we don&#39;t need to display that for the assembly. &nbsp;The user will be able to select the channels that will be included in the monitoring run.</p>\n\n<p>When the user is done checking channels for inclusion, they clicks Save. &nbsp;Clicking Save will do two things:</p>\n\n<ul>\n\t<li>Navigate back to the settings page</li>\n\t<li>Change the &quot;Select&quot; text on the settings page to &quot;XX channels&quot;, where XX is the number of channels selected for the monitoring run</li>\n</ul>\n\n<p>The next time that &quot;XX channels&quot; is pressed, the channel list will load again, but we need to ensure the previously checked channels are shown as checked. &nbsp;They need to be persistent so the user doesn&#39;t lose their selections.</p>\n\n<h3>03-Channel-monitor.png and transition pages</h3>\n\n<p>This page is shown when &quot;Start&quot; is clicked. &nbsp;This is the main montoring screen. &nbsp;Each channel is played for the configured amount of time, and we can see the transitions between channels shown in 05-Transition-step1.png and 06-Transition-step2.png. &nbsp;Note that the player screen used here will just match the Flash version we have now - there is no need to update the Flash here.</p>\n\n<h3>04-Channel-monitor-statistics-hidden.png</h3>\n\n<p>This page shows that the runtime statistics panel on the right can be shown and hidden during the monitoring run.</p>\n\n<h3>08-Channel-monitor-results.png / 09-Channel-settings-errors.png</h3>\n\n<p>At the end of the run, or if the user cancels playback during a looping run, we will display this page. &nbsp;This will show the total time, total number of channels, and error information. &nbsp;At the top we have the total time of the run and the total channels played.</p>\n\n<p>Underneath that is the count of errors. &nbsp;Each unique major and minor code should be displayed and the count of the number of times that error was seen during the playback attempts. &nbsp;The storyboard shows 3329.12000, but there could be many different error codes encountered.</p>\n\n<p>The &quot;show errors only&quot; will limit the list to only those channels where errors were seen</p>\n\n<p>The result column shows the results of the playback of each channel. &nbsp;If a channel was played multiple times, if playback encountered an error on any attempt, that channel will be marked as an error icon, with the latest error code displayed.</p>\n\n<p>The user can download the CSV file by clicking the &quot;Results&quot; download link at the top. &nbsp;Rename the link to &quot;Results.csv&quot;.</p>\n\n<p>On this page, the user should be able to click the settings icon to go back to the settings page and start another monitoring run.</p>\n\n<h3>Runtime statistics</h3>\n\n<p>The runtime statistics panel will display information about the current, ongoing monitoring run.&nbsp;</p>\n\n<ul>\n\t<li>University name - the name of the university being run against, taken from the current logged in user</li>\n\t<li>Channel count - the number of channels being monitored. &nbsp;This should just be an integer, not in the 00:00 format shown</li>\n\t<li>Time per channel</li>\n\t<li>Current channel - the callsign and channel image of the channel being played currently</li>\n\t<li>Run number - <strong>the channel image is in the wrong place here.</strong>&nbsp;&nbsp;The run number is the number of times all the channels have been played through, if looping is enabled</li>\n\t<li>Errors - total number of errors in the monitoring run</li>\n\t<li>Logs - log file download</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<h2>Milestone</h2>\n\n<p>For the milestone, please have the runtime statistics panel and the settings panels done.</p>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": 810,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30044052",
+  "finalFixEndDate": "2014-07-19T02:58:00.000Z",
+  "finalSubmissionGuidelines": "<p>Please see above</p>\n",
+  "forumId": 24051,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=24051",
+  "numberOfCheckpointSubmissions": 1,
+  "numberOfCheckpointsPrizes": 2,
+  "numberOfRegistrants": 23,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-08T21:55:00.000Z",
+      "actualStartTime": "2014-07-08T21:55:00.000Z",
+      "scheduledEndTime": "2014-07-08T21:55:00.000Z",
+      "actualendTime": "2014-07-08T21:55:00.000Z",
+      "_id": "583e8f6210a1db09a46c35f6"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-08T21:55:00.000Z",
+      "actualStartTime": "2014-07-08T21:55:00.000Z",
+      "scheduledEndTime": "2014-07-08T23:43:00.000Z",
+      "actualendTime": "2014-07-08T23:43:00.000Z",
+      "_id": "583e8f6210a1db09a46c35f5"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-09T13:00:00.000Z",
+      "actualStartTime": "2014-07-09T13:00:00.000Z",
+      "scheduledEndTime": "2014-07-11T13:00:00.000Z",
+      "actualendTime": "2014-07-11T13:00:00.000Z",
+      "_id": "583e8f6210a1db09a46c35f4"
+    },
+    {
+      "type": "Checkpoint Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-09T13:05:00.000Z",
+      "actualStartTime": "2014-07-09T13:05:00.000Z",
+      "scheduledEndTime": "2014-07-12T13:00:00.000Z",
+      "actualendTime": "2014-07-12T13:00:00.000Z",
+      "_id": "583e8f6210a1db09a46c35f3"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-09T13:05:00.000Z",
+      "actualStartTime": "2014-07-09T13:05:00.000Z",
+      "scheduledEndTime": "2014-07-15T13:00:00.000Z",
+      "actualendTime": "2014-07-15T13:00:00.000Z",
+      "_id": "583e8f6210a1db09a46c35f2"
+    },
+    {
+      "type": "Checkpoint Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-12T13:00:00.000Z",
+      "actualStartTime": "2014-07-12T13:00:00.000Z",
+      "scheduledEndTime": "2014-07-12T15:55:00.000Z",
+      "actualendTime": "2014-07-12T15:55:00.000Z",
+      "_id": "583e8f6210a1db09a46c35f1"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-15T13:00:00.000Z",
+      "actualStartTime": "2014-07-15T13:00:00.000Z",
+      "scheduledEndTime": "2014-07-15T14:40:00.000Z",
+      "actualendTime": "2014-07-15T14:40:00.000Z",
+      "_id": "583e8f6210a1db09a46c35f0"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-15T14:40:00.000Z",
+      "actualStartTime": "2014-07-15T14:40:00.000Z",
+      "scheduledEndTime": "2014-07-17T08:55:00.000Z",
+      "actualendTime": "2014-07-17T08:55:00.000Z",
+      "_id": "583e8f6210a1db09a46c35ef"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-17T08:55:00.000Z",
+      "actualStartTime": "2014-07-17T08:55:00.000Z",
+      "scheduledEndTime": "2014-07-18T08:55:00.000Z",
+      "actualendTime": "2014-07-18T08:55:00.000Z",
+      "_id": "583e8f6210a1db09a46c35ee"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-18T08:55:00.000Z",
+      "actualStartTime": "2014-07-18T08:55:00.000Z",
+      "scheduledEndTime": "2014-07-18T10:40:00.000Z",
+      "actualendTime": "2014-07-18T10:40:00.000Z",
+      "_id": "583e8f6210a1db09a46c35ed"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-18T10:41:00.000Z",
+      "actualStartTime": "2014-07-18T10:41:00.000Z",
+      "scheduledEndTime": "2014-07-18T14:31:00.000Z",
+      "actualendTime": "2014-07-18T14:31:00.000Z",
+      "_id": "583e8f6210a1db09a46c35ec"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-18T14:31:00.000Z",
+      "actualStartTime": "2014-07-18T14:31:00.000Z",
+      "scheduledEndTime": "2014-07-19T02:58:00.000Z",
+      "actualendTime": "2014-07-19T02:58:00.000Z",
+      "_id": "583e8f6210a1db09a46c35eb"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-19T02:58:00.000Z",
+      "actualStartTime": "2014-07-19T02:58:00.000Z",
+      "scheduledEndTime": "2014-07-19T14:53:00.000Z",
+      "actualendTime": "2014-07-19T14:53:00.000Z",
+      "_id": "583e8f6210a1db09a46c35ea"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-07-19T14:53:00.000Z",
+      "actualStartTime": "2014-07-19T14:53:00.000Z",
+      "scheduledEndTime": "2014-07-24T14:53:00.000Z",
+      "actualendTime": "2014-07-24T14:53:00.000Z",
+      "_id": "583e8f6210a1db09a46c35e9"
+    }
+  ],
+  "platforms": [
+    "HTML"
+  ],
+  "postingDate": "2014-07-09T13:00:00.000Z",
+  "prize": [
+    1800,
+    900
+  ],
+  "projectId": 6275,
+  "registrants": [
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-09T13:08:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f6210a1db09a46c35e8"
+    },
+    {
+      "handle": "lovefreya",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-09T13:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f6210a1db09a46c35e7"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "0%",
+      "registrationDate": "2014-07-09T13:31:00.000Z",
+      "submissionDate": null,
+      "rating": "58",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f6210a1db09a46c35e6"
+    },
+    {
+      "handle": "daga_sumit",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-09T13:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f6210a1db09a46c35e5"
+    },
+    {
+      "handle": "abcivashritt",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-09T13:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f6210a1db09a46c35e4"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-09T14:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f6210a1db09a46c35e3"
+    },
+    {
+      "handle": "gogocrow",
+      "reliability": "100%",
+      "registrationDate": "2014-07-09T14:52:00.000Z",
+      "submissionDate": "2014-07-14T15:45:00.000Z",
+      "rating": "1351",
+      "colorStyle": "color: #6666FF",
+      "_id": "583e8f6210a1db09a46c35e2"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-07-09T17:29:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f6210a1db09a46c35e1"
+    },
+    {
+      "handle": "deepthi261",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-09T18:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f6210a1db09a46c35e0"
+    },
+    {
+      "handle": "jol",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-10T02:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f6210a1db09a46c35df"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-10T03:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f6210a1db09a46c35de"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-07-10T03:29:00.000Z",
+      "submissionDate": null,
+      "rating": "1093",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f6210a1db09a46c35dd"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "0%",
+      "registrationDate": "2014-07-10T06:22:00.000Z",
+      "submissionDate": null,
+      "rating": "1457",
+      "colorStyle": "color: #6666FF",
+      "_id": "583e8f6210a1db09a46c35dc"
+    },
+    {
+      "handle": "nasreenkamaal",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-10T06:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f6210a1db09a46c35db"
+    },
+    {
+      "handle": "codercat",
+      "reliability": "0%",
+      "registrationDate": "2014-07-10T06:25:00.000Z",
+      "submissionDate": null,
+      "rating": "838",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f6210a1db09a46c35da"
+    },
+    {
+      "handle": "rrr_guru",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-10T06:41:00.000Z",
+      "submissionDate": null,
+      "rating": "613",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f6210a1db09a46c35d9"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2014-07-10T11:31:00.000Z",
+      "submissionDate": null,
+      "rating": "1055",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f6210a1db09a46c35d8"
+    },
+    {
+      "handle": "frozenfx",
+      "reliability": "6%",
+      "registrationDate": "2014-07-10T15:47:00.000Z",
+      "submissionDate": null,
+      "rating": "1844",
+      "colorStyle": "color: #DDCC00",
+      "_id": "583e8f6210a1db09a46c35d7"
+    },
+    {
+      "handle": "o.kaya",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-10T17:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f6210a1db09a46c35d6"
+    },
+    {
+      "handle": "agus.mw",
+      "reliability": "0%",
+      "registrationDate": "2014-07-10T23:57:00.000Z",
+      "submissionDate": null,
+      "rating": "1030",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f6210a1db09a46c35d5"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "0%",
+      "registrationDate": "2014-07-11T01:07:00.000Z",
+      "submissionDate": null,
+      "rating": "819",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f6210a1db09a46c35d4"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-11T03:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f6210a1db09a46c35d3"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-07-11T08:45:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f6210a1db09a46c35d2"
+    }
+  ],
+  "registrationEndDate": "2014-07-11T13:00:00.000Z",
+  "reliabilityBonus": 360,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-07-15T13:00:00.000Z",
+  "submissions": [
+    {
+      "handle": "gogocrow",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 97.03,
+      "finalScore": 97.03,
+      "points": 810,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-07-14T15:45:00.000Z",
+      "_id": "583e8f6210a1db09a46c35f7"
+    }
+  ],
+  "technology": [
+    "HTML"
+  ]
+}

@@ -1,0 +1,355 @@
+{
+  "_id": 30055948,
+  "_isComplete": true,
+  "__v": 830,
+  "_lastUpdate": "2016-12-20T22:05:05.923Z",
+  "appealsEndDate": "2016-12-20T22:03:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Android Ionic - Offline Sync",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2017-01-12T00:19:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": 1908946,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">We have developed an Ionic Android application that allows Retailers to scan products and add them to their inventory (stock) of products. They can then scan those products to sell them. We need to develop a feature that allows Retailers to add products to to their inventory when the mobile device doesn&rsquo;t have an Internet connection.</span><br />\n<br />\n<span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">A few terms to get familiar with first. Inventory is all the products the Retailer has in stock and has sold. You&rsquo;ll see references in the app to &lsquo;Incoming&rsquo; and that just means add a product to stock. In this contest we are only interested in offline sync for adding products to stock. You do not need to consider offline sync for selling products .</span><br />\n<br />\n<span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\"><strong>We need the following implemented</strong></span></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">Assume that the Retailer has:<br />\n-signed in to the mobile app<br />\n-already has products in their inventory (stock)</span><br />\n&nbsp;</p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">When the user first signs-in to the app you&rsquo;ll want to retrieve the Retailers products from their inventory with a call to GET /retailer/{id}/products and store them in a database collection/table on the device (PouchDB or SQLite). Next make a call to /retailer/{id}/products/recent which retrieves the Retailer&#39;s recent products that have been added to their Inventory and add those to another collection/table. Each time they login, you&rsquo;ll need to update both of these tables/collections so you have the most up to date data. </span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">Now turn off your internet connection and attempt to add a product to the inventory by navigating to the Scan Barcode screen, tap the &lsquo;Incoming&rsquo; tab then scan a product (see &lsquo;Barcodes for Testing&rsquo; section<br />\n<br />\n).</span><img src=\"https://lh6.googleusercontent.com/BrB_Ps-45TdLx64P6o9wq-k0PKnCWRdbti9hU79m-slKUkwFsZE_tVZh23uHdiOVNfUwFVf8F6AhMVtVZKWBVTXb6LsD0XT-1m5f5WgDjxAHspuyd4-wD3I0MOLoGw9ehQTHwNmx\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:401px; transform:rotate(0.00rad); width:223px\" /></p>\n\n<div><br />\n<img src=\"https://lh6.googleusercontent.com/uT1hQn9xhYhwocxa1GVR2hqCE3bPJtdny0MDn6Ji3p-On3m4WFl8sYPw_04McU6jt7G3d9OwANuui0AZTrwY6guz8vWnv9mgRjmvl90i_P17zNa-uNDpxWjs6eFd28obSgy4ZO1R\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:398px; transform:rotate(0.00rad); width:221px\" /></div>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">Once the scanner returns the barcode number, check if that barcode exists in the device database as a stock item (i.e. it&rsquo;s in the inventory as a stock item). If it&rsquo;s a stock item, then add it to a collection/table in the database (&lsquo;offlineScans&rsquo;). Display a &lsquo;Scan Success - Offline&rsquo; toast message (to see an example of this message try scanning a product when the device is online). Tapping on the Scan Activity screen should display a &lsquo;clock&rsquo; icon (see &lsquo;assets&rsquo; in the Gitlab repo for the clock icon) on the product. If it&rsquo;s not a stock item, then display a &lsquo;Not in stock. No data connection&rsquo;.</span></p>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">Once the internet connection is restored, make a PUT request to /retailer/:id/products for each product in the &lsquo;offlineScans&rsquo; collection and empty the &lsquo;offlineScans&rsquo; collection/table. Tapping on the Scan Activity will show that the synced products have a &lsquo;tick&rsquo; icon on them (see &lsquo;assets&rsquo; in the Gitlab repo for the tick icon).</span></p>\n\n<div>&nbsp;</div>\n\n<div><br />\n<img src=\"https://lh4.googleusercontent.com/zcKY_mQtWTUu56CPk68BghSjEAccDsCxMoMC5HETwnXqaSpIQWh5whWGW7gOmbIM9VszjfBEt9yDV-jwGKQP5mTQqIVpkO6pTAoyA9sCwTcGlIUcNmvgG8REUHHYYNaJ2Df3rsrM\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:392px; transform:rotate(0.00rad); width:237px\" /></div>\n\n<div>&nbsp;</div>\n\n<div>&nbsp;</div>\n\n<div><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">\f</span></div>\n\n<p><strong>Barcodes for Testing</strong></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">For the offline sync part of the challenge you&rsquo;ll need some barcodes to test. All of these barcodes exist as valid products in the Retailer Loyalty backend.</span></p>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\"><img src=\"https://lh5.googleusercontent.com/fTr4yeFw2dtYq-s42z81bqm9wT77FQMiFhkt1ImbQXXFPhhb6SXkyTueU_XyVun0Nl-d-2YzVHMC5vitDauiISWHK5jSgRWH5S5bi5y6_aBxGT7BV7HsIIqAYsffFMAucjUijIV8\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:120px; transform:rotate(0.00rad); width:246px\" /></span></p>\n\n<div>&nbsp;</div>\n\n<div>&nbsp;</div>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\"><img src=\"https://lh6.googleusercontent.com/3je1QUynAqCImo3js1L_47ZEW7fykYQLdgtyE2zc9p1ZT_t-3NpuMvPNSFaghF5HK7oYYRymp_KK08njdNgMcHgwHovbjeGqXGSC5jxrpLvnOma9OFOu4tAyLfrhc1pwVjvLTgmr\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:120px; transform:rotate(0.00rad); width:246px\" /></span></p>\n\n<div>&nbsp;</div>\n\n<div>&nbsp;</div>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\"><img src=\"https://lh5.googleusercontent.com/25_5yF6cxwXJlIYvx2geQMKxG9UCN4V8UCgGLUhJwuSba1vGRYh2w4S3j8ou4iYDwqyBYu5w3k6-CibOnjF1wVs1H6N9JpfD1gSVGTxUB0q89DLPBxV4PuXmArK33PlleZVJBBXq\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:120px; transform:rotate(0.00rad); width:246px\" /></span></p>\n\n<div>&nbsp;</div>\n\n<div>&nbsp;</div>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\"><img src=\"https://lh3.googleusercontent.com/vpLYmrhz2yE8o5Vj26d4wNcznlS70ccvQpIQEUSBcH7Cw-7_pEeXsk9rbxycOha8UJw3zH4EWeNsDSyCy8MOZK9VvFfpxwQZ2Z-E92M6urHClz-HjUVKTU9WHULwAEnHnRhkoGNY\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:120px; transform:rotate(0.00rad); width:246px\" /></span></p>\n\n<div>&nbsp;</div>\n\n<p><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\"><img src=\"https://lh3.googleusercontent.com/ztum7XOGtKYdRpGVJUcUreMtiZVPFj6NEKmzfUtHclXWIbCL97_6JAc_Gx1r5iCTWi0KHlt-BSQDBcrmo2oaEEV_F6_y_HNC0W4H6alVmz-DKVzRgj6o0vZAghQw5pzC5Dx6Cg3w\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:120px; transform:rotate(0.00rad); width:246px\" /></span></p>\n\n<div>&nbsp;</div>\n\n<div>&nbsp;</div>\n\n<p><strong>Test Accounts</strong><br />\n<span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">Please use the following test accounts to login as either Retailer or Agent. The password is </span><span style=\"color:rgb(0, 0, 0); font-family:courier new; font-size:13.3333px\">password123</span><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\"> for all accounts. Note: each retailer has been assigned an Agent.</span></p>\n\n<div style=\"margin-right:4.3pt\"><strong>Retailer /&nbsp;</strong><strong>Assigned Agent</strong><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">retailer1@example.com /&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">agent1@example.com</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">retailer2@example.com /&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">agent1@example.com</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">retailer3@example.com /&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">agent2@example.com</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">retailer4@example.com /&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">agent2@example.com</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">retailer5@example.com /&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">agent3@example.com</span><br />\n<br />\n&nbsp;</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30055948",
+  "event": {
+    "id": 3447,
+    "description": "2017 TopCoder(R) Open",
+    "shortDescription": "tco17"
+  },
+  "finalSubmissionGuidelines": "<p><strong>Getting access to the code and building the Ionic app</strong></p>\n\n<div><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">The code for the Ionic app is in a Gitlab repo </span><a href=\"https://gitlab.com/hpe-retailer-loyalty/retailer-loyalty-mobile-app/tree/develop\" style=\"text-decoration: none;\"><u>here</u></a><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">. Ask for access in the forums.</span></div>\n\n<div><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6667px\">You&rsquo;ll require the following to build the app:</span></div>\n\n<p><span style=\"background-color:transparent; font-size:14.6667px\">NodeJS 6.x or 7.x</span></p>\n\n<p><span style=\"background-color:transparent; font-size:14.6667px\">Ionic 2.1.x</span></p>\n\n<p><span style=\"background-color:transparent; font-size:14.6667px\">Cordova 6+</span></p>\n\n<p><span style=\"background-color:transparent; font-size:14.6667px\">Android SDK (latest updates)</span></p>\n\n<p><span style=\"background-color:transparent; font-size:14.6667px\">Java 8</span></p>\n\n<ul>\n</ul>\n\n<div><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">Once you have cloned the repo you must work off the </span><strong>&lsquo;develop&rsquo;</strong><span style=\"color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\"> branch.</span></div>\n\n<p><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">Run the following commands (</span><strong>make sure you&rsquo;re in the &lsquo;ionic&rsquo; directory</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">).</span></p>\n\n<p><span style=\"background-color:rgb(249, 242, 244); color:rgb(199, 37, 78); font-family:courier new; font-size:13.3333px\">$ npm i</span><br />\n<span style=\"background-color:rgb(249, 242, 244); color:rgb(199, 37, 78); font-family:courier new; font-size:13.3333px\">$ ionic state restore</span><br />\n<br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">To run in browser:</span></p>\n\n<p><span style=\"background-color:rgb(249, 242, 244); color:rgb(199, 37, 78); font-family:courier new; font-size:13.3333px\">ionic serve</span><br />\n<br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:13.3333px\">To run in connected android device:</span></p>\n\n<p><br />\n<span style=\"background-color:rgb(249, 242, 244); color:rgb(199, 37, 78); font-family:courier new; font-size:13.3333px\">ionic run android</span></p>\n",
+  "forumId": 34738,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=34738",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 29,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2016-12-13T00:19:00.000Z",
+      "actualStartTime": "2016-12-13T00:19:00.000Z",
+      "scheduledEndTime": "2017-01-12T00:19:00.000Z",
+      "actualendTime": null,
+      "_id": "5859ab1190ca64469c667d13"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-12-20T21:58:00.000Z",
+      "actualStartTime": "2016-12-20T21:58:00.000Z",
+      "scheduledEndTime": "2016-12-20T22:03:00.000Z",
+      "actualendTime": "2016-12-20T22:03:00.000Z",
+      "_id": "5859ab1190ca64469c667d12"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2016-12-13T00:24:00.000Z",
+      "actualStartTime": "2016-12-13T00:24:00.000Z",
+      "scheduledEndTime": "2017-01-12T00:24:00.000Z",
+      "actualendTime": null,
+      "_id": "5859ab1190ca64469c667d11"
+    }
+  ],
+  "platforms": [
+    "Mobile",
+    "HTML",
+    "Other",
+    "Android"
+  ],
+  "postingDate": "2016-12-13T00:19:00.000Z",
+  "prize": [
+    400
+  ],
+  "projectId": 11104,
+  "registrants": [
+    {
+      "handle": "wwxyxgy",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-13T01:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667d10"
+    },
+    {
+      "handle": "jackyzhangjb",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-13T02:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667d0f"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-13T02:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667d0e"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-13T02:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667d0d"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-13T03:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667d0c"
+    },
+    {
+      "handle": "akinwale",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-13T03:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667d0b"
+    },
+    {
+      "handle": "cunhavictor",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-13T04:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667d0a"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-13T04:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667d09"
+    },
+    {
+      "handle": "ksanju",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-13T04:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667d08"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-13T06:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667d07"
+    },
+    {
+      "handle": "JGeeks",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-13T11:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667d06"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-13T12:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667d05"
+    },
+    {
+      "handle": "talesforce",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-13T14:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667d04"
+    },
+    {
+      "handle": "borysfan",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-13T14:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667d03"
+    },
+    {
+      "handle": "Ishada",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-13T14:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667d02"
+    },
+    {
+      "handle": "ketzjs09",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-13T16:26:00.000Z",
+      "submissionDate": "2016-12-20T21:56:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667d01"
+    },
+    {
+      "handle": "Yaziid",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-13T23:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667d00"
+    },
+    {
+      "handle": "spark14",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-14T04:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667cff"
+    },
+    {
+      "handle": "vokie",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-14T07:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667cfe"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-14T07:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667cfd"
+    },
+    {
+      "handle": "Raywilliams01",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-14T08:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667cfc"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-14T12:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667cfb"
+    },
+    {
+      "handle": "gets0ul",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-14T18:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667cfa"
+    },
+    {
+      "handle": "faisalbasha1982",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-14T18:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667cf9"
+    },
+    {
+      "handle": "mohhasbias",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-14T21:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667cf8"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-15T00:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667cf7"
+    },
+    {
+      "handle": "snehaheda",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-15T06:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667cf6"
+    },
+    {
+      "handle": "michael_tang",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-15T11:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667cf5"
+    },
+    {
+      "handle": "ivyxjc",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-15T11:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5859ab1190ca64469c667cf4"
+    }
+  ],
+  "registrationEndDate": "2017-01-12T00:19:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "INTERNAL",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2017-01-12T00:24:00.000Z",
+  "submissions": [
+    {
+      "handle": "ketzjs09",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-12-20T21:56:00.000Z",
+      "_id": "5859ab1190ca64469c667d14"
+    }
+  ],
+  "technology": [
+    "Android",
+    "Node.js"
+  ]
+}

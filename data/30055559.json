@@ -1,0 +1,466 @@
+{
+  "_id": 30055559,
+  "_isComplete": true,
+  "__v": 2702,
+  "_lastUpdate": "2016-11-16T15:41:17.792Z",
+  "appealsEndDate": "2016-11-16T15:39:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Living Progress - Build - Mentor ME - Remote Services Implementation",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span style=\"color:rgb(255, 0, 0)\"><strong>Project Overview</strong></span></h2>\n\n<p>Mentor ME is a responsive mobile app with the objective at assisting underachieving high school students &ndash; particularly those at risk of becoming school dropouts. Mentor ME enables, empowers and inspires new talent by building networking relationships from a list of mentors that assist you sharing ideas, guidance, learning and connecting with other leaders.<br />\n<br />\nThe propose of Mentor ME is be more effective, efficiency at mentorship programs and to increase the coverage of current programs where younger adults can have access to volunteer mentors to get guidance and motivation to graduate. The core of Mentor ME is the match between the Mentee interests and opportunities to Mentor Skill.<br />\n<br />\nThe whole project consists of three parts:<br />\n- The mentor and mentee Android application.<br />\n- A set of REST-based services to support data access and updates for the mobile applications.<br />\n- A batch Java application which will update the Haven OnDemand recommendation model with Professional and Personal Interest weightings and will use the Google Maps Geocoding API convert provided address info into Longitude and Latitude coordinates.</p>\n\n<p><span style=\"color:rgb(255, 0, 0)\"><strong>Competition Task Overview</strong></span></p>\n\n<p>In a previous <a href=\"http://www.topcoder.com/challenge-details/30055306/?type=develop&amp;noncache=true\"><u>service challenge</u></a>, we developed an internal ranking/recommendation algorithm to allow matching between Mentors and Mentees and vice versa based purely on professional and personal interests. &nbsp;&nbsp;In this challenge, we&rsquo;re hoping to enhance this functionality. &nbsp;Some Mentors and Mentee might only want to connect with their mentorship partners on a virtual basis which means that physical location won&rsquo;t be a factor. &nbsp;But for other physical proximity will be relevant.</p>\n\n<p>In this challenge we&rsquo;re also going to develop a service which provides an alternative matching mechanism using HPE&rsquo;s Haven OnDemand and a script which will update the prediction model on daily basis uses the services developed. &nbsp;The API&rsquo;s that we&rsquo;ll be using are the <a href=\"https://dev.havenondemand.com/apis/trainpredictor#overview\"><u>Train Prediction</u></a> API call and the <a href=\"https://dev.havenondemand.com/apis/predict#overview\"><u>Predict</u></a> API call.</p>\n\n<p>Each user of the Mentor Me application will designate a series of personal and professional interests using our mobile application. &nbsp;These are stored in the weighted_personal_interest and weighted_professional_interest tables of our data model. &nbsp;You can find the latest data model in the Github repository in the SQL folder. &nbsp;The initial list of personal and professional interests can be found here:</p>\n\n<p><a href=\"https://www.iab.com/guidelines/iab-quality-assurance-guidelines-qag-taxonomy/\"><u>https://www.iab.com/guidelines/iab-quality-assurance-guidelines-qag-taxonomy/</u></a></p>\n\n<div>SQL files have been provided to load this data - personal_interest.sql and professional_interest.sql in the sqls folder of the repository. &nbsp;The idea here is that common professional interest will be more important than personal interest. &nbsp;The interests are ranked into two levels. &nbsp;Specific interest matches should also be ranked more than highly than the general ones. &nbsp;(e.g. A match on the professional interest of Television should return a higher score than a match on the more general category of Arts and Entertainment.) &nbsp;Also the &ldquo;weighting&rdquo; of the personal and professional interests comes from the user rankings of each personal and professional interest that they select. &nbsp;Each user selects a 1 - 3 ranking of both personal and professional interest - 1 being the more important interest and 3 the least important. &nbsp;There is some simplified test data in the sqls/testdata.sql file which contain a script to load interest and users already.</div>\n\n<p>Each day, all the personal and professional interests and their weightings for all the users in the system will need to be uploaded to the Haven OnDemand training model using the Train Prediction API call.</p>\n\n<p>We&rsquo;re also going to implement some Geocoding functionality as part of our batch processes. &nbsp;We&rsquo;re going to collect address information from our users. &nbsp;You&rsquo;ll need to add the following fields to the User table:</p>\n\n<p>`is_virtual_user` TINYINT(1) NOT NULL,<br />\n`street_address` VARCHAR (512)<br />\n`city` VARCHAR(128)<br />\n`state_id` BIGINT (fk to state)<br />\n`country_id` BIGINT (fk to country)<br />\n`postal_code` VARCHAR(25)<br />\n`longitude` DECIMAL (16, 8)<br />\n`latitude` DECIMAL (16, 8)<br />\n`last_modified_on` DATETIME NOT NULL (this can be initialized with the created_on date to start)</p>\n\n<p>We need to modify our &ldquo;Auditable Interface&rdquo;. &nbsp;Currently we only have a created_on date in our Auditable interface. &nbsp;But I think we need to include a &ldquo;last_modified_on&rdquo; field as well for some of the logic for processing users. &nbsp;&nbsp;Specifically, we need to update the last_modified_on date if there have been changes to a user so the batch process can ensure that the users preference and location have been updated for matching purposes. &nbsp;A country.sql file and state.sql file have been provided in the sqls folder of the services repository.</p>\n\n<p><span style=\"color:#FF0000\"><strong>Java Batch Application Requirements:</strong></span><br />\n1. Create a java command line application that can be executed by shell script on a Linux machine on a nightly basis using cron.<br />\n2. The java application will extract user details and preferences for users that have been newly created or updated in the past 24 hours. &nbsp;Please update our User services/endpoints to include the new information required to extract the appropriate list of users and their info.<br />\n3. The application will use the <a href=\"https://developers.google.com/maps/documentation/geocoding/intro\"><u>Google Maps Geocoding API</u></a> to convert provided address info into Longitude &nbsp;and Latitude Coordinates.<br />\n4. We have a limited number of API calls per night. &nbsp;If we can batch a set of addresses and receive a batch of geocoded responses for the Longitude and Latitude updates this is ideal.<br />\n5. We should <a href=\"https://dev.havenondemand.com/apis/deletepredictionmodel#overview\"><u>delete</u></a> the currently trained model in the system.<br />\n6. Create and Train a model to predict matching mentors based on professional and personal interests using the Haven On Demand <a href=\"https://dev.havenondemand.com/apis/trainpredictor#overview\"><u>Train Prediction</u></a> API. It&rsquo;s going to require a little thought to handle the weightings properly. <a href=\"https://dev.havenondemand.com/docs/HowTo_Prediction.html\"><u>Here</u></a> is an article about how to set up the models. &nbsp;I think we&rsquo;re going to need to send both the parent categories (level 1) and the more specific (level 2) categories to make matching more likely since our list of lower level personal interest is 361 individual categories. &nbsp;If another API call is more likely to fulfill the matching requirements, alternative solutions can be discussed in the forums.<br />\n7. You should also load whether a User is a Mentor or Mentee to the model or perhaps we create two separate models for matching purposes.<br />\n8. When the application has trained the model it should execute asynchronous job status calls to validate that the model has been trained. &nbsp;It should output a success or failure message to a log file.<br />\n9. It would be helpful as well to execute a <a href=\"https://dev.havenondemand.com/apis/getpredictionmodeldetails#overview\"><u>Get Prediction Model Details</u></a> after training and logs results to provide some details about the training process.<br />\n10. The batch java command line application should be in a separate directory. &nbsp;We&rsquo;ll probably load this code to a separate repository.<br />\n11. Please use Maven to build a jar file for the application.<br />\n12. Environment specific variable like the IP addresses for the endpoints should be designated in system variables.</p>\n\n<p><span style=\"color:#FF0000\"><strong>Services Update Requirements</strong></span><br />\n1. Add the User field defined above to the User table and the User Service output.<br />\n2. Update the Auditable interface so that we can report on a Last Modified Timestamp as well as the Created Date Timestamp<br />\n3. Create a services endpoint on each of the Mentor and Mentee Services which executes a <a href=\"https://dev.havenondemand.com/apis/predict#overview\"><u>Predict</u></a> call to the model you&rsquo;ve trained with Haven OnDemand. &nbsp;This can be synchronous API call. &nbsp;The idea here is to retrieve a list of Mentors or Mentee with compatible interests.</p>\n\n<p><span style=\"color:rgb(255, 0, 0)\"><strong>Technology Overview</strong></span><br />\nJava 8<br />\nHaven OnDemand<br />\nREST<br />\nMySQL</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30055559",
+  "finalSubmissionGuidelines": "<h2><span style=\"color:rgb(255, 0, 0)\"><strong>Submission Deliverables</strong></span></h2>\n\n<p>- For each member, the final submission should be uploaded via the challenge detail page on <a href=\"http://www.topcoder.com/\"><u>topcoder.com</u></a>.<br />\n- You should use the code in the following GitHub repository as a starting point for your submission: <a href=\"https://github.com/topcoderinc/HPE-LP-MentorMe-Services\"><u>https://github.com/topcoderinc/HPE-LP-MentorMe-Services</u></a>. You should fork this repository. &nbsp;Winning submissions will be asked to submit a pull request to the repository.<br />\n- Please use the existing build scripts to build and deploy your solutions. &nbsp;You, of course, may make modifications to them as required.</p>\n",
+  "forumId": 34364,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=34364",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 40,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-11-07T04:00:00.000Z",
+      "actualStartTime": "2016-11-07T04:00:00.000Z",
+      "scheduledEndTime": "2016-11-13T04:01:00.000Z",
+      "actualendTime": "2016-11-13T04:01:00.000Z",
+      "_id": "582c7e1d550dfb3b52f2d9f1"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-11-07T04:05:00.000Z",
+      "actualStartTime": "2016-11-07T04:05:00.000Z",
+      "scheduledEndTime": "2016-11-13T04:01:00.000Z",
+      "actualendTime": "2016-11-13T04:01:00.000Z",
+      "_id": "582c7e1d550dfb3b52f2d9f0"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-11-13T04:01:00.000Z",
+      "actualStartTime": "2016-11-13T04:01:00.000Z",
+      "scheduledEndTime": "2016-11-15T04:00:00.000Z",
+      "actualendTime": "2016-11-15T04:00:00.000Z",
+      "_id": "582c7e1d550dfb3b52f2d9ef"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-11-15T04:00:00.000Z",
+      "actualStartTime": "2016-11-15T04:00:00.000Z",
+      "scheduledEndTime": "2016-11-16T04:00:00.000Z",
+      "actualendTime": "2016-11-16T04:00:00.000Z",
+      "_id": "582c7e1d550dfb3b52f2d9ee"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-11-16T04:00:00.000Z",
+      "actualStartTime": "2016-11-16T04:00:00.000Z",
+      "scheduledEndTime": "2016-11-16T15:39:00.000Z",
+      "actualendTime": "2016-11-16T15:39:00.000Z",
+      "_id": "582c7e1d550dfb3b52f2d9ed"
+    }
+  ],
+  "platforms": [
+    "HPE Haven OnDemand"
+  ],
+  "postingDate": "2016-11-07T04:00:00.000Z",
+  "prize": [
+    1500,
+    750
+  ],
+  "projectId": 9615,
+  "registrants": [
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-08T11:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9ec"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T04:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9eb"
+    },
+    {
+      "handle": "vvvpig",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T07:19:00.000Z",
+      "submissionDate": "2016-11-13T00:30:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9ea"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T04:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9e9"
+    },
+    {
+      "handle": "net_buster",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T19:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9e8"
+    },
+    {
+      "handle": "bannie2492",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T05:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9e7"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T05:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9e6"
+    },
+    {
+      "handle": "panoptimum",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T06:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9e5"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T07:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9e4"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T08:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9e3"
+    },
+    {
+      "handle": "code_now",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T09:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9e2"
+    },
+    {
+      "handle": "veshu",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T12:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9e1"
+    },
+    {
+      "handle": "jayeshk26",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T12:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9e0"
+    },
+    {
+      "handle": "winterflame",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T12:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9df"
+    },
+    {
+      "handle": "kastiel",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T12:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9de"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T14:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9dd"
+    },
+    {
+      "handle": "sfaxiano",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T16:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9dc"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T17:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9db"
+    },
+    {
+      "handle": "kondakovdmitry",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T17:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9da"
+    },
+    {
+      "handle": "jol",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T18:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9d9"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T20:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9d8"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T23:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9d7"
+    },
+    {
+      "handle": "ShindouHikaru",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-08T01:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9d6"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-08T01:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9d5"
+    },
+    {
+      "handle": "chubbchubbs",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-08T03:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9d4"
+    },
+    {
+      "handle": "renqingwei123",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-08T09:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9d3"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-08T10:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9d2"
+    },
+    {
+      "handle": "cairi",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-08T13:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9d1"
+    },
+    {
+      "handle": "gauravs23",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-08T19:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9d0"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-09T11:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9cf"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-09T16:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9ce"
+    },
+    {
+      "handle": "MKuk",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-09T21:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9cd"
+    },
+    {
+      "handle": "mwasylyk",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-09T22:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9cc"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-10T00:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9cb"
+    },
+    {
+      "handle": "myagmarbatd",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-10T02:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9ca"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-10T10:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9c9"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-10T23:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9c8"
+    },
+    {
+      "handle": "TopG",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-12T02:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9c7"
+    },
+    {
+      "handle": "agnelvishal",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-12T18:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9c6"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-13T02:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "582c7e1d550dfb3b52f2d9c5"
+    }
+  ],
+  "registrationEndDate": "2016-11-13T04:01:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-11-13T04:01:00.000Z",
+  "submissions": [
+    {
+      "handle": "vvvpig",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 97.5,
+      "finalScore": 97.5,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-11-13T00:30:00.000Z",
+      "_id": "582c7e1d550dfb3b52f2d9f2"
+    }
+  ],
+  "technology": [
+    "Java",
+    "MySQL",
+    "REST"
+  ]
+}

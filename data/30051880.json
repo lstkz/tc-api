@@ -1,8 +1,8 @@
 {
   "_id": 30051880,
   "_isComplete": true,
-  "__v": 2125,
-  "_lastUpdate": "2016-11-05T11:07:30.456Z",
+  "__v": 24226,
+  "_lastUpdate": "2017-02-17T08:01:28.492Z",
   "appealsEndDate": "2015-10-23T13:24:00.000Z",
   "challengeCommunity": "develop",
   "challengeName": "Fix Arena Admin Tool Problem With Java 8u60",
@@ -10,7 +10,7 @@
   "checkpointSubmissionEndDate": null,
   "currentPhaseEndDate": "2015-11-21T13:19:00.000Z",
   "currentPhaseName": "Registration",
-  "currentPhaseRemainingTime": -30235626,
+  "currentPhaseRemainingTime": -39206402,
   "currentStatus": "Cancelled - Client Request",
   "detailedRequirements": "<h2><span>Project Overview</span></h2>\n\n<p><span>TopCoder Competition Engine is a system used for Single Round Matches (SRM) and Marathon Matches (MM).</span></p>\n\n<h2><span>Competition Task Overview</span></h2>\n\n<p><span>This challenge is expected to fix a problem with java 8u60 (need this specific version or higher to reproduce the problem).</span></p>\n\n<p>When starting the Arena Admin Tool, &nbsp;we are getting error like&nbsp;</p>\n\n<blockquote>\n<p><span style=\"color:#0000FF\">2015-10-22 08:58:54,465 [RetryThread] - Error connecting to admin listener server<br />\njavax.net.ssl.SSLHandshakeException: No appropriate protocol (protocol is disabled or cipher suites are inappropriate)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; at sun.security.ssl.Handshaker.activate(Unknown Source)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; at sun.security.ssl.SSLSocketImpl.kickstartHandshake(Unknown Source)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; at sun.security.ssl.SSLSocketImpl.performInitialHandshake(Unknown Source)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; at sun.security.ssl.SSLSocketImpl.writeRecord(Unknown Source)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; at sun.security.ssl.AppOutputStream.write(Unknown Source)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; at com.topcoder.netCommon.io.ObjectWriter.writeObject(ObjectWriter.java:127)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; at com.topcoder.netCommon.io.ClientSocket.writeObject(ClientSocket.java:137)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; at com.topcoder.netCommon.io.ClientSocket.writeObject(ClientSocket.java:123)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; at com.topcoder.client.contestMonitor.model.MonitorServerConnection.tryToConnect(MonitorServerConnection.java:66)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; at com.topcoder.client.contestMonitor.model.MonitorServerConnection.cycle(MonitorServerConnection.java:136)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; at com.topcoder.shared.util.StoppableThread$STRunnable.run(StoppableThread.java:100)<br />\n&nbsp; &nbsp; &nbsp; &nbsp; at java.lang.Thread.run(Unknown Source)</span></p>\n</blockquote>\n\n<p>&nbsp;</p>\n\n<p><span>A general investigation shows that is related to the following</span></p>\n\n<blockquote>\n<p><strong>Synopsis</strong>: Disable RC4 cipher suites</p>\n\n<p>RC4-based TLS ciphersuites (e.g. TLS_RSA_WITH_RC4_128_SHA) are now considered compromised and should no longer be used (see RFC 7465). Accordingly, RC4-based TLS ciphersuites have been deactivated by default in the Oracle JSSE implementation by adding &quot;RC4&quot; to &quot;jdk.tls.disabledAlgorithms&quot; security property, and by removing them from the default enabled ciphersuites list. These cipher suites can be reactivated by removing &quot;RC4&quot; form &quot;jdk.tls.disabledAlgorithms&quot; security property in the<code>java.security</code>&nbsp;file or by dynamically calling Security.setProperty(), and also readding them to the enabled ciphersuite list using the SSLSocket/SSLEngine.setEnabledCipherSuites() methods.</p>\n\n<p>You can also use the&nbsp;<code>-Djava.security.properties</code>&nbsp;command line option to override the<code>jdk.tls.disabledAlgorithms</code>&nbsp;security property. For example:</p>\n\n<p><code>java -Djava.security.properties=my.java.security ...</code></p>\n\n<p>where&nbsp;<code>my.java.security</code>&nbsp;is a file containing the property without RC4:</p>\n\n<p><code>jdk.tls.disabledAlgorithms=SSLv3</code></p>\n\n<p>Even with this option set from commandline, the RC4 based ciphersuites need to be re-added to the enabled ciphersuite list by using the&nbsp;<code>SSLSocket/SSLEngine.setEnabledCipherSuites()</code>&nbsp;methods.</p>\n\n<p>See&nbsp;<a href=\"http://bugs.java.com/view_bug.do?bug_id=8076221\" style=\"color: rgb(31, 79, 130); margin: 0px; padding: 0px; list-style: none; text-decoration: none;\" target=\"_blank\">8076221</a>.</p>\n</blockquote>\n\n<p>We&#39;d like you to reproduce this problem and provide a fix for it.</p>\n\n<h3><span>Verification</span></h3>\n\n<p><span>You can follow the </span><u><span>SRM Problem Guide</span></u><span> to carry out the standard verification process. Let me know if you need any more clarification.</span></p>\n\n<h3><span>About VMs</span></h3>\n\n<p><span>Before asking your own VM, you need to have a public key on your profile before asking for the VM.</span></p>\n\n<p><span>You can find more details on how to generate a key <a href=\"http://apps.topcoder.com/wiki/display/projects/Generate+SSH+Key\"><span>http://apps.topcoder.com/wiki/display/projects/Generate+SSH+Key</span></a> and how to connect using it <a href=\"http://apps.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key\"><span>http://apps.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key</span></a>.</span></p>\n\n<p><span>Please reference <a href=\"http://apps.topcoder.com/wiki/display/docs/Competition+Engine+VM+Setup\"><span>http://apps.topcoder.com/wiki/display/docs/Competition+Engine+VM+Setup</span></a> for general usage of Arena VM.</span></p>\n\n<p><span>Previously, we have made several update for the Arena VM.&nbsp; So when the Arena VM allocated is available for you, there is a problem and a SRM contest already setup, you can reuse that for testing.</span></p>\n",
   "digitalRunPoints": null,
@@ -35,7 +35,7 @@
       "actualStartTime": "2015-10-22T13:19:00.000Z",
       "scheduledEndTime": "2015-11-21T13:19:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd72550dfb3b52be46c2"
+      "_id": "58a6add85d036c0bbdd5acf2"
     },
     {
       "type": "Iterative Review",
@@ -44,7 +44,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2015-10-23T13:24:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd72550dfb3b52be46c1"
+      "_id": "58a6add85d036c0bbdd5acf1"
     },
     {
       "type": "Submission",
@@ -53,7 +53,7 @@
       "actualStartTime": "2015-10-22T13:24:00.000Z",
       "scheduledEndTime": "2015-11-21T13:24:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd72550dfb3b52be46c0"
+      "_id": "58a6add85d036c0bbdd5acf0"
     }
   ],
   "platforms": [
@@ -72,7 +72,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46bf"
+      "_id": "58a6add85d036c0bbdd5acef"
     },
     {
       "handle": "cellkore",
@@ -81,7 +81,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46be"
+      "_id": "58a6add85d036c0bbdd5acee"
     },
     {
       "handle": "gurucodes",
@@ -90,7 +90,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46bd"
+      "_id": "58a6add85d036c0bbdd5aced"
     },
     {
       "handle": "Bende",
@@ -99,7 +99,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46bc"
+      "_id": "58a6add85d036c0bbdd5acec"
     },
     {
       "handle": "mulish",
@@ -108,7 +108,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46bb"
+      "_id": "58a6add85d036c0bbdd5aceb"
     },
     {
       "handle": "blu3fox",
@@ -117,7 +117,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46ba"
+      "_id": "58a6add85d036c0bbdd5acea"
     },
     {
       "handle": "duongratdeptrai",
@@ -126,7 +126,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46b9"
+      "_id": "58a6add85d036c0bbdd5ace9"
     },
     {
       "handle": "savon_cn",
@@ -135,7 +135,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46b8"
+      "_id": "58a6add85d036c0bbdd5ace8"
     },
     {
       "handle": "sah2ed",
@@ -144,7 +144,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46b7"
+      "_id": "58a6add85d036c0bbdd5ace7"
     },
     {
       "handle": "v295",
@@ -153,7 +153,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46b6"
+      "_id": "58a6add85d036c0bbdd5ace6"
     },
     {
       "handle": "MathClassHeroes",
@@ -162,7 +162,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46b5"
+      "_id": "58a6add85d036c0bbdd5ace5"
     },
     {
       "handle": "bhupesh_kumar",
@@ -171,7 +171,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46b4"
+      "_id": "58a6add85d036c0bbdd5ace4"
     },
     {
       "handle": "codejam157",
@@ -180,7 +180,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46b3"
+      "_id": "58a6add85d036c0bbdd5ace3"
     },
     {
       "handle": "JENUNAVA",
@@ -189,7 +189,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46b2"
+      "_id": "58a6add85d036c0bbdd5ace2"
     },
     {
       "handle": "sunbinbrother",
@@ -198,7 +198,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46b1"
+      "_id": "58a6add85d036c0bbdd5ace1"
     },
     {
       "handle": "ppatel5",
@@ -207,7 +207,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46b0"
+      "_id": "58a6add85d036c0bbdd5ace0"
     },
     {
       "handle": "tumakha",
@@ -216,7 +216,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46af"
+      "_id": "58a6add85d036c0bbdd5acdf"
     },
     {
       "handle": "turboriso",
@@ -225,7 +225,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46ae"
+      "_id": "58a6add85d036c0bbdd5acde"
     },
     {
       "handle": "blissbero",
@@ -234,7 +234,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46ad"
+      "_id": "58a6add85d036c0bbdd5acdd"
     },
     {
       "handle": "navintb",
@@ -243,7 +243,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46ac"
+      "_id": "58a6add85d036c0bbdd5acdc"
     },
     {
       "handle": "smtryingcode",
@@ -252,7 +252,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46ab"
+      "_id": "58a6add85d036c0bbdd5acdb"
     },
     {
       "handle": "chadchoud",
@@ -261,7 +261,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46aa"
+      "_id": "58a6add85d036c0bbdd5acda"
     },
     {
       "handle": "diegobust4545",
@@ -270,7 +270,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46a9"
+      "_id": "58a6add85d036c0bbdd5acd9"
     },
     {
       "handle": "gets0ul",
@@ -279,7 +279,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46a8"
+      "_id": "58a6add85d036c0bbdd5acd8"
     },
     {
       "handle": "serfire",
@@ -288,7 +288,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46a7"
+      "_id": "58a6add85d036c0bbdd5acd7"
     },
     {
       "handle": "anand514",
@@ -297,7 +297,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46a6"
+      "_id": "58a6add85d036c0bbdd5acd6"
     },
     {
       "handle": "sriharijoshi5",
@@ -306,7 +306,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46a5"
+      "_id": "58a6add85d036c0bbdd5acd5"
     },
     {
       "handle": "fatima92",
@@ -315,7 +315,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd72550dfb3b52be46a4"
+      "_id": "58a6add85d036c0bbdd5acd4"
     }
   ],
   "registrationEndDate": "2015-11-21T13:19:00.000Z",

@@ -1,0 +1,473 @@
+{
+  "_id": 30056069,
+  "_isComplete": true,
+  "__v": 1934,
+  "_lastUpdate": "2017-01-06T07:42:40.049Z",
+  "appealsEndDate": "2017-01-06T07:35:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Hercules Retail App - Admin web site",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<div>\n<div>We currently have an iOS and web application built for the Retail 360 app. &nbsp;The Retail 360 app allows customer service representatives for Hercules to manage customer accounts and view customer information. &nbsp;This challenge will implement a simple web application and web service that can map customer service representative IDs to store IDs and to whether or not the customer service representative has access to the application. &nbsp;This information is going to be available in the Hercules services in the future, but it isn&#39;t available now, so we are going to build out a simple admin portal to allow Hercules to manage this information until it&#39;s available in their services.<br />\n<br />\n<strong>Code</strong><br />\n<br />\nThis will be an entirely new application, not based on any existing code. &nbsp;It will be deployed in Heroku and will have these general requirements:<br />\n<br />\n* Must be easily deployed to Heroku (<span style=\"font-family:courier new,courier,monospace\">git push heroku master</span>)<br />\n* Can use MongoDB for data storage<br />\n* Should use the latest Node version available on Heroku<br />\n* Can use MIT and BSD licensed 3rd party libraries, but *not* GPL<br />\n<strong>* Must use GraphQL for the service definitions and UI-to-server messaging</strong><br />\n<br />\n<strong>Requirements</strong><br />\n<br />\n* Admins can<br />\n&nbsp;* Log in<br />\n&nbsp;* Upload spreadsheet<br />\n&nbsp;* Modify existing records<br />\n&nbsp; &nbsp;* Turn Retail360 access on or off<br />\n&nbsp; &nbsp;* Turn admin privileges on or off<br />\n<br />\n<strong>Data model</strong><br />\n<br />\n<em>User type:</em><br />\n<br />\n<span style=\"font-family:courier new,courier,monospace\">ntid : String (primary key)<br />\nhasRetail360Access : Boolean<br />\nisAdmin : Boolean<br />\napiKey : String<br />\nstoreID : String</span><br />\n<br />\n<br />\n<em>Store type:</em><br />\n<br />\n<span style=\"font-family:courier new,courier,monospace\">storeid : String (primary key)<br />\nstoreAddressLine1 : String<br />\nstoreAddressLine2 : String<br />\nstoreZipCode : String<br />\nstoreCity : String<br />\nstoreState : String</span><br />\n&nbsp;</div>\n\n<h2>GraphQL:</h2>\n\n<div>The GraphQL service should allow for these query operations and mutations. &nbsp;The definition of the supported queries is at your discretion. &nbsp;Please make sure to properly use GraphQL features like directives to make the API easy to use and understandable.<br />\n<br />\n<em>Helpful links:<br />\n<br />\n*&nbsp;</em><a href=\"http://graphql.org/learn/\">http://graphql.org/learn/</a><br />\n*<a href=\"https://medium.com/@HurricaneJames/graphql-mutations-fb3ad5ae73c4#.4r9xs9jl6\">&nbsp;https://medium.com/@HurricaneJames/graphql-mutations-fb3ad5ae73c4#.4r9xs9jl6</a><br />\n*&nbsp;<a href=\"https://www.compose.com/articles/using-graphql-with-mongodb/\">https://www.compose.com/articles/using-graphql-with-mongodb/</a><br />\n<br />\n<strong>* Search users</strong></div>\n\n<div><br />\nAllow searching users by different criteria. Filter can be either:<br />\n<br />\n*&nbsp;A list of store IDs, which will return all users for all stores in the list.&nbsp;If an ID isn&#39;t found, it will be ignored<br />\n* A list of ntids, which will return all users whose IDs match. &nbsp;If an ID isn&#39;t found, it will be ignored<br />\n<br />\nIn addition to the filter above, we can also filter on access to retail360. &nbsp;This can be done by itself, or in conjunction with either a storeID or ntid filter.<br />\n* A flag to return all users with access to retail360, or all users without access to retail360<br />\n<br />\n<strong>* Get User a user by their NT ID</strong><br />\n<br />\n<strong>* Create User</strong><br />\n<br />\nCreates a new user if API key has admin access.<br />\n<br />\n<strong>* Update User</strong><br />\n<br />\nUpdates user if API key has admin access. `ntid` can never be updated.<br />\n<br />\n<strong>* Delete user</strong><br />\n<br />\nDeletes user if API key has admin access.<br />\n<br />\n<strong>* Search stores</strong><br />\n<br />\nAllow searching stores by different criteria. Filter can be either:<br />\n<br />\n*&nbsp;A list of store IDs, which will return all stores whose IDs match.&nbsp;If an ID isn&#39;t found, it will be ignored<br />\n* A list of zip codes, which returns all stores in the given zip codes. &nbsp;If a zip code isn&#39;t found, it will be ignored<br />\n* A list of states, which returns all stores in the given states. &nbsp;If a state isn&#39;t found, it will be ignored<br />\n<br />\n<strong>* Get Store by store ID</strong><br />\n<br />\n<strong>* Create Store</strong><br />\n<br />\nCreates store if API key has admin access.&nbsp;<br />\n<br />\n<strong>* Update Store</strong><br />\n<br />\nUpdates store if API key has admin access. `storeid` can never be updated.<br />\n<br />\n<strong>* Delete user</strong><br />\n<br />\nDeletes store if API key has admin access.<br />\n<br />\n<strong>Logging:</strong><br />\n<br />\nAll changes must be logged by timestamp, ip, current user, and action (eg `ntid=somentid hasRetail360Access=true`)<br />\n<br />\n<strong>Administrator UI</strong></div>\n\n<div><br />\nThe admin interface will be accessible on the &quot;/admin&quot; endpoint of the deployed application. &nbsp;All communication must be done with the backend using the GraphQL services.<br />\n<br />\nPagination should be used and should be configurable. &nbsp;Expect that there will be hundreds of store locations and thousands of users in the database in the production version of the app.<br />\n<br />\n<a href=\"http://graphql.org/learn/pagination/\">http://graphql.org/learn/pagination/</a><br />\n<br />\n<strong>Administrator UI definition</strong><br />\n<br />\nPlease base the administrator interface in Bootstrap and use this theme to define the UI:<br />\n<br />\n<a href=\"https://bootswatch.com/sandstone/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">https://bootswatch.com/sandstone/</a><br />\n<br />\n<strong>Administrator login</strong><br />\n<br />\nThe admin UI must be protected by a username / password. &nbsp;This username and password can be configured manually through a node command after deployment. &nbsp;The username and password should be stored in the MongoDB, and it&#39;s important that an unauthenticated user will be redirected back to the login prompt when they attempt to access any admin UI page. &nbsp;The admin login should set a cookie that expires after 2 weeks so the user gets &quot;remembered&quot; when they come back to the admin UI. &nbsp;<br />\n<br />\nIf a user is not an admin, they will be able to view the data, but not make changes.<br />\n<br />\n<strong>Administrator API:</strong><br />\n<br />\nEach admin user should have an API token associated with their account that is&nbsp;<strong>required</strong>&nbsp;for all API calls. &nbsp;We need to ensure that the API is secured. &nbsp;<br />\n<br />\n<strong>Routes</strong><br />\n<br />\nPlease make sure the routes for the admin UI are sensible. &nbsp;For instance, to edit a user, you can choose something like &quot;/admin/user/{ntid}/edit&quot;. &nbsp;Or to view the users table, the path could just be &quot;/admin/users&quot;. &nbsp;The same would apply to the storesas well.<br />\n<br />\n<strong>Header</strong><br />\n<br />\nThe UI should have a header with two navigation buttons or tabs:<br />\n<br />\n* Users<br />\n* Stores<br />\n<br />\n<strong>View the current database</strong><br />\n<br />\nThe main goal of the admin interface will be to view and edit the data in the database. &nbsp;This will be the &quot;Users&quot; tab. &nbsp;Please make the first screen a list of the video records on the database, in a table with these columns:<br />\n<br />\n* NTid<br />\n* StoreID<br />\n* Check mark for isAdmin<br />\n* Check mark for hasRetail360Access<br />\n* &quot;Edit&quot;&nbsp;button (blue)<br />\n* &quot;Delete&quot; button (red)<br />\n<br />\nThe admin user should be able to:<br />\n<br />\n* Search the table on the fly by typing in a text box<br />\n* Filter to just certain stores or whether or not the user has retail 360 access<br />\n<br />\n<strong>Edit</strong><br />\n<br />\nIf the user clicks &quot;Edit&quot; for a specific user, they should go to a new screen with a form where they can edit the data for the video record, including:<br />\n<br />\n* StoreID (from a searchable dropdown)<br />\n* Checkbox for is admin<br />\n* Check box for has retail 360 access<br />\n<br />\n<strong>Delete a user</strong><br />\n<br />\nIf the admin clicks &quot;Delete&quot; for a user, we will pop up a modal dialog (skinned with the Bootstrap theme, not browser native) that says &quot;Are you sure you want to delete this user? &nbsp;Yes / No&quot;. &nbsp;If the user clicks the &quot;Yes&quot; button, the user will be deleted and the table of users will be refreshed. &nbsp;If the user clicks &quot;No&quot;, the modal dialog will be closed.<br />\n<br />\n<strong>Add a user</strong><br />\n<br />\nAbove the table list of users should be an &quot;Add User&quot; (green) button that allows the user to enter the ntID, storeID, and admin and retail 360 access information on a form and then insert it into the database. &nbsp;The &quot;Add User&quot; screen should have the form details and two buttons - &quot;Cancel&quot; and &quot;Save&quot;. &nbsp;If the user clicks &quot;Cancel&quot;, they will get redirected back to the list of users. &nbsp;If the user clicks &quot;Save&quot;, the record will be saved to the database and the user will get redirected back to the list of users. &nbsp;Make sure that the table shown to the user is always up to date - if a record is added, it should show up in the table.<br />\n<br />\n<strong>Stores tab</strong><br />\n<br />\nThe &quot;Stores&quot; tab will allow the admin to view and manage the stores, in the same way the users are managed above.<br />\n<br />\n<strong>Uploading bulk data</strong><br />\n<br />\nOne key feature of the admin UI will be the ability to upload data in CSV format to quickly bulk load in stores and users. &nbsp;There should be an option underneath both Stores and Users to &quot;Bulk import&quot;. &nbsp;The bulk import will take in a CSV formatted spreadsheet (format should be defined by the competitor) and will add in the data in the spreadsheet. &nbsp;Any duplicates in the existing data will be updated with the values from the spreadsheet, using the ntid or storeid as the key.<br />\n<strong>Heroku deploy</strong><br />\n<br />\nMake sure the Heroku deployment information works and that the package.json is up to date with the latest package versions as well. &nbsp;Don&#39;t expect the deployment to be anything other than &quot;npm install&quot; / &quot;npm start&quot; locally and &quot;git push heroku master&quot; for Heroku deployment.</div>\n\n<div><br />\n<strong>Swagger</strong><br />\n<br />\nPlease submit a Swagger file for the API details in the app.<br />\n<br />\n<strong>Video</strong><br />\n<br />\nNo video is required for this challenge.<br />\n&nbsp;</div>\n\n<div>&nbsp;</div>\n</div>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30056069",
+  "finalSubmissionGuidelines": "&nbsp;&nbsp;",
+  "forumId": 34816,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=34816",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 41,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-12-29T14:00:00.000Z",
+      "actualStartTime": "2016-12-29T14:00:00.000Z",
+      "scheduledEndTime": "2017-01-03T14:01:00.000Z",
+      "actualendTime": "2017-01-03T14:01:00.000Z",
+      "_id": "586f4a7090ca64469cc7ce68"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-12-29T14:06:00.000Z",
+      "actualStartTime": "2016-12-29T14:06:00.000Z",
+      "scheduledEndTime": "2017-01-03T14:01:00.000Z",
+      "actualendTime": "2017-01-03T14:01:00.000Z",
+      "_id": "586f4a7090ca64469cc7ce67"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-03T14:01:00.000Z",
+      "actualStartTime": "2017-01-03T14:01:00.000Z",
+      "scheduledEndTime": "2017-01-05T13:11:00.000Z",
+      "actualendTime": "2017-01-05T13:11:00.000Z",
+      "_id": "586f4a7090ca64469cc7ce66"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-05T13:11:00.000Z",
+      "actualStartTime": "2017-01-05T13:11:00.000Z",
+      "scheduledEndTime": "2017-01-06T07:33:00.000Z",
+      "actualendTime": "2017-01-06T07:33:00.000Z",
+      "_id": "586f4a7090ca64469cc7ce65"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-06T07:33:00.000Z",
+      "actualStartTime": "2017-01-06T07:33:00.000Z",
+      "scheduledEndTime": "2017-01-06T07:35:00.000Z",
+      "actualendTime": "2017-01-06T07:35:00.000Z",
+      "_id": "586f4a7090ca64469cc7ce64"
+    }
+  ],
+  "platforms": [
+    "Heroku"
+  ],
+  "postingDate": "2016-12-29T14:00:00.000Z",
+  "prize": [
+    800,
+    400
+  ],
+  "projectId": 10634,
+  "registrants": [
+    {
+      "handle": "nghi85",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-29T18:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce63"
+    },
+    {
+      "handle": "sionnow",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-31T11:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce62"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-29T14:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce61"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-29T15:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce60"
+    },
+    {
+      "handle": "Rushikesh.Deshp",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-29T16:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce5f"
+    },
+    {
+      "handle": "csy2012",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-29T17:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce5e"
+    },
+    {
+      "handle": "shubhendus",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-29T19:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce5d"
+    },
+    {
+      "handle": "republic82",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-29T20:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce5c"
+    },
+    {
+      "handle": "Colinh84",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-29T22:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce5b"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-29T23:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce5a"
+    },
+    {
+      "handle": "diogenesjcs",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-30T00:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce59"
+    },
+    {
+      "handle": "jackyzhangjb",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-30T01:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce58"
+    },
+    {
+      "handle": "Bende",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-30T01:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce57"
+    },
+    {
+      "handle": "pcblues",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-30T02:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce56"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-30T05:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce55"
+    },
+    {
+      "handle": "ananthhh",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-30T06:15:00.000Z",
+      "submissionDate": "2017-01-03T10:58:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce54"
+    },
+    {
+      "handle": "moulyg",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-30T06:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce53"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-30T07:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce52"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-30T07:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce51"
+    },
+    {
+      "handle": "YiiBryan",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-30T08:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce50"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-30T12:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce4f"
+    },
+    {
+      "handle": "Yurii",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-30T13:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce4e"
+    },
+    {
+      "handle": "ShindouHikaru",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-30T13:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce4d"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-30T17:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce4c"
+    },
+    {
+      "handle": "balajincse",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-31T07:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce4b"
+    },
+    {
+      "handle": "wwxyxgy",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-31T11:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce4a"
+    },
+    {
+      "handle": "ptarunn",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-31T14:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce49"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-31T14:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce48"
+    },
+    {
+      "handle": "oa414",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-31T14:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce47"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-31T15:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce46"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-31T15:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce45"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-31T18:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce44"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-01T02:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce43"
+    },
+    {
+      "handle": "gets0ul",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-01T12:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce42"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-02T12:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce41"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-01T17:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce40"
+    },
+    {
+      "handle": "spanhawk",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-01T20:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce3f"
+    },
+    {
+      "handle": "ecavalier313",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-01T22:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce3e"
+    },
+    {
+      "handle": "zaixiang",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-02T02:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce3d"
+    },
+    {
+      "handle": "stevelvovo",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-02T19:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce3c"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-03T01:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "586f4a7090ca64469cc7ce3b"
+    }
+  ],
+  "registrationEndDate": "2017-01-03T14:01:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2017-01-03T14:01:00.000Z",
+  "submissions": [
+    {
+      "handle": "ananthhh",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 82.5,
+      "finalScore": 82.5,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2017-01-03T10:58:00.000Z",
+      "_id": "586f4a7090ca64469cc7ce69"
+    }
+  ],
+  "technology": [
+    "Node.js"
+  ]
+}

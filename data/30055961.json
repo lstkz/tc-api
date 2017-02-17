@@ -1,0 +1,371 @@
+{
+  "_id": 30055961,
+  "_isComplete": true,
+  "__v": 1061,
+  "_lastUpdate": "2016-12-25T00:46:18.770Z",
+  "appealsEndDate": "2016-12-25T00:43:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Hercules Fog Recorder - In-memory file system",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "The Hercules Fog Recorder is an application that runs in an embedded environment and caches large numbers of small files for later, or simultaneous, retrieval. &nbsp;The main files captures are streams of video data, cut into small files in HLS (HTTP Live Streaming) format.<br />\n<br />\n<strong>Problem:</strong><br />\n<br />\nThe application works well in most cases, but the client has a specific device that has a hard-drive that is formatted with an XFS file system tuned to larger files, instead of the small HLS fragment files we will be downloading.<br />\n<br />\nThe XFS file system is formatted like this, as an example:<br />\n<br />\n<span style=\"font-family:courier new,courier,monospace\">&nbsp;mkfs.xfs -f -b size=4096 -d agcount=4 -s size=4096 -l size=2m -r extsize=4m,rtdev=/dev/sda1 /dev/sda2</span><br />\n<br />\nThe problem here is the real-time extsize for the XFS formatting. &nbsp; &nbsp;This is fine for large files (&gt;=4MB), but isn&#39;t good for small files, since they will essentially take up a full &quot;block&quot; of real-time storage, which is 4MB, and potentially up to 32MB on certain devices. &nbsp;Our HLS fragments tend to be in the 300-600KB size, so there&#39;s a large discrepancy.<br />\n<br />\n<strong>Solution:</strong><br />\n<br />\nThe client has asked for suggestions, and this challenge will implement some custom code that could alleviate the issue by caching in memory and then writing to disk with metadata that allows us to serve up the files, while efficiently using the space for each block.<br />\n<br />\nThe client has asked for an abstracted file system. &nbsp;So for example, manage a directory map in RAM. &nbsp;This can be cached to persistent storage periodically (using the &#39;normal&#39; file partition).<br />\n<br />\nEach file will map to a block, offset, and length. Blocks will fill, with each file appended in place until a 4MB block would be surpassed.<br />\nBlocks will need to be destroyed only when every file contained is logically deleted.<br />\n<br />\n<em>Simplifications:</em><br />\n<br />\nGiven that this will be used only for media files, &nbsp;logically a given recording will continuously append. &nbsp;Culling or completed recordings will always occur from the other end. &nbsp;So no need to ever recycle space from a &quot;removed file&quot; in the middle of a block, or move files around inside a block. &nbsp;We will append until the recording is complete and then the entire recording can either be played back or deleted. &nbsp;<br />\n<br />\nSimilarly, we won&#39;t ever have files that need to span multiple blocks, since the biggest fragment is still going to be far smaller than 4MB. &nbsp;And we don&#39;t really care about wasting space at the end of a given block.<br />\n<br />\nWe can use directories/subdirectories to manager chunks on disk. &nbsp;<br />\n<br />\nFiles will be fully written (either to RAM or disk) before they are requested for reading, but note that a current block may be being read and written to at the same time, because it is valid for a user to play back a recording as it is being recorded.<br />\n<br />\n<strong>Buffering</strong><br />\n<br />\nWrites need to be buffered. &nbsp;The client software currently uses a 512KB RAM space to buffer before writing to disk, and we can do the same. &nbsp;If a file is requested for reading while still in the RAM buffer, then it should be read from RAM buffer.<br />\n<br />\n<strong>Challenge submission</strong><br />\n<br />\nYour submission should be a set of C++ files that can be dropped into an existing project and used. &nbsp;We want the code to be free from as many 3rd party libraries as possible, since the embedded system has limited libraries available. &nbsp;If you think a 3rd party library could be very useful, please mention it in the forum, and the copilot will investigate if it&#39;s available, but chances are it likely won&#39;t be an option.<br />\n<br />\n<strong>Compiler</strong><br />\n<br />\nWe are targeting Linux for submissions, and g++ 4.5.1. &nbsp;This is a rather old compiler, so please make sure that you test on it explicitly. &nbsp;<br />\n<br />\n<strong>Tests</strong><br />\n<br />\nPlease include a simple test application that wraps the C++ files and does a good job of showing how the code works and can easily be used to validate the submission for both writing files and then reading them back out again using the stored metadata. &nbsp;Targeting &quot;make&quot; for your test application should be alright, just make sure to follow the compiler version restriction above.<br />\n<br />\n<strong>Submission details</strong><br />\n<br />\nNo video is required, but your README.md needs to be very thorough in details and validation information so that reviewers can easily&nbsp;build and validate your submission.<br />\n&nbsp;",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30055961",
+  "finalSubmissionGuidelines": "Please see above",
+  "forumId": 34751,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=34751",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 26,
+  "numberOfSubmissions": 4,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-12-15T14:00:00.000Z",
+      "actualStartTime": "2016-12-15T14:00:00.000Z",
+      "scheduledEndTime": "2016-12-20T14:00:00.000Z",
+      "actualendTime": "2016-12-20T14:00:00.000Z",
+      "_id": "585f16da90ca64469cfeccde"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-12-15T14:05:00.000Z",
+      "actualStartTime": "2016-12-15T14:05:00.000Z",
+      "scheduledEndTime": "2016-12-20T14:01:00.000Z",
+      "actualendTime": "2016-12-20T14:01:00.000Z",
+      "_id": "585f16da90ca64469cfeccdd"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-12-20T14:01:00.000Z",
+      "actualStartTime": "2016-12-20T14:01:00.000Z",
+      "scheduledEndTime": "2016-12-23T13:56:00.000Z",
+      "actualendTime": "2016-12-23T13:56:00.000Z",
+      "_id": "585f16da90ca64469cfeccdc"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-12-23T13:56:00.000Z",
+      "actualStartTime": "2016-12-23T13:56:00.000Z",
+      "scheduledEndTime": "2016-12-24T13:57:00.000Z",
+      "actualendTime": "2016-12-24T13:57:00.000Z",
+      "_id": "585f16da90ca64469cfeccdb"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-12-24T13:57:00.000Z",
+      "actualStartTime": "2016-12-24T13:57:00.000Z",
+      "scheduledEndTime": "2016-12-25T00:43:00.000Z",
+      "actualendTime": "2016-12-25T00:43:00.000Z",
+      "_id": "585f16da90ca64469cfeccda"
+    }
+  ],
+  "platforms": [
+    "Linux"
+  ],
+  "postingDate": "2016-12-15T14:00:00.000Z",
+  "prize": [
+    1200,
+    600
+  ],
+  "projectId": 9391,
+  "registrants": [
+    {
+      "handle": "Erona",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-15T16:10:00.000Z",
+      "submissionDate": "2016-12-20T09:03:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccd9"
+    },
+    {
+      "handle": "Ksys",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-15T14:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccd8"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-15T14:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccd7"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-15T16:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccd6"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-15T16:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccd5"
+    },
+    {
+      "handle": "ljsf_cc",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-15T18:01:00.000Z",
+      "submissionDate": "2016-12-20T13:55:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccd4"
+    },
+    {
+      "handle": "wwxyxgy",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-15T22:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccd3"
+    },
+    {
+      "handle": "usamah",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-15T23:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccd2"
+    },
+    {
+      "handle": "billsedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-16T00:09:00.000Z",
+      "submissionDate": "2016-12-20T13:57:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccd1"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-16T02:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccd0"
+    },
+    {
+      "handle": "TopG",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-16T03:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfecccf"
+    },
+    {
+      "handle": "csy2012",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-16T06:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccce"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-16T08:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfecccd"
+    },
+    {
+      "handle": "Mentar0s",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-16T08:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfecccc"
+    },
+    {
+      "handle": "amber.j",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-16T18:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfecccb"
+    },
+    {
+      "handle": "TomatoFish",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-16T20:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccca"
+    },
+    {
+      "handle": "onehundreddays",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-19T01:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccc9"
+    },
+    {
+      "handle": "persistnow",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-17T01:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccc8"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-17T06:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccc7"
+    },
+    {
+      "handle": "Rushikesh.Deshp",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-17T08:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccc6"
+    },
+    {
+      "handle": "Kai.Lou",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-17T14:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccc5"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-17T16:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccc4"
+    },
+    {
+      "handle": "codercat",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-18T02:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccc3"
+    },
+    {
+      "handle": "sionnow",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-19T08:38:00.000Z",
+      "submissionDate": "2016-12-20T13:55:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccc2"
+    },
+    {
+      "handle": "bhagya_millewa",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-19T11:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccc1"
+    },
+    {
+      "handle": "PerryDuckbill",
+      "reliability": "n/a",
+      "registrationDate": "2016-12-19T21:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "585f16da90ca64469cfeccc0"
+    }
+  ],
+  "registrationEndDate": "2016-12-20T14:00:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-12-20T14:01:00.000Z",
+  "submissions": [
+    {
+      "handle": "Erona",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 96.88,
+      "finalScore": 98.13,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-12-20T09:03:00.000Z",
+      "_id": "585f16da90ca64469cfecce2"
+    },
+    {
+      "handle": "billsedison",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 86.25,
+      "finalScore": 91.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-12-20T13:57:00.000Z",
+      "_id": "585f16da90ca64469cfecce1"
+    },
+    {
+      "handle": "ljsf_cc",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 83.75,
+      "finalScore": 83.75,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2016-12-20T13:55:00.000Z",
+      "_id": "585f16da90ca64469cfecce0"
+    },
+    {
+      "handle": "sionnow",
+      "placement": 4,
+      "screeningScore": null,
+      "initialScore": 77.5,
+      "finalScore": 77.5,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-12-20T13:55:00.000Z",
+      "_id": "585f16da90ca64469cfeccdf"
+    }
+  ],
+  "technology": [
+    "C++"
+  ]
+}

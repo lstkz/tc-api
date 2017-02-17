@@ -1,0 +1,332 @@
+{
+  "_id": 30056438,
+  "_isComplete": true,
+  "__v": 958,
+  "_lastUpdate": "2017-02-17T08:02:47.768Z",
+  "appealsEndDate": "2017-02-18T13:42:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Hercules pxscene Pix.js integration - Additional basics examples",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2017-02-18T01:42:00.000Z",
+  "currentPhaseName": "Appeals",
+  "currentPhaseRemainingTime": 63699,
+  "currentStatus": "Active",
+  "detailedRequirements": "<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">For the Hercules client, we are going to be doing some work that involves a couple of their drawing technologies, name &quot;pxCore&quot; and &quot;pxScene&quot;. &nbsp;The links below offer a lot more details on these particular technologies. &nbsp;pxscene is a graphics drawing library that has Javascript hooks exposed thorugh Node.js and v8. &nbsp;This challenge will investigate integrating some drawing functionality into pixi.js to allow for using pixi.js APIs to target drawing to pxscene<br />\n<br />\n<strong>Pxscene</strong><br />\n<br />\nPxscene is a platform independent drawing platform that will be used on a wide variety of embedded devices for the Hercules client. &nbsp;You can find more information here, and you can download the app to be used for testing: &nbsp;</span><a href=\"http://www.pxscene.org/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); font-family: &quot;Source Sans Pro&quot;, Arial, Helvetica, sans-serif; font-size: 12px;\">http://www.pxscene.org/</a><br />\n<br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">A link to the Github project and build instructions for Mac are provided in the forum.</span><br />\n<br />\n<strong>Pixi.js</strong><br />\n<br />\n<a href=\"http://www.pixijs.com/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); font-family: &quot;Source Sans Pro&quot;, Arial, Helvetica, sans-serif; font-size: 12px;\">Pixi.js</a><span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp;is a Javascript graphics library that has a lot of nice features and the ability to target either WebGL or Canvas2D. &nbsp;We&#39;ve used it extensively for a project for the client here that may eventually be ported to work on pxscene.</span><br />\n<br />\n<strong>Pxscene limitations</strong><br />\n<br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">The main task will be injecting a 3rd drawing target into Pixi (in addition to WebGL / Canvas2D), but note that pxscene runs in V8, not a true browser, so there may be some additional compatibility issues</span><br />\n<br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">We&#39;ve done a little investigation into what pxscene can do and what it can&#39;t do. &nbsp;One bit missing piece is the &quot;document&quot; and &quot;window&quot; APIs. &nbsp;Neither is used heavily by pixi, but we will need to have some way to tell Pixi that we are rendering to pxscene instead of a browser and have it use the proper APIs for bootstrapping the drawable view.</span><br />\n<br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">Some of the interaction code may need to be updated / changed as well to use the pxscene APIs.</span><br />\n<br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">Note that there may be technical limitations to implementing some of the requirements. &nbsp;Those can be discussed in the forum and we may limit scope accordingly.</span><br />\n<br />\n<strong>Previous PoC</strong><br />\n<br />\nWe ran a previous PoC to help bootstrap Pixi on pxscene and that code and documentation will be available in the forum. &nbsp;We&#39;re going to build off of what was already done.<br />\n<br />\n<strong>Requirements</strong><br />\n<br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">For this challenge, we are going to target updates to Pixi.js to at least be able to run the &quot;Basics&quot; examples found here: &nbsp;</span><a href=\"http://pixijs.github.io/examples/#/basics/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); font-family: &quot;Source Sans Pro&quot;, Arial, Helvetica, sans-serif; font-size: 12px;\">http://pixijs.github.io/examples/#/basics/</a>, including:<br />\n<br />\n* Container (<a href=\"http://pixijs.github.io/examples/#/basics/container.js\">http://pixijs.github.io/examples/#/basics/container.js</a>)<br />\n* Container Pivot (<a href=\"http://pixijs.github.io/examples/#/basics/container-pivot.js\">http://pixijs.github.io/examples/#/basics/container-pivot.js</a>)<br />\n* Spritesheet Animation (<a href=\"http://pixijs.github.io/examples/#/basics/spritesheet.js\">http://pixijs.github.io/examples/#/basics/spritesheet.js</a>)<br />\n* Click (<a href=\"http://pixijs.github.io/examples/#/basics/click.js\">http://pixijs.github.io/examples/#/basics/click.js</a>)&nbsp;<br />\n* Tiling Sprite (<a href=\"http://pixijs.github.io/examples/#/basics/tiling-sprite.js\">http://pixijs.github.io/examples/#/basics/tiling-sprite.js</a>)<br />\n* Text (<a href=\"http://pixijs.github.io/examples/#/basics/text.js\">http://pixijs.github.io/examples/#/basics/text.js</a>)<br />\n<br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">Each individual example can be a separate pxscene JS file that is loaded in the pxscene app for testing. &nbsp;</span><br />\n<br />\n<strong>Heroku hosting</strong><br />\n<br />\nI&#39;d like to be able to host the examples on Heroku for easy publishing to the customer for testing. &nbsp;Please provide a basic Heroku wrapper around the code that we can deploy to load examples over HTTP instead of file:// links. &nbsp;Something like this would be good, for what would be the input to pxscene.<br />\n<br />\nhttp://tc-pixi-js.herokuapp.com/examples/basic.js<br />\n<br />\n<strong>Submission</strong><br />\n<br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">For this challenge, please submit:</span><br />\n<br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">1. &nbsp;An updated set of Pixi sources that target pxscene</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">2. &nbsp;A set of example JS files that match the examples on the pixijs Github site that can be run in the pxscene app</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">3. &nbsp;A video showing the examples being tested in pxscene</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">4. &nbsp;A README documenting any setup that needs to be done, and any limitations that your ran into while investigating.<br />\n5. &nbsp;Deployment instructions for putting the examples on Heroku</span><br />\n<br />\n<strong>Links</strong><br />\n<br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">*&nbsp;</span><a href=\"http://www.pixijs.com/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); font-family: &quot;Source Sans Pro&quot;, Arial, Helvetica, sans-serif; font-size: 12px;\">Pixi.js</a><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">*&nbsp;</span><a href=\"http://pxscene.org/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); font-family: &quot;Source Sans Pro&quot;, Arial, Helvetica, sans-serif; font-size: 12px;\">Pxscene</a><span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">&nbsp;</span><br />\n<span style=\"color:rgb(102, 102, 102); font-family:source sans pro,arial,helvetica,sans-serif; font-size:12px\">*&nbsp;</span><a href=\"http://johnrobinsn.github.io/pxScene2d/docs/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); font-family: &quot;Source Sans Pro&quot;, Arial, Helvetica, sans-serif; font-size: 12px;\">http://johnrobinsn.github.io/pxScene2d/docs/</a>",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30056438",
+  "event": {
+    "id": 3447,
+    "description": "2017 TopCoder(R) Open",
+    "shortDescription": "tco17"
+  },
+  "finalSubmissionGuidelines": "Please see above",
+  "forumId": 35151,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=35151",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 26,
+  "numberOfSubmissions": 4,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2017-02-10T01:43:00.000Z",
+      "actualStartTime": "2017-02-10T01:43:00.000Z",
+      "scheduledEndTime": "2017-02-15T01:42:00.000Z",
+      "actualendTime": "2017-02-15T01:42:00.000Z",
+      "_id": "58a6ae275d036c0bbdd5c793"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2017-02-10T01:48:00.000Z",
+      "actualStartTime": "2017-02-10T01:48:00.000Z",
+      "scheduledEndTime": "2017-02-15T01:42:00.000Z",
+      "actualendTime": "2017-02-15T01:42:00.000Z",
+      "_id": "58a6ae275d036c0bbdd5c792"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2017-02-15T01:42:00.000Z",
+      "actualStartTime": "2017-02-15T01:42:00.000Z",
+      "scheduledEndTime": "2017-02-17T01:42:00.000Z",
+      "actualendTime": "2017-02-17T01:42:00.000Z",
+      "_id": "58a6ae275d036c0bbdd5c791"
+    },
+    {
+      "type": "Appeals",
+      "status": "Open",
+      "scheduledStartTime": "2017-02-17T01:42:00.000Z",
+      "actualStartTime": "2017-02-17T01:42:00.000Z",
+      "scheduledEndTime": "2017-02-18T01:42:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae275d036c0bbdd5c790"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2017-02-18T01:42:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2017-02-18T13:42:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae275d036c0bbdd5c78f"
+    }
+  ],
+  "platforms": [
+    "Heroku",
+    "NodeJS"
+  ],
+  "postingDate": "2017-02-10T01:43:00.000Z",
+  "prize": [
+    1700,
+    850
+  ],
+  "projectId": 12316,
+  "registrants": [
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T01:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c78e"
+    },
+    {
+      "handle": "wwxyxgy",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T02:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c78d"
+    },
+    {
+      "handle": "ouyangki",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T02:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c78c"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T03:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c78b"
+    },
+    {
+      "handle": "spanhawk",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T06:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c78a"
+    },
+    {
+      "handle": "MonicaMuranyi",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T07:56:00.000Z",
+      "submissionDate": "2017-02-14T21:03:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c789"
+    },
+    {
+      "handle": "ShindouHikaru",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T08:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c788"
+    },
+    {
+      "handle": "demo.b",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T08:43:00.000Z",
+      "submissionDate": "2017-02-14T23:45:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c787"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T10:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c786"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T12:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c785"
+    },
+    {
+      "handle": "agus.mw",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T14:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c784"
+    },
+    {
+      "handle": "diogenesjcs",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T14:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c783"
+    },
+    {
+      "handle": "graphit",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T20:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c782"
+    },
+    {
+      "handle": "NikhilKalige",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-10T21:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c781"
+    },
+    {
+      "handle": "billsedison",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-11T08:57:00.000Z",
+      "submissionDate": "2017-02-14T19:08:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c780"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-11T14:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c77f"
+    },
+    {
+      "handle": "oa414",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-11T15:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c77e"
+    },
+    {
+      "handle": "DHEERAJSONI",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-11T15:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c77d"
+    },
+    {
+      "handle": "PerryDuckbill",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-12T01:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c77c"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-12T06:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c77b"
+    },
+    {
+      "handle": "Rushikesh.Deshp",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-12T15:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c77a"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-12T23:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c779"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-13T04:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c778"
+    },
+    {
+      "handle": "jiangliwu",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-13T14:46:00.000Z",
+      "submissionDate": "2017-02-13T14:47:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c777"
+    },
+    {
+      "handle": "j404",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-13T17:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c776"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-14T05:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae275d036c0bbdd5c775"
+    }
+  ],
+  "registrationEndDate": "2017-02-15T01:42:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2017-02-15T01:42:00.000Z",
+  "submissions": [],
+  "technology": [
+    "Node.js"
+  ]
+}

@@ -1,0 +1,411 @@
+{
+  "_id": 30052242,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-12-13T10:13:01.086Z",
+  "appealsEndDate": "2015-12-05T10:49:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Java Web App for Health Clinic Booking Engine",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"color:#000000\"><span style=\"font-size:14px\">Topcoder has been asked by a client to develop a scheduling tool for a medical setting. &nbsp;The tool needs to allow scheduling staff at the clinic to enter availability of medical personnel and to handle the actual scheduling of appointments. &nbsp;&nbsp;The staff in this clinic manage a variety of medical tests and procedures which are called products. &nbsp;Each product is associated with different medical staff and has different time requirements. &nbsp;There are some other business rules as well -- for example, some products/tests can only be administered by males nurses to male patients or by females nurses to female patients.</span></span></span></p>\n\n<p><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"color:#000000\"><span style=\"font-size:14px\">The application as a whole - a medical practice management app - is primarily going to be developed in Salesforce.com. &nbsp;You will see that the attached data model definitely has a Salesforce.com flavor to it. &nbsp;However, the booking engine that we&rsquo;re developing here is going to be developed in Java as a web application using Heroku and PostgreSQL. &nbsp;Ultimately the booking engine will be integrated with data from Salesforce.com and will take advantage of the Heroku Connect and Salesforce.com Canvas functionality to integrate with SFDC. &nbsp;&nbsp;</span></span></span></p>\n\n<p><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">The app will be hosted in a SFDC frame so you should design the screens to be less than full screen. &nbsp;The default width for Canvas Apps is 800px and the default height is 900px. &nbsp;These can be adjusted but just providing those stats to indicate that we should be conservative with screen space. &nbsp;Here are the screens we&rsquo;ll be developing and the functionality that will be associated with each page:</span></span></span></p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">Work Rota Entry - The scheduling staff at the clinic need a simple interface to enter availability data for Doctors, Nurses, and Technicians. &nbsp;The page should allow the staff to select one of the medical staff. &nbsp;Medical staff are identified by Contact records with the Record Type of &nbsp;&lsquo;Acme Resource&rsquo; in the interface. &nbsp;The data fields for the Work Rota object and entry form should correspond to the following fields in the database:</span></span></span></span></p>\n\t</li>\n</ol>\n\n<p dir=\"ltr\" style=\"margin-left:80px\"><span style=\"color:rgb(0, 0, 0)\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">ScheduleStartDate: Date</span></span></span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:tahoma,geneva,sans-serif; font-size:14px\">ScheduleEndDate: Date</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:tahoma,geneva,sans-serif; font-size:14px\">WorkingHoursStartTime: Time</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:tahoma,geneva,sans-serif; font-size:14px\">WorkingHoursEndTime: Time</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:tahoma,geneva,sans-serif; font-size:14px\">SiteId: FK to&nbsp;</span><em>Site</em><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:tahoma,geneva,sans-serif; font-size:14px\">&nbsp;object</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:tahoma,geneva,sans-serif; font-size:14px\">DayOfTheWeek: int(1): 0 = Sunday .. 6 = Saturday</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:tahoma,geneva,sans-serif; font-size:14px\">AutomaticallyScheduleBreaks: Boolean &nbsp;- A flag which indicates if the application should automatically schedule a lunch hour after four hours of work and a rest break for 15 minutes every 2 hours.</span></p>\n\n<ol start=\"2\">\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><em>&nbsp;</em><span style=\"background-color:transparent\">When the scheduling staff member clicks save, the application should save records to the </span><em>WorkRota</em><span style=\"background-color:transparent\"> table and set the Active flag on the WorkRota record to true.<span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">&nbsp; &nbsp; &nbsp;&nbsp;</span></span></span></span></span></span></span></span></p>\n\t</li>\n</ol>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">When an active rota is saved (step 1 above) the application must create </span>ContactAvailability<span style=\"background-color:transparent\"> records, 4 per hour (representing 15 minutes timeslots) from ScheduleStartDate to ScheduleEndDate</span></span></span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">The relevant ContactAvailablity records between WorkingHoursStartTime and WorkingHoursEndTime have Status = Available</span></span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">Outside of these times, Status = Unavailable</span></span></span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">The ContactAvailability table is the real heart of the application functionality where resource capacity is documented and managed.</span></span></span></span></p>\n\n<ol start=\"3\">\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">Outside of the booking engine, medical tests and services will be selected for particular patients. &nbsp;These medical tests and services are stored in the Product2 table in Salesforce.com. &nbsp;This table will be available as readonly in the PostgreSQL data model as well. &nbsp;&nbsp;The patient for the clinic are also stored as Contact records. &nbsp;These records have a Record Type = &lsquo;Client&rsquo;. &nbsp;Both the patient Contact Ids, the Product Ids, and a Case Id (18 character strings for SFDC primary keys) will be passed to our application through request parameters (e.g. /booking?contactid=</span></span>0035000000XRFYl&amp;productid=a3y500000000NEa&amp;caseid=</span></span>5005000000iDhwH<span style=\"color:#000000\"><span style=\"font-size:14px\">)</span></span><span style=\"font-size:14px\">.</span> &nbsp;<span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">For the initial version of the app, we should just process a single product id for single patient but in future versions of the app there will be multiple tests per individual.</span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">The task of the booking service is to combine the availability data associated with the medical staff with the time required to complete a particular product to determine when there are available appointments. &nbsp;We&rsquo;re hoping to provide a simple interface like the following so staff can create the bookings:</span></span></span></span></p>\n\t</li>\n</ol>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Step 1:</span></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\"><img src=\"https://lh6.googleusercontent.com/56I_5e55vNBfSMkFW63mbdF5HsuiAgiHYXxUW3q23bIoIk30kIejdVFsG8iWMc93QwMD_EXs5lZ_2ehKr12aGPFqTvgw3165uidiKteK60pY8jorvAhLW23ebE3poL75Nbrs8un4\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:147px; transform:rotate(0.00rad); width:624px\" /></span></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Step 2: &nbsp;</span></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\"><img src=\"https://lh6.googleusercontent.com/QDoJJJvKBk0ajq5FgiiJIBicIyurMjr2xWTBMASScUn_7YlJEwBN3lESTDyLQxwt2mkhe2cgDZ7VYzUo-FVSVVPYRZuXojTYshTQTjLMIlnx_8dQLe0_xc9gC6RbfLMu5Gg3-V0u\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:141px; transform:rotate(0.00rad); width:624px\" /></span></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Step 3: &nbsp;</span></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\"><img src=\"https://lh3.googleusercontent.com/MzGzMfSpb5U2pMZD2QzkV5rRPTLiMWk2ouRisroKPzVq6eRLIOZcovFinjcWqiNkN6G2cFpa65tL83nC6p2cErf8kTAvTiW2pvAiQdoYEVyd2ZSbwUFT-PkxEdqWYOzKjnhivhNF\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:133px; transform:rotate(0.00rad); width:624px\" /></span></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">The current plan is to model the schedule in the database using the fields defined </span><strong>ContactAvailability</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0)\"> table. &nbsp;The schema for the table is defined below. &nbsp;Each row in the table represents the availability status of each contact for a given date and 15 minute timeslot. Therefore for each contact there will be 4 x 24 records per day. &nbsp;If you have other ideas for modeling and managing the booking process you may make suggestions in the project forums.</span></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">There is business logic associated with each of the records in the Product2 table. &nbsp;The business logic is tracked in the Capability_required__c and the Capability_master__c tables. &nbsp;For example in the sample data documented here: &nbsp;</span></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><a href=\"https://docs.google.com/spreadsheets/d/1B78IWjollUkgk9Xg-pIIzY85vkfZGyta8fn41nbsRUI/edit#gid=1788546730\" style=\"text-decoration:none;\"><span style=\"color:#0000FF\"><u>https://docs.google.com/spreadsheets/d/1B78IWjollUkgk9Xg-pIIzY85vkfZGyta8fn41nbsRUI/edit#gid=1788546730</u></span></a></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Rows 1 and 2 of the sample Capability_required data document the resources required for completing an International Assignment Medical. &nbsp;This requires 30 minutes of technician time and 15 minutes of doctor time.</span></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">The application should scan the ContactAvailability table for the designated time period to show where there might be available timeslots for the procedures selected.</span></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:36pt\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">4. &nbsp;&nbsp;The Case object in SFDC is being used to host the appointment data in the system. &nbsp;It will join the time returned by the booking engine with the patient and product information. &nbsp;&nbsp;When a booking is confirmed in the UI above, the application will:</span></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:80px\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">1. Create assignment records&nbsp;1 per resource needed</span></span></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:120px\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">a. Assignment__c.ownerId = contact.userId__c</span></span></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:120px\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">b. Booking__c = case.Id</span></span></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:120px\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">c. Status = &ldquo;Confirmed&rdquo;</span></span></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:80px\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">2. &nbsp;Update case</span></span></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:120px\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">a. Status = &ldquo;Confirmed&rdquo;</span></span></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:120px\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">b. Appointment time = Date &amp; time of appointment</span></span></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:120px\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">c. Contact__c = Contact ID of the client attending the clinic</span></span></span></span></p>\n\n<p dir=\"ltr\" style=\"margin-left:80px\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">3. Update ContactAvailabilty record(s), setting status = &ldquo;Unavailable&rdquo; for the relevant contacts and updating Why to the ID of the relevant assignment record</span></span></span></span></p>\n\n<p dir=\"ltr\"><strong><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Data dictionary: &nbsp;</span></span></span></strong></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><em>ContactAvailability: Heroku PG table: not in SFDC</em></span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">ScheduleId: auto increment, PK</span></span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">ContactId: varchar(18)</span></span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">Date: date indexed</span></span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">Slot start time: time</span></span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">Slot end time: time = slot start time + 15 (configurable via system global setting)</span></span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">Status = {Available | Unavailable}</span></span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">Why: varchar(18) ID of assignment record</span></span></span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><em>WorkRota: Heroku PG table: not in SFDC</em></span></span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">Id: auto increment PK</span></span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">ScheduleStartDate: Date</span></span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">ScheduleEndDate: Date</span></span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">WorkingHoursStartTime: Time</span></span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">WorkingHoursEndTime: Time</span></span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">SiteId: FK to </span><em>Site</em><span style=\"background-color:transparent\"> object</span></span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">DayOfTheWeek: int(1): 0 = Sunday .. 6 = Saturday</span></span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">AutomaticallyScheduleBreaks: Boolean &nbsp;- A flag which indicates if the application should automatically schedule a lunch hour after four hours of work and a rest break for 15 minutes every 2 hours.</span></span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">Active: Boolean</span></span></span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><em>Assignment: Salesforce object</em></span></span></span></p>\n\n\t<ul>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">Id: varchar(18): PK: Salesforce ID</span></span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">Case__c: varchar(18): FK: Salesforce ID of parent case in M:D relationship</span></span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">Assigned_to__c: varchar(18): FK: SFDC ID of resource (contact)</span></span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">Estimated_start_time__c: dateTime</span></span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">Estimated_end_time__c: dateTime</span></span></span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">Status: varchar(255): picklist = &ldquo;Confirmed | Cancelled&rdquo;</span></span></span></span></p>\n\t\t</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p><br />\n<em><img src=\"https://lh5.googleusercontent.com/cMOg8ymL0C0VaVsqxXWyLoqp4U3USUJ0iHtARKKY3MOrSPsPRSWa_Y417E7VY4-Ii3cP0GZibO8pYcXGd31ejdEOpJj_XzbAsBrg_jXXtXW8E2XBXg89ASGWaRCBg6dhHsxpXojQ\" style=\"border:none; height:554px; transform:rotate(0rad); width:700px\" /></em></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Sample data for the objects in this data model can be found on </span><u><a href=\"https://docs.google.com/spreadsheets/d/1B78IWjollUkgk9Xg-pIIzY85vkfZGyta8fn41nbsRUI/edit?usp=sharing\" style=\"text-decoration:none;\"><span style=\"color:#0000FF\">this google sheet</span></a></u></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">A salesforce </span><em>ant</em><span style=\"background-color:transparent; color:rgb(0, 0, 0)\"> style metadata package can be </span><a href=\"https://drive.google.com/open?id=0B332vV6hegjGUzFBNTlsMXdCMDg\" style=\"text-decoration:none;\"><span style=\"color:#0000FF\"><u>found here</u></span></a><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">.</span></span></span></p>\n\n<p dir=\"ltr\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">Alternatively click on this link to install a salesforce unmanaged package into you salesforce developer edition org. This will also seed your org with some sample data&nbsp;</span></span></span><a href=\"http://apps.topcoder.com/forums/?module=Announcement&amp;annID=2949\">http://apps.topcoder.com/forums/?module=Announcement&amp;annID=2949</a></p>\n\n<p dir=\"ltr\">&nbsp;</p>\n\n<div>&nbsp;</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30052242",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">Please provide your source code, sql scripts, and deployment code in a .zip file.</span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">You should use Java based web technologies to complete this application. &nbsp;A .war file is mandatory deliverable for this application. &nbsp;&nbsp;&nbsp;It will be deployed to Heroku. &nbsp;Your application should be built using the OpenJDK 1.8 &nbsp;(Java 8). </span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">You have flexibility about the front-end web frameworks and javascript used for the application. </span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">Maven is the required build tool for this application.</span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">Your submission should include unit test code. &nbsp;In future challenges, we will be developing additional functionality using this codebase and robust testing to validate existing functionality will be extremely helpful.</span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:tahoma,geneva,sans-serif\"><span style=\"background-color:transparent\">You should provide detailed instructions on how to build, run and deploy your application.</span></span></span></span></p>\n\t</li>\n\t<li dir=\"ltr\"><span style=\"font-size:14px\">No screen sharing video is required for this challenge.</span></li>\n</ol>\n",
+  "forumId": 31228,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=31228",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 33,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-21T23:01:00.000Z",
+      "actualStartTime": "2015-11-21T23:01:00.000Z",
+      "scheduledEndTime": "2015-11-28T22:59:00.000Z",
+      "actualendTime": "2015-11-28T22:59:00.000Z",
+      "_id": "584fc9ad10a1db09a4633cd1"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-11-21T23:06:00.000Z",
+      "actualStartTime": "2015-11-21T23:06:00.000Z",
+      "scheduledEndTime": "2015-12-02T10:59:00.000Z",
+      "actualendTime": "2015-12-02T10:59:00.000Z",
+      "_id": "584fc9ad10a1db09a4633cd0"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-12-02T10:59:00.000Z",
+      "actualStartTime": "2015-12-02T10:59:00.000Z",
+      "scheduledEndTime": "2015-12-04T10:46:00.000Z",
+      "actualendTime": "2015-12-04T10:46:00.000Z",
+      "_id": "584fc9ad10a1db09a4633ccf"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-12-04T10:46:00.000Z",
+      "actualStartTime": "2015-12-04T10:46:00.000Z",
+      "scheduledEndTime": "2015-12-05T10:47:00.000Z",
+      "actualendTime": "2015-12-05T10:47:00.000Z",
+      "_id": "584fc9ad10a1db09a4633cce"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-12-05T10:47:00.000Z",
+      "actualStartTime": "2015-12-05T10:47:00.000Z",
+      "scheduledEndTime": "2015-12-05T10:49:00.000Z",
+      "actualendTime": "2015-12-05T10:49:00.000Z",
+      "_id": "584fc9ad10a1db09a4633ccd"
+    }
+  ],
+  "platforms": [
+    "Heroku",
+    "Salesforce.com",
+    "Other"
+  ],
+  "postingDate": "2015-11-21T23:01:00.000Z",
+  "prize": [
+    2000,
+    1000
+  ],
+  "projectId": 9279,
+  "registrants": [
+    {
+      "handle": "zaixiang",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T03:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633ccc"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T03:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633ccb"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T06:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cca"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T06:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cc9"
+    },
+    {
+      "handle": "chtbharti",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T07:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cc8"
+    },
+    {
+      "handle": "dima_pp",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T08:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cc7"
+    },
+    {
+      "handle": "lanchongyizu",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T14:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cc6"
+    },
+    {
+      "handle": "soumo.vnit",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T14:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cc5"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T14:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cc4"
+    },
+    {
+      "handle": "smtryingcode",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T16:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cc3"
+    },
+    {
+      "handle": "son4moon",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-22T21:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cc2"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-23T03:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cc1"
+    },
+    {
+      "handle": "himanshu.akgec",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-23T03:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cc0"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-23T05:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cbf"
+    },
+    {
+      "handle": "krishna_b",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-23T07:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cbe"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-23T07:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cbd"
+    },
+    {
+      "handle": "MonicaMuranyi",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-23T09:22:00.000Z",
+      "submissionDate": "2015-12-02T10:11:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cbc"
+    },
+    {
+      "handle": "erhanuman9010",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-23T10:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cbb"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-23T11:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cba"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-23T12:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cb9"
+    },
+    {
+      "handle": "1013Vishal",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-23T13:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cb8"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-23T17:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cb7"
+    },
+    {
+      "handle": "Rakesh.Sa",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-23T18:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cb6"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-24T15:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cb5"
+    },
+    {
+      "handle": "cjalmeida",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-24T17:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cb4"
+    },
+    {
+      "handle": "tonymiao2012",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-24T19:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cb3"
+    },
+    {
+      "handle": "SAbdulRahuman",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-25T13:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cb2"
+    },
+    {
+      "handle": "stevenke",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-25T16:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cb1"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-26T10:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cb0"
+    },
+    {
+      "handle": "vnn456",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-27T04:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633caf"
+    },
+    {
+      "handle": "nickthecamel",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-27T15:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cae"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-27T16:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cad"
+    },
+    {
+      "handle": "iCare",
+      "reliability": "n/a",
+      "registrationDate": "2015-11-28T16:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ad10a1db09a4633cac"
+    }
+  ],
+  "registrationEndDate": "2015-11-28T22:59:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-12-02T10:59:00.000Z",
+  "submissions": [
+    {
+      "handle": "MonicaMuranyi",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 90,
+      "finalScore": 90,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-12-02T10:11:00.000Z",
+      "_id": "584fc9ad10a1db09a4633cd2"
+    }
+  ],
+  "technology": [
+    "Java",
+    "JavaScript",
+    "PostgreSQL",
+    "Salesforce"
+  ]
+}

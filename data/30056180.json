@@ -1,0 +1,708 @@
+{
+  "_id": 30056180,
+  "_isComplete": true,
+  "__v": 1930,
+  "_lastUpdate": "2017-01-25T16:11:47.357Z",
+  "appealsEndDate": "2017-01-25T16:07:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "FAYA Java App - Frontend API Part 1 Code Challenge",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "The client is building the Fund Accounting Yield Application (FAYA), previously referred to as the SEC Yield application. This is the 2nd phase, where we adding new calculation engines and add more front end features for the end user.\n<h1>Challenge Overview</h1>\nThe goal of this challenge is to build Spring REST API to support a frontend angular application http://54.208.2.67:5555/ .<br />\n<br />\nWhat is expected from you in this challenge:<br />\n- Use the frontend app to design and implement the Spring REST API in scope.<br />\n- Reuse an existing REST API that you will use for delegating some of the logic, or reusing entities.<br />\n- Write unit tests for the api.<br />\n- Provide test data and updated POSTMAN files.\n<h1>Challenge Requirements</h1>\nRefer to this pdf (slide 3), it shows the structure of the application, it show that the frontend api should be on its own container (war file), it will delegate the persistence logic to another war container which is the faya-api in existing source code<br />\nhttps://drive.google.com/open?id=0By6n2kEXozMwUUVmQUZYY0JoSXc&nbsp;<br />\n<br />\nHere is the list the APIs we need to implement along with where they are going to be used in the frontend pages:<br />\n<br />\n<strong>1. Get Funds by type</strong><br />\n&nbsp; - Used to retrieve funds list by type, type here is : SEC yield, Money Market yield, or Distribution yield.<br />\n&nbsp; - Route : /funds/:type?date=&lt;business date&gt;<br />\n&nbsp; - Used in following pages : &nbsp;([Funds available for submit section](http://54.208.2.67:5555/dashboard), [Fund Review - Sec yield table](http://54.208.2.67:5555/fund-review/sec-yield), [Money Market Yield table](http://54.208.2.67:5555/fund-review/mm-yield), and [Distribution Yield table](http://54.208.2.67:5555/fund-review/mm-yield))<br />\n&nbsp; - If date is not passed, it should use current date by default<br />\n&nbsp; - type path parameter is required always.<br />\n&nbsp; - For sec yield to pull funds, you will use existing API `GET /fundAccountingSECYieldData`, you can find this api defined under fundyield-api folder<br />\n&nbsp; - For MM yield to pull funds, you will use existing api `GET /moneyMarketFundYieldData`, you can find this api defined under fundyield-api folder<br />\n&nbsp; - For Dist yeild to pull funds, you will use existing api `GET /distributionFundYieldData`, you can find this api defined under fundyield-api folder<br />\n<strong>2. Get Sec Yield by CUSIP</strong><br />\n&nbsp; - Retrieves the SEC yield of the passed CUSIP<br />\n&nbsp; - Route : /secYield/cusip/:cusip<br />\n&nbsp; - This api will delegate the call to a fundyield-api REST API, which will delegate to faya-api REST API, we need to add new API added to faya-api folder, that pulls the sec yield from persistence using the passed in CUSIP.<br />\n&nbsp; - Refer to existing API that pull SEC Yield to understand how to populate the entities and return them<br />\n&nbsp; - It is used by What analysis main page http://54.208.2.67:5555/what-if-analysis, and results will be rendered in sub-pages i.e. http://54.208.2.67:5555/what-if-analysis/tips page<br />\n&nbsp; - The UI field names does not match the sec yield model structure, we have a mapping excel file for you to use to map between the UI and model https://drive.google.com/open?id=0B8huYiP6g3MLdVJ6UUJWZDlqUkUtSU9hYTE1SkU0ajUycEpv (this is a mapping between old code name and new one, if you still not sure, please post in forums and we will clarify)<br />\n<strong>3. Submit What If Analysis Changes</strong><br />\n&nbsp; - This submit the sec yield with the overridden values<br />\n&nbsp; - Route: POST /funds/:CUSIP/WhatIfAnalysis where body contains the field changes, and the comment<br />\n&nbsp; - It will save the status of the fund as &quot;submitted&quot;<br />\n&nbsp; - We will have new table that store the overridden fields, you can name it &quot;WhatIfAnalysisFields&quot; table, and you need to document clearly in a PDF document the mapping between the fields in the table and the SEC Yield fields.<br />\n&nbsp; - The editable fields are outlined in this document in case it is not clear from prototype https://docs.google.com/document/d/1USomqhUCYw5t6mwuZvYQJElhPE3JxB3vTdM55QVMtfU/edit?usp=sharing&nbsp;<br />\n&nbsp; - The call will be done in http://54.208.2.67:5555/what-if-analysis/tips and similar pages to submit the fund changes for review under Admin/approver review page<br />\n<strong>4. Recalculate SEC Yield</strong><br />\n&nbsp; - This will recalculate the sec yield fund using the overridden values without persisting them<br />\n&nbsp; - Route : POST /funds/:CUSIP/recalculate where body contains the changes<br />\n&nbsp; - Used in http://54.208.2.67:5555/what-if-analysis/tips what user changes/override any value<br />\n&nbsp; - The api expected to be implemented is similar to GET /fundAccountingSECYieldData with difference that we use the overriden fields for calculation, we don&#39;t do any persistences work here, only do the calculation and return the results.<br />\n<strong>5. Get Funds Pending Review</strong><br />\n&nbsp; - This retrieves the SEC Yield funds submitted and pending review, this will read from WhatIfAnalysis and SEC Yield fund tables.<br />\n&nbsp; - Route: GET /funds/review<br />\n&nbsp; - This only accessible by Admin/approver in the review page &nbsp;http://54.208.2.67:5555/approval and http://54.208.2.67:5555/approval/123456789<br />\n&nbsp; - It should only retrieve funds pending review<br />\n<strong>6. Submit Fund Review</strong><br />\n&nbsp; - This will be used by admin/approver to submit the what if analysis modification review http://54.208.2.67:5555/approval<br />\n&nbsp; - Route : POST /fund/:CUSIP/review where body contains fields changes, OR the review status (rejected/approved)<br />\n&nbsp; - The admin/approver can change values, so this will behave like `Submit What If Analysis Changes` api where it will update changes to the new table, it will also update the status field to proper status : accepted or rejected<br />\n<strong>7. Submit Fund To FIRS/UNITY</strong><br />\n&nbsp; - This is used to submit the approved fund to FIRS/UNITY<br />\n&nbsp; - Route : POST /fund/type/:type/id/:id with body contains type=&lt;type&gt; where type is FIRS or UNITY<br />\n&nbsp; - It is used in Fund review pages http://54.208.2.67:5555/fund-review/sec-yield<br />\n&nbsp; - We simply update the fund related table to store the type the fund is submitted to, and add a flag that indicates it was submitted<br />\n<strong>8. SSO implementation</strong><br />\n&nbsp; - You are provided in the challenge forums with architecture update files that include the changes needed to implement SSO through spring interceptors, the Security class diagram in TCUML explains what you need to do, also you need to write the ADS document for more information about the security implementation.<br />\n&nbsp;- The security should be applied into this new API we are building\n<h2>Folder Structure</h2>\n- Follow the current folder structure used by faya-api and fundyield-api<br />\n- If you need any common entities, you will need to reuse seccommons folder<br />\n- The API should be placed in its own war file, it will communicate with existing API via http calls\n<h2>Unit Tests</h2>\nYou will implement unit tests for all new code you are adding, you should provide accuracy and failure unit tests, and try to cover all edges and cases. You will need to use mocks, but not create too many mock objects, as it is hard to maintain. Some limited level of mocking is acceptable. Use [mockito] (http://mockito.org/) as the preferred library. It is also expected that you will write full functional tests to validate each piece of functionality.\n\n<h2>General Notes</h2>\n- You are reusing the existing entities and DB tables to populate frontend except for WhatIfAnalysis table, it is new table.<br />\n- All APIs implemented here will delegate to REST API placed under fundyield-api folder/war, which in turn will delegate to faya-api persistence APIs. Make sure to follow this structure.<br />\n- All sql commands will be executed as Stored Procedures as done in current code.<br />\n- Update README file<br />\n- Provide POSTMAN for all the new/updated APIs<br />\n- Update sql script files<br />\n- Update test data files\n<h2>Documents</h2>\n- Provided in challenge forums the existing source code and architecture<br />\n- Also provided the UI prototype\n<h2>Technology overview</h2>\n&nbsp;- Java 8<br />\n&nbsp;- Spring REST API<br />\n&nbsp;- JSON<br />\n&nbsp;- Apache HTTP Server<br />\n&nbsp;- Tomcat 8<br />\n&nbsp;- Spring Framework 4.x http://projects.spring.io/spring-framework/&nbsp;<br />\n&nbsp;- Log4j 1.2 http://logging.apache.org/log4j/1.2/&nbsp;<br />\n&nbsp;- Joda-Time 2.9 http://www.joda.org/joda-time/installation.html&nbsp;<br />\n&nbsp;- Oracle 11g express edition",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30056180",
+  "event": {
+    "id": 3447,
+    "description": "2017 TopCoder(R) Open",
+    "shortDescription": "tco17"
+  },
+  "finalSubmissionGuidelines": "<h1>Deliverables</h1>\n- Updated git patch file for the new/updated files that implemented the requirements<br />\n- It is Ok to submit a full source code if you are new to git versioning<br />\n- Winner will be asked to do a merge request to the original repository after challenge ends",
+  "forumId": 34911,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=34911",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 65,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-17T00:59:00.000Z",
+      "actualStartTime": "2017-01-17T00:59:00.000Z",
+      "scheduledEndTime": "2017-01-22T13:59:00.000Z",
+      "actualendTime": "2017-01-22T13:59:00.000Z",
+      "_id": "5888ce4390ca64469c09a41f"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-17T01:04:00.000Z",
+      "actualStartTime": "2017-01-17T01:04:00.000Z",
+      "scheduledEndTime": "2017-01-22T14:01:00.000Z",
+      "actualendTime": "2017-01-22T14:01:00.000Z",
+      "_id": "5888ce4390ca64469c09a41e"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-22T14:01:00.000Z",
+      "actualStartTime": "2017-01-22T14:01:00.000Z",
+      "scheduledEndTime": "2017-01-24T13:51:00.000Z",
+      "actualendTime": "2017-01-24T13:51:00.000Z",
+      "_id": "5888ce4390ca64469c09a41d"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-24T13:51:00.000Z",
+      "actualStartTime": "2017-01-24T13:51:00.000Z",
+      "scheduledEndTime": "2017-01-25T13:51:00.000Z",
+      "actualendTime": "2017-01-25T13:51:00.000Z",
+      "_id": "5888ce4390ca64469c09a41c"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-25T13:51:00.000Z",
+      "actualStartTime": "2017-01-25T13:51:00.000Z",
+      "scheduledEndTime": "2017-01-25T16:07:00.000Z",
+      "actualendTime": "2017-01-25T16:07:00.000Z",
+      "_id": "5888ce4390ca64469c09a41b"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2017-01-17T00:59:00.000Z",
+  "prize": [
+    1600,
+    800
+  ],
+  "projectId": 11378,
+  "registrants": [
+    {
+      "handle": "asif_1234",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-22T03:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a41a"
+    },
+    {
+      "handle": "ptarunn",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T14:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a419"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T04:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a418"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T14:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a417"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T01:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a416"
+    },
+    {
+      "handle": "phsaibot",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T10:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a415"
+    },
+    {
+      "handle": "wwxyxgy",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T01:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a414"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T01:35:00.000Z",
+      "submissionDate": "2017-01-22T13:22:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a413"
+    },
+    {
+      "handle": "dhiogocorrea",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T02:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a412"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T02:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a411"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T02:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a410"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T02:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a40f"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T02:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a40e"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T03:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a40d"
+    },
+    {
+      "handle": "ljsf_cc",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T03:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a40c"
+    },
+    {
+      "handle": "moulyg",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T03:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a40b"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T03:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a40a"
+    },
+    {
+      "handle": "Rushikesh.Deshp",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T03:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a409"
+    },
+    {
+      "handle": "gvir",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T04:20:00.000Z",
+      "submissionDate": "2017-01-22T13:12:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a408"
+    },
+    {
+      "handle": "prastowo.arie",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T04:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a407"
+    },
+    {
+      "handle": "oa414",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T05:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a406"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T07:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a405"
+    },
+    {
+      "handle": "hash3r",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T16:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a404"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T05:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a403"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T06:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a402"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T06:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a401"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T06:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a400"
+    },
+    {
+      "handle": "lipsum",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T07:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3ff"
+    },
+    {
+      "handle": "stevelvovo",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T07:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3fe"
+    },
+    {
+      "handle": "bannie2492",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T08:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3fd"
+    },
+    {
+      "handle": "Mentar0s",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T09:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3fc"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T09:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3fb"
+    },
+    {
+      "handle": "ShindouHikaru",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T09:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3fa"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T09:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3f9"
+    },
+    {
+      "handle": "spanhawk",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T20:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3f8"
+    },
+    {
+      "handle": "bruyn18",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-18T00:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3f7"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-18T01:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3f6"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-18T02:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3f5"
+    },
+    {
+      "handle": "stevenfrog",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-18T02:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3f4"
+    },
+    {
+      "handle": "csy2012",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-18T04:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3f3"
+    },
+    {
+      "handle": "gauravs23",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-18T06:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3f2"
+    },
+    {
+      "handle": "j404",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-18T07:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3f1"
+    },
+    {
+      "handle": "sfaxiano",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-18T09:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3f0"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-18T10:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3ef"
+    },
+    {
+      "handle": "lud9956",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-18T15:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3ee"
+    },
+    {
+      "handle": "hs328",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-18T15:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3ed"
+    },
+    {
+      "handle": "padegal12",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-18T16:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3ec"
+    },
+    {
+      "handle": "ShadowFriend",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-18T16:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3eb"
+    },
+    {
+      "handle": "faisalbasha1982",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-18T17:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3ea"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-18T17:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3e9"
+    },
+    {
+      "handle": "Luckyodell",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-19T01:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3e8"
+    },
+    {
+      "handle": "roopats",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-19T01:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3e7"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-19T00:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3e6"
+    },
+    {
+      "handle": "sylar",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-20T18:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3e5"
+    },
+    {
+      "handle": "daft300punk",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-19T04:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3e4"
+    },
+    {
+      "handle": "zhouyu8p",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-19T10:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3e3"
+    },
+    {
+      "handle": "gnerdyvivek",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-19T11:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3e2"
+    },
+    {
+      "handle": "topcoderSakib",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-19T17:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3e1"
+    },
+    {
+      "handle": "yashodeep.v1",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-19T17:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3e0"
+    },
+    {
+      "handle": "gpbencke",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-19T17:31:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3df"
+    },
+    {
+      "handle": "krasowskiM",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-19T20:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3de"
+    },
+    {
+      "handle": "BrainScorn",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-20T16:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3dd"
+    },
+    {
+      "handle": "anantpanthri",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-20T22:18:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3dc"
+    },
+    {
+      "handle": "happyesthete",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-21T09:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3db"
+    },
+    {
+      "handle": "veshu",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-21T11:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5888ce4390ca64469c09a3da"
+    }
+  ],
+  "registrationEndDate": "2017-01-22T13:59:00.000Z",
+  "reviewScorecardId": 30001973,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2017-01-22T14:01:00.000Z",
+  "submissions": [
+    {
+      "handle": "gvir",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 85.5,
+      "finalScore": 85.5,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2017-01-22T13:12:00.000Z",
+      "_id": "5888ce4390ca64469c09a421"
+    },
+    {
+      "handle": "fivestarwy",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 84.25,
+      "finalScore": 85.25,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2017-01-22T13:22:00.000Z",
+      "_id": "5888ce4390ca64469c09a420"
+    }
+  ],
+  "technology": [
+    "Java",
+    "Oracle 10g",
+    "REST",
+    "Spring"
+  ]
+}

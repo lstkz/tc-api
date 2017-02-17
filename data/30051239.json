@@ -1,0 +1,214 @@
+{
+  "_id": 30051239,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-11-14T16:15:14.912Z",
+  "appealsEndDate": "2015-08-24T10:52:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "QIR .NET Web App - Change Out Linked Servers",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2015-09-21T19:59:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -36270885,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.666666666666666px\">Welcome to the </span><strong>QIR .NET Web App - Change Out Linked Servers</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.666666666666666px\"> challenge. &nbsp;This is a F2F challenge to switch the Linked Servers functionality over to Connection Strings.</span></span></p>\n\n<h2 dir=\"ltr\"><span><strong>Project Overview</strong></span></h2>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.666666666666666px\">Our client is converting a pre-existing Quality Incident Reporting (QIR) application into .NET. &nbsp;We have produced the base application to allow users to create and manage quality incident records, while administrators can manage configurations within the application. QIR is currently built with .NET and a SQL back-end database. &nbsp;The front end utilizes ASP.NET with JavaScript.</span></span></p>\n\n<h2 dir=\"ltr\"><span><strong>Challenge Overview</strong></span></h2>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.666666666666666px\">Our main goal for this First2Finish challenge is to remove the dependency on linked servers and instead use configurable connection strings. We&rsquo;d like you to:</span></span></p>\n\n<p>&nbsp;</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.666666666666666px\">Remove any dependency on Linked Server setup and use connection strings to point to the external servers instead.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.666666666666666px\">Update related Stored Procedures.</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.666666666666666px\">Update Deployment Guide accordingly.</span></span></p>\n\t</li>\n</ol>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.666666666666666px\">After you register for the challenge, you will find an attachment explaining the issue in detail. &nbsp;We can provide further details and clarifications in the forums.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.666666666666666px\">Our main goal for this First2Finish challenge is to remove the use of linked servers and instead use connection strings to connect to external databases.</span></span></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.666666666666666px\">See </span><strong>Docs/Deployment Guide.doc</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.666666666666666px\"> for initial setup. &nbsp;See </span><strong>Docs/Deployment Guide - Reporting and Interfaces.doc</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.666666666666666px\"> for more details around the functionality and the verification.</span></span></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.666666666666666px\">There are 4 external systems that we built interfaces to using Linked Servers: CRM, Downtime, PALS, and Facilities.</span></span></p>\n\n<h2 dir=\"ltr\"><span><strong>CRM to QIR</strong></span></h2>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.666666666666666px\">Linked Server is setup via DB/Linked Servers/linkedServers.sql, under LNK_QIR_PRAXAIRPROD_MSCRM. &nbsp;</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.666666666666666px\">LNK_QIR_PRAXAIRPROD_MSCRM is referenced in the DB/3-StoredProcedures.sql, under the Import_IncidentsFromCRM SP for importing new QIRs from CRM. &nbsp;</span></span></p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.666666666666666px\">This stored procedure is used in IncidentImportService#ImportIncidentFromCRM().</span></span></p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.666666666666666px\">The Linked Server is also used in the Get_CustomerByPraxairNumber SP to query Customer by Praxair #.</span></span></p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.666666666666666px\">This stored procedure is used in IncidentService#GetCustomerByPraxairNumber().</span></span></p>\n\t\t</li>\n\t</ol>\n\t</li>\n</ol>\n\n<h2 dir=\"ltr\"><span><strong>Downtime to QIR</strong></span></h2>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.666666666666666px\">Linked Server is setup via DB/Linked Servers/linkedServers.sql, under LNK_QIR_DOWNTIME. &nbsp;</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.666666666666666px\">LNK_QIR_DOWNTIME is referenced in the DB/3-StoredProcedures.sql, under the Import_IncidentsFromDownTime SP for importing new QIRs from Downtime server.</span></span></p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.666666666666666px\">This stored procedure is used in IncidentImportService#ImportIncidentsFromDownTime()</span></span></p>\n\t\t</li>\n\t</ol>\n\t</li>\n</ol>\n\n<h2 dir=\"ltr\"><span><strong>PALS to QIR</strong></span></h2>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"color:rgb(34, 34, 34); font-size:14.666666666666666px\">Linked Server is setup via DB/Linked Servers/linkedServers.sql, under LNK_QIR_PALSDW</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.666666666666666px\">LNK_QIR_PALSDW is referenced in the DB/3-StoredProcedures.sql, under the Import_IncidentsFromPALS SP for importing new QIRs from PALS server.</span></span></p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.666666666666666px\">This stored procedure is used in IncidentImportService#ImportIncidentFromPALS()</span></span></p>\n\t\t</li>\n\t</ol>\n\t</li>\n</ol>\n\n<h2 dir=\"ltr\"><span><strong>Location in QIR</strong></span></h2>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.666666666666666px\">Location Drop Down:</span></span></p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.666666666666666px\">Refer to the Location drop down on the Incident page</span><br />\n\t\t<span style=\"background-color:transparent; font-size:14.666666666666666px\"><img src=\"https://lh6.googleusercontent.com/1IUSZLTSKzcfRJrI5y4OM2TW6e_WTq9JqZ-Mvgr16Ph5qfE0-8Zw2qVAfYAdYDhTzzURf_FikfPpPT5p8BNkwxUu9ezsYn-h8q8vITf2QZ-cNfoyhZ0TQaHI-eLBheW2O5JmOXAA\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:143px; transform:rotate(0.00rad); width:445px\" /></span></span></p>\n\t\t</li>\n\t</ol>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"color:rgb(34, 34, 34); font-size:14.666666666666666px\">Linked Server is setup via DB/Linked Servers/linkedServers.sql, under LNK_QIR_FACILITY</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"font-size:14.666666666666666px\">LNK_QIR_FACILITY is referenced in the DB/3-StoredProcedures.sql, under the Get_LocationByDepartment SP for building a list of locations from the Facility server.</span></span></p>\n\n\t<ol>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.666666666666666px\">This stored procedure is used in IncidentService#GetLocationsByDepartment()</span></span></p>\n\t\t</li>\n\t\t<li dir=\"ltr\">\n\t\t<p dir=\"ltr\"><span><span style=\"font-size:14.666666666666666px\">The location list is used to populate the drop-down </span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14.666666666666666px\">based on the selected Department.</span></span></p>\n\t\t</li>\n\t</ol>\n\t</li>\n</ol>\n\n<h2 dir=\"ltr\"><span><strong>Additional Notes</strong></span></h2>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(34, 34, 34); font-family:arial; font-size:14.666666666666666px\">DB/Linked Servers/Other Database Test Data.sql is used to create sample data on the external DBs. &nbsp;Please let us know how this should be changed once the linked servers are removed. Separate scripts for each server/DB?</span></span></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"color:rgb(34, 34, 34); font-family:arial; font-size:14.666666666666666px\">A lot of the queries are built using Stored Procedures. &nbsp;We&rsquo;d like to keep using Stored Procedures if possible. &nbsp;If they need to be installed on the source server instead of the QIR server, please raise that as a question in the forums and we can get clarification from the client if that will work.</span></span></p>\n\n<div>&nbsp;</div>\n\n<p dir=\"ltr\">&nbsp;</p>\n\n<p dir=\"ltr\">&nbsp;</p>\n\n<h2 dir=\"ltr\"><span><strong>Challenge Discussion</strong></span></h2>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.666666666666666px\">We are open to your suggestions and discussions in the forums for how to achieve these requirements.</span></span></p>\n\n<p>&nbsp;</p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.666666666666666px\">Any recommendations? We&#39;d love to hear your input in the forums.</span></span></p>\n\n<h2 dir=\"ltr\"><span><strong>Technology Overview</strong></span></h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.666666666666666px\">.NET (C#, ASP)</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.666666666666666px\">SQL Server</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.666666666666666px\">JavaScript</span></span></p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\"><span><strong>Materials Provided</strong></span></h2>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.666666666666666px\">Existing QIR code base</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.666666666666666px\">Issue Details</span></span></p>\n\t</li>\n</ul>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30051239",
+  "event": {
+    "id": 3446,
+    "description": "2016 TopCoder(R) Open",
+    "shortDescription": "tco16"
+  },
+  "finalSubmissionGuidelines": "<h1 dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:trebuchet ms; font-size:21.333333333333332px\">Submission Guidelines </span></span></h1>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.666666666666666px\">For each member, the final submission should be uploaded via the challenge detail page on </span><a href=\"http://www.topcoder.com/\" style=\"text-decoration:none;\"><u>topcoder.com</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.666666666666666px\">.</span></span></p>\n\n<h2 dir=\"ltr\"><span><strong>Submission Deliverables</strong></span></h2>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.666666666666666px\">Below is an overview of the deliverables. &nbsp;Please check against the challenge scorecard:</span></span></p>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.666666666666666px\">Source code</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.666666666666666px\">Updated Deployment Guide (if need be)</span></span></p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\"><span><span style=\"background-color:transparent; font-size:14.666666666666666px\">Any additional scripts to setup database, configuration, etc.</span></span></p>\n\t</li>\n</ul>\n\n<h2 dir=\"ltr\"><span><strong>Environment Setup</strong></span></h2>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.666666666666666px\">Our target server is Windows 2012 Server. &nbsp;You may develop against other versions of Windows and save any Windows-2012-Server-specific changes for Final Fixes.</span></span></p>\n\n<h3 dir=\"ltr\"><span><strong>Demo</strong></span></h3>\n\n<p><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.666666666666666px\">You can also take a quick look at the demo site by looking at the </span><strong>Test Users</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.666666666666666px\"> doc.</span></span></p>\n",
+  "forumId": 30355,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=30355",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 11,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2015-08-22T19:59:00.000Z",
+      "actualStartTime": "2015-08-22T19:59:00.000Z",
+      "scheduledEndTime": "2015-09-21T19:59:00.000Z",
+      "actualendTime": null,
+      "_id": "5829e312550dfb3b523294cb"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-08-23T03:38:00.000Z",
+      "actualStartTime": "2015-08-23T03:38:00.000Z",
+      "scheduledEndTime": "2015-08-24T10:52:00.000Z",
+      "actualendTime": "2015-08-24T10:52:00.000Z",
+      "_id": "5829e312550dfb3b523294ca"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2015-08-22T20:04:00.000Z",
+      "actualStartTime": "2015-08-22T20:04:00.000Z",
+      "scheduledEndTime": "2015-09-21T20:04:00.000Z",
+      "actualendTime": null,
+      "_id": "5829e312550dfb3b523294c9"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-08-22T19:59:00.000Z",
+  "prize": [
+    300
+  ],
+  "projectId": 8093,
+  "registrants": [
+    {
+      "handle": "ngoctay",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-22T22:33:00.000Z",
+      "submissionDate": "2015-08-23T03:49:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e312550dfb3b523294c8"
+    },
+    {
+      "handle": "kinfkong",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-23T00:11:00.000Z",
+      "submissionDate": "2015-08-23T04:56:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e312550dfb3b523294c7"
+    },
+    {
+      "handle": "kromm",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-23T00:35:00.000Z",
+      "submissionDate": "2015-08-23T03:37:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e312550dfb3b523294c6"
+    },
+    {
+      "handle": "sabbirhs",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-23T05:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e312550dfb3b523294c5"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-23T08:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e312550dfb3b523294c4"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-23T12:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e312550dfb3b523294c3"
+    },
+    {
+      "handle": "TopCoderGuy",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-23T12:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e312550dfb3b523294c2"
+    },
+    {
+      "handle": "saichakrapani",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-23T14:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e312550dfb3b523294c1"
+    },
+    {
+      "handle": "devboy",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-23T21:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e312550dfb3b523294c0"
+    },
+    {
+      "handle": "Sethard",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-24T09:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e312550dfb3b523294bf"
+    },
+    {
+      "handle": "joan012",
+      "reliability": "n/a",
+      "registrationDate": "2015-08-24T09:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e312550dfb3b523294be"
+    }
+  ],
+  "registrationEndDate": "2015-09-21T19:59:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2015-09-21T20:04:00.000Z",
+  "submissions": [
+    {
+      "handle": "kromm",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-08-23T03:37:00.000Z",
+      "_id": "5829e312550dfb3b523294ce"
+    },
+    {
+      "handle": "ngoctay",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-08-23T03:49:00.000Z",
+      "_id": "5829e312550dfb3b523294cd"
+    },
+    {
+      "handle": "kinfkong",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-08-23T04:56:00.000Z",
+      "_id": "5829e312550dfb3b523294cc"
+    }
+  ],
+  "technology": [
+    ".NET",
+    "ASP.NET",
+    "C#",
+    "SQL"
+  ]
+}

@@ -1,8 +1,8 @@
 {
   "_id": 30041981,
   "_isComplete": true,
-  "__v": 2613,
-  "_lastUpdate": "2016-11-05T11:07:38.852Z",
+  "__v": 24429,
+  "_lastUpdate": "2017-02-17T08:04:05.303Z",
   "appealsEndDate": "2014-07-04T20:43:00.000Z",
   "challengeCommunity": "develop",
   "challengeName": "Release Assembly - Genetic Gain Calculator Octave Enhancement",
@@ -10,7 +10,7 @@
   "checkpointSubmissionEndDate": null,
   "currentPhaseEndDate": "2014-07-01T20:43:00.000Z",
   "currentPhaseName": "Post-Mortem",
-  "currentPhaseRemainingTime": -74096594,
+  "currentPhaseRemainingTime": -83067519,
   "currentStatus": "Cancelled - Zero Submissions",
   "detailedRequirements": "<h2><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></h2>\n\n<p><span>This project should convert a Matlab project to Octave and improve the performance.</span></p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Competition Task Overview</span></h2>\n\n<p>We have converted the matlab code to Octave in first Assembly challenge.</p>\n\n<p>We are going to implement following enhancements in this challenge:</p>\n\n<p>The updated code should produce exactly same result with the existing code.</p>\n\n<p>The execution time of the attached large data set in Octave should be less than 5 hours.</p>\n\n<ol>\n\t<li>Most of the time for each analysis run is spent rearranging and sorting the input files. Actual analysis doesn&rsquo;t begin until the environment calibration step, which is the 2<sup>nd</sup> to last step. We should either modify the input format or by change the calculation so that such extensive rearrangement is not required.</li>\n\t<li>Remove the RM calculation section, and make RM a column in the input source file. Do not include materials without RM value during the calculation.</li>\n\t<li>The current format specifies 17 columns, but only a few of these are actually used in analysis. Have the code require only these columns, and be flexible with the rest.</li>\n\t<li>Remove parts of code that reference files used during method development, and generalize. Simplify wherever possible. Right now there are so many functions used. Some should be combined or dropped rather than just using comments.</li>\n\t<li>Try not to use .mat files for load/save. Just use csv or txt instead so non-matlab users can read and produce.</li>\n\t<li>Don&#39;t make hard references to year range and breeding group in the code. Determine them from the input file.</li>\n\t<li>There are many files in the final reports produced. Only produce a configurable set of them. Start with: Rank Sum, Column Means, VarietiesOutcome Correlation, Rank Sum BG, Rank Sum BG 2, Rank Sum BG Col Mean and Num Varieties.</li>\n\t<li>Make breeding stages to be analyzed configurable.</li>\n\t<li>Make year to year hypothesis tests configurable. Currently we compare year N yield versus Year N-1 yield, and there is some interest to look at additional comparisons, such as earliest year versus latest year.</li>\n\t<li>Provide explicit guidelines on expected column headers, formats, and all other requirements for main input file. Also update the Readme.m file to reflect current code status.</li>\n\t<li>Provide a flow chart showing the order that the functions are used, using the file names and function names, so non-MatLab experts like me can see what order the code does its processes. The table below is a demonstration please follow the latest code.</li>\n</ol>\n\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:929px\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p><strong>Step</strong></p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p><strong>Step name</strong></p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p><strong>Folder name</strong></p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p><strong>Function/ m file name</strong></p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>A</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Internal config</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>none</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p><strong>internalConfig</strong></p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>B</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Join input</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>None</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p><strong>joinInput</strong>(inputFiles, inFile)</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>C</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Sorted files</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>sorted</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p>sortedFiles &nbsp;= &nbsp;<strong>sortByVarietyYearStage</strong>(inFile,sortedFilesDir)</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>D</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>RmFile</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>rm</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p>rmFile &nbsp;= <strong>&nbsp;loadRM</strong>(rmFiles,rmFilesDir)</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>E</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Calculated RM files</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>calculatedRM</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p>calculatedRMFiles &nbsp;= &nbsp;<strong>calculateRM</strong>(varieties,sortedFiles, rmRangeFiles, checkRMFiles, rmFile, desieseFiles,&nbsp; calculatedRMDir )</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>F</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Assigned variety files</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>asignedVariety</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p>assignedVarietyFiles =<strong> assignVariety</strong>(varieties,calculatedRMFiles,assignedVarietyDir)</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>G</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Aggregated files</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>aggregated</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p>aggregatedFiles = <strong>aggregate</strong>(varieties,calculatedRMFiles,aggregatedDir)</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>H</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Station break files</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>stationBreak</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p>stationBreakFiles = <strong>stationBreak</strong>(varieties, aggregatedFiles,stationBreakDir)</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>I</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Gather stations files</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>stationGather</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p>gatherStationsFiles = <strong>gatherStations</strong>(varieties,stationBreakFiles,assignedVarietyFiles,gatherStationsDir)</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>J</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Gather stage files</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>stageGather</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p>gatherStageFiles =<strong> gatherStage</strong>(varieties,aggregatedFiles,assignedVarietyFiles, gatherStageDir)</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>K</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Calibrated Environment</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>calibratedEnviroment</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p>calibrateEnviromentFiles = <strong>calibrateEnviroment</strong>(varieties, calculatedRMFiles,assignedVarietyFiles, calibrateEnviromentDir )</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>L</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Calibrated Environment 2</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>calibratedEnviroment2</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p>calibrateEnviromentFiles2 = <strong>calibrateEnviroment2</strong>(varieties, calibrateEnviromentFiles,calibrateEnviroment2Dir)</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>M1</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Report file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>none - excel file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p><strong>rankSum</strong>(varieties,calibrateEnviromentFiles2, gatherStageFiles, reportDir, 1 )</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>M2</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Report file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>none - excel file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p><strong>rankSum</strong>(varieties,calibrateEnviromentFiles2, gatherStageFiles, reportDir, 0.05 )</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>M3</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Report file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>none - excel file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p><strong>tables</strong>(varieties,calibrateEnviromentFiles2, gatherStageFiles,reportDir )</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>M4</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Report file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>none - excel file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p><strong>normality</strong>(varieties, calibrateEnviromentFiles2, gatherStageFiles,reportDir, 1 )</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>M5</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Report file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>none - excel file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p><strong>normality</strong>(varieties, calibrateEnviromentFiles2, gatherStageFiles,reportDir, 0.05 )</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>M6</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Report file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>none - excel file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p><strong>plotResults</strong>(varieties,gatherStageFiles,calibrateEnviromentFiles2,reportDir )</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>M7</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Report file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>none - excel file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p><strong>rankSumBG</strong>( varieties, calibrateEnviromentFiles2, gatherStationsFiles,reportDir )</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>M8</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Report file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>none - excel file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p><strong>rankSumBG2</strong>( varieties, calibrateEnviromentFiles2, gatherStationsFiles,reportDir )</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>M9</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Report file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>none - excel file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p><strong>rankSumBG_ColMean</strong>( varieties, calibrateEnviromentFiles2, gatherStationsFiles,reportDir)</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>M10</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Report file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>none - excel file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p><strong>rankSumBG_GainLoss</strong>( varieties, calibrateEnviromentFiles2, gatherStationsFiles,reportDir )</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"height:15px; width:38px\">\n\t\t\t<p>M11</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:141px\">\n\t\t\t<p>Report file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:121px\">\n\t\t\t<p>none - excel file</p>\n\t\t\t</td>\n\t\t\t<td style=\"height:15px; width:631px\">\n\t\t\t<p><strong>rankSumBG_NumVarieties</strong>( varieties, calibrateEnviromentFiles2, gatherStationsFiles,reportDir )</p>\n\t\t\t</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<h3><span style=\"color:rgb(255, 0, 0)\">Testing</span></h3>\n\n<p>Client has provided us with some smaller data sets, each set has 4 separate files, one for each group (referenced in the code as &#39;bg&#39; or &#39;bgGrp&#39;). They can be&nbsp;<span style=\"font-size:13px\">used independently or&nbsp;</span>combined.</p>\n\n<p><span>You can start from small data set but you must make sure your Octave code could provide exactly same result with Matlab code for ALL data sets.</span></p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Technology Overview</span></h2>\n\n<ul>\n\t<li><span>Octave</span></li>\n</ul>\n",
   "digitalRunPoints": 720,
@@ -36,7 +36,7 @@
       "actualStartTime": "2014-06-24T19:16:00.000Z",
       "scheduledEndTime": "2014-06-24T19:16:00.000Z",
       "actualendTime": "2014-06-24T19:16:00.000Z",
-      "_id": "581dbd7a550dfb3b52be51cf"
+      "_id": "58a6ae755d036c0bbdd5d339"
     },
     {
       "type": "Specification Review",
@@ -45,7 +45,7 @@
       "actualStartTime": "2014-06-24T19:16:00.000Z",
       "scheduledEndTime": "2014-06-24T20:46:00.000Z",
       "actualendTime": "2014-06-24T20:46:00.000Z",
-      "_id": "581dbd7a550dfb3b52be51ce"
+      "_id": "58a6ae755d036c0bbdd5d338"
     },
     {
       "type": "Registration",
@@ -54,7 +54,7 @@
       "actualStartTime": "2014-06-24T20:46:00.000Z",
       "scheduledEndTime": "2014-06-26T20:46:00.000Z",
       "actualendTime": "2014-06-26T20:46:00.000Z",
-      "_id": "581dbd7a550dfb3b52be51cd"
+      "_id": "58a6ae755d036c0bbdd5d337"
     },
     {
       "type": "Submission",
@@ -63,7 +63,7 @@
       "actualStartTime": "2014-06-24T20:51:00.000Z",
       "scheduledEndTime": "2014-06-30T20:43:00.000Z",
       "actualendTime": "2014-06-30T20:43:00.000Z",
-      "_id": "581dbd7a550dfb3b52be51cc"
+      "_id": "58a6ae755d036c0bbdd5d336"
     },
     {
       "type": "Screening",
@@ -72,7 +72,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2014-07-01T08:43:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd7a550dfb3b52be51cb"
+      "_id": "58a6ae755d036c0bbdd5d335"
     },
     {
       "type": "Review",
@@ -81,7 +81,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2014-07-03T08:43:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd7a550dfb3b52be51ca"
+      "_id": "58a6ae755d036c0bbdd5d334"
     },
     {
       "type": "Appeals",
@@ -90,7 +90,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2014-07-04T08:43:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd7a550dfb3b52be51c9"
+      "_id": "58a6ae755d036c0bbdd5d333"
     },
     {
       "type": "Appeals Response",
@@ -99,7 +99,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2014-07-04T20:43:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd7a550dfb3b52be51c8"
+      "_id": "58a6ae755d036c0bbdd5d332"
     },
     {
       "type": "Aggregation",
@@ -108,7 +108,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2014-07-05T08:43:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd7a550dfb3b52be51c7"
+      "_id": "58a6ae755d036c0bbdd5d331"
     },
     {
       "type": "Final Fix",
@@ -117,7 +117,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2014-07-06T08:43:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd7a550dfb3b52be51c6"
+      "_id": "58a6ae755d036c0bbdd5d330"
     },
     {
       "type": "Final Review",
@@ -126,7 +126,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2014-07-06T20:43:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd7a550dfb3b52be51c5"
+      "_id": "58a6ae755d036c0bbdd5d32f"
     },
     {
       "type": "Approval",
@@ -135,7 +135,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2014-07-11T20:43:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd7a550dfb3b52be51c4"
+      "_id": "58a6ae755d036c0bbdd5d32e"
     },
     {
       "type": "Post-Mortem",
@@ -144,7 +144,7 @@
       "actualStartTime": "2014-06-30T20:43:00.000Z",
       "scheduledEndTime": "2014-07-01T20:43:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd7a550dfb3b52be51c3"
+      "_id": "58a6ae755d036c0bbdd5d32d"
     }
   ],
   "platforms": [
@@ -164,7 +164,7 @@
       "submissionDate": null,
       "rating": "581",
       "colorStyle": "color: #999999",
-      "_id": "581dbd7a550dfb3b52be51c2"
+      "_id": "58a6ae755d036c0bbdd5d32c"
     },
     {
       "handle": "sunbinbrother",
@@ -173,7 +173,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd7a550dfb3b52be51c1"
+      "_id": "58a6ae755d036c0bbdd5d32b"
     },
     {
       "handle": "gjw99",
@@ -182,7 +182,7 @@
       "submissionDate": null,
       "rating": "1093",
       "colorStyle": "color: #00A900",
-      "_id": "581dbd7a550dfb3b52be51c0"
+      "_id": "58a6ae755d036c0bbdd5d32a"
     },
     {
       "handle": "yedtoss",
@@ -191,7 +191,7 @@
       "submissionDate": null,
       "rating": "857",
       "colorStyle": "color: #999999",
-      "_id": "581dbd7a550dfb3b52be51bf"
+      "_id": "58a6ae755d036c0bbdd5d329"
     },
     {
       "handle": "woodjhon",
@@ -200,7 +200,7 @@
       "submissionDate": null,
       "rating": "782",
       "colorStyle": "color: #999999",
-      "_id": "581dbd7a550dfb3b52be51be"
+      "_id": "58a6ae755d036c0bbdd5d328"
     },
     {
       "handle": "poundinc_tc",
@@ -209,7 +209,7 @@
       "submissionDate": null,
       "rating": "323",
       "colorStyle": "color: #999999",
-      "_id": "581dbd7a550dfb3b52be51bd"
+      "_id": "58a6ae755d036c0bbdd5d327"
     },
     {
       "handle": "an_ant",
@@ -218,7 +218,7 @@
       "submissionDate": null,
       "rating": "1299",
       "colorStyle": "color: #6666FF",
-      "_id": "581dbd7a550dfb3b52be51bc"
+      "_id": "58a6ae755d036c0bbdd5d326"
     },
     {
       "handle": "Gando19850304",
@@ -227,7 +227,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd7a550dfb3b52be51bb"
+      "_id": "58a6ae755d036c0bbdd5d325"
     },
     {
       "handle": "v3nturetheworld",
@@ -236,7 +236,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd7a550dfb3b52be51ba"
+      "_id": "58a6ae755d036c0bbdd5d324"
     },
     {
       "handle": "cosherx",
@@ -245,7 +245,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd7a550dfb3b52be51b9"
+      "_id": "58a6ae755d036c0bbdd5d323"
     },
     {
       "handle": "sweetu",
@@ -254,7 +254,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd7a550dfb3b52be51b8"
+      "_id": "58a6ae755d036c0bbdd5d322"
     },
     {
       "handle": "testXuSanping",
@@ -263,7 +263,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd7a550dfb3b52be51b7"
+      "_id": "58a6ae755d036c0bbdd5d321"
     }
   ],
   "registrationEndDate": "2014-06-26T20:46:00.000Z",

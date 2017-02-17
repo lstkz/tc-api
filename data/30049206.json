@@ -1,0 +1,342 @@
+{
+  "_id": 30049206,
+  "_isComplete": true,
+  "__v": 16815,
+  "_lastUpdate": "2017-02-17T08:06:40.397Z",
+  "appealsEndDate": "2015-03-22T14:50:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "QIR .NET Web App - Home Page and Incident Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Cancelled - Failed Review",
+  "detailedRequirements": "<div>\n<h2><span>1.0 - Challenge Overview</span></h2>\n\n<p><span>Welcome to the&nbsp;<strong>QIR .NET Web App -&nbsp;Home Page and Incident Assembly</strong></span>&nbsp;challenge! In this challenge, you will need to build the backend services, stored procedures and part of the pages that the new&nbsp;QIR .NET App will use (based on the architecture design).</p>\n\n<p><span>NOTE: This is part 3 of a series of assembly challenges for this project! &nbsp;</span></p>\n\n<h2><span>1.1 - Project Overview</span></h2>\n\n<p><span>The client for this project has an existing system called Quality Incident Reporting (QIR) application.&nbsp; This existing application was created using SharePoint and is used for creating and managing quality incident records. &nbsp;The goal for this project is to build a new Quality Incident Reporting&nbsp;application&nbsp;using .NET (based on the&nbsp;existing QIR application).</span></p>\n\n<p><span>This assembly will provide the the backend services, stored procedures and part of the pages as detailed below for&nbsp;the Home Page and Incidents (details below).</span></p>\n\n<h2><span>1.2 - Competition Task Overview</span></h2>\n\n<p><span>A complete list of deliverables can be found in the TopCoder Assembly competition Tutorial at:&nbsp;<a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a></span></p>\n\n<p><span><strong>Note</strong>: Extensive implementation notes are provided at method documentation on UML Class Diagrams. Please follow them for implementation.</span></p>\n\n<p><span><strong>Note</strong>: Please read the whole Application Design Specification first. All the details not mentioned in this specification are provided in that document.</span></p>\n\n<p><span>1.2.1 &nbsp; &nbsp;<strong>Backend Services</strong><br />\nThis assembly is responsible for implementing the following services on class diagram &quot;Backend Services Class Diagram&quot;:<br />\n&nbsp;&nbsp; &nbsp;1) </span>IncidentService<br />\n&nbsp; &nbsp; 2) ClassificationService<br />\n&nbsp; &nbsp; 3) ClassificationNodeService<br />\n&nbsp; &nbsp; 4) ActionItemService</p>\n\n<p><span>1.2.2 &nbsp; &nbsp;<strong>Stored Procedures</strong><br />\nThis assembly is responsible for implementing all stored procedures used by the above-mentioned services.</span></p>\n\n<p><span>1.2.3 &nbsp; &nbsp;<strong>Regular Home Page (regularHomePage.aspx)</strong></span></p>\n\n<p>Code Behind: RegularHomePage<br />\nWireframe: regular_user_home</p>\n\n<p>- The content of this page is rendered in server side, see the RegularHomePage methods for details.<br />\n- For rendering QIRs data we will use GridView to render the root causes tree. We need to prepare incident data for the data provider.<br />\n- The &ldquo;Clear&rdquo; button erases all values entered by user in search parameters. No interaction with the server side takes place.<br />\n- When &ldquo;Remove from working list&rdquo; link button is clicked against a QIR and database is updated relevant the grid view is updated with the same paging/sorting/search parameters staying on the page without reloading the whole page.</p>\n\n<p><span>1.2.4 &nbsp; &nbsp;<strong>Admin Home Page (adminHomePage.aspx)</strong></span></p>\n\n<p>Code Behind: AdminHomePage<br />\nWireframe: business_and_system_admin_user_home</p>\n\n<p>- The processing of this page is similar to the above page (Regular Home). Note that all some more search criteria are added and &ldquo;Delete&rdquo; link button is available against every QIR in the list. Handled by code behind as well.<br />\n- When &ldquo;Delete&rdquo; link button is clicked against a QIR and database is updated relevant the grid view is updated with the same paging/sorting/search parameters staying on the page without reloading the whole page.</p>\n\n<p><span>1.2.5 &nbsp; &nbsp;</span><strong>Draft Incident Page (draftIncidentPage.aspx)</strong></p>\n\n<p>Code Behind: DraftIncidentPage<br />\nWireframe: qir-_required_for_draft_fields_filled</p>\n\n<p>Most of content of this page is rendered in server side, see the DraftIncidentPage methods for details. But some content are rendered in client side using Javascript, using AJAX calls to server side:<br />\n- for adding Author a modal popup appears when clicking &ldquo;&hellip;&rdquo;; SearchPersonsRequestHandler AJAX request is made to get available persons (at first all at once, then by first chars of their name); AJAX response is rendered as a list of users;<br />\n- the same for adding Incident Owner;<br />\n- to populate regions drop down list after the department is chosen GetRegionByDeptRequestHandler AJAX request is made to get regions by the chosen department;<br />\n- if Impact on customers is &ldquo;Yes&rdquo; all other fields in &ldquo;Impact On Customer&rdquo; section are available; if &ldquo;No&rdquo; &ndash; all these fields are hidden;<br />\n- when enter/edit classification button is clicked a modal popup appears to choose a classification:<br />\n&nbsp; &nbsp;- to get all classification nodes GetAllClassificationNodesRequestHandler AJAX request is made to the server side;&nbsp;<br />\n&nbsp; &nbsp;- its AJAX response after being parsed popuated a TreeView instance and is rendered in the popup by means of this instance;<br />\n&nbsp; &nbsp;- when user updates any level of classification or keyword values (see modal popup in wireframe) you must loop though the TreeView nodes to find and render only those nodes that contain [keyword] substring or are children of the selected node;<br />\n&nbsp; &nbsp;- to populate next level drop down list of the current node GetClassificationChildrenNodesRequestHandler AJAX request is made to the server side;<br />\n- when enter/edit root cause button is clicked a modal popup appears to choose a root cause:<br />\n&nbsp; &nbsp;- to get all root cause nodes GetAllRootCausesRequestHandler AJAX request is made to the server side; they are persisted at the client-side until the popup is closed;<br />\n&nbsp; &nbsp;- its AJAX response after being parsed popuated a TreeView instance and is rendered in the popup by means of this instance;<br />\n&nbsp; &nbsp;- when user updates any level of root cause or keyword values (see modal popup in wireframe) you must loop though the TreeView nodes to find and render only those nodes that contain [keyword] substring or are children of the selected node;<br />\n&nbsp; &nbsp;- to populate next level drop down list of the current node GetRootCauseChildrenNodesRequestHandler AJAX request is made to the server side;<br />\n&nbsp; &nbsp;<br />\nThe code snippet below gives an idea how search for nodes by its name or a substring in its name:</p>\n\n<p><code>private TreeNode FindNodeByValue(string value)<br />\n{<br />\n&nbsp; &nbsp; foreach(TreeNode node in TreeView1.Nodes)<br />\n&nbsp; &nbsp; {<br />\n&nbsp; &nbsp; &nbsp; &nbsp; if(node.Value = value) return node;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; TreeNode pnode = FindNodeRecursion(node, value);<br />\n&nbsp; &nbsp; &nbsp; &nbsp; if(pnode != null) return pnode;<br />\n&nbsp; &nbsp; }<br />\n&nbsp; &nbsp; return null;<br />\n}</code></p>\n\n<p><code>private TreeNode FindNodeRecursion(TreeNode parentNode, string value)<br />\n{<br />\n&nbsp; &nbsp; foreach(TreeNode node in parentNode.ChildNodes)<br />\n&nbsp; &nbsp; {<br />\n&nbsp; &nbsp; &nbsp; &nbsp; if(node.Value = value) return node;<br />\n&nbsp; &nbsp; &nbsp; &nbsp; TreeNode pnode = FindNodeRecursion(node, value);<br />\n&nbsp; &nbsp; &nbsp; &nbsp; if(pnode != null) return pnode;<br />\n&nbsp; &nbsp; }<br />\n&nbsp; &nbsp; return null;<br />\n}&nbsp;</code></p>\n\n<p>&nbsp;</p>\n\n<p><span>1.2.6 &nbsp; &nbsp;</span><strong>Required for Save Incident Page (requiredForSaveIncidentPage.aspx)</strong></p>\n\n<p>Code Behind: RequiredForSaveIncidentPage<br />\nWireframe: qir-_required_for_save_fields_filled</p>\n\n<p>The processing of this page is similar to the above page (Draft Incident Page). Everything different to the page above is handled by the server side and documented in RequiredForSaveIncidentPage impl notes.</p>\n\n<p><span>1.2.7 &nbsp; &nbsp;</span><strong>Required for Approval Incident Page (requiredForApprovalIncidentPage.aspx)</strong></p>\n\n<p>Code Behind: RequiredForApprovalIncidentPage<br />\nWireframe: qir-_required_for_approval_fields_filled</p>\n\n<p>- The processing of this page is similar to the above page (Draft Incident Page and Required for Save Incident Page). Everything different to the page above is handled by the server side and documented in RequiredForApprovalIncidentPage impl notes.<br />\n- The only difference for the client-side is Edit link button against each action item. It shows a modal popup which populate with action item draft. These data is pulled from the server side with GetActionItemRequestHandler AJAX request (its response is parsed and rendered as Action Item).</p>\n\n<p><span>1.2.8 &nbsp; &nbsp;</span><strong>Awaiting for Approval Incident Page (requiredForApprovalIncidentPage.aspx)</strong></p>\n\n<p>Code Behind: AwaitingforApprovalIncidentPage<br />\nWireframe: qir-_awaiting_approval</p>\n\n<p>- The processing of this page is similar to the above page (Required for Save Incident Page and Approval Incident Page). Everything different to the page above is handled by the server side and documented in RequiredForApprovalIncidentPage impl notes.<br />\n- When Reject button a modal popup appears asking a user for the rejection reason. User can either cancel this action or enter the reason and click Reject &ndash; this action will be handled with #Reject which accepts the incident Id and the reason text.</p>\n\n<p>1.2.9 &nbsp; &nbsp;<strong>Closed Incident Page (closedIncidentPage.aspx)</strong></p>\n\n<p>Code Behind: ClosedIncidentPage<br />\nWireframe: qir-_closed</p>\n\n<p>This page is fully rendered on page load. All possible actions are handled with code behind of ClosedIncidentPage class.</p>\n\n<p>1.2.10 &nbsp; &nbsp;<strong>Reopened Incident Page (reopensedIncidentPage.aspx)</strong></p>\n\n<p>Code Behind: ReopenedIncidentPage<br />\nWireframe: qir-_reopened</p>\n\n<p>This page has controls and behaviour totally similar to Required for Approval Incident Page (requiredForApprovalIncidentPage.aspx). The only tiny difference is that rejection reason is displayed.</p>\n\n<p>1.2.11 &nbsp; &nbsp;<strong>Request handlers</strong></p>\n\n<p>This assembly is responsible for implementing all HTTP Request handlers used by the above-mentioned pages.</p>\n\n<p>&nbsp;</p>\n\n<h2><span>1.3 - Technology Overview</span></h2>\n\n<p><span>- Windows Server 2008 R2<br />\n- MS SQL Server 2012<br />\n- IIS 7<br />\n- C# 4.0<br />\n- .NET Framework 4.0<br />\n- ASP.NET Web Form<br />\n- jQuery 1.11.1 http://jquery.com</span></p>\n\n<p>&nbsp;</p>\n\n<p><span><strong>Browser Requirements:</strong><br />\nYour submission must works on browser in the list below:<br />\n- IE8+<br />\n- Safari latest version on Mac &amp; Windows<br />\n- Firefox latest version on Mac &amp; Windows<br />\n- Chrome latest version on Mac &amp; Windows</span></p>\n\n<p>&nbsp;</p>\n\n<h2><span>1.4 - Documentation Provided</span></h2>\n\n<p><span>Documentation and Applications that will be provided to registered members:</span></p>\n\n<table style=\"line-height:16px\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<th><span><strong>Document Name</strong></span></th>\n\t\t\t<th><span><strong>&nbsp; &nbsp;Document Description &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</strong></span></th>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><span>Application Design Specification</span></td>\n\t\t\t<td><span>&nbsp; &nbsp;Architecture documentation attached</span></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><span>Class Diagrams</span></td>\n\t\t\t<td><span>&nbsp; &nbsp;Architecture documentation attached</span></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><span>Sequence Diagrams</span></td>\n\t\t\t<td><span>&nbsp; &nbsp;Architecture documentation attached</span></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><span>ERD</span></td>\n\t\t\t<td><span>&nbsp; &nbsp;Architecture documentation attached</span></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><span>UI Prototype</span></td>\n\t\t\t<td><span>&nbsp; &nbsp;HTML / CSS / JS prototype attached</span></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><span>Assembly 1: Model, Exception, Authorization, and Notification Assembly</span></td>\n\t\t\t<td><span>&nbsp; &nbsp;Completed 1st assembly challenge in this series</span></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Assembly 2:&nbsp;Codes, Regions, Logs and Root Cause Assembly</td>\n\t\t\t<td>&nbsp; &nbsp;Completed 2nd assembly challenge in this series</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><span>Quality Incident Report Enhancements - Dec 19 2014.xlsx</span></td>\n\t\t\t<td><span>&nbsp; &nbsp;Excel file with latest requirements (form fields, access levels, classifications, root causes, etc)</span></td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<h2>&nbsp;</h2>\n\n<h2><span>1.5 - Testing</span></h2>\n\n<p><span>Please include unit tests to verify your application successfully meets the requirements of the project. &nbsp;You should provide functional tests.</span></p>\n</div>\n\n<div>&nbsp;</div>\n",
+  "digitalRunPoints": 810,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30049206",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2015-03-24T02:50:00.000Z",
+  "finalSubmissionGuidelines": "<p>- Completed code for the application (see architecture documentation and section 1.2 of this challenge spec above)<br />\n- A complete and detailed deployment documented explaining how to deploy the application including configuration information.<br />\n- Tests to verify your application successfully meets the requirements of the project.</p>\n\n<p>A complete list of deliverables can be found in the TopCoder Assembly competition Tutorial at:&nbsp;<a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a></p>\n",
+  "forumId": 27304,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=27304",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 17,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-04T20:35:00.000Z",
+      "actualStartTime": "2015-03-04T20:35:00.000Z",
+      "scheduledEndTime": "2015-03-04T20:37:00.000Z",
+      "actualendTime": "2015-03-04T20:37:00.000Z",
+      "_id": "58a6af105d036c0bbdd602c3"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-04T20:37:00.000Z",
+      "actualStartTime": "2015-03-04T20:37:00.000Z",
+      "scheduledEndTime": "2015-03-04T22:10:00.000Z",
+      "actualendTime": "2015-03-04T22:10:00.000Z",
+      "_id": "58a6af105d036c0bbdd602c2"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-05T21:00:00.000Z",
+      "actualStartTime": "2015-03-05T21:00:00.000Z",
+      "scheduledEndTime": "2015-03-07T21:02:00.000Z",
+      "actualendTime": "2015-03-07T21:02:00.000Z",
+      "_id": "58a6af105d036c0bbdd602c1"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-05T21:07:00.000Z",
+      "actualStartTime": "2015-03-05T21:07:00.000Z",
+      "scheduledEndTime": "2015-03-11T20:03:00.000Z",
+      "actualendTime": "2015-03-11T20:03:00.000Z",
+      "_id": "58a6af105d036c0bbdd602c0"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-11T20:03:00.000Z",
+      "actualStartTime": "2015-03-11T20:03:00.000Z",
+      "scheduledEndTime": "2015-03-12T07:30:00.000Z",
+      "actualendTime": "2015-03-12T07:30:00.000Z",
+      "_id": "58a6af105d036c0bbdd602bf"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-18T13:10:00.000Z",
+      "actualStartTime": "2015-03-18T13:10:00.000Z",
+      "scheduledEndTime": "2015-03-21T04:30:00.000Z",
+      "actualendTime": "2015-03-21T04:30:00.000Z",
+      "_id": "58a6af105d036c0bbdd602be"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-21T04:30:00.000Z",
+      "actualStartTime": "2015-03-21T04:30:00.000Z",
+      "scheduledEndTime": "2015-03-22T11:43:00.000Z",
+      "actualendTime": "2015-03-22T11:43:00.000Z",
+      "_id": "58a6af105d036c0bbdd602bd"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-22T11:43:00.000Z",
+      "actualStartTime": "2015-03-22T11:43:00.000Z",
+      "scheduledEndTime": "2015-03-22T14:50:00.000Z",
+      "actualendTime": "2015-03-22T14:50:00.000Z",
+      "_id": "58a6af105d036c0bbdd602bc"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Scheduled",
+      "scheduledStartTime": "2015-03-22T14:50:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2015-03-23T02:50:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6af105d036c0bbdd602bb"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Scheduled",
+      "scheduledStartTime": "2015-03-23T02:50:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2015-03-24T02:50:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6af105d036c0bbdd602ba"
+    },
+    {
+      "type": "Final Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2015-03-24T02:50:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2015-03-24T14:50:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6af105d036c0bbdd602b9"
+    },
+    {
+      "type": "Approval",
+      "status": "Scheduled",
+      "scheduledStartTime": "2015-03-24T14:50:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2015-03-29T14:50:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6af105d036c0bbdd602b8"
+    },
+    {
+      "type": "Post-Mortem",
+      "status": "Closed",
+      "scheduledStartTime": "2015-03-22T14:53:00.000Z",
+      "actualStartTime": "2015-03-22T14:53:00.000Z",
+      "scheduledEndTime": "2015-03-23T14:53:00.000Z",
+      "actualendTime": "2015-03-23T14:53:00.000Z",
+      "_id": "58a6af105d036c0bbdd602b7"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-03-05T21:00:00.000Z",
+  "prize": [
+    1800,
+    900
+  ],
+  "projectId": 8093,
+  "registrants": [
+    {
+      "handle": "dinaju",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-06T18:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6af105d036c0bbdd602b6"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-05T22:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6af105d036c0bbdd602b5"
+    },
+    {
+      "handle": "vvvpig",
+      "reliability": "100%",
+      "registrationDate": "2015-03-06T00:52:00.000Z",
+      "submissionDate": "2015-03-11T12:16:00.000Z",
+      "rating": "1264",
+      "colorStyle": "color: #6666FF",
+      "_id": "58a6af105d036c0bbdd602b4"
+    },
+    {
+      "handle": "dilip.thapa",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-06T02:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6af105d036c0bbdd602b3"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-06T05:19:00.000Z",
+      "submissionDate": null,
+      "rating": "717",
+      "colorStyle": "color: #999999",
+      "_id": "58a6af105d036c0bbdd602b2"
+    },
+    {
+      "handle": "Amith",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-06T06:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6af105d036c0bbdd602b1"
+    },
+    {
+      "handle": "DerekZhao",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-06T08:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6af105d036c0bbdd602b0"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-06T11:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6af105d036c0bbdd602af"
+    },
+    {
+      "handle": "googlesmkm",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-06T14:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6af105d036c0bbdd602ae"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-06T14:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6af105d036c0bbdd602ad"
+    },
+    {
+      "handle": "Cagi",
+      "reliability": "0%",
+      "registrationDate": "2015-03-06T14:49:00.000Z",
+      "submissionDate": null,
+      "rating": "1114",
+      "colorStyle": "color: #00A900",
+      "_id": "58a6af105d036c0bbdd602ac"
+    },
+    {
+      "handle": "winstips",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-06T15:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6af105d036c0bbdd602ab"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "0%",
+      "registrationDate": "2015-03-06T16:29:00.000Z",
+      "submissionDate": null,
+      "rating": "1221",
+      "colorStyle": "color: #6666FF",
+      "_id": "58a6af105d036c0bbdd602aa"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2015-03-07T06:45:00.000Z",
+      "submissionDate": null,
+      "rating": "1055",
+      "colorStyle": "color: #00A900",
+      "_id": "58a6af105d036c0bbdd602a9"
+    },
+    {
+      "handle": "demo.b",
+      "reliability": "n/a",
+      "registrationDate": "2015-03-07T13:35:00.000Z",
+      "submissionDate": null,
+      "rating": "421",
+      "colorStyle": "color: #999999",
+      "_id": "58a6af105d036c0bbdd602a8"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2015-03-07T17:08:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58a6af105d036c0bbdd602a7"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2015-03-07T17:51:00.000Z",
+      "submissionDate": null,
+      "rating": "267",
+      "colorStyle": "color: #999999",
+      "_id": "58a6af105d036c0bbdd602a6"
+    }
+  ],
+  "registrationEndDate": "2015-03-07T21:02:00.000Z",
+  "reliabilityBonus": 360,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-03-11T20:03:00.000Z",
+  "submissions": [
+    {
+      "handle": "vvvpig",
+      "placement": 1,
+      "screeningScore": 50,
+      "initialScore": 73.6,
+      "finalScore": 74.11,
+      "points": 810,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-03-11T12:16:00.000Z",
+      "_id": "58a6af105d036c0bbdd602c4"
+    }
+  ],
+  "technology": [
+    ".NET",
+    "ASP.NET",
+    "C#",
+    "IIS",
+    "JQuery",
+    "SQL Server",
+    "Windows Server"
+  ]
+}

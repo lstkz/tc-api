@@ -1,0 +1,327 @@
+{
+  "_id": 30047451,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-11-30T08:34:33.228Z",
+  "appealsEndDate": "2014-12-09T01:04:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Helium - Web App Frontend Assembly - REPOST",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2>1.0 - Challenge Overview</h2>\n\n<p>Welcome to the&nbsp;<strong>Helium Web App Frontend Assembly</strong>&nbsp;challenge! In this challenge, you will need to build the Frontend for the new&nbsp;Helium web application&nbsp;based on the architecture design. This challenge will produce&nbsp;the front end pages and HTTP handlers.</p>\n\n<h2>1.1 - Project Overview</h2>\n\n<p>The client for this project runs a business where they fill and ship containers of liquid helium.&nbsp; The current process of planning and scheduling container fills and shipments includes manual steps, such as adding data to Excel files.&nbsp; For this project, the client is looking to create a web application that fits into their existing system and can be used to eliminate these manual steps and streamline the process of production planning for their liquid helium business.</p>\n\n<p>The existing logistics planning system uses a combination of manual processes, including data from paper/excel spreadsheets and live data in the client&rsquo;s existing production logistics system. &nbsp;This current logistics system collects data from existing, client facing systems and orders entered via an order entry system.&nbsp; All of this data will need to be consumed by the new web application.</p>\n\n<p>On a weekly basis in the current process (or somewhat real-time when conditions change), logistics personnel will gather data from multiple different sources and make a draft schedule. If everything appears good with that draft schedule, they will create a &ldquo;fill and ship&rdquo; schedule to deliver to the client&rsquo;s plants. This schedule tells the plant employees what container to fill, for which customer, and when to ship it. The plant employees are sent repeated schedules if there are any changes from unforeseen conditions.</p>\n\n<p>The new web application will need to integrate with the existing systems and fill in the gaps where manual steps are currently involved.&nbsp; The end product produced by the system will be the fill and ship schedule.</p>\n\n<h2>1.2 - Competition Task Overview</h2>\n\n<p>A complete list of deliverables can be found in the TopCoder Assembly competition Tutorial at:&nbsp;<a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a></p>\n\n<p><strong>Note</strong>: Extensive implementation notes are provided at method documentation on UML Class Diagrams. Please follow them for implementation.</p>\n\n<p><strong>Note</strong>: Please read the whole Application Design Specification first. All the details not mentioned in this specification are provided in that document.</p>\n\n<p>1.2.1&nbsp;&nbsp; &nbsp;<strong>Front End</strong><br />\nThis assembly is responsible for all stuff in the TCUML Frontend Class Diagram. Related pages and JavaScript code are also in scope.</p>\n\n<p>1.2.2 &nbsp; &nbsp;<strong>Dashboard Page (dashboard.aspx)</strong></p>\n\n<p>Code Behind: DashboardPage<br />\nWireframe: Logistics Planner - Dashboard</p>\n\n<p>Quite some content of this page is rendered in server side, see the Page_Load method for details. But some content are rendered in client side using Javascript, using AJAX calls to server side:<br />\n(1)&nbsp;&nbsp; &nbsp;In the DISRUPTIONS widget: when page is ready, and when the search criteria are changed, make AJAX request to SearchDisruptionsHandler to get matched disruptions, then update the widget content with AJAX response.<br />\n(2)&nbsp;&nbsp; &nbsp;In the ORDERS, ORDERS WITHOUT OVERSEAS BOOKING, ORDERS WITHOUT CARRIER BOOKING widgets: when page is ready, and when the search criteria are changed, make AJAX request to SearchOrdersHandler to get matched disruptions, then update the widget content with AJAX response. Note that the OrderSearchCriteria.WithoutOverseaBooking, WithoutCarrierBooking fields may be used for the later two widgets.<br />\nNote that if QueryOrderLastDayCount is configured in client side, then corresponding time range conditions should be added to the order search criteria.<br />\n(3)&nbsp;&nbsp; &nbsp;In the CONTAINER STATUS widget: when page is ready, and when the search criteria are changed, make AJAX request to SearchContainerStatusesHandler to get matched disruptions, then update the widget content with AJAX response.<br />\n(4)&nbsp;&nbsp; &nbsp;In the BOOKINGS widget: when page is ready, and when the search criteria are changed, make AJAX request to SearchBookingsHandler to get matched disruptions, then update the widget content with AJAX response.</p>\n\n<p>Note that if QueryBookingLastDayCount is configured in client side, then corresponding time range conditions should be added to the booking search criteria.</p>\n\n<p>The &ldquo;CURRENT PRODUCTION SCHEDULE&rdquo; and &ldquo;CARRIERS - SCHEDULE, PLANNING AND MILEAGE CALCULATION SHEET&rdquo; widgets are rendered as server side, so if their header selection buttons are changed, it should post back to server to update the page. But assemblers may enhance it to render all these two widgets content into client side, then show/hide corresponding content when the header selection is changed.</p>\n\n<p>When the dashboard setting is updated, it should call the server side SaveSetting_Click method.</p>\n\n<p>User may drag and drop a widget to reorganize the widgets. This will change the widget ordering. The client side will make AJAX request to DashboardSettingHandler to save the updated settings.<br />\nThe dashboard should allow any widget to popup, this is just UI feature that should be done in prototype.</p>\n\n<p>In the wireframe page, the &ldquo;CURRENT PRODUCTION SCHEDULE&rdquo; widget shows fill and shipping schedules in a single table, this is wrong, fill schedules and shipping schedules should be separated in two tables. This is like the View Schedule Option 1 Page, see 1.2.5 for details about how to render schedules.</p>\n\n<p>1.2.3 &nbsp; &nbsp;<strong>Edit Schedule Calendar Page (editScheduleCalendar.aspx)</strong></p>\n\n<p>Code Behind: EditScheduleCalendarPage<br />\nWireframe: Logistics Planner - View/Edit Production Schedule (calendar view)</p>\n\n<p>We will use Infragistics schedule control (<a href=\"http://www.infragistics.com/samples/aspnet/schedule/overview\">http://www.infragistics.com/samples/aspnet/schedule/overview</a>) to render the calendar view. We will bind its GenericDataProvider to ICollection, see <a href=\"http://www.infragistics.com/samples/aspnet/schedule/bind-genericdataprovider-to-icollection\">http://www.infragistics.com/samples/aspnet/schedule/bind-genericdataprovider-to-icollection</a> for details. We need to prepare resources and appointments for the data provider for the schedule control. The resources include &ldquo;Fill schedule&rdquo;, &ldquo;Shipping Schedule&rdquo; and &ldquo;Disruption&rdquo;. The appointments are constructed from the fill schedules, shipping schedules and disruptions.</p>\n\n<p>Published fill schedules are in color light yellow.<br />\nDraft fill schedules are in color strong yellow.<br />\nPublished shipping schedules are in color light blue.<br />\nDraft shipping schedules are in color strong blue.<br />\nDisruptions are in color red.</p>\n\n<p>A fillSchedule should not be shown if there is a draftFillSchedule whose ExistingFillScheduleId = fillSchedule.Id; similarly, a shippingSchedule should not be shown if there is a draftShippingSchedule whose ExistingShippingScheduleId = shippingSchedule.Id.</p>\n\n<p>When user edits schedule data, the following data will be tracked:<br />\n(1)&nbsp;&nbsp; &nbsp;For create/update/delete of published data (FillSchedule, ShippingSchedule), a draft data (DraftFillSchedule, DraftShippingSchedule) will be created. For example, if user drag and drop a published schedule data, this is to edit its Date, then a new DraftFillSchedule will be created, draft data will be same as the linked published data except that the Date field is updated.<br />\n(2)&nbsp;&nbsp; &nbsp;For update of draft data (DraftFillSchedule, DraftShippingSchedule), that same record is used but with updated values. For example, if user drag and drop a draft schedule data, this is to edit its Date, then the DraftFillSchedule&rsquo;s Date will be created.<br />\n(3)&nbsp;&nbsp; &nbsp;For delete of draft data (DraftFillSchedule, DraftShippingSchedule), deleted draft schedule id will be tracked.</p>\n\n<p>Thus finally, the &ldquo;edit schedule&rdquo; operations are all tracked with draftFillSchedules, draftShippingSchedules, deletedDraftFillScheduleIds, deletedDraftShippingScheduleIds. When &ldquo;Publish Ship and Fill Schedule&rdquo; or &ldquo;Save Changes&rdquo; buttons are clicked, these data will be posted to server side. These data may be stored in hidden fields using JSON formats, and in server side, use JavaScriptSerializer to deserialize them. For detailed publish/save handling, see the TCUML Publish_Click/Save_Click methods.</p>\n\n<p>The &nbsp;&ldquo;Cancel Changes&rdquo; button simple links to the dashboard page.</p>\n\n<p>1.2.4 &nbsp; &nbsp;<strong>Edit Schedule Table Page (editScheduleTable.aspx)</strong></p>\n\n<p>Code Behind: EditScheduleTablePage<br />\nWireframe: Logistics Planner - View/Edit Production Schedule (table view)</p>\n\n<p>In the table header, there are search fields, when these are changed, it should post back to server so that the table content is updated.<br />\nWhen &ldquo;Add&rdquo; button is clicked, it will create draft data (DraftFillSchedule, DraftShippingSchedule) in client side, it won&rsquo;t trigger server side method, all updates will be handled together in &ldquo;save&rdquo; or &ldquo;publish&rdquo; buttons click handlers.</p>\n\n<p>Draft records should be highlighted with bold texts.</p>\n\n<p>The rest processing is similar to the &ldquo;Edit Schedule Calendar Page&rdquo;.</p>\n\n<p>1.2.5 &nbsp; &nbsp;<strong>View Schedule Option 1 Page (viewSchedule1.aspx)</strong></p>\n\n<p>Code Behind: ViewScheduleOption1Page<br />\nWireframe: Plant Employee - View/Export/Print Ship and Fill Schedule - Option 1</p>\n\n<p>This page is rendered in the Page_Load method, it accepts start, end, fillSlotName query parameters, see the Page_Load method doc for more details.<br />\nWhen the &ldquo;Print&rdquo; button is clicked, it uses browser&rsquo;s print functionalities to print the current page.<br />\nWhen the &ldquo;Export&rdquo; button is clicked, it will ask user what format to export (Excel or CSV), then make request to ExportScheduleHandler to download the export.</p>\n\n<p>1.2.6 &nbsp; &nbsp;<strong>View Schedule Option 2 Page (viewSchedule2.aspx)</strong></p>\n\n<p>Code Behind: ViewScheduleOption2Page<br />\nWireframe: Plant Employee - View/Export/Print Ship and Fill Schedule - Option 2</p>\n\n<p>The processing of this page is similar to the above page. Note that all fill and shipping schedules are rendered, and when &ldquo;Fill Schedule&rdquo; / &rdquo;Ship Schedule&rdquo; are selected, hide/show corresponding schedule data.</p>\n\n<p>1.2.7 &nbsp; &nbsp;Help Pages</p>\n\n<p>The wireframe has no help pages, but the prototype provided to this assembly may contain help pages. These help pages if present will be static pages.</p>\n\n<p>&nbsp;</p>\n\n<h2>1.3 - Technology Overview</h2>\n\n<p>- Windows Server 2008 R2<br />\n- MS Office 2007<br />\n- MS SQL Server 2005<br />\n- IIS 7<br />\n- C# 3.5<br />\n- .NET Framework 3.5<br />\n- ASP.NET Web Form<br />\n- jQuery 1.11.1 <a href=\"http://jquery.com\">http://jquery.com</a><br />\n- Open XML SDK 2.0 for Microsoft Office (already included in .NET 3.5)<br />\n- Microsoft Chart Controls for Microsoft .NET Framework 3.5 -&nbsp;<a href=\"http://www.microsoft.com/en-us/download/details.aspx?id=14422\">http://www.microsoft.com/en-us/download/details.aspx?id=14422</a><br />\n- Infragistics Ultimate 2014 Vol. 1 -&nbsp;<a href=\"http://www.infragistics.com/\">http://www.infragistics.com/</a></p>\n\n<p>&nbsp;</p>\n\n<h2>1.4 - Documentation Provided</h2>\n\n<p>Documentation and Applications that will be provided to registered members:</p>\n\n<table style=\"line-height:16px\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<th><strong>Document Name</strong></th>\n\t\t\t<th><strong>&nbsp; &nbsp;Document Description &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</strong></th>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Application Design Specification</td>\n\t\t\t<td>&nbsp; &nbsp;Architecture documentation attached</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Class Diagrams</td>\n\t\t\t<td>&nbsp; &nbsp;Architecture documentation attached</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Sequence Diagrams</td>\n\t\t\t<td>&nbsp; &nbsp;Architecture documentation attached</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>ERD</td>\n\t\t\t<td>&nbsp; &nbsp;Architecture documentation attached</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Backend Assembly Code</td>\n\t\t\t<td>&nbsp; &nbsp;The completed Backend Assembly code</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>UI Prototype</td>\n\t\t\t<td>&nbsp; &nbsp;Completed UI Prototype</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<h2>&nbsp;</h2>\n\n<h2>1.5 - Testing</h2>\n\n<p>Please include unit tests to verify your application successfully meets the requirements of the project. &nbsp;You should provide functional tests.</p>\n",
+  "digitalRunPoints": 810,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30047451",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2014-12-18T16:17:00.000Z",
+  "finalSubmissionGuidelines": "<p>- Completed code for the application frontend (see architecture documentation and section 1.2 of this challenge spec above)<br />\n- A complete and detailed deployment documented explaining how to deploy the application including configuration information.<br />\n- Tests to verify your application successfully meets the requirements of the project.</p>\n\n<p><span>A complete list of deliverables can be found in the TopCoder Assembly competition Tutorial at:&nbsp;</span><a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); line-height: 20.7999992370605px;\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a></p>\n",
+  "forumId": 23968,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=23968",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 17,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-26T14:56:00.000Z",
+      "actualStartTime": "2014-11-26T14:56:00.000Z",
+      "scheduledEndTime": "2014-11-26T14:57:00.000Z",
+      "actualendTime": "2014-11-26T14:57:00.000Z",
+      "_id": "583e8f1910a1db09a46bf5b2"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-26T14:57:00.000Z",
+      "actualStartTime": "2014-11-26T14:57:00.000Z",
+      "scheduledEndTime": "2014-11-26T16:17:00.000Z",
+      "actualendTime": "2014-11-26T16:17:00.000Z",
+      "_id": "583e8f1910a1db09a46bf5b1"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-27T15:00:00.000Z",
+      "actualStartTime": "2014-11-27T15:00:00.000Z",
+      "scheduledEndTime": "2014-12-02T15:45:00.000Z",
+      "actualendTime": "2014-12-02T15:45:00.000Z",
+      "_id": "583e8f1910a1db09a46bf5b0"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-11-27T15:05:00.000Z",
+      "actualStartTime": "2014-11-27T15:05:00.000Z",
+      "scheduledEndTime": "2014-12-05T15:05:00.000Z",
+      "actualendTime": "2014-12-05T15:05:00.000Z",
+      "_id": "583e8f1910a1db09a46bf5af"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-05T15:05:00.000Z",
+      "actualStartTime": "2014-12-05T15:05:00.000Z",
+      "scheduledEndTime": "2014-12-06T09:06:00.000Z",
+      "actualendTime": "2014-12-06T09:06:00.000Z",
+      "_id": "583e8f1910a1db09a46bf5ae"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-06T09:06:00.000Z",
+      "actualStartTime": "2014-12-06T09:06:00.000Z",
+      "scheduledEndTime": "2014-12-07T12:40:00.000Z",
+      "actualendTime": "2014-12-07T12:40:00.000Z",
+      "_id": "583e8f1910a1db09a46bf5ad"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-07T12:40:00.000Z",
+      "actualStartTime": "2014-12-07T12:40:00.000Z",
+      "scheduledEndTime": "2014-12-09T00:40:00.000Z",
+      "actualendTime": "2014-12-09T00:40:00.000Z",
+      "_id": "583e8f1910a1db09a46bf5ac"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-09T00:40:00.000Z",
+      "actualStartTime": "2014-12-09T00:40:00.000Z",
+      "scheduledEndTime": "2014-12-09T01:04:00.000Z",
+      "actualendTime": "2014-12-09T01:04:00.000Z",
+      "_id": "583e8f1910a1db09a46bf5ab"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-09T01:04:00.000Z",
+      "actualStartTime": "2014-12-09T01:04:00.000Z",
+      "scheduledEndTime": "2014-12-09T01:45:00.000Z",
+      "actualendTime": "2014-12-09T01:45:00.000Z",
+      "_id": "583e8f1910a1db09a46bf5aa"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-09T01:45:00.000Z",
+      "actualStartTime": "2014-12-09T01:45:00.000Z",
+      "scheduledEndTime": "2014-12-18T16:17:00.000Z",
+      "actualendTime": "2014-12-18T16:17:00.000Z",
+      "_id": "583e8f1910a1db09a46bf5a9"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-18T16:17:00.000Z",
+      "actualStartTime": "2014-12-18T16:17:00.000Z",
+      "scheduledEndTime": "2014-12-19T03:13:00.000Z",
+      "actualendTime": "2014-12-19T03:13:00.000Z",
+      "_id": "583e8f1910a1db09a46bf5a8"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-12-19T03:13:00.000Z",
+      "actualStartTime": "2014-12-19T03:13:00.000Z",
+      "scheduledEndTime": "2014-12-24T03:13:00.000Z",
+      "actualendTime": "2014-12-24T03:13:00.000Z",
+      "_id": "583e8f1910a1db09a46bf5a7"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2014-11-27T15:00:00.000Z",
+  "prize": [
+    1800,
+    900
+  ],
+  "projectId": 7788,
+  "registrants": [
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2014-11-27T15:03:00.000Z",
+      "submissionDate": null,
+      "rating": "1088",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f1910a1db09a46bf5a6"
+    },
+    {
+      "handle": "f0rc0d3r",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-27T15:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1910a1db09a46bf5a5"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-27T17:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1910a1db09a46bf5a4"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "6%",
+      "registrationDate": "2014-11-27T20:01:00.000Z",
+      "submissionDate": null,
+      "rating": "1584",
+      "colorStyle": "color: #DDCC00",
+      "_id": "583e8f1910a1db09a46bf5a3"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-28T00:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1910a1db09a46bf5a2"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-11-28T04:18:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1910a1db09a46bf5a1"
+    },
+    {
+      "handle": "crim",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-28T09:35:00.000Z",
+      "submissionDate": null,
+      "rating": "659",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1910a1db09a46bf5a0"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-28T14:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1910a1db09a46bf59f"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-29T15:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1910a1db09a46bf59e"
+    },
+    {
+      "handle": "next_design",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-29T20:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1910a1db09a46bf59d"
+    },
+    {
+      "handle": "demo.b",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-30T07:57:00.000Z",
+      "submissionDate": null,
+      "rating": "421",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1910a1db09a46bf59c"
+    },
+    {
+      "handle": "sidthekid",
+      "reliability": "n/a",
+      "registrationDate": "2014-11-30T09:30:00.000Z",
+      "submissionDate": null,
+      "rating": "895",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1910a1db09a46bf59b"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "0%",
+      "registrationDate": "2014-11-30T11:49:00.000Z",
+      "submissionDate": null,
+      "rating": "1391",
+      "colorStyle": "color: #6666FF",
+      "_id": "583e8f1910a1db09a46bf59a"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-01T00:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1910a1db09a46bf599"
+    },
+    {
+      "handle": "anshumali",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-01T11:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1910a1db09a46bf598"
+    },
+    {
+      "handle": "Yeung",
+      "reliability": "100%",
+      "registrationDate": "2014-12-01T13:57:00.000Z",
+      "submissionDate": "2014-12-05T15:05:00.000Z",
+      "rating": "1984",
+      "colorStyle": "color: #DDCC00",
+      "_id": "583e8f1910a1db09a46bf597"
+    },
+    {
+      "handle": "shankarkamble",
+      "reliability": "n/a",
+      "registrationDate": "2014-12-01T17:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1910a1db09a46bf596"
+    }
+  ],
+  "registrationEndDate": "2014-12-02T15:45:00.000Z",
+  "reliabilityBonus": 360,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-12-05T15:05:00.000Z",
+  "submissions": [
+    {
+      "handle": "Yeung",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 92.31,
+      "finalScore": 93.18,
+      "points": 810,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-12-05T15:05:00.000Z",
+      "_id": "583e8f1910a1db09a46bf5b3"
+    }
+  ],
+  "technology": [
+    ".NET"
+  ]
+}

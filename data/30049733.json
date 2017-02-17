@@ -1,0 +1,448 @@
+{
+  "_id": 30049733,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-11-30T08:34:32.573Z",
+  "appealsEndDate": "2015-04-24T03:11:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Java Service Failover - Enhancements Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span style=\"color:rgb(255, 0, 0)\">Competition Task Overview</span></h2>\n\n<p>Welcome to the Fall from Grace Challenge: Gracefully service failover component in Java���</p>\n\n<p>In the previous challenge we have built a simple java based component that can gracefully handle the inability to connect to an HTTP(s) based service, now we need to make some enhancements to it.</p>\n\n<p>ReachabilityCheckerImpl is the primary class containing the implementation. &nbsp;It has many limitations.&nbsp;</p>\n\n<ol>\n\t<li>It creates a new instance of AsyncHttpClient each time, which will in-turn create a brand new connection pool and management threads every time it is called. &nbsp;We need to&nbsp;<span style=\"color:rgb(34, 34, 34); font-family:arial,sans-serif; font-size:12.8000001907349px\">hand the component to inject an AsyncHttpClient client in to avoid creating new connection pools.</span></li>\n\t<li>The implementation currently will accept invalid TLS/SSL certs, which is a major security concern. We need to&nbsp;<span style=\"color:rgb(34, 34, 34); font-family:arial,sans-serif; font-size:12.8000001907349px\">reject invalid certs if found. Self-signed certs should be supported.</span></li>\n\t<li>Each call to check() allocates a new ExecutorService, and thus another thread pool. &nbsp;We&#39;ll run out of threads real quick like this. We&nbsp;<span style=\"color:rgb(34, 34, 34); font-family:arial,sans-serif; font-size:12.8000001907349px\">need to be able to pass in a thread pool that we can reuse.</span></li>\n\t<li>The implementation only handles 500 errors, and no other response code. We need to handle the<span style=\"color:rgb(34, 34, 34); font-family:arial,sans-serif; font-size:12.8000001907349px\">&nbsp;entire class of 5XX errors.</span></li>\n\t<li>It needs to<span style=\"color:rgb(34, 34, 34); font-family:arial,sans-serif; font-size:12.8000001907349px\">&nbsp;support 301, 302, 307, and 308 redirects.</span></li>\n\t<li>It logs errors at the debug level, this should be updated to<span style=\"color:rgb(34, 34, 34); font-family:arial,sans-serif; font-size:12.8000001907349px\">&nbsp;log errors properly.&nbsp;</span></li>\n\t<li>We have to manually call ReachabilityChecker#check in our application, handle the response and then issue a new request to do the work that the app actually needs to do. &nbsp;The way they set it up, this doesn&#39;t send multiple requests and provide the application with a response. &nbsp;It sends multiple requests and tells you which host/IP address returned first. We need to fix this so that&nbsp;<span style=\"color:rgb(34, 34, 34); font-family:arial,sans-serif; font-size:12.8000001907349px\">the check should, on finding a good connection, actually execute the HTTP request instead of just returning the availability of the service.</span></li>\n</ol>\n\n<h3><span style=\"color:rgb(255, 0, 0)\">Testing</span></h3>\n\n<p><span>Unit tests are required for the code created in this challenge. And if necessary previous unit tests must be updated to work with the new code as well.</span></p>\n\n<p><span>You should also provide or update the CLI based program to test the API using different parameters.</span></p>\n\n<h3><span style=\"color:rgb(255, 0, 0)\">Setup</span></h3>\n\n<ul>\n\t<li>Send an email to&nbsp;<a href=\"mailto:cwd@appirio.com\" style=\"padding: 0px; margin: 0px; color: rgb(65, 131, 196); box-sizing: border-box; text-decoration: none; background: transparent;\">lazybaer</a>&nbsp;or&nbsp;<a href=\"mailto:Wendell@copilots.topcoder.com\" style=\"padding: 0px; margin: 0px; color: rgb(65, 131, 196); box-sizing: border-box; text-decoration: none; background: transparent;\">wendell</a>&nbsp;or post in the forums to request to be added to the&nbsp;<a href=\"https://gitlab.com/groups/Hercues-ServiceFailover\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">ServiceFailover team on gitlab</a>&nbsp;if you are not already a member</li>\n\t<li>Once added to the team, fork the repository, if you haven&rsquo;t already, and work off of the <a href=\"https://gitlab.com/team-autobots/ServiceFailover/tree/30049733-Enhancements\">30049733-Enhancements</a>&nbsp;branch</li>\n\t<li>Add&nbsp;<a href=\"https://gitlab.com/u/huangqun\" style=\"padding: 0px; margin: 0px; color: rgb(65, 131, 196); box-sizing: border-box; text-decoration: none; background: transparent;\">wendell</a>&nbsp;and&nbsp;<a href=\"https://gitlab.com/u/lazybaer\" style=\"padding: 0px; margin: 0px; color: rgb(65, 131, 196); box-sizing: border-box; text-decoration: none; background: transparent;\">lazybaer</a>&nbsp;as members of your forked repository.</li>\n</ul>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Technology Overview</span></h2>\n\n<ul>\n\t<li><span>Java 7</span></li>\n\t<li><span>JUnit</span></li>\n\t<li><span>HTTP(s)</span></li>\n\t<li><span><a href=\"https://github.com/AsyncHttpClient/async-http-client\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">AsyncHttpClient</a></span></li>\n</ul>\n",
+  "digitalRunPoints": 540,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30049733",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2015-04-25T15:27:00.000Z",
+  "finalSubmissionGuidelines": "<h2><strong><span style=\"color:rgb(255, 0, 0)\">Submission Deliverables</span></strong></h2>\n\n<ul>\n\t<li>Your code changes must be pushed to your private gitlab repo</li>\n\t<li>Submit a zipped version of your repo to Online Review</li>\n\t<li>Make sure your submission includes a clear guide to deploy and test / verify your submission</li>\n\t<li><strong>Once picked as the winner and done with fixes, you&#39;re expected to submit a merge request to the specified branch</strong></li>\n</ul>\n\n<h2><span style=\"color:rgb(255, 0, 0)\"><strong>Final Submission</strong></span></h2>\n\n<p>For each member, the final submission should be uploaded via the challenge detail page on&nbsp;<a href=\"http://www.topcoder.com/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">topcoder.com</a>.</p>\n",
+  "forumId": 28955,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=28955",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 29,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-14T13:12:00.000Z",
+      "actualStartTime": "2015-04-14T13:12:00.000Z",
+      "scheduledEndTime": "2015-04-14T13:14:00.000Z",
+      "actualendTime": "2015-04-14T13:14:00.000Z",
+      "_id": "583e8f1810a1db09a46bf478"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-14T13:14:00.000Z",
+      "actualStartTime": "2015-04-14T13:14:00.000Z",
+      "scheduledEndTime": "2015-04-14T14:40:00.000Z",
+      "actualendTime": "2015-04-14T14:40:00.000Z",
+      "_id": "583e8f1810a1db09a46bf477"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-14T14:40:00.000Z",
+      "actualStartTime": "2015-04-14T14:40:00.000Z",
+      "scheduledEndTime": "2015-04-16T14:41:00.000Z",
+      "actualendTime": "2015-04-16T14:41:00.000Z",
+      "_id": "583e8f1810a1db09a46bf476"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-14T14:45:00.000Z",
+      "actualStartTime": "2015-04-14T14:45:00.000Z",
+      "scheduledEndTime": "2015-04-20T14:42:00.000Z",
+      "actualendTime": "2015-04-20T14:42:00.000Z",
+      "_id": "583e8f1810a1db09a46bf475"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-20T14:42:00.000Z",
+      "actualStartTime": "2015-04-20T14:42:00.000Z",
+      "scheduledEndTime": "2015-04-20T20:19:00.000Z",
+      "actualendTime": "2015-04-20T20:19:00.000Z",
+      "_id": "583e8f1810a1db09a46bf474"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-20T20:19:00.000Z",
+      "actualStartTime": "2015-04-20T20:19:00.000Z",
+      "scheduledEndTime": "2015-04-22T19:39:00.000Z",
+      "actualendTime": "2015-04-22T19:39:00.000Z",
+      "_id": "583e8f1810a1db09a46bf473"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-22T19:39:00.000Z",
+      "actualStartTime": "2015-04-22T19:39:00.000Z",
+      "scheduledEndTime": "2015-04-23T19:41:00.000Z",
+      "actualendTime": "2015-04-23T19:41:00.000Z",
+      "_id": "583e8f1810a1db09a46bf472"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-23T19:41:00.000Z",
+      "actualStartTime": "2015-04-23T19:41:00.000Z",
+      "scheduledEndTime": "2015-04-24T03:11:00.000Z",
+      "actualendTime": "2015-04-24T03:11:00.000Z",
+      "_id": "583e8f1810a1db09a46bf471"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-24T03:11:00.000Z",
+      "actualStartTime": "2015-04-24T03:11:00.000Z",
+      "scheduledEndTime": "2015-04-24T14:21:00.000Z",
+      "actualendTime": "2015-04-24T14:21:00.000Z",
+      "_id": "583e8f1810a1db09a46bf470"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-24T14:21:00.000Z",
+      "actualStartTime": "2015-04-24T14:21:00.000Z",
+      "scheduledEndTime": "2015-04-25T15:27:00.000Z",
+      "actualendTime": "2015-04-25T15:27:00.000Z",
+      "_id": "583e8f1810a1db09a46bf46f"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-25T15:27:00.000Z",
+      "actualStartTime": "2015-04-25T15:27:00.000Z",
+      "scheduledEndTime": "2015-04-25T22:19:00.000Z",
+      "actualendTime": "2015-04-25T22:19:00.000Z",
+      "_id": "583e8f1810a1db09a46bf46e"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-04-25T22:19:00.000Z",
+      "actualStartTime": "2015-04-25T22:19:00.000Z",
+      "scheduledEndTime": "2015-05-05T22:21:00.000Z",
+      "actualendTime": "2015-05-05T22:21:00.000Z",
+      "_id": "583e8f1810a1db09a46bf46d"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-04-14T14:40:00.000Z",
+  "prize": [
+    1200,
+    600
+  ],
+  "projectId": 8639,
+  "registrants": [
+    {
+      "handle": "albertwang",
+      "reliability": "80%",
+      "registrationDate": "2015-04-14T14:46:00.000Z",
+      "submissionDate": "2015-04-20T09:14:00.000Z",
+      "rating": "1664",
+      "colorStyle": "color: #DDCC00",
+      "_id": "583e8f1810a1db09a46bf46c"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2015-04-14T15:43:00.000Z",
+      "submissionDate": null,
+      "rating": "1053",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f1810a1db09a46bf46b"
+    },
+    {
+      "handle": "meena123",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-14T16:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1810a1db09a46bf46a"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-14T16:10:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1810a1db09a46bf469"
+    },
+    {
+      "handle": "frozenfx",
+      "reliability": "0%",
+      "registrationDate": "2015-04-14T16:22:00.000Z",
+      "submissionDate": null,
+      "rating": "1844",
+      "colorStyle": "color: #DDCC00",
+      "_id": "583e8f1810a1db09a46bf468"
+    },
+    {
+      "handle": "gvir",
+      "reliability": "8%",
+      "registrationDate": "2015-04-14T16:38:00.000Z",
+      "submissionDate": null,
+      "rating": "1285",
+      "colorStyle": "color: #6666FF",
+      "_id": "583e8f1810a1db09a46bf467"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-14T17:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1810a1db09a46bf466"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "6%",
+      "registrationDate": "2015-04-14T17:36:00.000Z",
+      "submissionDate": null,
+      "rating": "957",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f1810a1db09a46bf465"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-14T17:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1810a1db09a46bf464"
+    },
+    {
+      "handle": "gauravs23",
+      "reliability": "13%",
+      "registrationDate": "2015-04-14T17:46:00.000Z",
+      "submissionDate": null,
+      "rating": "755",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1810a1db09a46bf463"
+    },
+    {
+      "handle": "uyscuti",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-14T19:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1810a1db09a46bf462"
+    },
+    {
+      "handle": "superastrom",
+      "reliability": "0%",
+      "registrationDate": "2015-04-15T00:33:00.000Z",
+      "submissionDate": null,
+      "rating": "468",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1810a1db09a46bf461"
+    },
+    {
+      "handle": "michael_tang",
+      "reliability": "0%",
+      "registrationDate": "2015-04-15T03:59:00.000Z",
+      "submissionDate": null,
+      "rating": "497",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1810a1db09a46bf460"
+    },
+    {
+      "handle": "ngoctay",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-15T14:16:00.000Z",
+      "submissionDate": "2015-04-19T22:44:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1810a1db09a46bf45f"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2015-04-15T15:12:00.000Z",
+      "submissionDate": null,
+      "rating": "265",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1810a1db09a46bf45e"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-15T16:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1810a1db09a46bf45d"
+    },
+    {
+      "handle": "jol",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-15T16:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1810a1db09a46bf45c"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-15T17:32:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1810a1db09a46bf45b"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2015-04-15T18:33:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1810a1db09a46bf45a"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2015-04-15T21:00:00.000Z",
+      "submissionDate": null,
+      "rating": "1387",
+      "colorStyle": "color: #6666FF",
+      "_id": "583e8f1810a1db09a46bf459"
+    },
+    {
+      "handle": "lexusine",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-16T00:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1810a1db09a46bf458"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-16T00:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1810a1db09a46bf457"
+    },
+    {
+      "handle": "qixiao",
+      "reliability": "0%",
+      "registrationDate": "2015-04-16T00:58:00.000Z",
+      "submissionDate": null,
+      "rating": "786",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1810a1db09a46bf456"
+    },
+    {
+      "handle": "OlinaRuan",
+      "reliability": "6%",
+      "registrationDate": "2015-04-16T08:10:00.000Z",
+      "submissionDate": null,
+      "rating": "1072",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f1810a1db09a46bf455"
+    },
+    {
+      "handle": "patka",
+      "reliability": "6%",
+      "registrationDate": "2015-04-16T11:38:00.000Z",
+      "submissionDate": null,
+      "rating": "566",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1810a1db09a46bf454"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-16T11:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1810a1db09a46bf453"
+    },
+    {
+      "handle": "linuxgeek",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-16T12:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1810a1db09a46bf452"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "0%",
+      "registrationDate": "2015-04-16T13:06:00.000Z",
+      "submissionDate": null,
+      "rating": "618",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1810a1db09a46bf451"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2015-04-16T13:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1810a1db09a46bf450"
+    }
+  ],
+  "registrationEndDate": "2015-04-16T14:41:00.000Z",
+  "reliabilityBonus": 240,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-04-20T14:42:00.000Z",
+  "submissions": [
+    {
+      "handle": "albertwang",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 96.96,
+      "finalScore": 97.7,
+      "points": 378,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-04-20T09:14:00.000Z",
+      "_id": "583e8f1810a1db09a46bf47a"
+    },
+    {
+      "handle": "ngoctay",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 76.54,
+      "finalScore": 76.54,
+      "points": 162,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-04-19T22:44:00.000Z",
+      "_id": "583e8f1810a1db09a46bf479"
+    }
+  ],
+  "technology": [
+    "HTTP",
+    "JUnit",
+    "Java"
+  ]
+}

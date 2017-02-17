@@ -1,0 +1,384 @@
+{
+  "_id": 30056324,
+  "_isComplete": true,
+  "__v": 1791,
+  "_lastUpdate": "2017-02-06T23:24:14.881Z",
+  "appealsEndDate": "2017-02-06T23:20:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Hercules Fog Record - Tune Time Optimisation",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><span style=\"font-size:12px\"><strong>Describe what you want to accomplish.&nbsp;</strong></span><br />\n<br />\nThe Fog recorder application is a C++ application that allows a user to schedule recordings for TV shows and record live TV. We use this project to test certain functionality of client applications, which are external to just the recorder.</p>\n\n<div>\n<p>he recorder is a Unix, and it includes Makefiles that can be used on Linux and Mac and there are also ways to build for Windows.<br />\n<br />\nThis challenge will focus on a scenarios below and optimising how quickly playback starts when a new recording is initiated.<br />\n<br />\n<strong>VERSION</strong><br />\n<br />\nWe maintain two separate branches of the codebase for this project. &nbsp;This code challenge applies to&nbsp;<strong>master</strong>. &nbsp;Do&nbsp;<strong>not</strong>&nbsp;use the new_build branch. &nbsp;<br />\n<br />\n<strong>CODE</strong></p>\n\n<p>The existing code is here:</p>\n\n<p><a href=\"https://gitlab.com/hercules-fog/Fog-CLI\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); background: 0px 0px; text-decoration: none; outline: 0px; cursor: pointer; transition: all 0.2s ease-in-out; -webkit-tap-highlight-color: transparent; word-wrap: break-word;\">https://gitlab.com/hercules-fog/Fog-CLI/</a></p>\n\n<p>A link will be provided in the forum where you will be able to get access.<br />\n<br />\n<strong>Make sure to use the &quot;master&quot; branch!<br />\n<br />\nLinux</strong><br />\n<br />\nFor this challenge, we will target Linux or Mac for compilation and unit testing, since that will be the nearest to the deployment environment of the actual production app. &nbsp;You can also use the Windows build environment, but note that your changes will be reviewed and tested in either Linux or MacOS.<br />\n&nbsp;</p>\n\n<h3><strong>Submission</strong></h3>\n\n<p>Your submission to OR should be a Git patch file that can be applied to see the fixes. Here is documentation on how to generate a Git patch file:</p>\n\n<p><a href=\"https://ariejan.net/2009/10/26/how-to-create-and-apply-a-patch-with-git/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); background: 0px 0px; text-decoration: none; outline: 0px; cursor: pointer; transition: all 0.2s ease-in-out; -webkit-tap-highlight-color: transparent; word-wrap: break-word;\">https://ariejan.net/2009/10/26/how-to-create-and-apply-a-patch-with-git/<br />\n<br />\nWe will target Git commit hash&nbsp;</a>ee934e7b9905b27e7f3696f9167a2763e63289c1</p>\n\n<h3><strong>Requirement 1</strong></h3>\nThe current Fog implementation is used in an embedded environment, specifically the &quot;/tsb&quot; endpoint of the API. &nbsp;A sample URL would like like this, where &quot;192.168.86.31&quot; is the address of the Fog server, and&nbsp;http://link.po.ccp.xcal.tv/s/ofHU/4hWDCVC_7W8J4097gubuBEHG_1PAYL10 is the link to the live manifest that will be recorded and played back through Fog.<br />\n<br />\nhttp://192.168.86.31:9080/tsb?clientId=FogCodeChallenge&amp;recordedUrl=http:%2F%2Flink.po.ccp.xcal.tv%2Fs%2FofHU%2F4hWDCVC_7W8J4097gubuBEHG_1PAYL10<br />\n<br />\nThe embedded system will make a request like this, and that tells Fog to:<br />\n<br />\n1. Start recording the given &quot;recordedUrl&quot;<br />\n2. Make a custom manifest and return a 302 redirect to the recorded manifest<br />\n<br />\nThe embedded system will wait for the 302 redirect and will then start playback.<br />\n<br />\nThe problem we are seeing is that this process is slow:<br />\n<br />\n0. Make the request to /tsb<br />\n1. Start the recording<br />\n2. Generate the manifest<br />\n3. Wait until we fill up the recorded buffer<br />\n4. Return the new manifest in the redirect<br />\n<br />\nIn the actual use case, a new &quot;/tsb&quot; request is made every time the user changes a channel on their TV. &nbsp;Think of it as having to do this every time a user presses &quot;channel up&quot; or &quot;channel down&quot; on their remote control. &nbsp;Because this is a common use case and is something that is time sensitive, we need to optimise this so that playback starts as quickly as possible.<br />\n<br />\n<strong>Things we can do:</strong><br />\n<br />\n* The configuration used in production is the same as the one currently in Git. &nbsp;If there are potential optimisations there, we can investigate, but the client is going to be very hesitant to make changes here, for various reasons.<br />\n* One idea the client had was to proxy the request of the initial fragments to the end-server instead of through Fog. &nbsp;This means that Fog would initially serve up the manifest that points to the remote server, which could be used for the first 5-10 seconds while the recording buffer fills up and then on subsequent manifest requests we would give the player one that points solely to Fog instead of to the remote server. &nbsp;This is something they would like to see investigated and implemented.<br />\n<br />\n<strong>Submission:</strong><br />\n<br />\nPlease submit a Git patch file and a separate README (don&#39;t update the README in Git) that describes your changes and how to validate the optimisation.<br />\n&nbsp;</div>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30056324",
+  "event": {
+    "id": 3447,
+    "description": "2017 TopCoder(R) Open",
+    "shortDescription": "tco17"
+  },
+  "finalSubmissionGuidelines": "Please see above",
+  "forumId": 34955,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=34955",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 28,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-29T21:23:00.000Z",
+      "actualStartTime": "2017-01-29T21:23:00.000Z",
+      "scheduledEndTime": "2017-02-03T21:29:00.000Z",
+      "actualendTime": "2017-02-03T21:29:00.000Z",
+      "_id": "5899059e90ca64469ca6fe34"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-29T21:29:00.000Z",
+      "actualStartTime": "2017-01-29T21:29:00.000Z",
+      "scheduledEndTime": "2017-02-03T21:29:00.000Z",
+      "actualendTime": "2017-02-03T21:29:00.000Z",
+      "_id": "5899059e90ca64469ca6fe33"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2017-02-03T21:29:00.000Z",
+      "actualStartTime": "2017-02-03T21:29:00.000Z",
+      "scheduledEndTime": "2017-02-05T21:21:00.000Z",
+      "actualendTime": "2017-02-05T21:21:00.000Z",
+      "_id": "5899059e90ca64469ca6fe32"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2017-02-05T21:21:00.000Z",
+      "actualStartTime": "2017-02-05T21:21:00.000Z",
+      "scheduledEndTime": "2017-02-06T21:22:00.000Z",
+      "actualendTime": "2017-02-06T21:22:00.000Z",
+      "_id": "5899059e90ca64469ca6fe31"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2017-02-06T21:22:00.000Z",
+      "actualStartTime": "2017-02-06T21:22:00.000Z",
+      "scheduledEndTime": "2017-02-06T23:20:00.000Z",
+      "actualendTime": "2017-02-06T23:20:00.000Z",
+      "_id": "5899059e90ca64469ca6fe30"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2017-01-29T21:23:00.000Z",
+  "prize": [
+    1500,
+    750
+  ],
+  "projectId": 11869,
+  "registrants": [
+    {
+      "handle": "Ksys",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-29T22:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe2f"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-29T23:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe2e"
+    },
+    {
+      "handle": "billsedison",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-30T01:20:00.000Z",
+      "submissionDate": "2017-02-03T10:02:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe2d"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-30T05:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe2c"
+    },
+    {
+      "handle": "adolia",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-30T05:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe2b"
+    },
+    {
+      "handle": "Erona",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-30T06:45:00.000Z",
+      "submissionDate": "2017-02-03T16:22:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe2a"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-30T10:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe29"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-30T10:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe28"
+    },
+    {
+      "handle": "ljsf_cc",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-30T13:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe27"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-30T15:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe26"
+    },
+    {
+      "handle": "diogenesjcs",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-30T15:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe25"
+    },
+    {
+      "handle": "Rushikesh.Deshp",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-30T18:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe24"
+    },
+    {
+      "handle": "brunch",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-31T06:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe23"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-31T11:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe22"
+    },
+    {
+      "handle": "republic82",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-31T16:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe21"
+    },
+    {
+      "handle": "calebjmu",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-31T18:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe20"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-31T19:08:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe1f"
+    },
+    {
+      "handle": "NikhilKalige",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-01T02:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe1e"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-01T13:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe1d"
+    },
+    {
+      "handle": "DeanVeleker",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-01T15:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe1c"
+    },
+    {
+      "handle": "stevelvovo",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-01T18:54:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe1b"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-01T23:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe1a"
+    },
+    {
+      "handle": "Xmastah",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-02T10:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe19"
+    },
+    {
+      "handle": "weez17",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-02T16:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe18"
+    },
+    {
+      "handle": "Symbitic",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-02T17:25:00.000Z",
+      "submissionDate": "2017-02-03T02:52:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe17"
+    },
+    {
+      "handle": "faisalbasha1982",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-02T17:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe16"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-03T06:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe15"
+    },
+    {
+      "handle": "kennywong",
+      "reliability": "n/a",
+      "registrationDate": "2017-02-03T17:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5899059e90ca64469ca6fe14"
+    }
+  ],
+  "registrationEndDate": "2017-02-03T21:29:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2017-02-03T21:29:00.000Z",
+  "submissions": [
+    {
+      "handle": "Erona",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 91.25,
+      "finalScore": 93.75,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2017-02-03T16:22:00.000Z",
+      "_id": "5899059e90ca64469ca6fe37"
+    },
+    {
+      "handle": "billsedison",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 93.13,
+      "finalScore": 93.13,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2017-02-03T10:02:00.000Z",
+      "_id": "5899059e90ca64469ca6fe36"
+    },
+    {
+      "handle": "Symbitic",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 63.75,
+      "finalScore": 63.75,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2017-02-03T02:52:00.000Z",
+      "_id": "5899059e90ca64469ca6fe35"
+    }
+  ],
+  "technology": [
+    "C",
+    "C++"
+  ]
+}

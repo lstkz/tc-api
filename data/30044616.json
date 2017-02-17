@@ -1,0 +1,425 @@
+{
+  "_id": 30044616,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-11-30T08:35:08.866Z",
+  "appealsEndDate": "2014-09-23T04:09:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Applause Dynamic Infographic Generator Module Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h1><a name=\"_Toc10301853\"></a><a name=\"_Toc456598592\">Applause Dynamic Infographic Generator Assembly Specification</a></h1>\n\n<h1><a name=\"_Toc456598593\">1.&nbsp;&nbsp;&nbsp;&nbsp; Project Overview</a></h1>\n\n<h2>1.1&nbsp;&nbsp;&nbsp;&nbsp; System Description</h2>\n\n<p style=\"margin-left:36.0pt\">The client (Applause) would like to develop service (Infographic Generator) that generates infographic for apps based on analytics data gathered by the client, the infograpic would be used for web presentation and print publication. The app testing and analytics data are provided through a standard web-based API call in JSON format.</p>\n\n<p style=\"margin-left:36.0pt\">This application (Infographic Generator) will be implemented using Python and deployed on Google App Engine, it is responsible for pulling and parsing analytics data from the web API, and generating the infographic based on the collected data.</p>\n\n<p style=\"margin-left:36.0pt\">This assembly will implement the entire application.</p>\n\n<h2>1.2&nbsp;&nbsp;&nbsp;&nbsp; Competition Task Overview</h2>\n\n<p style=\"margin-left:36.0pt\">A complete list of deliverables can be found in the TopCoder Assembly competition Tutorial at:</p>\n\n<p style=\"margin-left:36pt\"><a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a></p>\n\n<p style=\"margin-left:36pt\"><em>Note: Please read the whole Application Design Specification first. All the details not mentioned in this specification are provided in that document.</em></p>\n\n<h3>1.2.1&nbsp;&nbsp;&nbsp;&nbsp; Google App Engine &amp; Code Organization</h3>\n\n<p style=\"margin-left:36.0pt\">This application will be developed and deployed on Google App Engine, please refer to the <a href=\"https://developers.google.com/appengine/docs/python/gettingstartedpython27/introduction\">official tutorial</a> to get started if you are not familiar with Python development on Google App Engine.</p>\n\n<p style=\"margin-left:36.0pt\">The code of the application should be organized as attached document.</p>\n\n<h3>1.2.2&nbsp;&nbsp;&nbsp;&nbsp; Python Classes &amp; Modules</h3>\n\n<p style=\"margin-left:36.0pt\">The following classes and modules on &quot;Main Class Diagram&quot; are in scope of this assembly:</p>\n\n<ul>\n\t<li>InfographicData</li>\n\t<li>Attribute</li>\n\t<li>Tip</li>\n\t<li>Feedback</li>\n\t<li>Offering</li>\n\t<li>InfographicDataException</li>\n\t<li>infographic_data.py</li>\n\t<li>InfographicHandler</li>\n\t<li>handlers.py</li>\n\t<li>settings.py</li>\n\t<li>main.py</li>\n</ul>\n\n<p style=\"margin-left:36.0pt\">Extensive implementation details are provided at TCUML class and method documentations.</p>\n\n<h3>1.2.3&nbsp;&nbsp;&nbsp;&nbsp; Infographic jinja2 template</h3>\n\n<p style=\"margin-left:36.0pt\"><u>Data Mapping</u></p>\n\n<p style=\"margin-left:36.0pt\">Basically the infographic will be a web page written with HTML and CSS. jinja2 will be used as the template tool. If you&#39;re not familiar with jinja2, please get started with <a href=\"http://jinja.pocoo.org/docs/api/#basics\">this</a>.</p>\n\n<p style=\"margin-left:36.0pt\">An UI prototype built using HTML and CSS will be provided to assemblers, and assemblers are expected to replace hard-coded infographic information/data with jinja2 variables. A single root variable &quot;data&quot; (of type InfographicData) is available to the jinja2 template. Since the business logic for analytics data extraction is taken care of by InfographicHandler and infographic_data module, no complex control structures (such as if-else) are expected in the jinja2 template.</p>\n\n<p style=\"margin-left:36.0pt\">The following summarizes the mapping from infographic data item (see &quot;Applause Infographic Data Mapping.docx&quot;) to jinja2 variables:</p>\n\n<table border=\"1\" cellpadding=\"0\" cellspacing=\"0\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"width:195px\">\n\t\t\t<p><strong>Data Item</strong></p>\n\t\t\t</td>\n\t\t\t<td style=\"width:395px\">\n\t\t\t<p><strong>Variable</strong></p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"width:195px\">\n\t\t\t<p>1. Users are saying</p>\n\t\t\t</td>\n\t\t\t<td style=\"width:395px\">\n\t\t\t<p>{{data.headlines[0]}}</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"width:195px\">\n\t\t\t<p>2. Test in the Wild</p>\n\t\t\t</td>\n\t\t\t<td style=\"width:395px\">\n\t\t\t<p>{{data.headlines[1]}}</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"width:195px\">\n\t\t\t<p>3. Uncover issues in real time</p>\n\t\t\t</td>\n\t\t\t<td style=\"width:395px\">\n\t\t\t<p>{{data.headlines[2]}}</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"width:195px\">\n\t\t\t<p>4.&nbsp; Logo for application</p>\n\t\t\t</td>\n\t\t\t<td style=\"width:395px\">\n\t\t\t<p>{{data.app_logo}}</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"width:195px\">\n\t\t\t<p>5. Title</p>\n\t\t\t</td>\n\t\t\t<td style=\"width:395px\">\n\t\t\t<p>{{data.app_title}}</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"width:195px\">\n\t\t\t<p>6. Applause Score</p>\n\t\t\t</td>\n\t\t\t<td style=\"width:395px\">\n\t\t\t<p>{{data.applause_score}}</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"width:195px\">\n\t\t\t<p>7. Positive feedback</p>\n\t\t\t</td>\n\t\t\t<td style=\"width:395px\">\n\t\t\t<ul>\n\t\t\t\t<li>Rating: {{data.positive_feedbacks[0].rating}}</li>\n\t\t\t\t<li>Text: {{data.positive_feedbacks[0].text}}</li>\n\t\t\t</ul>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"width:195px\">\n\t\t\t<p>8. 9. Negative Feedback</p>\n\t\t\t</td>\n\t\t\t<td style=\"width:395px\">\n\t\t\t<ul>\n\t\t\t\t<li>Rating 1: {{data.negative_feedbacks[0].rating}}</li>\n\t\t\t\t<li>Text 1: {{data.negative_feedbacks[0].text}}</li>\n\t\t\t\t<li>Rating 2: {{data.negative_feedbacks[1].rating}}</li>\n\t\t\t\t<li>Text 2: {{data.negative_feedbacks[1].text}}</li>\n\t\t\t</ul>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"width:195px\">\n\t\t\t<p>10. Best attribute</p>\n\t\t\t</td>\n\t\t\t<td style=\"width:395px\">\n\t\t\t<p>{{data.best_attributes[0].name}}</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"width:195px\">\n\t\t\t<p>11. Spider Graph</p>\n\t\t\t</td>\n\t\t\t<td style=\"width:395px\">\n\t\t\t<p>{{data.spider_graph_url}}</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"width:195px\">\n\t\t\t<p>12. Positive Card</p>\n\t\t\t</td>\n\t\t\t<td style=\"width:395px\">\n\t\t\t<ul>\n\t\t\t\t<li>Tip Title: {{data.best_attributes[0].tips_and_tricks[0].title}}</li>\n\t\t\t\t<li>Tip Description: {{data.best_attributes[0].tips_and_tricks[0].description}}</li>\n\t\t\t\t<li>Tip Title Image: {{data.best_attributes[0].tips_and_tricks[0].title_image}}</li>\n\t\t\t\t<li>Tip User Image: {{data.best_attributes[0].tips_and_tricks[0].user_image}}</li>\n\t\t\t\t<li>Offering Name: {{data.best_attributes[0].offerings[0].name}}</li>\n\t\t\t\t<li>Offering Image: {{data.best_attributes[0].offerings[0].image}}</li>\n\t\t\t\t<li>Attribute Score: {{data.best_attributes[0].applause_score}}</li>\n\t\t\t\t<li>Attribute Trend: {{data.best_attributes[0].trend}}</li>\n\t\t\t</ul>\n\n\t\t\t<p style=\"margin-left:18.0pt\">Note different &quot;trend&quot; value will correspond to different icons.</p>\n\n\t\t\t<ul>\n\t\t\t\t<li>Attribute Category Score: {{data.best_attributes[0].category_score}}</li>\n\t\t\t\t<li>Review: <a href=\"http://apps.topcoder.com/forums/?module=Thread&amp;threadID=826403&amp;start=0\">TBD</a></li>\n\t\t\t</ul>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"width:195px\">\n\t\t\t<p>13.15.16.&nbsp; Negative feedback 1, 2, 3</p>\n\t\t\t</td>\n\t\t\t<td style=\"width:395px\">\n\t\t\t<ul>\n\t\t\t\t<li>data.worst_attributes[0]</li>\n\t\t\t\t<li>data.worst_attributes[1]</li>\n\t\t\t\t<li>data.worst_attributes[2]</li>\n\t\t\t</ul>\n\n\t\t\t<p>Mapping for each attribute is the same as &quot;12. Positive Card&quot;.</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"width:195px\">\n\t\t\t<p>14. Positive Token</p>\n\t\t\t</td>\n\t\t\t<td style=\"width:395px\">\n\t\t\t<p>The image of the positive token will be based on {{data.best_attributes[0].name}}</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"width:195px\">\n\t\t\t<p>17. Negative tokens</p>\n\t\t\t</td>\n\t\t\t<td style=\"width:395px\">\n\t\t\t<p>The image of the negative tokens will be based on {{data.worst_attributes[0].name}}, {{data.worst_attributes[1].name}}, {{data.worst_attributes[2].name}}</p>\n\t\t\t</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p style=\"margin-left:36.0pt\"><u>Positive/Negative Tokens</u></p>\n\n<p style=\"margin-left:36.0pt\">Note that since the numbers of positive/negative tokens are fixed on the infographic, it is assumed that the token positions are fixed (i.e. the positive token is near the START of the lane, negative tokens are near the FINISH of the lane). In summary, from left to right on the racing lane are data.worst_attributes[0], data.worst_attributes[1], data.worst_attributes[2] and data.best_attributes[0].</p>\n\n<p style=\"margin-left:36.0pt\"><u>Spider Graph</u></p>\n\n<p style=\"margin-left:36.0pt\">Since client provides the Spider Graph for each app as a web page (e.g. <a href=\"https://mjohnson.applause.com/radarchart?appids=333903271&amp;width=500\">https://mjohnson.applause.com/radarchart?appids=333903271&amp;width=500</a> ), the infographic web page will embed the Spider Graph in an iframe with proper CSS style to hide borders and scroll bars. Please also note that the &quot;width&quot; of the iframe should be set as the value of &quot;width&quot; query parameter in the Spider Graph URL, so that the iframe can fit to the infographic web page best.</p>\n\n<p style=\"margin-left:36.0pt\">e.g.</p>\n\n<table border=\"1\" cellpadding=\"0\" cellspacing=\"0\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"width:638px\">\n\t\t\t<p>&lt;iframe src=&quot;{{data.spider_graph_url}}&quot; frameBorder=&quot;0&quot;</p>\n\n\t\t\t<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; style=&quot;width:500px; height:500px; overflow-y: hidden; overflow-x: hidden;&quot;&gt;</p>\n\n\t\t\t<p>&lt;/iframe&gt;</p>\n\t\t\t</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<h2>&nbsp;</h2>\n\n<h2>1.3 &nbsp; &nbsp; Technology overview</h2>\n\n<ul>\n\t<li><a name=\"_Toc264791785\"></a><a name=\"_Toc253168776\"></a><a name=\"_Toc247023653\">Python 2.7</a></li>\n\t<li>HTML</li>\n\t<li>CSS</li>\n\t<li>JSON</li>\n\t<li><a href=\"https://developers.google.com/appengine/\">Google App Engine</a></li>\n\t<li><a href=\"https://pypi.python.org/pypi/webapp2\">webapp2</a> (latest version at Google App Engine)</li>\n\t<li><a href=\"http://jinja.pocoo.org/docs/\">jinja2</a> (latest version at Google App Engine)</li>\n</ul>\n\n<h2>1.5&nbsp;&nbsp;&nbsp;&nbsp; Existing Documents</h2>\n\n<p style=\"margin-left:54pt\">&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Class Diagrams</p>\n\n<p style=\"margin-left:54pt\">&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sequence Diagrams</p>\n\n<p style=\"margin-left:54pt\">&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Application Design Specification</p>\n\n<p style=\"margin-left:54pt\">&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Assembly Specification</p>\n\n<p style=\"margin-left:54pt\">&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Applause Analytics Data Service JSON Sample (client-provided)</p>\n\n<p style=\"margin-left:54pt\">&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Applause Infographic Data Mapping Document (client-provided)</p>\n\n<p style=\"margin-left:54pt\">&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Infographic Graphic Design (client-provided)</p>\n",
+  "digitalRunPoints": 540,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30044616",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2014-09-28T16:23:00.000Z",
+  "finalSubmissionGuidelines": "<h2><a name=\"_Toc282280945\">Deliverables</a></h2>\n\n<ul>\n\t<li>Source code and configuration files.</li>\n\t<li>Deployment guide to configure and verify the application.</li>\n\t<li>It is important that the application must be deployed to Google App Engine.</li>\n</ul>\n",
+  "forumId": 24501,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=24501",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 23,
+  "numberOfSubmissions": 5,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-12T08:51:00.000Z",
+      "actualStartTime": "2014-09-12T08:51:00.000Z",
+      "scheduledEndTime": "2014-09-12T08:52:00.000Z",
+      "actualendTime": "2014-09-12T08:52:00.000Z",
+      "_id": "583e8f3c10a1db09a46c1135"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-12T08:52:00.000Z",
+      "actualStartTime": "2014-09-12T08:52:00.000Z",
+      "scheduledEndTime": "2014-09-12T12:11:00.000Z",
+      "actualendTime": "2014-09-12T12:11:00.000Z",
+      "_id": "583e8f3c10a1db09a46c1134"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-12T12:11:00.000Z",
+      "actualStartTime": "2014-09-12T12:11:00.000Z",
+      "scheduledEndTime": "2014-09-16T12:11:00.000Z",
+      "actualendTime": "2014-09-16T12:11:00.000Z",
+      "_id": "583e8f3c10a1db09a46c1133"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-12T12:16:00.000Z",
+      "actualStartTime": "2014-09-12T12:16:00.000Z",
+      "scheduledEndTime": "2014-09-19T12:11:00.000Z",
+      "actualendTime": "2014-09-19T12:11:00.000Z",
+      "_id": "583e8f3c10a1db09a46c1132"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-19T12:11:00.000Z",
+      "actualStartTime": "2014-09-19T12:11:00.000Z",
+      "scheduledEndTime": "2014-09-19T17:41:00.000Z",
+      "actualendTime": "2014-09-19T17:41:00.000Z",
+      "_id": "583e8f3c10a1db09a46c1131"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-19T17:41:00.000Z",
+      "actualStartTime": "2014-09-19T17:41:00.000Z",
+      "scheduledEndTime": "2014-09-21T16:34:00.000Z",
+      "actualendTime": "2014-09-21T16:34:00.000Z",
+      "_id": "583e8f3c10a1db09a46c1130"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-21T16:34:00.000Z",
+      "actualStartTime": "2014-09-21T16:34:00.000Z",
+      "scheduledEndTime": "2014-09-22T16:34:00.000Z",
+      "actualendTime": "2014-09-22T16:34:00.000Z",
+      "_id": "583e8f3c10a1db09a46c112f"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-22T16:34:00.000Z",
+      "actualStartTime": "2014-09-22T16:34:00.000Z",
+      "scheduledEndTime": "2014-09-23T04:09:00.000Z",
+      "actualendTime": "2014-09-23T04:09:00.000Z",
+      "_id": "583e8f3c10a1db09a46c112e"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-23T04:09:00.000Z",
+      "actualStartTime": "2014-09-23T04:09:00.000Z",
+      "scheduledEndTime": "2014-09-23T04:14:00.000Z",
+      "actualendTime": "2014-09-23T04:14:00.000Z",
+      "_id": "583e8f3c10a1db09a46c112d"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-23T04:14:00.000Z",
+      "actualStartTime": "2014-09-23T04:14:00.000Z",
+      "scheduledEndTime": "2014-09-28T16:23:00.000Z",
+      "actualendTime": "2014-09-28T16:23:00.000Z",
+      "_id": "583e8f3c10a1db09a46c112c"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-28T16:23:00.000Z",
+      "actualStartTime": "2014-09-28T16:23:00.000Z",
+      "scheduledEndTime": "2014-09-28T17:53:00.000Z",
+      "actualendTime": "2014-09-28T17:53:00.000Z",
+      "_id": "583e8f3c10a1db09a46c112b"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2014-09-28T17:53:00.000Z",
+      "actualStartTime": "2014-09-28T17:53:00.000Z",
+      "scheduledEndTime": "2014-09-28T17:54:00.000Z",
+      "actualendTime": "2014-09-28T17:54:00.000Z",
+      "_id": "583e8f3c10a1db09a46c112a"
+    }
+  ],
+  "platforms": [
+    "Google"
+  ],
+  "postingDate": "2014-09-12T12:11:00.000Z",
+  "prize": [
+    1200,
+    600
+  ],
+  "projectId": 7862,
+  "registrants": [
+    {
+      "handle": "fivestarwy",
+      "reliability": "6%",
+      "registrationDate": "2014-09-12T12:59:00.000Z",
+      "submissionDate": "2014-09-19T08:40:00.000Z",
+      "rating": "440",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f3c10a1db09a46c1129"
+    },
+    {
+      "handle": "srikkbhat",
+      "reliability": "50%",
+      "registrationDate": "2014-09-12T13:37:00.000Z",
+      "submissionDate": "2014-09-17T22:59:00.000Z",
+      "rating": "1035",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f3c10a1db09a46c1128"
+    },
+    {
+      "handle": "rajeshk87",
+      "reliability": "0%",
+      "registrationDate": "2014-09-12T14:12:00.000Z",
+      "submissionDate": null,
+      "rating": "600",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f3c10a1db09a46c1127"
+    },
+    {
+      "handle": "gonia_119",
+      "reliability": "20%",
+      "registrationDate": "2014-09-12T16:14:00.000Z",
+      "submissionDate": null,
+      "rating": "1009",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f3c10a1db09a46c1126"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-12T16:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f3c10a1db09a46c1125"
+    },
+    {
+      "handle": "roarky",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-12T16:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f3c10a1db09a46c1124"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-09-12T16:47:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f3c10a1db09a46c1123"
+    },
+    {
+      "handle": "Mloody2000",
+      "reliability": "70%",
+      "registrationDate": "2014-09-12T17:33:00.000Z",
+      "submissionDate": null,
+      "rating": "1090",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f3c10a1db09a46c1122"
+    },
+    {
+      "handle": "D.R.MC",
+      "reliability": "100%",
+      "registrationDate": "2014-09-12T17:39:00.000Z",
+      "submissionDate": "2014-09-19T08:56:00.000Z",
+      "rating": "1538",
+      "colorStyle": "color: #DDCC00",
+      "_id": "583e8f3c10a1db09a46c1121"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "0%",
+      "registrationDate": "2014-09-12T18:43:00.000Z",
+      "submissionDate": null,
+      "rating": "1447",
+      "colorStyle": "color: #6666FF",
+      "_id": "583e8f3c10a1db09a46c1120"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-12T22:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f3c10a1db09a46c111f"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-13T01:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f3c10a1db09a46c111e"
+    },
+    {
+      "handle": "Cagi",
+      "reliability": "0%",
+      "registrationDate": "2014-09-13T10:19:00.000Z",
+      "submissionDate": null,
+      "rating": "1114",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f3c10a1db09a46c111d"
+    },
+    {
+      "handle": "partychen",
+      "reliability": "20%",
+      "registrationDate": "2014-09-13T10:23:00.000Z",
+      "submissionDate": "2014-09-18T15:42:00.000Z",
+      "rating": "1135",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f3c10a1db09a46c111c"
+    },
+    {
+      "handle": "deedee",
+      "reliability": "13%",
+      "registrationDate": "2014-09-13T14:29:00.000Z",
+      "submissionDate": null,
+      "rating": "787",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f3c10a1db09a46c111b"
+    },
+    {
+      "handle": "SePulTribe",
+      "reliability": "0%",
+      "registrationDate": "2014-09-13T16:31:00.000Z",
+      "submissionDate": null,
+      "rating": "585",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f3c10a1db09a46c111a"
+    },
+    {
+      "handle": "chuxy111",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-14T05:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f3c10a1db09a46c1119"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-14T06:23:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f3c10a1db09a46c1118"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "13%",
+      "registrationDate": "2014-09-14T11:54:00.000Z",
+      "submissionDate": null,
+      "rating": "1058",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f3c10a1db09a46c1117"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-15T04:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f3c10a1db09a46c1116"
+    },
+    {
+      "handle": "arvind81983",
+      "reliability": "13%",
+      "registrationDate": "2014-09-15T04:58:00.000Z",
+      "submissionDate": "2014-09-19T10:48:00.000Z",
+      "rating": "617",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f3c10a1db09a46c1115"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2014-09-15T06:39:00.000Z",
+      "submissionDate": null,
+      "rating": "1088",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f3c10a1db09a46c1114"
+    },
+    {
+      "handle": "aang112",
+      "reliability": "n/a",
+      "registrationDate": "2014-09-15T12:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f3c10a1db09a46c1113"
+    }
+  ],
+  "registrationEndDate": "2014-09-16T12:11:00.000Z",
+  "reliabilityBonus": 240,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-09-19T12:11:00.000Z",
+  "submissions": [
+    {
+      "handle": "D.R.MC",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 98.24,
+      "finalScore": 98.88,
+      "points": 302.40000000000003,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-09-19T08:56:00.000Z",
+      "_id": "583e8f3c10a1db09a46c113a"
+    },
+    {
+      "handle": "partychen",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 95.94,
+      "finalScore": 97.15,
+      "points": 108,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-09-18T15:42:00.000Z",
+      "_id": "583e8f3c10a1db09a46c1139"
+    },
+    {
+      "handle": "fivestarwy",
+      "placement": 3,
+      "screeningScore": 100,
+      "initialScore": 93.35,
+      "finalScore": 96.76,
+      "points": 54,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-09-19T08:40:00.000Z",
+      "_id": "583e8f3c10a1db09a46c1138"
+    },
+    {
+      "handle": "srikkbhat",
+      "placement": 4,
+      "screeningScore": 100,
+      "initialScore": 95.68,
+      "finalScore": 96,
+      "points": 43.2,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-09-17T22:59:00.000Z",
+      "_id": "583e8f3c10a1db09a46c1137"
+    },
+    {
+      "handle": "arvind81983",
+      "placement": 5,
+      "screeningScore": 100,
+      "initialScore": 81.7,
+      "finalScore": 81.7,
+      "points": 32.4,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2014-09-19T10:48:00.000Z",
+      "_id": "583e8f3c10a1db09a46c1136"
+    }
+  ],
+  "technology": [
+    "Python"
+  ]
+}

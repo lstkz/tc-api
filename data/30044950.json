@@ -1,0 +1,369 @@
+{
+  "_id": 30044950,
+  "_isComplete": true,
+  "__v": 19668,
+  "_lastUpdate": "2017-02-17T08:01:25.663Z",
+  "appealsEndDate": "2014-08-24T01:42:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Hercules PCDVR iOS App - UI Updates integration and API service class refactoring",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": "2014-08-15T01:38:00.000Z",
+  "currentPhaseEndDate": "2014-08-21T01:42:00.000Z",
+  "currentPhaseName": "Post-Mortem",
+  "currentPhaseRemainingTime": -78729417,
+  "currentStatus": "Cancelled - Zero Submissions",
+  "detailedRequirements": "<p>The Hercules Personal Content DVR application is a stand-alone iOS app, allowing users to upload their own video content they recorded on their phone or tablet camera into their DVR for playback on their TV and syncing with other devices.</p>\n\n<p>This assembly will integrate in the UI updates into the current codebase, as well as implement a complete refactoring of the service code to make it easier to use and test.</p>\n\n<p><strong>General requirements</strong></p>\n\n<p>The results from the UI Update 2 assembly will be provided in the forum. &nbsp;You can see the initial requirements here:</p>\n\n<p><a href=\"http://www.topcoder.com/challenge-details/30044254/?type=develop&amp;noncache=true\">http://www.topcoder.com/challenge-details/30044254/?type=develop&amp;noncache=true</a></p>\n\n<p>This assembly will integrate the changes from that assembly into the current codebase in the forum, resulting in a single output with the new UI, using the updated services and authentication.</p>\n\n<p><strong>Backend service refactoring</strong></p>\n\n<p>The backend service has become cumbersome due to the number of times the backend API has been rewritten and features have been added and removed. &nbsp;To alleviate future pains in maintaining that set of classes, we are going to fully refactor the API accordingly to the TCUML file in the forum and description of the changes below.</p>\n\n<p><strong>Here are the general requirements:</strong></p>\n\n<p>1) The BackendService will be configurable for the backend URL to connect to, as it is now<br />\n2) The functionality for logout will be moved to the AuthenticationManager<br />\n3) EVERY network call will be asynchronous, and the response will be delivered via the NSNotificationCenter<br />\n4) EVERY API call will be mapped to a specific notification that the various views and view controllers can register for<br />\n5) All view controllers and views will need to be updated to handle the new events accordingly<br />\n6) Downloads will be split into a separate class<br />\n7) Uploads will be split into a separate class<br />\n8) Only &quot;Favorites&quot; and pending upload information will be cached in CoreData, ensuring the data seen in the UI is up-to-date. &nbsp;Some data may be cached in memory, to speed things up, but not sent to CoreData. &nbsp;Favorites can be viewed offline, so we will cache the favorites thumbnails and information for offline viewing. &nbsp;Uploads can be resumable, so we have to keep upload progress and the queue for use when the network or app resumes. &nbsp;</p>\n\n<p>We are going to enforce a consistent mechanism for the app in general, with the goal being reduced redundancy, reduced complexity, and lesser chances of threading issues.</p>\n\n<p>Once we have the code into the new classes, we will likely take the service classes and write unit tests against them to help ensure they are working properly under all expected cases.</p>\n\n<p><strong>Rename</strong></p>\n\n<p>The BackendService class will be renamed &quot;UgcAPI&quot;. &nbsp;</p>\n\n<p><strong>UgcAPI class</strong></p>\n\n<p>The UgcAPI class will now handle all API calls, with each backend API call mapped to a single class method in the UgcAPI. &nbsp;Each call will be asynchronous. &nbsp;This means that to get the albums, for example, a user will call [UgcAPI getAlbums], and the UgcAPI class will raise a UGC_GetAllAlbums event with the array of albums and files when the results are downloaded from the API, parsed, and available. &nbsp;Timeouts and errors from the API will be raised in a similar fashion, and every class that makes an API call should register for the appropriate events here as well. &nbsp; The &quot;UGC_InputError&quot; will be called by the UgcAPI class whenever the input doesn&#39;t match what is expected. &nbsp;For instance, if createAlbum is called with a null album, then the UGC_InputError should be raised.</p>\n\n<p>You can use ASIHttp for all calls, not just downloading, if it would make the code cleaner than using the standard NS URL request classes. &nbsp;*All* network calls in the application MUST be asynchronous now.</p>\n\n<p>The &quot;callApi&quot; will do what the similar call does now - set up the call to the endpoint, apply the token to the header, and call either a success or failure block. &nbsp;This call will be wrapped by the other, public API calls in the UgcAPI class.</p>\n\n<p><strong>Uploads</strong></p>\n\n<p>The upload mechanism will be kept in a completely class now, to make it easy to resume uploads when the app starts, or the network connection is available again. &nbsp;When a call is made to UgcAPI.upload, the UgcAPI upload method will do the following:</p>\n\n<p>1) Create a new MediaFileUpload instance, filling in the asset,fileName, albumGuid, and thumbnailData. &nbsp;The ThumbnailGenerator can be used to generate the thumbnail for the asset.<br />\n2) Generate the fileGuid and uploadUrl by calling the PUT to the files endpoint in the API, applying the resultant values to the upload<br />\n3) The upload is then queued in UgcUploader.addUploadToQueue</p>\n\n<p>At this point the UgcUploader takes over and manages the upload. &nbsp;Similar to what we do now, the upload is queued, and each upload is processed in the order it was added to the queue. &nbsp;The UgcUploader will handle all aspects of the upload, including:</p>\n\n<p>1) Chunking the file for resumable uploads, where appropriate. &nbsp;<br />\n2) Uploading the file, pausing if the network is disconnected.<br />\n3) Notifying about the upload progress, including whenever an upload starts, the progress is changed (speed and percentage), and when an upload completes successfully and is processing. &nbsp;Once an upload is done entirely, it will be completely removed from the queue, and it should be returnable from the regular data calls with a new mediaStatus, like &quot;UPLOAD-COMPLETE&quot;<br />\n4) The UI classes can get the upload progress of a given file whenever they want by calling UgcUpload.getUploadProgress(fileGuid). &nbsp;This will be useful for files that are returned from the service that show up as UPLOAD-INPROGRESS or MEDIA-NONE in their mediaStatuses. &nbsp;This can be used to query for a matched upload, so if the user leaves an album view and comes back to it we can appropriately show the queue.</p>\n\n<p>It&#39;s important that if a download is cancelled, that the proper API calls are made to fully delete the file so any uploaded chunks are also removed.</p>\n\n<p><strong>Downloads</strong></p>\n\n<p>Similar to uploads, the download mechanism will be kept in a completely class now, to make it easy to resume downloads when the app starts, or the network connection is available again. &nbsp;When a call is made to UgcAPI.downloadFileToFavorites, the UgcAPI upload method will do the following:</p>\n\n<p>1) Create a new MediaFileDownload instance, filling in the mediaUrl from the file.<br />\n3) The upload is then queued in UgcDownloader.addDownloadToQueue</p>\n\n<p>At this point the UgcDownloader takes over and manages the download. &nbsp;Similar to what we do now, the download is queued, and each download is processed in the order it was added to the queue. &nbsp;The UgcUploader will handle all aspects of the upload, including:</p>\n\n<p>1) Downloading the file, pausing if the network is disconnected.<br />\n2) Notifying about the download progress, including whenever an download starts, the progress is changed (speed and percentage), and when a download completes successfully. &nbsp;Once an download is done entirely, it will be completely removed from the queue<br />\n4) The UI classes can get the download progress of a given file whenever they want by calling UgcDownloader.getDownloadProgress(fileGuid). &nbsp;This can be used to query for a matched download, so if the user leaves an album view and comes back to it we can appropriately show the status on the file.</p>\n\n<p><strong>DBHelper</strong></p>\n\n<p>The DBHelper will be reorganized with only managing uploads and downloads in mind, including full CRUD functionality, as well as selecting only those downloads and uploads valid for a given album, to aid in the UI integration.</p>\n\n<p>This new DBHelper should have a single managed object context and should perform all operations on a single thread, to avoid the complexity we have now with multi-threaded MOC usage.</p>\n\n<p>The clearAllData method will be used on logout, to remove all downloads and uploads.</p>\n\n<p><strong>Entities</strong></p>\n\n<p>The new entities are used when returning data in the notifications. &nbsp;For instance, if a call is made to UgcAPI.getAllAlbums, the notification should contain an NSArray of Album instances, with each Album having an array of MediaFile instances, allowing us to fully fill in the UI. &nbsp;These classes are for in-memory usage *only*. &nbsp;They will not be saved to the CoreData model, ensuring that all data seen in the UI is &quot;fresh&quot; as the user navigates the screens.<br />\n&nbsp;<br />\n<strong>Queues</strong></p>\n\n<p>Look here for an easy addition to NSMutableArray that adds in some basic queue functionality, useful for the upload and download queues.<br />\n<a href=\"http://stackoverflow.com/questions/817469/how-do-i-make-and-use-a-queue-in-objective-c\">http://stackoverflow.com/questions/817469/how-do-i-make-and-use-a-queue-in-objective-c</a></p>\n\n<p><strong>Login and Logout</strong></p>\n\n<p>All login and logout functionality will be kept in the &quot;AuthorizationManager&quot; class. &nbsp;This *includes* retrieving and updating the login token, which is currently in the QuantumAppDelegate class.</p>\n\n<p>The refreshAccessToken method will be moved from the QuantumAppDelegate to the AuthenticationManager class, allowing for a single call to be made to refresh the access token, if available.&nbsp;</p>\n\n<p>In addition, instead of having the QuantumAppDelegate check the Keychain properties to determine if a user is logged in, we will add a new &quot;isLoggedIn&quot; property to the AuthenticationManager, which will handle the same sort of functionality seen in QuantumAppDelegate.refreshAccessToken, returning &quot;true&quot; if the user has a token, login, and password stored in the keychain.</p>\n\n<p>In addition, the timer for the refresh token will now be part of the AuthenticationManager class, allowing the QuantumAppDelegate to &quot;know&quot; far less about the authentication. &nbsp;When starting up, we will still do the following in the QuantumAppDelegate, but the implementation should be much more straightforward:</p>\n\n<p>1) Check if the user is already logged in (now AuthenticationManager.isLoggedIn)<br />\n2) If not logged in, show the login panel<br />\n3) If logged in, refresh the token (now [AuthenticationManager.instance refreshAccessToken])<br />\n4) If logged in, start the timer (now [AuthenticationManager.instance startTokenRefreshTimer])<br />\n5) If *not* logged in, show the login screen<br />\n6) When the app pauses or is quit, make sure to stop the token refresh timer (now [AuthenticationManager.instance stopTokenRefreshTimer])</p>\n\n<p>In addition, when the app resumes, we need to make sure to resume the uploader as well ([UgcUploader resumeUploads]), and the downloader ([UgcDownloader resumeDownloads])</p>\n\n<p>On logout, the AuthenticationManager should make sure to use the UgcUploader and UgcDownloader to prompt the user if there are active uploads, as well as to ensure that all pending uploads and downloads are cancelled properly.</p>\n\n<p><strong>Notification Definitions</strong></p>\n\n<p>*ALL* notification names must now be separated into a &quot;NotificationDefinitions&quot; header. &nbsp;This will ensure that we have easy reference to all available notification names in the app. &nbsp;New ones are created for the API calls, but all existing notification names outside of the API calls should be moved here. &nbsp;All notifications related to the API and uploading and downloading should have the &quot;UGC_&quot; prefix. &nbsp;All others can just have the &quot;XC_&quot; prefix.</p>\n\n<p>The UI will need to be rewired into the new notifications so that upload status, refreshing, download status and queuing, and all other related functions , like editing, moving, deleting work as expected.</p>\n\n<p><strong>Refreshing in the UI</strong></p>\n\n<p>Each view controller should have an appropriate timer to refresh it&#39;s data on a regular basis, like every 30 seconds. &nbsp;For instance, if the user is viewing the files for an album, an NSTimer should be started on the AlbumViewController to call UgcAPI.getAlbum and update the API every 30 seconds, so that if a user on a separate device deletes, edits, or uploads a file, that change is shown on all other devices. &nbsp;This would apply to the For You screen, the Deleted Items screen, the Albums screen, the Library screen, and the individual Album views.</p>\n\n<p><strong>Thumbnail generator</strong></p>\n\n<p>We currently generate thumbnails for the albums based on an algorithm to build a 2x2 &quot;grid&quot; of thumbnails for albums that have 4 or more entities. &nbsp;In addition, thumbnails for files need to be generated at a configurable size (constants on the ThumbnailGenerator class). &nbsp;Please use a low Jpeg quality setting, like 0.4 when building the data. &nbsp;This should ensure that&nbsp;<strong>all</strong>&nbsp;thumbnails in the app look good, even at retina sizing. &nbsp;This must work for both photos <strong>and</strong>&nbsp;videos. &nbsp;All thumbnail generation should flow through the ThumbnailGenerator, including all album edits (moving files, deleting files, album creation, etc...), and all file edits (creating a new file, editing an existing file through Aviary, editing a video cover option for the thumbnail).</p>\n\n<p><strong>Updating</strong></p>\n\n<p>We have to support updating, so ensure the CoreData updates to the data model are done as a new version.</p>\n\n<p><strong>Git Merge</strong></p>\n\n<p>The winner will be responsible for merging the changes into Git during final fixes. &nbsp;We can add a little extra time to final fixes to help with this. &nbsp;Work will continue to be done to fix other bugs while the assembly is going on, so the winner will need to ensure that the merge doesn&#39;t overwrite any updates since the time the assembly started.</p>\n\n<p><strong>Milestone</strong></p>\n\n<p>For the milestone, please have the refactoring complete. &nbsp;It doesn&#39;t have to be integrated into the UI, but it should be complete in the code and working properly.</p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": 1125,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30044950",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2014-08-25T13:42:00.000Z",
+  "finalSubmissionGuidelines": "<p>Please see above</p>\n",
+  "forumId": 24811,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=24811",
+  "numberOfCheckpointSubmissions": 2,
+  "numberOfCheckpointsPrizes": 2,
+  "numberOfRegistrants": 20,
+  "numberOfSubmissions": 0,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-10T20:47:00.000Z",
+      "actualStartTime": "2014-08-10T20:47:00.000Z",
+      "scheduledEndTime": "2014-08-10T20:49:00.000Z",
+      "actualendTime": "2014-08-10T20:49:00.000Z",
+      "_id": "58a6add55d036c0bbdd5ac63"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-10T20:49:00.000Z",
+      "actualStartTime": "2014-08-10T20:49:00.000Z",
+      "scheduledEndTime": "2014-08-11T01:37:00.000Z",
+      "actualendTime": "2014-08-11T01:37:00.000Z",
+      "_id": "58a6add55d036c0bbdd5ac62"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-11T01:37:00.000Z",
+      "actualStartTime": "2014-08-11T01:37:00.000Z",
+      "scheduledEndTime": "2014-08-13T01:38:00.000Z",
+      "actualendTime": "2014-08-13T01:38:00.000Z",
+      "_id": "58a6add55d036c0bbdd5ac61"
+    },
+    {
+      "type": "Checkpoint Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-11T01:42:00.000Z",
+      "actualStartTime": "2014-08-11T01:42:00.000Z",
+      "scheduledEndTime": "2014-08-15T01:38:00.000Z",
+      "actualendTime": "2014-08-15T01:38:00.000Z",
+      "_id": "58a6add55d036c0bbdd5ac60"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-11T01:42:00.000Z",
+      "actualStartTime": "2014-08-11T01:42:00.000Z",
+      "scheduledEndTime": "2014-08-20T01:42:00.000Z",
+      "actualendTime": "2014-08-20T01:42:00.000Z",
+      "_id": "58a6add55d036c0bbdd5ac5f"
+    },
+    {
+      "type": "Checkpoint Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-15T01:38:00.000Z",
+      "actualStartTime": "2014-08-15T01:38:00.000Z",
+      "scheduledEndTime": "2014-08-16T02:32:00.000Z",
+      "actualendTime": "2014-08-16T02:32:00.000Z",
+      "_id": "58a6add55d036c0bbdd5ac5e"
+    },
+    {
+      "type": "Screening",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-08-20T01:42:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-08-20T13:42:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6add55d036c0bbdd5ac5d"
+    },
+    {
+      "type": "Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-08-20T13:42:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-08-22T13:42:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6add55d036c0bbdd5ac5c"
+    },
+    {
+      "type": "Appeals",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-08-22T13:42:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-08-23T13:42:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6add55d036c0bbdd5ac5b"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-08-23T13:42:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-08-24T01:42:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6add55d036c0bbdd5ac5a"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-08-24T01:42:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-08-24T13:42:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6add55d036c0bbdd5ac59"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-08-24T13:42:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-08-25T13:42:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6add55d036c0bbdd5ac58"
+    },
+    {
+      "type": "Final Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-08-25T13:42:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-08-26T01:42:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6add55d036c0bbdd5ac57"
+    },
+    {
+      "type": "Approval",
+      "status": "Scheduled",
+      "scheduledStartTime": "2014-08-26T01:42:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2014-08-31T01:42:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6add55d036c0bbdd5ac56"
+    },
+    {
+      "type": "Post-Mortem",
+      "status": "Open",
+      "scheduledStartTime": "2014-08-20T01:42:00.000Z",
+      "actualStartTime": "2014-08-20T01:42:00.000Z",
+      "scheduledEndTime": "2014-08-21T01:42:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6add55d036c0bbdd5ac55"
+    }
+  ],
+  "platforms": [
+    "iOS"
+  ],
+  "postingDate": "2014-08-11T01:37:00.000Z",
+  "prize": [
+    2500,
+    1250
+  ],
+  "projectId": 6680,
+  "registrants": [
+    {
+      "handle": "michael_tang",
+      "reliability": "0%",
+      "registrationDate": "2014-08-11T14:00:00.000Z",
+      "submissionDate": null,
+      "rating": "497",
+      "colorStyle": "color: #999999",
+      "_id": "58a6add55d036c0bbdd5ac54"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2014-08-11T01:48:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "58a6add55d036c0bbdd5ac53"
+    },
+    {
+      "handle": "kinfkong",
+      "reliability": "100%",
+      "registrationDate": "2014-08-11T01:50:00.000Z",
+      "submissionDate": "2014-08-15T01:13:00.000Z",
+      "rating": "1473",
+      "colorStyle": "color: #6666FF",
+      "_id": "58a6add55d036c0bbdd5ac52"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "0%",
+      "registrationDate": "2014-08-11T02:48:00.000Z",
+      "submissionDate": null,
+      "rating": "819",
+      "colorStyle": "color: #999999",
+      "_id": "58a6add55d036c0bbdd5ac51"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-11T03:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6add55d036c0bbdd5ac50"
+    },
+    {
+      "handle": "duxiaoyang",
+      "reliability": "40%",
+      "registrationDate": "2014-08-11T03:33:00.000Z",
+      "submissionDate": null,
+      "rating": "974",
+      "colorStyle": "color: #00A900",
+      "_id": "58a6add55d036c0bbdd5ac4f"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-11T04:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6add55d036c0bbdd5ac4e"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-11T06:11:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "58a6add55d036c0bbdd5ac4d"
+    },
+    {
+      "handle": "arthurjlp",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-11T08:55:00.000Z",
+      "submissionDate": null,
+      "rating": "754",
+      "colorStyle": "color: #999999",
+      "_id": "58a6add55d036c0bbdd5ac4c"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2014-08-11T09:13:00.000Z",
+      "submissionDate": null,
+      "rating": "1032",
+      "colorStyle": "color: #00A900",
+      "_id": "58a6add55d036c0bbdd5ac4b"
+    },
+    {
+      "handle": "artm",
+      "reliability": "66%",
+      "registrationDate": "2014-08-11T09:48:00.000Z",
+      "submissionDate": "2014-08-14T21:32:00.000Z",
+      "rating": "654",
+      "colorStyle": "color: #999999",
+      "_id": "58a6add55d036c0bbdd5ac4a"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "6%",
+      "registrationDate": "2014-08-11T13:09:00.000Z",
+      "submissionDate": null,
+      "rating": "709",
+      "colorStyle": "color: #999999",
+      "_id": "58a6add55d036c0bbdd5ac49"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2014-08-11T13:37:00.000Z",
+      "submissionDate": null,
+      "rating": "895",
+      "colorStyle": "color: #999999",
+      "_id": "58a6add55d036c0bbdd5ac48"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-11T15:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6add55d036c0bbdd5ac47"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-11T16:09:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "58a6add55d036c0bbdd5ac46"
+    },
+    {
+      "handle": "winterflame",
+      "reliability": "0%",
+      "registrationDate": "2014-08-11T20:47:00.000Z",
+      "submissionDate": null,
+      "rating": "978",
+      "colorStyle": "color: #00A900",
+      "_id": "58a6add55d036c0bbdd5ac45"
+    },
+    {
+      "handle": "sylar",
+      "reliability": "100%",
+      "registrationDate": "2014-08-12T06:02:00.000Z",
+      "submissionDate": null,
+      "rating": "946",
+      "colorStyle": "color: #00A900",
+      "_id": "58a6add55d036c0bbdd5ac44"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "0%",
+      "registrationDate": "2014-08-12T00:41:00.000Z",
+      "submissionDate": null,
+      "rating": "1031",
+      "colorStyle": "color: #00A900",
+      "_id": "58a6add55d036c0bbdd5ac43"
+    },
+    {
+      "handle": "AnhQuan",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-12T17:32:00.000Z",
+      "submissionDate": null,
+      "rating": "592",
+      "colorStyle": "color: #999999",
+      "_id": "58a6add55d036c0bbdd5ac42"
+    },
+    {
+      "handle": "cmax",
+      "reliability": "26%",
+      "registrationDate": "2014-08-12T08:03:00.000Z",
+      "submissionDate": null,
+      "rating": "803",
+      "colorStyle": "color: #999999",
+      "_id": "58a6add55d036c0bbdd5ac41"
+    }
+  ],
+  "registrationEndDate": "2014-08-13T01:38:00.000Z",
+  "reliabilityBonus": 500,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2014-08-20T01:42:00.000Z",
+  "submissions": [],
+  "technology": [
+    "iOS"
+  ]
+}

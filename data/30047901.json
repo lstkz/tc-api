@@ -1,0 +1,418 @@
+{
+  "_id": 30047901,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-11-30T08:34:34.741Z",
+  "appealsEndDate": "2015-02-19T07:15:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "QIR .NET Web App - Codes, Regions, Logs and Root Cause Assembly",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2>1.0 - Challenge Overview</h2>\n\n<p>Welcome to the&nbsp;<strong>QIR .NET Web App - <span>Codes, Regions, Logs and Root Cause Assembly</span></strong>&nbsp;challenge! In this challenge, you will need to build the backend services, stored procedures and part of the pages that the new&nbsp;QIR .NET App will use (based on the architecture design).</p>\n\n<p>NOTE: This is part 2 of a series of assembly challenges for this project! &nbsp;</p>\n\n<h2>1.1 - Project Overview</h2>\n\n<p>The client for this project has an existing system called Quality Incident Reporting (QIR) application.&nbsp; This existing application was created using SharePoint and is used for creating and managing quality incident records. &nbsp;The goal for this project is to build a new Quality Incident Reporting&nbsp;application&nbsp;using .NET (based on the&nbsp;existing QIR application).</p>\n\n<p>This assembly will provide the the backend services, stored procedures and part of the pages as detailed below for&nbsp;Codes, Regions, Logs and Root Cause.</p>\n\n<h2>1.2 - Competition Task Overview</h2>\n\n<p>A complete list of deliverables can be found in the TopCoder Assembly competition Tutorial at:&nbsp;<a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a></p>\n\n<p><strong>Note</strong>: Extensive implementation notes are provided at method documentation on UML Class Diagrams. Please follow them for implementation.</p>\n\n<p><strong>Note</strong>: Please read the whole Application Design Specification first. All the details not mentioned in this specification are provided in that document.</p>\n\n<p>1.2.1 &nbsp; &nbsp;<strong>Backend Services</strong><br />\nThis assembly is responsible for implementing the following services on class diagram &quot;Backend Services Class Diagram&quot;:<br />\n&nbsp;&nbsp; &nbsp;1) CodeService<br />\n<span>&nbsp; &nbsp;&nbsp;</span>2) DepartmentRegionService<br />\n<span>&nbsp; &nbsp;&nbsp;</span>3) ApplicationLogService<br />\n<span>&nbsp; &nbsp;&nbsp;</span>4) EventLogService<br />\n<span>&nbsp; &nbsp;&nbsp;</span>5) RootCauseService</p>\n\n<p>1.2.2 &nbsp; &nbsp;<strong>Stored Procedures</strong><br />\nThis assembly is responsible for implementing all stored procedures used by the above-mentioned services.</p>\n\n<p>1.2.3 &nbsp; &nbsp;<strong>RootCause Page (rootCausesPage.aspx)</strong></p>\n\n<p>Code Behind: RootCausesPage<br />\nWireframe: manage_root_causes</p>\n\n<p>We will use TreeView class to render the root causes tree. We need to prepare id, name and parentId for the data provider.&nbsp;<br />\nThe root cause nodes of the first level cannot be added or deleted.<br />\nClicking on any node provides a menu of the following options:<br />\n- duplicate node (handled by the namesake method in the page code behind);<br />\n- duplicate branch (handled by the namesake method in the page code behind);<br />\n- add child &ndash; opens an &ldquo;input box + submit&rdquo; form to request a child name, when Submit button is clicked this event is handled by #AddChild method in the page code behind;<br />\n- add sibling &ndash; opens an &ldquo;input box + submit&rdquo; form to request a sibling name, when Submit button is clicked this event is handled by #AddSibling method in the page code behind;<br />\n- edit &ndash; opens an &ldquo;input box + submit&rdquo; form to request a new name, when Submit button is clicked this event is handled by #Edit method in the page code behind;<br />\n- delete (handled by the namesake method in the page code behind);</p>\n\n<p>The menu can be closed with &ldquo;x&rdquo; at any moment.</p>\n\n<p>Drag-n-dropping nodes or branches is implemented with jQuery.</p>\n\n<p>When a node is dropped on another node the page calls the RootCauseService.DragAndDropOnNode method at the server side passing both dragged node id and id of node it is dropped on.</p>\n\n<p>The tree view is then refreshed.</p>\n\n<p>When a node is dropped between 2 other nodes the page calls the RootCauseService.DragAndDropBetweenNodes method at the server side passing both dragged node id and id of the lower node before which it is dropped (&ldquo;beforeId&rdquo;). The tree view is then refreshed.</p>\n\n<p>1.2.4 &nbsp; &nbsp;<strong>Codes Page (codes.aspx)</strong></p>\n\n<p>Code Behind: CodesPage<br />\nWireframe: manage_codes</p>\n\n<p>When any code type is selected GetCodesByTypeRequestHandler AJAX request is made to get all codes by this type. The code type drop down list is populated with AJAX response. We will use GridView to render the table of these codes. We need to prepare Code data (as per the code entity) for the data provider.</p>\n\n<p>When an update on the grid is made (Code added and edited) it is handled by #GridUpdate method in the page code behind.</p>\n\n<p>The &ldquo;Clear&rdquo; button erases all values entered by user in a draft of new entity. No interaction with the server side takes place.</p>\n\n<p>1.2.5 &nbsp; &nbsp;<strong>Dept Regions Page (deptRegionsPage.aspx)</strong></p>\n\n<p>Code Behind: DeptRegionsPage<br />\nWireframe: manage_dept_regions</p>\n\n<p>When any department is selected GetRegionByDeptRequestHandler AJAX request is made to get all regions by this department. The grid view is populated with AJAX response. We will use GridView to render the table of these regions. We need to prepare Region data (as per the region entity) for the data provider.</p>\n\n<p>When an update on the grid is made (Region added and edited) it is handled by #GridUpdate method in the page code behind.</p>\n\n<p>The &ldquo;Clear&rdquo; button erases all values entered by user in a draft of new entity. No interaction with the server side takes place.</p>\n\n<p>1.2.6 &nbsp; &nbsp;<strong>Application Log Page</strong></p>\n\n<p>Code Behind: ApplicationLogPage<br />\nWireframe: application_log</p>\n\n<p>This page is rendered on page load. Then paging and sorting is possible. It is handled by Next_Click and Previous_Click methods at server side.</p>\n\n<p>1.2.7 &nbsp; &nbsp;<strong>Request handlers</strong></p>\n\n<p>This assembly is responsible for implementing all HTTP Request handlers used by the above-mentioned pages.</p>\n\n<p>&nbsp;</p>\n\n<h2>1.3 - Technology Overview</h2>\n\n<p>- Windows Server 2008 R2<br />\n- MS SQL Server 2012<br />\n- IIS 7<br />\n- C# 4.0<br />\n- .NET Framework 4.0<br />\n- ASP.NET Web Form<br />\n- jQuery 1.11.1 http://jquery.com</p>\n\n<p>&nbsp;</p>\n\n<p><strong>Browser Requirements:</strong><br />\nYour submission must works on browser in the list below:<br />\n- IE8+<br />\n- Safari latest version on Mac &amp; Windows<br />\n- Firefox latest version on Mac &amp; Windows<br />\n- Chrome latest version on Mac &amp; Windows</p>\n\n<p>&nbsp;</p>\n\n<h2>1.4 - Documentation Provided</h2>\n\n<p>Documentation and Applications that will be provided to registered members:</p>\n\n<table style=\"line-height:16px\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<th><strong>Document Name</strong></th>\n\t\t\t<th><strong>&nbsp; &nbsp;Document Description &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</strong></th>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Application Design Specification</td>\n\t\t\t<td>&nbsp; &nbsp;Architecture documentation attached</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Class Diagrams</td>\n\t\t\t<td>&nbsp; &nbsp;Architecture documentation attached</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Sequence Diagrams</td>\n\t\t\t<td>&nbsp; &nbsp;Architecture documentation attached</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>ERD</td>\n\t\t\t<td>&nbsp; &nbsp;Architecture documentation attached</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>UI Prototype</td>\n\t\t\t<td>&nbsp; &nbsp;HTML / CSS / JS prototype attached</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Assembly 1: Model, Exception, Authorization, and Notification Assembly</td>\n\t\t\t<td>&nbsp; &nbsp;Completed 1st assembly challenge in this series</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Quality Incident Report Enhancements - Dec 19 2014.xlsx</td>\n\t\t\t<td>&nbsp; &nbsp;Excel file with latest requirements (form fields, access levels, classifications, root causes, etc)</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<h2>&nbsp;</h2>\n\n<h2>1.5 - Testing</h2>\n\n<p>Please include unit tests to verify your application successfully meets the requirements of the project. &nbsp;You should provide functional tests.</p>\n",
+  "digitalRunPoints": 720,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30047901",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2015-02-20T03:25:00.000Z",
+  "finalSubmissionGuidelines": "<p>- Completed code for the application (see architecture documentation and section 1.2 of this challenge spec above)<br />\n- A complete and detailed deployment documented explaining how to deploy the application including configuration information.<br />\n- Tests to verify your application successfully meets the requirements of the project.</p>\n\n<p>A complete list of deliverables can be found in the TopCoder Assembly competition Tutorial at:&nbsp;<a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102);\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a></p>\n",
+  "forumId": 27303,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=27303",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 24,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-10T01:13:00.000Z",
+      "actualStartTime": "2015-02-10T01:13:00.000Z",
+      "scheduledEndTime": "2015-02-10T01:15:00.000Z",
+      "actualendTime": "2015-02-10T01:15:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf815"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-10T01:15:00.000Z",
+      "actualStartTime": "2015-02-10T01:15:00.000Z",
+      "scheduledEndTime": "2015-02-10T02:48:00.000Z",
+      "actualendTime": "2015-02-10T02:48:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf814"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-10T17:00:00.000Z",
+      "actualStartTime": "2015-02-10T17:00:00.000Z",
+      "scheduledEndTime": "2015-02-12T17:00:00.000Z",
+      "actualendTime": "2015-02-12T17:00:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf813"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-10T17:06:00.000Z",
+      "actualStartTime": "2015-02-10T17:06:00.000Z",
+      "scheduledEndTime": "2015-02-15T17:01:00.000Z",
+      "actualendTime": "2015-02-15T17:01:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf812"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-15T17:01:00.000Z",
+      "actualStartTime": "2015-02-15T17:01:00.000Z",
+      "scheduledEndTime": "2015-02-16T03:56:00.000Z",
+      "actualendTime": "2015-02-16T03:56:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf811"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-16T03:56:00.000Z",
+      "actualStartTime": "2015-02-16T03:56:00.000Z",
+      "scheduledEndTime": "2015-02-18T03:49:00.000Z",
+      "actualendTime": "2015-02-18T03:49:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf810"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-18T03:49:00.000Z",
+      "actualStartTime": "2015-02-18T03:49:00.000Z",
+      "scheduledEndTime": "2015-02-19T03:49:00.000Z",
+      "actualendTime": "2015-02-19T03:49:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf80f"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-19T03:49:00.000Z",
+      "actualStartTime": "2015-02-19T03:49:00.000Z",
+      "scheduledEndTime": "2015-02-19T07:15:00.000Z",
+      "actualendTime": "2015-02-19T07:15:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf80e"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-19T07:15:00.000Z",
+      "actualStartTime": "2015-02-19T07:15:00.000Z",
+      "scheduledEndTime": "2015-02-19T08:23:00.000Z",
+      "actualendTime": "2015-02-19T08:23:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf80d"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-19T08:23:00.000Z",
+      "actualStartTime": "2015-02-19T08:23:00.000Z",
+      "scheduledEndTime": "2015-02-20T03:25:00.000Z",
+      "actualendTime": "2015-02-20T03:25:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf80c"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-20T03:25:00.000Z",
+      "actualStartTime": "2015-02-20T03:25:00.000Z",
+      "scheduledEndTime": "2015-02-20T11:01:00.000Z",
+      "actualendTime": "2015-02-20T11:01:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf80b"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-20T11:01:00.000Z",
+      "actualStartTime": "2015-02-20T11:01:00.000Z",
+      "scheduledEndTime": "2015-02-25T11:02:00.000Z",
+      "actualendTime": "2015-02-25T11:02:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf80a"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-02-10T17:00:00.000Z",
+  "prize": [
+    1600,
+    800
+  ],
+  "projectId": 8093,
+  "registrants": [
+    {
+      "handle": "DerekLoveCC",
+      "reliability": "26%",
+      "registrationDate": "2015-02-11T00:37:00.000Z",
+      "submissionDate": "2015-02-15T13:02:00.000Z",
+      "rating": "646",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf809"
+    },
+    {
+      "handle": "vvvpig",
+      "reliability": "93%",
+      "registrationDate": "2015-02-11T00:29:00.000Z",
+      "submissionDate": "2015-02-15T07:26:00.000Z",
+      "rating": "1199",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f1a10a1db09a46bf808"
+    },
+    {
+      "handle": "GFalcon",
+      "reliability": "15%",
+      "registrationDate": "2015-02-11T09:14:00.000Z",
+      "submissionDate": null,
+      "rating": "1264",
+      "colorStyle": "color: #6666FF",
+      "_id": "583e8f1a10a1db09a46bf807"
+    },
+    {
+      "handle": "net_buster",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-10T17:43:00.000Z",
+      "submissionDate": null,
+      "rating": "659",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf806"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "6%",
+      "registrationDate": "2015-02-10T17:15:00.000Z",
+      "submissionDate": null,
+      "rating": "798",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf805"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-10T17:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1a10a1db09a46bf804"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-10T18:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1a10a1db09a46bf803"
+    },
+    {
+      "handle": "pfilippi",
+      "reliability": "0%",
+      "registrationDate": "2015-02-10T18:29:00.000Z",
+      "submissionDate": null,
+      "rating": "1028",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f1a10a1db09a46bf802"
+    },
+    {
+      "handle": "mishacucicea",
+      "reliability": "50%",
+      "registrationDate": "2015-02-10T21:13:00.000Z",
+      "submissionDate": "2015-02-15T16:42:00.000Z",
+      "rating": "1049",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f1a10a1db09a46bf801"
+    },
+    {
+      "handle": "dccnyccu",
+      "reliability": "44%",
+      "registrationDate": "2015-02-12T01:29:00.000Z",
+      "submissionDate": null,
+      "rating": "843",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf800"
+    },
+    {
+      "handle": "TAG",
+      "reliability": "0%",
+      "registrationDate": "2015-02-11T01:40:00.000Z",
+      "submissionDate": null,
+      "rating": "1201",
+      "colorStyle": "color: #6666FF",
+      "_id": "583e8f1a10a1db09a46bf7ff"
+    },
+    {
+      "handle": "mulish",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-11T07:42:00.000Z",
+      "submissionDate": null,
+      "rating": "717",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf7fe"
+    },
+    {
+      "handle": "crim",
+      "reliability": "22%",
+      "registrationDate": "2015-02-11T13:36:00.000Z",
+      "submissionDate": null,
+      "rating": "830",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf7fd"
+    },
+    {
+      "handle": "dilip.thapa",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-11T13:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1a10a1db09a46bf7fc"
+    },
+    {
+      "handle": "Amith",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-11T14:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1a10a1db09a46bf7fb"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-11T15:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1a10a1db09a46bf7fa"
+    },
+    {
+      "handle": "arunprakashb",
+      "reliability": "12%",
+      "registrationDate": "2015-02-11T16:15:00.000Z",
+      "submissionDate": null,
+      "rating": "499",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf7f9"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-11T19:35:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf7f8"
+    },
+    {
+      "handle": "pnomarev",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-11T21:09:00.000Z",
+      "submissionDate": null,
+      "rating": "473",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf7f7"
+    },
+    {
+      "handle": "Abhijeet.Nagre",
+      "reliability": "25%",
+      "registrationDate": "2015-02-11T22:23:00.000Z",
+      "submissionDate": null,
+      "rating": "631",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf7f6"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2015-02-12T02:16:00.000Z",
+      "submissionDate": null,
+      "rating": "782",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf7f5"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2015-02-12T06:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f1a10a1db09a46bf7f4"
+    },
+    {
+      "handle": "yashubhat.gv",
+      "reliability": "16%",
+      "registrationDate": "2015-02-12T11:34:00.000Z",
+      "submissionDate": null,
+      "rating": "998",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f1a10a1db09a46bf7f3"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "0%",
+      "registrationDate": "2015-02-12T15:41:00.000Z",
+      "submissionDate": null,
+      "rating": "810",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f1a10a1db09a46bf7f2"
+    }
+  ],
+  "registrationEndDate": "2015-02-12T17:00:00.000Z",
+  "reliabilityBonus": 320,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-02-15T17:01:00.000Z",
+  "submissions": [
+    {
+      "handle": "vvvpig",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 85.76,
+      "finalScore": 90.04,
+      "points": 720,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-02-15T07:26:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf818"
+    },
+    {
+      "handle": "DerekLoveCC",
+      "placement": null,
+      "screeningScore": 50,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Failed Screening",
+      "submissionDate": "2015-02-15T13:02:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf817"
+    },
+    {
+      "handle": "mishacucicea",
+      "placement": null,
+      "screeningScore": 50,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Failed Screening",
+      "submissionDate": "2015-02-15T16:42:00.000Z",
+      "_id": "583e8f1a10a1db09a46bf816"
+    }
+  ],
+  "technology": [
+    ".NET",
+    "ASP.NET",
+    "C#",
+    "IIS",
+    "JQuery",
+    "SQL Server",
+    "Windows Server"
+  ]
+}

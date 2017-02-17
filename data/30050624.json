@@ -1,0 +1,453 @@
+{
+  "_id": 30050624,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-11-22T10:05:41.288Z",
+  "appealsEndDate": "2015-07-07T14:40:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Cissonius Customer Database Architecture Challenge",
+  "challengeType": "Architecture",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span style=\"color:rgb(255, 0, 0)\">1 Project Overview</span></h2>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">The aim of this project is to build a customer database system (similar to a CRM system) to enhance the customer experience, marketing effectiveness and regulatory reporting of our client&rsquo;s website. The customer database system will capture customer data from multiple channels and provide a single customer view/access point to various applications across the corporate domain.</span></span></p>\n\n<p><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">The project will be implemented in several phases, and while this architecture challenge will only focus on the business requirements for phase 1 (basically functionality related to online customers and basic customer information), it must also be designed in such a way that it is flexible/extensible enough to accommodate requirements for later phases with minimal efforts and no significant architectural changes.</span></span></p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">2 High Level System Design</span></h2>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">The following diagram illustrates the high-level system design.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\"><img src=\"https://lh6.googleusercontent.com/vYsw4K1V6SiCy4jB5jReCsxbgWOBdAuYxVlpG6GruohVbcLQq9Y_KSQ320O13acRR2vZ5Nr6bDCVpFEsYPIyw4PZ_uSlnJPzgi0Zn7nuVaBmFWALR_gezjugiJ4OBGjAb8FrInY\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:357px; transform:rotate(0.00rad); width:624px\" /></span></span></p>\n\n<p dir=\"ltr\"><span><u>REST APIs</u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Directly exposed to various channels (i.e. API clients) is the REST APIs layer, it will be exposed via HTTPS and use JSON as the payload. This layer will be implemented using Spring MVC technology and will be kept as thin as possible by delegating major business logic/rules to the layer underneath it.</span></span></p>\n\n<p dir=\"ltr\"><span><u>Business Logic/Rules</u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">This layer will include custom Business Services implemented as POJOs (Plain Old Java Objects), BRMS (Business Rule Management System) using JBoss Drools.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">The custom Business Services will implement core business logic such as customer registration, order tracking, etc., and they should abstract out configurable business rules and delegate to BRMS (Drools) for rule execution. It will access database persistence via Domain Models.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">The BRMS will be responsible for declaring and executing configurable business rules, e.g. password policy, required customer identification information per country/channel, database archiving policy, security policy, etc.</span></span></p>\n\n<p dir=\"ltr\"><u style=\"line-height:1.6\">Domain Models/Persistence</u></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">This layer will provide raw access to database persistence, largely via Domain Models implemented using JPA technology.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">A few major domain models are identified and presented below for your reference, please refer to detailed requirements document and extend the models accordingly.</span></span></p>\n\n<p><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\"><img src=\"https://lh5.googleusercontent.com/4VET_k4_fuLM-mAdfwNiAPekNoz22i0iMoJUATYSKuL9azGfJy_2N4tK8KBzamvIxHPp-hL3V9czmXVhOzggXvgLPlq8yrT6XGjUlpPL-AVPemfRJdSNB2O5_73deQm4P19M-Sw\" style=\"-webkit-transform:rotate(0.00rad); border:none; height:283px; transform:rotate(0.00rad); width:624px\" /></span></span></p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">3 Requirements</span></h2>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Detailed requirements are available in &ldquo;Database Specification.docx&rdquo;, this section summarizes the APIs to expose and integrations to implement, please treat this section as high-level suggestions and for reference only, please refer to detailed requirement document and propose full set of APIs addressing the requirements.</span></span></p>\n\n<h3 dir=\"ltr\"><span><strong>3.1</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong>Exposed REST APIs</strong></span></h3>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">In phase 1, the following high priority REST APIs must be exposed from the customer database system:</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Customer Registration</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Customer Change Password</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Customer Authentication</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Customer Profile Retrieval/Search</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Deactivate Customer Account</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Transfer Customer Data in Batch</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">List/Search Order History</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Get Order Details</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Manage Customer Profile Options</span></span></p>\n\n<h3 dir=\"ltr\"><span><strong>3.1.1</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong>Customer Registration</strong></span></h3>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">This API will be used to register a customer account.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Note that this API needs to verify customer data submitted from the API caller, to ensure the data conforms to required business rules, some example rules might be</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Email will be required (F01.1)</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Date of birth will be required if the source channel is SALT in UK (F01.5)</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Delivery address must match the country (F01.3)</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Password must match specified policy</span></span></p>\n\n<p dir=\"ltr\"><span><u>Input:</u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Customer account information (email, name, addresses, etc.)</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Registration method information</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:courier new; font-size:14.6666666666667px\">o</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Source channel (SALT/Mobile/etc.)</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:courier new; font-size:14.6666666666667px\">o</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Country</span></span></p>\n\n<p dir=\"ltr\"><span><u>Output:</u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Customer registration confirmation (Customer ID, etc.)</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Confirmation email sent to customer</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:courier new; font-size:14.6666666666667px\">o</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Includes password reset instructions if registration was done offline or opt for one click registration online</span></span></p>\n\n<h3 dir=\"ltr\"><span><strong>3.1.2</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong>Customer Change Password</strong></span></h3>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">This API will be used to change a customer&rsquo;s password.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Note that this API needs to verify if the new password meets the defined password policy.</span></span></p>\n\n<p dir=\"ltr\"><span><u>Input:</u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Old password</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">New password</span></span></p>\n\n<p dir=\"ltr\"><span><u>Output:</u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Password change confirmation</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Confirmation email sent to customer</span></span></p>\n\n<h3 dir=\"ltr\"><span><strong>3.1.3</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong>Customer Authentication</strong></span></h3>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">This API will be used to authenticate customer user.</span></span></p>\n\n<p dir=\"ltr\"><span><u>Input:</u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Username/email/password</span></span></p>\n\n<p dir=\"ltr\"><span><u>Output:</u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Access token that will be used in subsequent API calls</span></span></p>\n\n<h3 dir=\"ltr\"><span><strong>3.1.4</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong>Customer Profile Retrieval/Search</strong></span></h3>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">This API will be used to retrieve or search for customer profile(s).</span></span></p>\n\n<p dir=\"ltr\"><span><u>Input:</u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Customer ID/email/username/other search criteria</span></span></p>\n\n<p dir=\"ltr\"><span><u>Output:</u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Customer profile</span></span></p>\n\n<h3 dir=\"ltr\"><span><strong>3.1.5</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong>Deactivate Customer</strong></span></h3>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">This API will be used to deactivate a customer.</span></span></p>\n\n<p dir=\"ltr\"><span><u>Input:</u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Customer ID/email/username</span></span></p>\n\n<p dir=\"ltr\"><span><u>Output:</u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Customer deactivation confirmation</span></span></p>\n\n<h3 dir=\"ltr\"><span><strong>3.1.6</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong>Transfer Customer Data in Batch</strong></span></h3>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">This API will be used to transfer customer data in batch format.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Note that this API needs to verify customer data submitted from the API caller, to ensure the data conforms to required business rules, some example rules might be</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Email will be required (F01.1)</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Date of birth will be required if the source channel is SALT in UK (F01.5)</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Delivery address must match the country (F01.3)</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Password must match specified policy</span></span></p>\n\n<p dir=\"ltr\"><span><u>Input:</u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Customer account information (email, name, addresses, etc.)</span></span></p>\n\n<p dir=\"ltr\"><span><u>Output:</u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Confirmation (Customer IDs, etc.)</span></span></p>\n\n<h3 dir=\"ltr\"><span><strong>3.1.7</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong>List/Search Order History</strong></span></h3>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">This API will be used to list or search the order history for a customer.</span></span></p>\n\n<p dir=\"ltr\"><span><u>Input:</u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Search criteria</span></span></p>\n\n<p dir=\"ltr\"><span><u>Output:</u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Order history</span></span></p>\n\n<h3 dir=\"ltr\"><span><strong>3.1.8</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong>Get Order Details</strong></span></h3>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">This API will be used to get order details.</span></span></p>\n\n<p dir=\"ltr\"><span><u>Input:</u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Order ID</span></span></p>\n\n<p dir=\"ltr\"><span><u>Output:</u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Order detail</span></span></p>\n\n<h3 dir=\"ltr\"><span><strong>3.1.9</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong>Manage Customer Profile Options</strong></span></h3>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">This API will be used to manager customer profile options:</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Payment options (note that we will store the last 4 digits of a credit card and an expiration date here, with a token that references an external system for the full payment details. &nbsp;The API will NEVER deal with the full credit card number).</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Marketing options</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Addresses</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Customer consents/agreements</span></span></p>\n\n<p dir=\"ltr\"><span><u>Input:</u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Customer profile options</span></span></p>\n\n<p dir=\"ltr\"><span><u>Output:</u></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Confirmation</span></span></p>\n\n<h3 dir=\"ltr\"><span><strong>3.2</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong>Integration with online channels (SALT/Mobile)</strong></span></h3>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">In phase 1, the integrations with online channels (SALT/Mobile) will be implemented, the following integration requirements shall be covered in this architecture. Please clearly document how the integrations will be implemented. (see document in forums)</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">F01.6 &nbsp;</span></span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">F01.7 &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">F01.8 &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">F01.14 &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">F01.16 &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">F01.19</span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">F02.1 &nbsp;</span></span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">F02.2 &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">F02.3 &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">F02.4 &nbsp;</span><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">F02.5 &nbsp;</span></span><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">F02.6 &nbsp;</span></span><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">F02.7 &nbsp;</span></span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">F02.8</span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">F03.2 &nbsp;</span></span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">F03.3</span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">F06.05</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">F07.01</span></span></p>\n\n<h3 dir=\"ltr\"><span><strong>3.3</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong>Security</strong></span></h3>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">The REST APIs must be accessed via HTTPS to ensure secure communication.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Access to all REST APIs must be secured using access tokens. Two types of access tokens will be supported:</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Long-term Access Token used in general integrations with corporate systems (SALT/Mobile/RTS/etc.) that are not specific to a particular customer (i.e. not acting on behalf of a particular user). This type of tokens will be pre-generated and configured at API callers.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Short-term Access Token used to act on behalf of a particular user (e.g. a customer). This type of tokens will be obtained via Authenticate REST API call and will be used in subsequent API calls.</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">It is suggested to pass the access tokens as part of HTTP Authorization header. &nbsp;Please have a look at OAuth signing and validation for the long-term access token and standard bearer token authorization headers for the short-term access token. &nbsp;We don&#39;t want to reinvent the wheel here - if a standard approach fits and meets the requirements, that would be best as opposed to implementing a custom solution.</span></span></p>\n\n<h3 dir=\"ltr\"><span><strong>3.4</strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong>Auditing</strong></span></h3>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Audit trails should be available for all transactions including content changes. It is suggested that this is accomplished in two steps:</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Use database triggers to automatically keep track of database history in separate historical tables.</span></span></p>\n\n<p><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Use an AuditRecord Domain Model to keep track of each action performed in the system</span></span></p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Detailed Requirements</span></h2>\n\n<ul>\n\t<li>The specification document posted in the forum contains further details and information you may use for this challenge.&nbsp;</li>\n</ul>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Technology Overview</span></h2>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Java 7</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Spring Framework 4.x</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Spring MVC</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">JPA 2.1</span></span></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">SQL Server/PostgreSQL/To Be Defined</span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">JBoss Drools</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">JBoss AS</span></span></p>\n\n<p><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">REST APIs</span></span></p>\n\n<h2>&nbsp;</h2>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30050624",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2015-07-08T13:36:00.000Z",
+  "finalSubmissionGuidelines": "<h2><span style=\"color:rgb(255, 0, 0)\">Documentation Required</span></h2>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Application Design Specification</span></span></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Database Schema / ERD</span></span></p>\n\n<p dir=\"ltr\"><strong><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">REST API Specification (swagger.io format)</span></span></strong></p>\n\n<p dir=\"ltr\"><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">&middot;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Brief assembly Specifications with a suggested gameplan to implement this phase</span></span></p>\n\n<p dir=\"ltr\"><strong><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">UML Diagrams</span></strong></p>\n\n<p dir=\"ltr\"><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:courier new; font-size:14.6666666666667px\">o</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Class Diagrams</span></p>\n\n<p><span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:courier new; font-size:14.6666666666667px\">o</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:times new roman; font-size:9.33333333333333px\"> &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial; font-size:14.6666666666667px\">Sequence Diagrams</span></span></p>\n",
+  "forumId": 29796,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=29796",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 27,
+  "numberOfSubmissions": 4,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-06-26T18:34:00.000Z",
+      "actualStartTime": "2015-06-26T18:34:00.000Z",
+      "scheduledEndTime": "2015-06-26T18:35:00.000Z",
+      "actualendTime": "2015-06-26T18:35:00.000Z",
+      "_id": "58341875550dfb3b52a7ae0d"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-06-26T18:35:00.000Z",
+      "actualStartTime": "2015-06-26T18:35:00.000Z",
+      "scheduledEndTime": "2015-06-27T00:16:00.000Z",
+      "actualendTime": "2015-06-27T00:16:00.000Z",
+      "_id": "58341875550dfb3b52a7ae0c"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-06-27T00:16:00.000Z",
+      "actualStartTime": "2015-06-27T00:16:00.000Z",
+      "scheduledEndTime": "2015-06-29T00:16:00.000Z",
+      "actualendTime": "2015-06-29T00:16:00.000Z",
+      "_id": "58341875550dfb3b52a7ae0b"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-06-27T00:21:00.000Z",
+      "actualStartTime": "2015-06-27T00:21:00.000Z",
+      "scheduledEndTime": "2015-07-03T07:59:00.000Z",
+      "actualendTime": "2015-07-03T07:59:00.000Z",
+      "_id": "58341875550dfb3b52a7ae0a"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2015-07-03T07:59:00.000Z",
+      "actualStartTime": "2015-07-03T07:59:00.000Z",
+      "scheduledEndTime": "2015-07-03T16:00:00.000Z",
+      "actualendTime": "2015-07-03T16:00:00.000Z",
+      "_id": "58341875550dfb3b52a7ae09"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-07-03T16:00:00.000Z",
+      "actualStartTime": "2015-07-03T16:00:00.000Z",
+      "scheduledEndTime": "2015-07-06T02:11:00.000Z",
+      "actualendTime": "2015-07-06T02:11:00.000Z",
+      "_id": "58341875550dfb3b52a7ae08"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-07-06T02:11:00.000Z",
+      "actualStartTime": "2015-07-06T02:11:00.000Z",
+      "scheduledEndTime": "2015-07-07T02:11:00.000Z",
+      "actualendTime": "2015-07-07T02:11:00.000Z",
+      "_id": "58341875550dfb3b52a7ae07"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-07-07T02:11:00.000Z",
+      "actualStartTime": "2015-07-07T02:11:00.000Z",
+      "scheduledEndTime": "2015-07-07T14:40:00.000Z",
+      "actualendTime": "2015-07-07T14:40:00.000Z",
+      "_id": "58341875550dfb3b52a7ae06"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2015-07-07T14:40:00.000Z",
+      "actualStartTime": "2015-07-07T14:40:00.000Z",
+      "scheduledEndTime": "2015-07-07T14:57:00.000Z",
+      "actualendTime": "2015-07-07T14:57:00.000Z",
+      "_id": "58341875550dfb3b52a7ae05"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-07-07T14:57:00.000Z",
+      "actualStartTime": "2015-07-07T14:57:00.000Z",
+      "scheduledEndTime": "2015-07-08T13:36:00.000Z",
+      "actualendTime": "2015-07-08T13:36:00.000Z",
+      "_id": "58341875550dfb3b52a7ae04"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-07-08T13:36:00.000Z",
+      "actualStartTime": "2015-07-08T13:36:00.000Z",
+      "scheduledEndTime": "2015-07-08T16:50:00.000Z",
+      "actualendTime": "2015-07-08T16:50:00.000Z",
+      "_id": "58341875550dfb3b52a7ae03"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-07-08T16:50:00.000Z",
+      "actualStartTime": "2015-07-08T16:50:00.000Z",
+      "scheduledEndTime": "2015-07-13T16:50:00.000Z",
+      "actualendTime": "2015-07-13T16:50:00.000Z",
+      "_id": "58341875550dfb3b52a7ae02"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-06-27T00:16:00.000Z",
+  "prize": [
+    2000,
+    1000
+  ],
+  "projectId": 8968,
+  "registrants": [
+    {
+      "handle": "bannie2492",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-27T00:35:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58341875550dfb3b52a7ae01"
+    },
+    {
+      "handle": "ahmed.seddiq",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-27T02:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58341875550dfb3b52a7ae00"
+    },
+    {
+      "handle": "swengko",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-27T02:52:00.000Z",
+      "submissionDate": null,
+      "rating": "456",
+      "colorStyle": "color: #999999",
+      "_id": "58341875550dfb3b52a7adff"
+    },
+    {
+      "handle": "albertwang",
+      "reliability": "80%",
+      "registrationDate": "2015-06-27T03:02:00.000Z",
+      "submissionDate": "2015-07-03T07:51:00.000Z",
+      "rating": "2153",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58341875550dfb3b52a7adfe"
+    },
+    {
+      "handle": "suryasnat",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-27T03:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58341875550dfb3b52a7adfd"
+    },
+    {
+      "handle": "halbcoder",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-27T04:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58341875550dfb3b52a7adfc"
+    },
+    {
+      "handle": "zsudraco",
+      "reliability": "100%",
+      "registrationDate": "2015-06-27T04:43:00.000Z",
+      "submissionDate": "2015-07-02T22:44:00.000Z",
+      "rating": "1474",
+      "colorStyle": "color: #6666FF",
+      "_id": "58341875550dfb3b52a7adfb"
+    },
+    {
+      "handle": "vijay.kmbt",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-27T05:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58341875550dfb3b52a7adfa"
+    },
+    {
+      "handle": "jacshib",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-27T08:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58341875550dfb3b52a7adf9"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-27T09:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58341875550dfb3b52a7adf8"
+    },
+    {
+      "handle": "nagyf",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-27T09:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58341875550dfb3b52a7adf7"
+    },
+    {
+      "handle": "Urmass",
+      "reliability": "33%",
+      "registrationDate": "2015-06-27T10:17:00.000Z",
+      "submissionDate": null,
+      "rating": "1186",
+      "colorStyle": "color: #00A900",
+      "_id": "58341875550dfb3b52a7adf6"
+    },
+    {
+      "handle": "karthikbecse",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-27T11:07:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58341875550dfb3b52a7adf5"
+    },
+    {
+      "handle": "sb87534",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-27T12:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58341875550dfb3b52a7adf4"
+    },
+    {
+      "handle": "karthsharma",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-27T13:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58341875550dfb3b52a7adf3"
+    },
+    {
+      "handle": "ChenXiaoTemp",
+      "reliability": "14%",
+      "registrationDate": "2015-06-28T01:53:00.000Z",
+      "submissionDate": null,
+      "rating": "660",
+      "colorStyle": "color: #999999",
+      "_id": "58341875550dfb3b52a7adf2"
+    },
+    {
+      "handle": "argolite",
+      "reliability": "26%",
+      "registrationDate": "2015-06-27T19:45:00.000Z",
+      "submissionDate": null,
+      "rating": "708",
+      "colorStyle": "color: #999999",
+      "_id": "58341875550dfb3b52a7adf1"
+    },
+    {
+      "handle": "davidrp1981",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-27T21:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58341875550dfb3b52a7adf0"
+    },
+    {
+      "handle": "ShindouHikaru",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-27T20:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58341875550dfb3b52a7adef"
+    },
+    {
+      "handle": "chuxy111",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-28T01:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58341875550dfb3b52a7adee"
+    },
+    {
+      "handle": "xiulin_li",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-28T03:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58341875550dfb3b52a7aded"
+    },
+    {
+      "handle": "serfire",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-28T03:09:00.000Z",
+      "submissionDate": "2015-07-03T05:08:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58341875550dfb3b52a7adec"
+    },
+    {
+      "handle": "mishraawake",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-28T06:48:00.000Z",
+      "submissionDate": "2015-07-03T06:30:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58341875550dfb3b52a7adeb"
+    },
+    {
+      "handle": "michael_tang",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-28T07:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58341875550dfb3b52a7adea"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-28T10:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58341875550dfb3b52a7ade9"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2015-06-28T14:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58341875550dfb3b52a7ade8"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "6%",
+      "registrationDate": "2015-06-28T22:06:00.000Z",
+      "submissionDate": null,
+      "rating": "641",
+      "colorStyle": "color: #999999",
+      "_id": "58341875550dfb3b52a7ade7"
+    }
+  ],
+  "registrationEndDate": "2015-06-29T00:16:00.000Z",
+  "reliabilityBonus": 400,
+  "reviewScorecardId": 30001463,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30001330,
+  "submissionEndDate": "2015-07-03T07:59:00.000Z",
+  "submissions": [
+    {
+      "handle": "albertwang",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 94.86,
+      "finalScore": 95.47,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-07-03T07:51:00.000Z",
+      "_id": "58341875550dfb3b52a7ae11"
+    },
+    {
+      "handle": "zsudraco",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 90.69,
+      "finalScore": 92.27,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-07-02T22:44:00.000Z",
+      "_id": "58341875550dfb3b52a7ae10"
+    },
+    {
+      "handle": "serfire",
+      "placement": 3,
+      "screeningScore": 100,
+      "initialScore": 74.55,
+      "finalScore": 74.55,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2015-07-03T05:08:00.000Z",
+      "_id": "58341875550dfb3b52a7ae0f"
+    },
+    {
+      "handle": "mishraawake",
+      "placement": null,
+      "screeningScore": 0,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Failed Screening",
+      "submissionDate": "2015-07-03T06:30:00.000Z",
+      "_id": "58341875550dfb3b52a7ae0e"
+    }
+  ],
+  "technology": [
+    "Java",
+    "REST",
+    "SQL Server",
+    "Spring"
+  ]
+}

@@ -1,0 +1,538 @@
+{
+  "_id": 30056134,
+  "_isComplete": true,
+  "__v": 2554,
+  "_lastUpdate": "2017-01-22T10:46:27.294Z",
+  "appealsEndDate": "2017-01-22T10:42:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Topcoder Connect - Notifications System Updates",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>INTRODUCTION</strong></span></span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">In this challenge we&rsquo;ll be adding functionality to the existing Topcoder Connect notification system in order to post project status changes to specified Slack channels.</span></p>\n\n<p><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><strong>REQUIREMENTS</strong></span></span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">This challenge consists of three separate areas for updates and integration as described below.</span></p>\n\n<p><strong><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><em>Notifications System Updates</em></span></span></span></strong><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">You&rsquo;ll be updating the existing service (Node.js) to accept and process new platform notifications. &nbsp;We&rsquo;ll need two queues set up - one for managers and one for copilots. &nbsp;These should be defined in the services configuration.</span></p>\n\n<p><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">New messages received will be for the following events:</span></span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- Project moves from &ldquo;Draft&rdquo; to &ldquo;In Review&rdquo; (managers)</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- Project moves from &ldquo;In Review&rdquo; to &ldquo;Review&rdquo; (copilots)</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- Project isn&rsquo;t claimed - repost every 12 hours (copilots)</span></p>\n\n<p><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">These events are already being handled by the notifications service. &nbsp;The functionality you&rsquo;ll be adding is to support integration with Slack. &nbsp;For the last event mentioned above, please see delayed messages for RabbitMQ </span><a href=\"https://www.rabbitmq.com/blog/2015/04/16/scheduling-messages-with-rabbitmq/\" style=\"text-decoration:none;\"><u>as described here</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">.</span></span></span></p>\n\n<p><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">The payload sent by the services to the queues for the Slack channels should be in the following format:</span></span></span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\"><span style=\"font-size:14px\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">{</span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp; &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&quot;username&quot;: &quot;webhookbot&quot;,</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp; &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&quot;icon_url&quot;: &quot;https://emoji.slack-edge.com/T03R80JP7/topcoder/7c68acd90a6b6d77.png&quot;,</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp; &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&quot;attachments&quot;: [</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp; &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">{</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp; &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&quot;fallback&quot;: &quot;New Project: https://connect.topcoder.com/projects/|Project Name&quot;,</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp; &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&quot;pretext&quot;: &quot;New Project: https://connect.topcoder.com/projects/|Project Name&quot;,</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp; &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&quot;fields&quot;: [</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp; &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">{</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp; &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&quot;title&quot;: &quot;Description&quot;,</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp; &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&quot;value&quot;: &quot;description&quot;,</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp; &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&quot;short&quot;: true</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp; &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">},</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp; &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">{</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp; &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&quot;title&quot;: &quot;Ref Code&quot;,</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp; &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&quot;value&quot;: &quot;refcode&quot;,</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp; &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&quot;short&quot;: false</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp; &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">}</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp; &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">]</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp; &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp;&nbsp; &nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">}</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">&nbsp; &nbsp;&nbsp;</span><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">]</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-size:14px\">}</span></span></p>\n\n<p><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">See the challenge forums for the current source for the services. &nbsp;Review the README for details on setting up a development environment.</span></span></span></p>\n\n<p><strong><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><em>CloudAMQP Integration</em></span></span></span></strong><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">In the end, all notifications will be posted to Slack channels from the RabbitMQ queue. &nbsp;We&rsquo;ll be using </span><a href=\"https://www.cloudamqp.com\" style=\"font-family: arial, helvetica, sans-serif; font-size: 14px; text-decoration: none;\"><u>CloudAMQP</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\"> and their webhooks to accomplish this. While the webhooks are a feature of dedicated hosting plans, you can assume that the message will be successfully posted to Slack once sent to the queue. &nbsp;You&rsquo;ll need to provide a working instance to validate against.</span></p>\n\n<p><strong><span style=\"color:#000000\"><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><em>Continuous Deployment to EC2</em></span></span></span></strong><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">Deployment of the services must be handled through CircleCI to EC2. &nbsp;</span><a href=\"https://circleci.com/docs/continuous-deployment-with-aws-ec2-container-service/\" style=\"font-family: arial, helvetica, sans-serif; font-size: 14px; text-decoration: none;\"><u>See here</u></a><span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\"> for the general workflow to use a guide for setting up this system. &nbsp;You&rsquo;ll need to provide documentation on steps necessary for deployment, and a working instance to validate against.</span></p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30056134",
+  "finalSubmissionGuidelines": "<p><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\"><span style=\"background-color:transparent; color:rgb(0, 0, 0)\">-- Updated notification services project, with updated README files where applicable</span></span></span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- Any documentation necessary for CloudAMQP, CircleCI and EC2 deployment</span><br />\n<span style=\"background-color:transparent; color:rgb(0, 0, 0); font-family:arial,helvetica,sans-serif; font-size:14px\">-- Working CloudAMQP and CircleCI/EC2 instances to validate against</span></p>\n",
+  "forumId": 34874,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=34874",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 45,
+  "numberOfSubmissions": 3,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-12T02:00:00.000Z",
+      "actualStartTime": "2017-01-12T02:00:00.000Z",
+      "scheduledEndTime": "2017-01-18T02:00:00.000Z",
+      "actualendTime": "2017-01-18T02:00:00.000Z",
+      "_id": "58848d8390ca64469cd9bff0"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-12T02:05:00.000Z",
+      "actualStartTime": "2017-01-12T02:05:00.000Z",
+      "scheduledEndTime": "2017-01-18T14:01:00.000Z",
+      "actualendTime": "2017-01-18T14:01:00.000Z",
+      "_id": "58848d8390ca64469cd9bfef"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-18T14:01:00.000Z",
+      "actualStartTime": "2017-01-18T14:01:00.000Z",
+      "scheduledEndTime": "2017-01-20T16:10:00.000Z",
+      "actualendTime": "2017-01-20T16:10:00.000Z",
+      "_id": "58848d8390ca64469cd9bfee"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-20T16:10:00.000Z",
+      "actualStartTime": "2017-01-20T16:10:00.000Z",
+      "scheduledEndTime": "2017-01-21T16:11:00.000Z",
+      "actualendTime": "2017-01-21T16:11:00.000Z",
+      "_id": "58848d8390ca64469cd9bfed"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2017-01-21T16:11:00.000Z",
+      "actualStartTime": "2017-01-21T16:11:00.000Z",
+      "scheduledEndTime": "2017-01-22T10:42:00.000Z",
+      "actualendTime": "2017-01-22T10:42:00.000Z",
+      "_id": "58848d8390ca64469cd9bfec"
+    }
+  ],
+  "platforms": [
+    "AWS",
+    "NodeJS",
+    "EC2"
+  ],
+  "postingDate": "2017-01-12T02:00:00.000Z",
+  "prize": [
+    1000,
+    750
+  ],
+  "projectId": 11650,
+  "registrants": [
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T08:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfeb"
+    },
+    {
+      "handle": "_Balli",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T10:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfea"
+    },
+    {
+      "handle": "AleaActaEst",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T02:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfe9"
+    },
+    {
+      "handle": "stevelvovo",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T08:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfe8"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T04:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfe7"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T02:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfe6"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T02:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfe5"
+    },
+    {
+      "handle": "bannie2492",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T02:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfe4"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T02:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfe3"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T03:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfe2"
+    },
+    {
+      "handle": "Yurii",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T04:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfe1"
+    },
+    {
+      "handle": "goyal.arpit.91",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T04:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfe0"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T04:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfdf"
+    },
+    {
+      "handle": "Amith",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T04:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfde"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T05:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfdd"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T05:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfdc"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T07:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfdb"
+    },
+    {
+      "handle": "ecavalier313",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T08:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfda"
+    },
+    {
+      "handle": "Sky_",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T08:16:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfd9"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T08:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfd8"
+    },
+    {
+      "handle": "uttpal25993",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T09:13:00.000Z",
+      "submissionDate": "2017-01-18T13:33:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfd7"
+    },
+    {
+      "handle": "ShindouHikaru",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T09:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfd6"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T14:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfd5"
+    },
+    {
+      "handle": "talesforce",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T14:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfd4"
+    },
+    {
+      "handle": "rootxigua",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T16:00:00.000Z",
+      "submissionDate": "2017-01-18T09:45:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfd3"
+    },
+    {
+      "handle": "tuxing",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T16:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfd2"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T21:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfd1"
+    },
+    {
+      "handle": "magdasieluzycka",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-12T21:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfd0"
+    },
+    {
+      "handle": "wangke",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-13T02:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfcf"
+    },
+    {
+      "handle": "hance",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-13T04:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfce"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-13T05:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfcd"
+    },
+    {
+      "handle": "AK5",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-16T07:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfcc"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-13T07:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfcb"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-13T08:24:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfca"
+    },
+    {
+      "handle": "sangharsh",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-13T08:49:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfc9"
+    },
+    {
+      "handle": "wwxyxgy",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-13T09:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfc8"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-14T00:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfc7"
+    },
+    {
+      "handle": "spanhawk",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-15T13:25:00.000Z",
+      "submissionDate": "2017-01-17T20:36:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfc6"
+    },
+    {
+      "handle": "MKuk",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-15T20:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfc5"
+    },
+    {
+      "handle": "anosama",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-15T21:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfc4"
+    },
+    {
+      "handle": "timhigins",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-16T15:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfc3"
+    },
+    {
+      "handle": "oa414",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-16T15:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfc2"
+    },
+    {
+      "handle": "SuperJJ",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T03:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfc1"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T11:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfc0"
+    },
+    {
+      "handle": "Setako",
+      "reliability": "n/a",
+      "registrationDate": "2017-01-17T11:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58848d8390ca64469cd9bfbf"
+    }
+  ],
+  "registrationEndDate": "2017-01-18T02:00:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2017-01-18T14:01:00.000Z",
+  "submissions": [
+    {
+      "handle": "uttpal25993",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 98.13,
+      "finalScore": 98.13,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2017-01-18T13:33:00.000Z",
+      "_id": "58848d8390ca64469cd9bff3"
+    },
+    {
+      "handle": "spanhawk",
+      "placement": 2,
+      "screeningScore": null,
+      "initialScore": 90.63,
+      "finalScore": 91.88,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2017-01-17T20:36:00.000Z",
+      "_id": "58848d8390ca64469cd9bff2"
+    },
+    {
+      "handle": "rootxigua",
+      "placement": 3,
+      "screeningScore": null,
+      "initialScore": 81.25,
+      "finalScore": 82.5,
+      "points": 0,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2017-01-18T09:45:00.000Z",
+      "_id": "58848d8390ca64469cd9bff1"
+    }
+  ],
+  "technology": [
+    "Node.js"
+  ],
+  "event": {
+    "id": 3447,
+    "description": "2017 TopCoder(R) Open",
+    "shortDescription": "tco17"
+  }
+}

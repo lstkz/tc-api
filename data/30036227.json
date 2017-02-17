@@ -1,0 +1,505 @@
+{
+  "_id": 30036227,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-11-30T08:35:42.801Z",
+  "appealsEndDate": "2013-12-04T01:56:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "PDS Cassini Annotation Challenge - Image Transformation Assembly Contest",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p style=\"font-size: 13px;\">&nbsp;</p>\n\n<p style=\"font-size: 13px;\"><span style=\"font-family:arial,helvetica,sans-serif;\"><strong>1. Project Overview</strong></span></p>\n\n<p style=\"font-size: 13px;\"><span style=\"font-family:arial,helvetica,sans-serif;\"><img alt=\"\" src=\"http://apps.topcoder.com/wiki/download/attachments/70980039/ntl.png\" style=\"width: 130px; height: 108px;\" /></span></p>\n\n<p style=\"font-size: 13px;\"><span style=\"font-size:12px;\"><span style=\"font-family:arial,helvetica,sans-serif;\">NASA has&nbsp;recorded over 100 terabytes of images, telemetry, models and just about everything one can imagine from all the planetary missions from the past 30 years. The data stored is within NASA&#39;s Planetary Data System (PDS). And it is all available free at&nbsp;<a href=\"http://pds.nasa.gov\">http://pds.nasa.gov</a></span></span></p>\n\n<p style=\"font-size: 13px;\"><span style=\"font-size:12px;\"><span style=\"font-family:arial,helvetica,sans-serif;\"><span style=\"line-height: 1.6em;\">However, while rich in depth and breadth, the PDS holdings have developed in a disparate fashion over the years with different architectures and formats at the various nodes. Consequently establishing a uniform approach to accessing data within the PDS is a significant challenge.</span></span></span></p>\n\n<p style=\"font-size: 13px;\"><span style=\"font-size:12px;\"><span style=\"font-family:arial,helvetica,sans-serif;\">PDS Cassini Annotation Challenge&nbsp;will leverage the&nbsp;<span class=\"s1\">PDS API developed in PDS Phase One and Two, as well as the rich archive of Cassnini data at the PDS-Rings Node hosted by SETI, and the&nbsp;</span>TopCoder Community of competitors afforded by the NTL, in an effort to develop an algorithm that can identify possible anomalies in Saturn ring patterns.</span></span></p>\n\n<p style=\"font-size: 13px;\"><span style=\"font-family:arial,helvetica,sans-serif;\"><strong style=\"line-height: 1.6em;\">2. Competition Task Overview</strong></span></p>\n\n<div>In this competition you have to develop an API to read the image data from a file based on the dataset information given below. You then have to use this API to transform the image to a grayscale JPEG or TIFF file. The API and the transformation will be used in later contests.</div>\n\n<div>&nbsp;</div>\n\n<div>\n<p>The dataset can be accessed <a href=\"http://pds-challenge.seti.org/browse/COISS_2xxx/COISS_2001/\">here</a>. Three variations are available for each image:</p>\n\n<p>1. Browse - A JPEG image, not suitable for doing actual science, but can be used to validate your results.<br />\n2. Raw - A 2D raster image preceded by an ASCII header. The image is stored with &#39;prefix bytes&#39; and is composed of one-byte or two-byte integers.<br />\n3. Derived - A radiometrically corrected version. The prefix bytes object has been removed, and the numbers are floating-point.</p>\n\n<p>The Raw and Derived versions have corresponding detached PDS label (LBL) files. Example,</p>\n</div>\n\n<ul>\n\t<li><span style=\"font-size:12px;\"><span style=\"font-family:arial,helvetica,sans-serif;\">Browse -&nbsp;<a href=\"http://pds-challenge.seti.org/browse/COISS_2xxx/COISS_2001/data/1455008823_1455194311/N1455008823_1_full.jpg\">/browse/COISS_2xxx/COISS_2001/data/1455008823_1455194311/N1455008823_1_full.jpg</a></span></span></li>\n\t<li><span style=\"font-size:12px;\"><span style=\"font-family:arial,helvetica,sans-serif;\">Raw -&nbsp;<a href=\"http://pds-challenge.seti.org/volumes/COISS_2xxx/COISS_2001/data/1455008823_1455194311/N1455008823_1.IMG\">/volumes/COISS_2xxx/COISS_2001/data/1455008823_1455194311/N1455008823_1.IMG</a></span></span></li>\n\t<li><span style=\"font-size:12px;\"><span style=\"font-family:arial,helvetica,sans-serif;\">Label -&nbsp;<a href=\"http://pds-challenge.seti.org/volumes/COISS_2xxx/COISS_2001/data/1455008823_1455194311/N1455008823_1.LBL\">/volumes/COISS_2xxx/COISS_2001/data/1455008823_1455194311/N1455008823_1.LBL</a></span></span></li>\n\t<li><span style=\"font-size:12px;\"><span style=\"font-family:arial,helvetica,sans-serif;\">Derived -&nbsp;<a href=\"http://pds-challenge.seti.org/derived/COISS_2xxx/COISS_2001/data/1455008823_1455194311/N1455008823_1_CALIB.IMG\">/derived/COISS_2xxx/COISS_2001/data/1455008823_1455194311/N1455008823_1_CALIB.IMG</a></span></span></li>\n\t<li><span style=\"font-size:12px;\"><span style=\"font-family:arial,helvetica,sans-serif;\">Label -&nbsp;<a href=\"http://pds-challenge.seti.org/derived/COISS_2xxx/COISS_2001/data/1455008823_1455194311/N1455008823_1_CALIB.LBL\">/derived/COISS_2xxx/COISS_2001/data/1455008823_1455194311/N1455008823_1_CALIB.LBL</a></span></span></li>\n</ul>\n\n<p>The image files are stored in a binary format called VICAR. However, all the information you need to read the image data is found inside the PDS labels, so the VICAR header can be ignored. The details of the PDS label standards are found here: <a href=\"http://pds.nasa.gov/tools/standards-reference.shtml\">http://pds.nasa.gov/tools/standards-reference.shtml</a>. The details of the image description are found starting on page A-64 of Appendix A here: <a href=\"http://pds.nasa.gov/documents/sr/AppendixA.pdf\">http://pds.nasa.gov/documents/sr/AppendixA.pdf</a>. However, the API does not need to support every PDS-supported image option; it only needs to support those used by the raw and calibrated Cassini images.</p>\n\n<p>When saving the 2-D image array as a JPEG or TIFF, the API must allow the user to define the range of image values (low,high) that map to black and white. Any image values below this range should also appear as black, and any values above this range should also appear as white. The values of (low,high) need not be the minimum and maximum values found in the array, although the default behavior could be to use these values.</p>\n\n<div>\n<p style=\"font-size: 13px;\"><span style=\"font-size:12px;\"><strong>2.1 API and Command Line Processor</strong></span></p>\n\n<p style=\"font-size: 13px;\">Competitors can design an API that is suitable for image transformation which can take the&nbsp;dataset location or the actual dataset as input parameter&nbsp;and return the image output stream.</p>\n\n<p style=\"font-size: 13px;\">Also there should be a provision to run the&nbsp;image transformation tool from command line by passing arguments.</p>\n\n<p style=\"font-size: 13px;\"><span style=\"font-family:arial,helvetica,sans-serif;\"><strong>3. Technology overview</strong></span></p>\n\n<ul style=\"font-size: 13px;\">\n\t<li><span style=\"font-family:arial,helvetica,sans-serif;\"><span style=\"line-height: 1.6em;\">J2SE 1.6</span></span></li>\n\t<li><span style=\"font-family:arial,helvetica,sans-serif;\"><span style=\"line-height: 1.6em;\">Spring 3.0.5:&nbsp;</span><a href=\"http://www.springsource.org/\" style=\"line-height: 1.6em;\">http://www.springsource.org/</a></span></li>\n\t<li><span style=\"font-family:arial,helvetica,sans-serif;\">Apache Ant 1.8.2:&nbsp;<a href=\"http://ant.apache.org/\">http://ant.apache.org/</a></span></li>\n</ul>\n</div>\n",
+  "digitalRunPoints": 810,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30036227",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2013-12-04T12:59:00.000Z",
+  "finalSubmissionGuidelines": "<p style=\"margin: 0px; padding: 3px 0px; line-height: 16px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><strong>Submission Deliverables</strong></p>\n\n<p style=\"margin: 0px; padding: 3px 0px; line-height: 16px; font-family: Arial, Helvetica, Verdana, sans-serif;\">A complete list of deliverables can be found in the TopCoder Assembly competition Tutorial at:</p>\n\n<p style=\"margin: 0px; padding: 3px 0px; line-height: 16px; font-family: Arial, Helvetica, Verdana, sans-serif;\"><a href=\"http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials\" style=\"color: rgb(0, 0, 102);\">http://apps.topcoder.com/wiki/display/tc/Assembly+Competition+Tutorials</a></p>\n\n<ul style=\"margin-left: 10px; padding-left: 10px; font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">\n\t<li style=\"padding-top: 2px; padding-bottom: 2px;\">Source code and configuration files.</li>\n\t<li style=\"padding-top: 2px; padding-bottom: 2px;\">Deployment guide to configure and verify the application.</li>\n</ul>\n",
+  "forumId": 19449,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=19449",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 37,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-25T22:02:00.000Z",
+      "actualStartTime": "2013-11-25T22:02:00.000Z",
+      "scheduledEndTime": "2013-11-25T22:02:00.000Z",
+      "actualendTime": "2013-11-25T22:02:00.000Z",
+      "_id": "583e8f5e10a1db09a46c31d8"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-25T22:02:00.000Z",
+      "actualStartTime": "2013-11-25T22:02:00.000Z",
+      "scheduledEndTime": "2013-11-26T00:10:00.000Z",
+      "actualendTime": "2013-11-26T00:10:00.000Z",
+      "_id": "583e8f5e10a1db09a46c31d7"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-26T00:10:00.000Z",
+      "actualStartTime": "2013-11-26T00:10:00.000Z",
+      "scheduledEndTime": "2013-11-28T00:10:00.000Z",
+      "actualendTime": "2013-11-28T00:10:00.000Z",
+      "_id": "583e8f5e10a1db09a46c31d6"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-11-26T00:15:00.000Z",
+      "actualStartTime": "2013-11-26T00:15:00.000Z",
+      "scheduledEndTime": "2013-12-01T00:15:00.000Z",
+      "actualendTime": "2013-12-01T00:15:00.000Z",
+      "_id": "583e8f5e10a1db09a46c31d5"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-01T00:15:00.000Z",
+      "actualStartTime": "2013-12-01T00:15:00.000Z",
+      "scheduledEndTime": "2013-12-01T11:09:00.000Z",
+      "actualendTime": "2013-12-01T11:09:00.000Z",
+      "_id": "583e8f5e10a1db09a46c31d4"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-01T11:09:00.000Z",
+      "actualStartTime": "2013-12-01T11:09:00.000Z",
+      "scheduledEndTime": "2013-12-03T11:01:00.000Z",
+      "actualendTime": "2013-12-03T11:01:00.000Z",
+      "_id": "583e8f5e10a1db09a46c31d3"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-03T11:01:00.000Z",
+      "actualStartTime": "2013-12-03T11:01:00.000Z",
+      "scheduledEndTime": "2013-12-03T14:56:00.000Z",
+      "actualendTime": "2013-12-03T14:56:00.000Z",
+      "_id": "583e8f5e10a1db09a46c31d2"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-03T14:56:00.000Z",
+      "actualStartTime": "2013-12-03T14:56:00.000Z",
+      "scheduledEndTime": "2013-12-04T01:56:00.000Z",
+      "actualendTime": "2013-12-04T01:56:00.000Z",
+      "_id": "583e8f5e10a1db09a46c31d1"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-04T01:56:00.000Z",
+      "actualStartTime": "2013-12-04T01:56:00.000Z",
+      "scheduledEndTime": "2013-12-04T02:05:00.000Z",
+      "actualendTime": "2013-12-04T02:05:00.000Z",
+      "_id": "583e8f5e10a1db09a46c31d0"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-04T02:05:00.000Z",
+      "actualStartTime": "2013-12-04T02:05:00.000Z",
+      "scheduledEndTime": "2013-12-04T12:59:00.000Z",
+      "actualendTime": "2013-12-04T12:59:00.000Z",
+      "_id": "583e8f5e10a1db09a46c31cf"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-04T12:59:00.000Z",
+      "actualStartTime": "2013-12-04T12:59:00.000Z",
+      "scheduledEndTime": "2013-12-04T14:47:00.000Z",
+      "actualendTime": "2013-12-04T14:47:00.000Z",
+      "_id": "583e8f5e10a1db09a46c31ce"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2013-12-04T14:47:00.000Z",
+      "actualStartTime": "2013-12-04T14:47:00.000Z",
+      "scheduledEndTime": "2013-12-09T14:47:00.000Z",
+      "actualendTime": "2013-12-09T14:47:00.000Z",
+      "_id": "583e8f5e10a1db09a46c31cd"
+    }
+  ],
+  "platforms": [],
+  "postingDate": "2013-11-26T00:10:00.000Z",
+  "prize": [
+    1800,
+    900
+  ],
+  "projectId": 6614,
+  "registrants": [
+    {
+      "handle": "qs8848",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-26T03:19:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5e10a1db09a46c31cc"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "0%",
+      "registrationDate": "2013-11-26T03:25:00.000Z",
+      "submissionDate": null,
+      "rating": "1722",
+      "colorStyle": "color: #DDCC00",
+      "_id": "583e8f5e10a1db09a46c31cb"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-26T00:17:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f5e10a1db09a46c31ca"
+    },
+    {
+      "handle": "Schpotsky",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-26T00:43:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5e10a1db09a46c31c9"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-26T00:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5e10a1db09a46c31c8"
+    },
+    {
+      "handle": "fivestarwy",
+      "reliability": "6%",
+      "registrationDate": "2013-11-26T01:22:00.000Z",
+      "submissionDate": null,
+      "rating": "583",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f5e10a1db09a46c31c7"
+    },
+    {
+      "handle": "brain_cn",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-26T01:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5e10a1db09a46c31c6"
+    },
+    {
+      "handle": "iRabbit",
+      "reliability": "33%",
+      "registrationDate": "2013-11-26T02:52:00.000Z",
+      "submissionDate": null,
+      "rating": "1511",
+      "colorStyle": "color: #DDCC00",
+      "_id": "583e8f5e10a1db09a46c31c5"
+    },
+    {
+      "handle": "frozenfx",
+      "reliability": "6%",
+      "registrationDate": "2013-11-26T02:53:00.000Z",
+      "submissionDate": null,
+      "rating": "1810",
+      "colorStyle": "color: #DDCC00",
+      "_id": "583e8f5e10a1db09a46c31c4"
+    },
+    {
+      "handle": "muzehyun",
+      "reliability": "0%",
+      "registrationDate": "2013-11-26T03:11:00.000Z",
+      "submissionDate": null,
+      "rating": "829",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f5e10a1db09a46c31c3"
+    },
+    {
+      "handle": "TMALBONPH",
+      "reliability": "0%",
+      "registrationDate": "2013-11-26T05:03:00.000Z",
+      "submissionDate": null,
+      "rating": "58",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f5e10a1db09a46c31c2"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "6%",
+      "registrationDate": "2013-11-26T06:27:00.000Z",
+      "submissionDate": null,
+      "rating": "529",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f5e10a1db09a46c31c1"
+    },
+    {
+      "handle": "velraman",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-26T06:42:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5e10a1db09a46c31c0"
+    },
+    {
+      "handle": "KennyAlive",
+      "reliability": "93%",
+      "registrationDate": "2013-11-26T07:15:00.000Z",
+      "submissionDate": "2013-12-01T00:08:00.000Z",
+      "rating": "1309",
+      "colorStyle": "color: #6666FF",
+      "_id": "583e8f5e10a1db09a46c31bf"
+    },
+    {
+      "handle": "raviteja.m",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-26T07:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5e10a1db09a46c31be"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-26T11:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5e10a1db09a46c31bd"
+    },
+    {
+      "handle": "rawuza",
+      "reliability": "22%",
+      "registrationDate": "2013-11-26T11:20:00.000Z",
+      "submissionDate": null,
+      "rating": "975",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f5e10a1db09a46c31bc"
+    },
+    {
+      "handle": "wsobolewski",
+      "reliability": "6%",
+      "registrationDate": "2013-11-26T13:35:00.000Z",
+      "submissionDate": null,
+      "rating": "985",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f5e10a1db09a46c31bb"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "6%",
+      "registrationDate": "2013-11-26T13:45:00.000Z",
+      "submissionDate": null,
+      "rating": "1096",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f5e10a1db09a46c31ba"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-26T14:46:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5e10a1db09a46c31b9"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-26T15:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5e10a1db09a46c31b8"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "26%",
+      "registrationDate": "2013-11-26T15:30:00.000Z",
+      "submissionDate": null,
+      "rating": "1101",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f5e10a1db09a46c31b7"
+    },
+    {
+      "handle": "amomsi",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-26T17:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5e10a1db09a46c31b6"
+    },
+    {
+      "handle": "redDoc",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-26T17:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5e10a1db09a46c31b5"
+    },
+    {
+      "handle": "saarixx",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-26T21:11:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5e10a1db09a46c31b4"
+    },
+    {
+      "handle": "patka",
+      "reliability": "0%",
+      "registrationDate": "2013-11-27T08:16:00.000Z",
+      "submissionDate": null,
+      "rating": "566",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f5e10a1db09a46c31b3"
+    },
+    {
+      "handle": "dexy",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-27T09:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5e10a1db09a46c31b2"
+    },
+    {
+      "handle": "dezl",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-27T11:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5e10a1db09a46c31b1"
+    },
+    {
+      "handle": "rrr_guru",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-27T11:11:00.000Z",
+      "submissionDate": null,
+      "rating": "613",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f5e10a1db09a46c31b0"
+    },
+    {
+      "handle": "agus.mw",
+      "reliability": "13%",
+      "registrationDate": "2013-11-27T11:57:00.000Z",
+      "submissionDate": null,
+      "rating": "957",
+      "colorStyle": "color: #00A900",
+      "_id": "583e8f5e10a1db09a46c31af"
+    },
+    {
+      "handle": "thientri",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-27T13:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5e10a1db09a46c31ae"
+    },
+    {
+      "handle": "vokie",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-27T14:50:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5e10a1db09a46c31ad"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-27T15:05:00.000Z",
+      "submissionDate": null,
+      "rating": "514",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f5e10a1db09a46c31ac"
+    },
+    {
+      "handle": "Luca",
+      "reliability": "0%",
+      "registrationDate": "2013-11-27T15:47:00.000Z",
+      "submissionDate": null,
+      "rating": "1690",
+      "colorStyle": "color: #DDCC00",
+      "_id": "583e8f5e10a1db09a46c31ab"
+    },
+    {
+      "handle": "Fantoccini",
+      "reliability": "n/a",
+      "registrationDate": "2013-11-28T00:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5e10a1db09a46c31aa"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "100%",
+      "registrationDate": "2013-11-26T12:27:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583e8f5e10a1db09a46c31a9"
+    },
+    {
+      "handle": "devmodugu",
+      "reliability": "0%",
+      "registrationDate": "2013-11-27T08:36:00.000Z",
+      "submissionDate": null,
+      "rating": "855",
+      "colorStyle": "color: #999999",
+      "_id": "583e8f5e10a1db09a46c31a8"
+    }
+  ],
+  "registrationEndDate": "2013-11-28T00:10:00.000Z",
+  "reliabilityBonus": 360,
+  "reviewScorecardId": 30001470,
+  "reviewType": null,
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2013-12-01T00:15:00.000Z",
+  "submissions": [
+    {
+      "handle": "KennyAlive",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 95.06,
+      "finalScore": 97.71,
+      "points": 810,
+      "submissionStatus": "Active",
+      "submissionDate": "2013-12-01T00:08:00.000Z",
+      "_id": "583e8f5e10a1db09a46c31d9"
+    }
+  ],
+  "technology": [
+    "Java"
+  ]
+}

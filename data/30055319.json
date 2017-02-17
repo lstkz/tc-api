@@ -1,0 +1,401 @@
+{
+  "_id": 30055319,
+  "_isComplete": true,
+  "__v": 2045,
+  "_lastUpdate": "2016-11-28T17:25:14.042Z",
+  "appealsEndDate": "2016-11-28T14:24:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Living Progress - Build - WWF - Real Time Search Implementation and Results Display",
+  "challengeType": "Code",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<h2><span style=\"color:rgb(255, 0, 0)\">Project Overview</span></h2>\n\n<p>Detect IT is a web application that is being developed by the World Wildlife Fund that allows comparison of trade data to identify discrepancies in reporting of imports and exports between countries which may be a sign of illegal activity. &nbsp;For example: if Russia reports significantly less exports of king crab to South Korea than South Korea reports in imports of king crab from Russia, this suggests there may be some illegal trade occurring in king crab between the two countries.&nbsp;<br />\n<br />\nThis challenge is part of the <a href=\"http://blitz.topcoder.com/hpe-lpc_build/\">Living Progress Build Challenge Blitz</a> program.</p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Competition Task Overview</span></h2>\n\n<p>In this challenge, we&#39;d like to build the real time search function, here are the details:<br />\n1. The searching is going to be done against a Vertica database which has been loaded with trade data from the United Nation&#39;s&nbsp;<a href=\"https://comtrade.un.org/data/\">UNComtrade</a> database. &nbsp; &nbsp;Here are the credentials for this database:&nbsp;<br />\n<br />\nHost:&nbsp;54.149.189.221<br />\nPort: 5433<br />\nDatabase Name: &nbsp;TradeData<br />\nUser: &nbsp;user1<br />\nPassword: &nbsp;pass1<br />\n<br />\nThis user account has read-only access to the data. &nbsp;It is the full production data set.<br />\n<br />\nThere is a lot of information in the &quot;Record&quot; table. &nbsp;Here are the relevant columns that users will be searching/querying when they initiate a query from the search page: &nbsp;<a href=\"https://github.com/topcoderinc/HP-LP-WWF-Detect-IT/blob/angular-dev/src/client/app/search-data/searchdata.html\">https://github.com/topcoderinc/HP-LP-WWF-Detect-IT/blob/angular-dev/src/client/app/search-data/searchdata.html</a>:<br />\nyear<br />\ntradeFlow<br />\nreporter<br />\npartner<br />\ncommodity<br />\nnetweightKg<br />\ntradeValueUSD<br />\n<br />\nThe commodities are reported as codes. &nbsp;For example, the code 030247 is &quot;Swordfish (Xiphias gladius)&quot;. &nbsp;These can be found in the Commodities table and we also designate there in the source column whether the commodities are &quot;Wild-caught&quot;, &quot;Farmed&quot;, &quot;Primarily farmed&quot;, or &quot;Hybrid&quot;.<br />\n<br />\nThe reporters and partners are countries. And the ids in the Record.reporter and Record.partner column are foreign keys to the Country table.<br />\n<br />\n2. This challenge involves implementing the following 3 pages in the prototype: &nbsp;<a href=\"http://tc-ui-prototype.herokuapp.com/wwf-detect-it/search-page.html\">http://tc-ui-prototype.herokuapp.com/wwf-detect-it/search-page.html</a>&nbsp;and&nbsp;<a href=\"http://tc-ui-prototype.herokuapp.com/wwf-detect-it/data-comparison-detail-page.html\">http://tc-ui-prototype.herokuapp.com/wwf-detect-it/data-comparison-detail-page.html</a>, and the <a href=\"http://tc-ui-prototype.herokuapp.com/wwf-detect-it/query-list-page.html\">http://tc-ui-prototype.herokuapp.com/wwf-detect-it/query-list-page.html</a>&nbsp;you can also find them in the prototype repo and you&#39;ll need to implement these to make sure they work properly with the backend.<br />\n3. We need to update a few of the search parameters: &nbsp;Reporting Country should be changed to Importer(s) and Partner Country should be changed to &quot;Exporter(s)&quot;. &nbsp;The Reporter Trade Flow parameter can be removed. &nbsp;These parameters should be updated in the filter section of the data-comparison-details-page.html as well.<br />\n4.&nbsp;On the search page there are some rules we need to impose to make the graphics readable and tables understandable. &nbsp;We are only going to allow more than one search parameter in one of the three dimensions of Importer, Exporter or Commodity, for example: you can have up to&nbsp;<em><u>5 Importers, 1 Exporter, and 1 Commodity</u></em> OR <u><em>1 Importer and 5 Exporters and 1 Commodity</em></u> OR <em><u>1 Importer and 1 Exporter and 5 Commodities</u></em>. The number limits (5, 1 ,1 )&nbsp;, (1, 5, 1) or (1, 1, 5)&nbsp;should be configurable. Users will pick out the Importers, Exporters and Commodities in the Search interface.<br />\n5. Please implement auto complete for the search parameters for Importer, Exporter and Commodity (like what we had here: <a href=\"http://54.218.19.28/\">http://54.218.19.28/</a>).<br />\n6. The search results need to be rendered in a Line Chart using d3.js so we can visualize the results, we also need a table below the chart showing the results in table view. Please note we only need to implement Line Chart in this challenge, the other types of charts are out of scope. &nbsp;<br />\n7. We need to implement the Map view using d3.js, for now we only need to color code the countries depending on whether they are importers or exporters.<br />\n8. Below the map or line chart you should display a table with the following columns: &nbsp;<br />\nYear<br />\nCommodity Name<br />\nImporter (Country Name)<br />\nImporter&nbsp;netweightKg<br />\nImporter&nbsp;tradeValueUSD<br />\nExporter&nbsp;(Country Name)<br />\nExporter netweightKg<br />\nExporter tradeValueUSD<br />\nDiff in netweightKg<br />\nDiff in tradeValueUSD<br />\n<br />\nIn order to generate a record in this form you&#39;ll need to combine the results of two different rows in the Record table in Vertica: &nbsp;the record of the importing country as reporter with the exporting country as partner AND the record of the exporter country as reporter with the importer country as partner for the same year and the same commodity. &nbsp;The system will need to calculate the difference quantities.<br />\n9. We need to impose the rules in the filters from both the search-page and the right side of data-comparison-detail-page, they need to affect results in the line chart, map view as well as the table view.<br />\n10. Even though we&#39;re allowing search parameters with multiple entries, let&#39;s show them individually in the chart. &nbsp;Hopefully, that will be easier to understand.<br />\n11. &nbsp;In the line chart, we should show years on the x axis and the y axis should show either netweightKg or tradeValueUSD&nbsp;depending on the selection of the user of the &quot;Display Trade By&quot; parameter. &nbsp;This filter is on the right side of the data comparison page as well.<br />\n12. On the search page when we save a query, it should save a name and be associated to the user and saved to a Query List so it can be rerun at a later time. &nbsp;Clicking the &quot;Save Query&quot; button on the search page should save the query to database and then direct the user to the Query List page where the list of saved queries is displayed. &nbsp;Each saved query has a panel with a slightly reduced size picture of the chart generated above. &nbsp;Clicking on the chart in the panel brings up one of the following options:</p>\n\n<p style=\"margin-left:40px\">a. Remove a Saved Query - the trash icon - removes the current query panel from list and deletes the Saved Query from the database.<br />\nb. Edit a Saved Query - pencil and paper icon - takes the User to the Search Data page with the search parameters populated. &nbsp;This allows the user to adjust the query if required. &nbsp;If they leave the name the same and click &quot;Save Query&quot; again we should save any changes to the same query record. &nbsp;If the user changes the name, then this should be &quot;Save As&quot; functionality and we&#39;ll record a new save query record in the database.<br />\nc. Run a Saved Query - which is the eye/view icon - navigates the user to the Data Comparison results page with the saved search parameters just as if a user had clicked the &quot;Run Query&quot; button from the Search Data page.</p>\n\n<p>13. &nbsp;On the query-list page there are a couple of changes that need to made:</p>\n\n<p style=\"margin-left:40px\">a. &nbsp;Please replace the Created by: search parameter at the top of the page with &quot;Importer&quot;. &nbsp;All the queries will be created by the current user so have a &quot;Created By&quot; parameter doesn&#39;t make sense.<br />\nb. &nbsp;Let&#39;s add the Commodity,Importer and Exporter parameters to the panels so user can see what the queries are all about. &nbsp;If there is more than one element in a parameter then you can just create a comma delimited list.<br />\nc. &nbsp;Let&#39;s remove the Created By and Last Update By elements from the panel field list. &nbsp;Those will always be the current user so they are meaningless. &nbsp;Also please remove the &quot;Collaborators&quot; field -- collaboration is being handled through the forums.</p>\n\n<p>14. &nbsp;On the data-comparison-detail-page, the Save function should work exactly like the &quot;Save Query&quot; button on the search-data page. &nbsp;There is a popup in the current interface which asks for the Query Name. &nbsp;This need to be saved along with the current set of search parameters.<br />\n15. &nbsp;Do not implement the Sharing/Publishing, Printing, or Download functions on the Data Comparison page. &nbsp;<br />\n16. &nbsp;The Key Findings should aggregate the following info:</p>\n\n<p style=\"margin-left:40px\">a. &nbsp;The aggregated total and average weight per year in KG of the Imports over the time period requested.<br />\nb. &nbsp;The aggregated total and average value per year in USD of the Imports over the time period requested.<br />\nc. &nbsp;The aggregated total and average weight per year in KG of the Exports over the time period requested.<br />\n���d. &nbsp;The aggregated total and average&nbsp;value per year in USD of the Exports over the time period requested.<br />\ne. &nbsp;The aggregated total of the difference for all the years and the average difference in weight per year between Imports and Exports over the time period requested.<br />\nf. &nbsp;&nbsp;The aggregated total of the difference for all the years in trade value and the average difference in trade value in USD per year between Imports and Exports over the time period requested.</p>\n\n<h3><span style=\"color:rgb(255, 0, 0)\">Testing</span></h3>\n\n<p>For the backend services, you must provide unit tests and postman file to test the REST services.<br />\n<br />\nFor frontend, we&#39;ve asked our prototype developers to create some basic unit tests for their AngularJS code. &nbsp;Please make sure that you update the front-end unit tests to ensure they are still functional. &nbsp;Any additional unit tests that you think would be helpful for future developers to understand your updates would be appreciated.</p>\n\n<h2><span style=\"color:rgb(255, 0, 0)\">Technology Overview</span></h2>\n\n<p><span style=\"font-size:12px\">Java 1.5</span><br />\nC# / .NET 4.5+<br />\nVisual Studio 2015<br />\nASP.NET MVC Web API<br />\nSQL Server Express 2016<br />\nREST<br />\nAngular.js<br />\nCSS<br />\nVertica<br />\nD3.js</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30055319",
+  "finalSubmissionGuidelines": "<h2><strong><span style=\"color:rgb(255, 0, 0)\">Submission Deliverables</span></strong></h2>\n\n<p>1. Complete projects that cover all the mentioned requirements<br />\n2. For the backend, we need a word based deployment guide with details on how to configure and deploy the services to IIS, and details on how to test / verify the REST services.<br />\n3. For the frontend, please provide a README in markdown format with details on how to deploy and test the pages.<br />\n4. Please keep your frontend and backend code in separate and independent folders, because they will need to be merged into different repos.</p>\n\n<h2><span style=\"color:#FF0000\"><strong>Final Submission</strong></span></h2>\n\n<p>- For frontend, please fork the following repo: <a href=\"https://github.com/topcoderinc/HP-LP-WWF-Detect-IT\">https://github.com/topcoderinc/HP-LP-WWF-Detect-IT</a>.&nbsp;We are working from the <u><span style=\"background-color:#FFFF00\">angular-dev</span></u> branch (which is the default). &nbsp;This contains the existing front-end website code.<br />\n- For backend, please fork the following repo:&nbsp;<a href=\"https://github.com/topcoderinc/HP-LP-WWF-Detect-IT-Services\">https://github.com/topcoderinc/HP-LP-WWF-Detect-IT-Services</a>. We are working from the <u><span style=\"background-color:#FFFF00\">master</span></u> branch (which is the default). This contains the existing backend services code.<br />\n- You will need to request access to the repos by providing your GitHub ID in the GitHub Access thread in the forum.<br />\n- The winner will be asked to provide a pull request to each of the repos with his or her updates.<br />\n- You will still need to submit a submission.zip with your source code, build scripts, and configuration files via the challenge detail page on topcoder.com.<br />\n- Check README file to deploy this Angularjs app<br />\n-&nbsp;For each member, the final submission should be uploaded via the challenge detail page on <a href=\"http://topcoder.com\">topcoder.com</a>.</p>\n",
+  "forumId": 34097,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=34097",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 32,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2016-11-17T00:00:00.000Z",
+      "actualStartTime": "2016-11-17T00:00:00.000Z",
+      "scheduledEndTime": "2016-11-24T23:59:00.000Z",
+      "actualendTime": "2016-11-24T23:59:00.000Z",
+      "_id": "583c687a83bfe908a8ea2a99"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2016-11-17T00:05:00.000Z",
+      "actualStartTime": "2016-11-17T00:05:00.000Z",
+      "scheduledEndTime": "2016-11-24T23:59:00.000Z",
+      "actualendTime": "2016-11-24T23:59:00.000Z",
+      "_id": "583c687a83bfe908a8ea2a98"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2016-11-24T23:59:00.000Z",
+      "actualStartTime": "2016-11-24T23:59:00.000Z",
+      "scheduledEndTime": "2016-11-27T05:39:00.000Z",
+      "actualendTime": "2016-11-27T05:39:00.000Z",
+      "_id": "583c687a83bfe908a8ea2a97"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2016-11-27T05:40:00.000Z",
+      "actualStartTime": "2016-11-27T05:40:00.000Z",
+      "scheduledEndTime": "2016-11-28T05:40:00.000Z",
+      "actualendTime": "2016-11-28T05:40:00.000Z",
+      "_id": "583c687a83bfe908a8ea2a96"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2016-11-28T05:41:00.000Z",
+      "actualStartTime": "2016-11-28T05:41:00.000Z",
+      "scheduledEndTime": "2016-11-28T14:24:00.000Z",
+      "actualendTime": "2016-11-28T14:24:00.000Z",
+      "_id": "583c687a83bfe908a8ea2a95"
+    }
+  ],
+  "platforms": [
+    "Microsoft Azure"
+  ],
+  "postingDate": "2016-11-17T00:00:00.000Z",
+  "prize": [
+    1800,
+    900
+  ],
+  "projectId": 9610,
+  "registrants": [
+    {
+      "handle": "NightWolf",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-17T00:00:00.000Z",
+      "submissionDate": "2016-11-24T22:36:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a94"
+    },
+    {
+      "handle": "sinana",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-17T10:45:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a93"
+    },
+    {
+      "handle": "codingdrone",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-17T01:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a92"
+    },
+    {
+      "handle": "zaixiang",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-17T00:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a91"
+    },
+    {
+      "handle": "gjw99",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-17T01:40:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a90"
+    },
+    {
+      "handle": "asteroidiv",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-17T02:06:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a8f"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-17T02:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a8e"
+    },
+    {
+      "handle": "Khadoos",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-17T03:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a8d"
+    },
+    {
+      "handle": "veshu",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-17T03:56:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a8c"
+    },
+    {
+      "handle": "Gando19850304",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-17T07:02:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a8b"
+    },
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-17T10:22:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a8a"
+    },
+    {
+      "handle": "mishacucicea",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-17T11:25:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a89"
+    },
+    {
+      "handle": "Nandhu1807",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-17T11:30:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a88"
+    },
+    {
+      "handle": "zeasratwde",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-17T14:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a87"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-17T16:00:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a86"
+    },
+    {
+      "handle": "Amith",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-17T16:04:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a85"
+    },
+    {
+      "handle": "rajrkrish",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T03:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a84"
+    },
+    {
+      "handle": "MartinPOON",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T06:57:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a83"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T11:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a82"
+    },
+    {
+      "handle": "alfiya_Zi",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T14:09:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a81"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T19:58:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a80"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-18T22:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a7f"
+    },
+    {
+      "handle": "johny4",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-19T06:03:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a7e"
+    },
+    {
+      "handle": "AliGebily",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-19T08:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a7d"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-19T12:20:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a7c"
+    },
+    {
+      "handle": "rtty",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-19T12:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a7b"
+    },
+    {
+      "handle": "tri_code",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-21T16:47:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a7a"
+    },
+    {
+      "handle": "sah2ed",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-21T16:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a79"
+    },
+    {
+      "handle": "nghi85",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-22T03:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a78"
+    },
+    {
+      "handle": "Rushikesh.Deshp",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-22T04:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a77"
+    },
+    {
+      "handle": "cam.ashwini",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-22T05:37:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a76"
+    },
+    {
+      "handle": "Figer",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-23T13:15:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "583c687a83bfe908a8ea2a75"
+    }
+  ],
+  "registrationEndDate": "2016-11-24T23:59:00.000Z",
+  "reviewScorecardId": 30001610,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": null,
+  "submissionEndDate": "2016-11-24T23:59:00.000Z",
+  "submissions": [
+    {
+      "handle": "NightWolf",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 80,
+      "finalScore": 81.25,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2016-11-24T22:36:00.000Z",
+      "_id": "583c687a83bfe908a8ea2a9a"
+    }
+  ],
+  "technology": [
+    ".NET",
+    "ASP.NET",
+    "Angular.js",
+    "C#",
+    "CSS",
+    "HTML5",
+    "REST",
+    "SQL",
+    "SQL Server",
+    "Vertica"
+  ]
+}

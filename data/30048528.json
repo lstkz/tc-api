@@ -1,0 +1,257 @@
+{
+  "_id": 30048528,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-12-13T10:13:00.365Z",
+  "appealsEndDate": "2015-02-02T09:06:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "PoC Assembly - TopCoder Competition Engine - Figure Out Way to Setup Linux Processor In a Different VM",
+  "challengeType": "Assembly Competition",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<div class=\"previewMask\">\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span style=\"color:rgb(255, 0, 0); font-family:arial,helvetica,verdana,sans-serif\">Project Overview</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span style=\"font-family:sans-serif,arial,verdana,trebuchet ms\">TopCoder Competition Engine is a system used for Single Round Matches (SRM) and Marathon Matches (MM). </span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<p><span><u>About Source Code Change</u></span></p>\n\n<p><span>Recently, we have migrated all source code for TopCoder Competition Engine from svn to github repositories, please check <a href=\"https://github.com/appirio-tech/arena-web/wiki/Source-Code-Repositories-for-TopCoder-Competition-Engine\">https://github.com/appirio-tech/arena-web/wiki/Source-Code-Repositories-for-TopCoder-Competition-Engine</a> for details.</span></p>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span style=\"color:rgb(255, 0, 0); font-size:13px\">Competition Task Overview</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n\n<p><span><u><span><span><span><span><span>About Architecture Changes</span></span></span></span></span></u></span></p>\n\n<p><span>Previously, we are migrating the system to use amazon SQS. so the build and deploy process is slightly changed.</span></p>\n\n<p><span>If you have a latest VM, you can see all services are setup in apps account, except mm web interface.</span></p>\n\n<p><span>Login as apps account, and run &#39;jps&#39;</span>, you can see all the processes.</p>\n\n<p><span style=\"color:#0000FF\">440 WebSocketServer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ---- Web Socket Listener as before<br />\n32694 Main&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ---- JBoss as before<br />\n430 MPSQASListener&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ---- MPSQAS Listener as before<br />\n432 AdminListenerMain&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ----&nbsp; Admin Listener as before<br />\n32766 ListenerMain&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ---- Main Listener<br />\n32652 elasticmq-server-0.8.5.jar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ----&nbsp; </span><span style=\"color:#FF0000\">Local SQS Service for compilation and testing task comsumption.</span><br />\n<span style=\"color:#0000FF\">438 ProcessorMain&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ---&nbsp; </span><span style=\"color:#FF0000\">Farm Processor</span></p>\n\n<p>and the build and deploy process is changed a lot, so the previous approach to add seperate Linux processor is not working.</p>\n\n<p>For this challenge, we&#39;d like to figure out and properly document the process to attach a new Farm Processor (Linux) separately for task comsumption.</p>\n\n<p>An Arena VM with all services up and CentOS 64bit VM will be allocated for each competitor to work on.</p>\n\n<p>Following are the expected use cases.</p>\n\n<p>1. Stop the ProcessorMain in Arena VM.</p>\n\n<p>2. Move the Farm Processor pieces to CentOS 64bit VM</p>\n\n<p>3. Start the Farm Processor, and figure out way to make it can connect to Local SQS Service in Arena VM.</p>\n\n<p>4. If specific domain needed, we can use <u>sqs.cloud.topcoder.com</u></p>\n\n<p>5. Make sure the compilation and testing is working properly with processor in a different VM.</p>\n\n<p>Please also properly document the whole process to setup another processor in CentOS 64bit VM.</p>\n\n<p><u>Reference</u></p>\n\n<p>Please check deploy_arena.sh and start-services_aren.sh files under ~/dev/arena-vm (https://github.com/appirio-tech/arena-vm) to under the way to build the package for farm processor and the way to start the farm processor.</p>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span><span style=\"color:#FF0000\">About VMs</span></span></span></span></span></span></span></span> </span> </span></span></span></span></span></p>\n\n<p><span><strong><span><span><span><span><span><span><span><span><span><span><span><span>Before asking your own VM, you need to have a public key on your profile before asking for the VM.</span></span></span></span></span></span></span></span></span></span></span></span></strong></span></p>\n\n<p><span><span><span><span><span><span><span><span><span><span><span><span><span>You can find more details on how to generate a key <span><a href=\"http://apps.topcoder.com/wiki/display/projects/Generate+SSH+Key\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/projects/Generate+SSH+Key</a></span> and how to connect using it <span><a href=\"http://apps.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key\" rel=\"nofollow\">http://apps.topcoder.com/wiki/display/projects/Connect+Using+SSH+Key</a></span>.</span></span></span></span></span></span></span></span></span></span></span></span></span></p>\n</div>\n</div>\n</div>\n</div>\n",
+  "digitalRunPoints": 360,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30048528",
+  "event": {
+    "id": 3442,
+    "description": "2015 topcoder Open",
+    "shortDescription": "tco15"
+  },
+  "finalFixEndDate": "2015-02-02T16:23:00.000Z",
+  "finalSubmissionGuidelines": "<div class=\"previewMask\">\n<ul>\n\t<li><span>Code changes</span></li>\n\t<li><span>Clear Guide to setup the farm processor separately.</span></li>\n\t<li>Working VM for demonstration purpose. Reviewers will still need to setup their own env for testing and review.</li>\n</ul>\n</div>\n",
+  "forumId": 27872,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=27872",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 8,
+  "numberOfSubmissions": 2,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-21T06:14:00.000Z",
+      "actualStartTime": "2015-01-21T06:14:00.000Z",
+      "scheduledEndTime": "2015-01-21T06:15:00.000Z",
+      "actualendTime": "2015-01-21T06:15:00.000Z",
+      "_id": "584fc9ac10a1db09a4633be5"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-21T06:15:00.000Z",
+      "actualStartTime": "2015-01-21T06:15:00.000Z",
+      "scheduledEndTime": "2015-01-21T08:52:00.000Z",
+      "actualendTime": "2015-01-21T08:52:00.000Z",
+      "_id": "584fc9ac10a1db09a4633be4"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-21T14:00:00.000Z",
+      "actualStartTime": "2015-01-21T14:00:00.000Z",
+      "scheduledEndTime": "2015-01-23T14:01:00.000Z",
+      "actualendTime": "2015-01-23T14:01:00.000Z",
+      "_id": "584fc9ac10a1db09a4633be3"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-21T14:05:00.000Z",
+      "actualStartTime": "2015-01-21T14:05:00.000Z",
+      "scheduledEndTime": "2015-01-29T14:01:00.000Z",
+      "actualendTime": "2015-01-29T14:01:00.000Z",
+      "_id": "584fc9ac10a1db09a4633be2"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-29T14:01:00.000Z",
+      "actualStartTime": "2015-01-29T14:01:00.000Z",
+      "scheduledEndTime": "2015-01-30T02:34:00.000Z",
+      "actualendTime": "2015-01-30T02:34:00.000Z",
+      "_id": "584fc9ac10a1db09a4633be1"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-01-30T02:34:00.000Z",
+      "actualStartTime": "2015-01-30T02:34:00.000Z",
+      "scheduledEndTime": "2015-02-01T01:03:00.000Z",
+      "actualendTime": "2015-02-01T01:03:00.000Z",
+      "_id": "584fc9ac10a1db09a4633be0"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-01T01:03:00.000Z",
+      "actualStartTime": "2015-02-01T01:03:00.000Z",
+      "scheduledEndTime": "2015-02-02T01:04:00.000Z",
+      "actualendTime": "2015-02-02T01:04:00.000Z",
+      "_id": "584fc9ac10a1db09a4633bdf"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-02T01:04:00.000Z",
+      "actualStartTime": "2015-02-02T01:04:00.000Z",
+      "scheduledEndTime": "2015-02-02T09:06:00.000Z",
+      "actualendTime": "2015-02-02T09:06:00.000Z",
+      "_id": "584fc9ac10a1db09a4633bde"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-02T09:06:00.000Z",
+      "actualStartTime": "2015-02-02T09:06:00.000Z",
+      "scheduledEndTime": "2015-02-02T09:10:00.000Z",
+      "actualendTime": "2015-02-02T09:10:00.000Z",
+      "_id": "584fc9ac10a1db09a4633bdd"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-02T09:10:00.000Z",
+      "actualStartTime": "2015-02-02T09:10:00.000Z",
+      "scheduledEndTime": "2015-02-02T16:23:00.000Z",
+      "actualendTime": "2015-02-02T16:23:00.000Z",
+      "_id": "584fc9ac10a1db09a4633bdc"
+    },
+    {
+      "type": "Final Review",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-02T16:23:00.000Z",
+      "actualStartTime": "2015-02-02T16:23:00.000Z",
+      "scheduledEndTime": "2015-02-03T00:53:00.000Z",
+      "actualendTime": "2015-02-03T00:53:00.000Z",
+      "_id": "584fc9ac10a1db09a4633bdb"
+    },
+    {
+      "type": "Approval",
+      "status": "Closed",
+      "scheduledStartTime": "2015-02-03T00:54:00.000Z",
+      "actualStartTime": "2015-02-03T00:54:00.000Z",
+      "scheduledEndTime": "2015-02-04T07:42:00.000Z",
+      "actualendTime": "2015-02-04T07:42:00.000Z",
+      "_id": "584fc9ac10a1db09a4633bda"
+    }
+  ],
+  "platforms": [
+    "Other"
+  ],
+  "postingDate": "2015-01-21T14:00:00.000Z",
+  "prize": [
+    800,
+    400
+  ],
+  "projectId": 7377,
+  "registrants": [
+    {
+      "handle": "blu3fox",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-21T15:39:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ac10a1db09a4633bd9"
+    },
+    {
+      "handle": "MonicaMuranyi",
+      "reliability": "76%",
+      "registrationDate": "2015-01-21T15:18:00.000Z",
+      "submissionDate": "2015-01-29T12:59:00.000Z",
+      "rating": "1250",
+      "colorStyle": "color: #6666FF",
+      "_id": "584fc9ac10a1db09a4633bd8"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-21T20:38:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ac10a1db09a4633bd7"
+    },
+    {
+      "handle": "pirosl_tc",
+      "reliability": "0%",
+      "registrationDate": "2015-01-21T23:15:00.000Z",
+      "submissionDate": null,
+      "rating": "738",
+      "colorStyle": "color: #999999",
+      "_id": "584fc9ac10a1db09a4633bd6"
+    },
+    {
+      "handle": "flytoj2ee",
+      "reliability": "93%",
+      "registrationDate": "2015-01-22T03:03:00.000Z",
+      "submissionDate": "2015-01-29T13:18:00.000Z",
+      "rating": "1674",
+      "colorStyle": "color: #DDCC00",
+      "_id": "584fc9ac10a1db09a4633bd5"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-22T07:15:00.000Z",
+      "submissionDate": null,
+      "rating": "323",
+      "colorStyle": "color: #999999",
+      "_id": "584fc9ac10a1db09a4633bd4"
+    },
+    {
+      "handle": "MiG-29",
+      "reliability": "n/a",
+      "registrationDate": "2015-01-22T11:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "584fc9ac10a1db09a4633bd3"
+    },
+    {
+      "handle": "yedtoss",
+      "reliability": "6%",
+      "registrationDate": "2015-01-23T12:00:00.000Z",
+      "submissionDate": null,
+      "rating": "927",
+      "colorStyle": "color: #00A900",
+      "_id": "584fc9ac10a1db09a4633bd2"
+    }
+  ],
+  "registrationEndDate": "2015-01-23T14:01:00.000Z",
+  "reliabilityBonus": 160,
+  "reviewScorecardId": 30001470,
+  "reviewType": "COMMUNITY",
+  "screeningScorecardId": 30000412,
+  "submissionEndDate": "2015-01-29T14:01:00.000Z",
+  "submissions": [
+    {
+      "handle": "MonicaMuranyi",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 98.74,
+      "finalScore": 99.31,
+      "points": 251.99999999999997,
+      "submissionStatus": "Active",
+      "submissionDate": "2015-01-29T12:59:00.000Z",
+      "_id": "584fc9ac10a1db09a4633be7"
+    },
+    {
+      "handle": "flytoj2ee",
+      "placement": 2,
+      "screeningScore": 100,
+      "initialScore": 85.14,
+      "finalScore": 86.04,
+      "points": 108,
+      "submissionStatus": "Completed Without Win",
+      "submissionDate": "2015-01-29T13:18:00.000Z",
+      "_id": "584fc9ac10a1db09a4633be6"
+    }
+  ],
+  "technology": [
+    "Other"
+  ]
+}

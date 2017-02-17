@@ -1,0 +1,353 @@
+{
+  "_id": 30033858,
+  "_isComplete": true,
+  "__v": 16305,
+  "_lastUpdate": "2017-02-17T08:02:38.279Z",
+  "appealsEndDate": "2013-07-19T07:54:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Healthcare Fraud Prevention - Data Exchange Network System Architecture",
+  "challengeType": "Architecture",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Cancelled - Failed Review",
+  "detailedRequirements": "<p><span style=\"font-size:14px;\"><strong>System Overview</strong></span></p>\n\n<p><span style=\"font-size:12px;\"><span style=\"font-family: arial, helvetica, sans-serif; line-height: 19.1875px;\">The Healthcare Fraud Prevention Partnership (HFPP) is building a network to exchange data between health insurers to detect and prevent fraud. An essential requirement is that data must be stored individually on each partner&#39;s premises, not centralized in a warehouse.&nbsp;The data exchange network must be decentralized and secure, and it must encourage reciprocity in sharing data.</span></span></p>\n\n<p><font face=\"arial, helvetica, sans-serif\"><span style=\"font-size: 12px; line-height: 19.1875px;\">The process of collecting and analyzing data is encapsulated in a concept called the <strong>study</strong>. Each study is a plan to answer certain questions about healthcare reimbursement&nbsp;<strong>claims</strong>&nbsp;that have been submitted to health insurers who are partners in the&nbsp;HFPP.</span></font></p>\n\n<p><span style=\"font-size: 12px; font-family: arial, helvetica, sans-serif; line-height: 19.1875px;\">The front end of the HFPP system has a study management interface that is currently under development. In the initial version of the HFPP system, studies are designed by an external committee and delivered to a trusted third party (TTP) for execution. The TTP user enters a study in the form of business rules that&nbsp;</span>express the following constraints:</p>\n\n<ul style=\"list-style-type:square;\">\n\t<li>which partners are being asked to contribute data to the study</li>\n\t<li>what data is requested from each partner&#39;s database</li>\n</ul>\n\n<p>Upon receving the data requests, partners who agree to contribute to the study retrieve the requested claims and transform&nbsp;them&nbsp;into a standard XML format using a conversion module that is currently under development. The data exchange network will take the output of the conversion module and transmit it to the TTP for aggregation and analysis.</p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px;\"><strong>Competition Task Overview</strong></span></p>\n\n<p><span style=\"font-size: 12px;\">We are seeking system architecture for the data exchange network, which is the linchpin of the HFPP project. We have already established the concept of a study and have outlined a claim format, so you will not make architectural decisions about these aspects of the project. The study management system and the data conversion module will interface with the network nodes according to standards that are to<span style=\"font-family:arial,helvetica,sans-serif;\"> be defined in this sequence of system architecture and module architecture contests. The present contest is expected to deliver a standard set of <a href=\"http://apps.topcoder.com/wiki/display/tc/System+Architecture+Inputs+and+Deliverables\">system architecture deliverables</a>, including sequence diagrams and interface diagrams.</span></span></p>\n\n<p><font face=\"arial, helvetica, sans-serif\">The following terminology is used throughout this specification and other documentation.</font></p>\n\n<ul style=\"margin: 0px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; list-style-type: square; padding-top: 6px !important; padding-right: 0px !important; padding-bottom: 6px !important;\">\n\t<li><span style=\"line-height: 1.6em;\"><strong>insurer</strong>: an entity that pays for a patient&#39;s medical services</span></li>\n\t<li style=\"padding: 0px; margin: 0px;\"><strong>provider</strong>: an entity that provides medical services to a patient</li>\n\t<li style=\"padding: 0px; margin: 0px;\"><strong>claim</strong>: a provider&#39;s request for payment from an insurer</li>\n\t<li style=\"padding: 0px; margin: 0px;\"><strong>HFPP</strong>: <span style=\"font-family: Arial, Helvetica, Verdana, sans-serif; line-height: 16px;\">Healthcare Fraud Prevention Partnership, a public and private initiative to detect and prevent healthcare fraud, waste and abuse</span></li>\n\t<li style=\"padding: 0px; margin: 0px;\"><strong>partner</strong>: a healthcare insurer or association that has joined the HFPP</li>\n\t<li style=\"padding: 0px; margin: 0px;\"><strong>study</strong>: a plan to search for fraudulent claims</li>\n\t<li style=\"padding: 0px; margin: 0px;\"><span style=\"line-height: 19.5px;\"><strong>TTP</strong>: the trusted third party,&nbsp;an independent body that executes studies</span></li>\n\t<li style=\"padding: 0px; margin: 0px;\"><strong>data request</strong>: a unit of execution for a study; the study is broken down into one or more requests for data from partners</li>\n\t<li style=\"padding: 0px; margin: 0px;\"><strong>data response</strong>: a partner&#39;s reply to a data request</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif;\"><span style=\"font-size:14px;\"><strong>Study Management Interface</strong></span></span></p>\n\n<p>To understand the purpose of the data exchange network, consider the following study examples.</p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"font-size:12px;\"><span style=\"font-family:arial,helvetica,sans-serif;\"><strong style=\"padding: 0px; margin: 0px;\">The impossible day:</strong>&nbsp;If insurers don&#39;t share data, they are unable to identify providers who are billing several insurers for a total of more than 24 hours in a single day. The data exchange network will allow partners to detect this fraud with a study that asks the following question:&nbsp;<em style=\"padding: 0px; margin: 0px;\">Is a provider billing insurers for more than 24 hours of service in a single day?</em></span></span></p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"font-size:12px;\"><span style=\"font-family:arial,helvetica,sans-serif;\"><strong style=\"padding: 0px; margin: 0px;\">Duplicate claims:</strong>&nbsp;An unscrupulous provider may provide a single treatment and submit multiple claims for it. To make the claims look different, the provider changes one detail such as the date, keeping everything else the same. A study might ask the following question:&nbsp;<em style=\"padding: 0px; margin: 0px;\">Is there a pair of claims that are identical in every way except for one value?</em></span></span></p>\n\n<p style=\"padding: 0px; margin: 0px 0px 12px; line-height: 1.5em; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;\"><span style=\"font-size:12px;\"><span style=\"font-family:arial,helvetica,sans-serif;\"><strong style=\"padding: 0px; margin: 0px;\">Unbundled services:</strong>&nbsp;Like a combo meal at a fast-food restaurant, some medical services are performed together for cost savings. This is often done with blood tests, for example. A common type of fraud involves billing separately for the components of the bundled treatment in order to receive a larger reimbursement. A study might ask:&nbsp;<em style=\"padding: 0px; margin: 0px;\">Did a patient receive individual services X, Y, and Z instead of the bundled service XYZ?</em></span></span></p>\n\n<p><span style=\"font-size: 12px;\">We have already defined a study management interface that allows the TTP to receive a study from the external committee and enter the data requests as a set of business rules. The group of partners to be targeted with&nbsp;data requests is expressed by another set of business rules.</span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:12px;\"><span style=\"font-size:14px;\"><strong>Claim Data Format</strong></span></span></p>\n\n<p><span style=\"font-size: 12px;\">Claims are stored by each partner in their own database in a format of their choosing. We are developing a proof-of-concept conversion module that transforms claims from a particular&nbsp;CSV format to a standard XML format. All future versions of the conversion module will also convert claims to XML. Thus, the HFPP network will always exchange data in the standard XML format. You can ignore the partner&#39;s individual&nbsp;choice of data format and assume that XML is the starting point for network transmission.&nbsp;Each network node is expected to serialize&nbsp;and encrypt the data prior to transmission, then decrypt and deserialize it upon arrival.</span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px;\"><strong>Data Exchange Network</strong></span></p>\n\n<p><span style=\"font-size: 12px;\">The primary requirement&nbsp;for the data exchange network is decentralized storage. Partner data</span><span style=\"font-size: 12px; line-height: 1.6em;\">&nbsp;will be stored on each partner&#39;s premises, not in a central warehouse.</span></p>\n\n<p><span style=\"font-size: 12px; line-height: 1.6em;\">Further network requirements are as follows.</span></p>\n\n<ul style=\"list-style-type:square;\">\n\t<li><a href=\"http://csrc.nist.gov/groups/SMA/fisma/\">FISMA</a>-compliant&nbsp;controls for&nbsp;network access authorization</li>\n\t<li><span style=\"font-size: 12px; line-height: 1.6em;\"><a href=\"http://www.hhs.gov/ocr/privacy/hipaa/administrative/securityrule/\">HIPAA</a>-compliant data handling safeguards to ensure&nbsp;privacy for healthcare providers and patients</span></li>\n\t<li>data sharing reciprocity: transactional reciprocity is not required, but HFPP members should share data in the long run</li>\n\t<li>caching of frequently shared data</li>\n</ul>\n\n<p>In addition to consulting the client questionnaire, please refer to the attached concept&nbsp;for the data exchange network. The network concept stipulates the use of a central hub to provide authentication, caching, and other network management services. While partners will continue to store their own data (except cached data) to achieve the goal of decentralized data storage, the central hub assumes responsibility for other aspects of the network. Therefore, peer-to-peer networking is not required.</p>\n\n<p>The network concept also includes the idea of using the <a href=\"http://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol\">AMQP</a> protocol for distributed messaging. You may incorporate this protocol, or &nbsp;a version of it, into the system architecture. However, AMQP is not required. You may substitute an approach of your own choosing.</p>\n\n<p>The ultimate goal of the HFPP project is for the data exchange network to support open requests. This means that any partner, not just the external committee, will be allowed to formulate studies. The initial iteration of the network will not support open requests, but this future goal should be taken into consideration. Also note that the data exchange network is expected to be an open standard that any partner (or more likely their software vendor) will be able to implement. We are designing the standard and building the proof-of-concept implementation.</p>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": 810,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30033858",
+  "event": {
+    "id": 3437,
+    "description": "2014 TopCoder(R) Open",
+    "shortDescription": "tco14"
+  },
+  "finalFixEndDate": "2013-07-20T19:54:00.000Z",
+  "finalSubmissionGuidelines": "<p><span style=\"font-size:14px;\"><strong><span style=\"font-family:arial,helvetica,sans-serif;\">Deliverables</span></strong></span></p>\n\n<ul style=\"list-style-type:square;\">\n\t<li><span style=\"font-family:arial,helvetica,sans-serif;\"><a href=\"http://apps.topcoder.com/wiki/display/tc/System+Architecture+Inputs+and+Deliverables\">standard deliverables</a> for System Architecture, including sequence diagrams and interface diagrams</span></li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px;\"><strong>Technology requirements</strong></span></p>\n\n<ul style=\"list-style-type:square;\">\n\t<li>open standards are encouraged, as the HFPP network itself will be an open standard</li>\n\t<li>an open-source software stack is encouraged if all&nbsp;licenses&nbsp;allow&nbsp;unrestricted commercial use</li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-family:arial,helvetica,sans-serif;\"><span style=\"font-size:14px;\"><strong>Special considerations</strong></span></span></p>\n\n<ul style=\"list-style-type:square;\">\n\t<li><span style=\"font-family:arial,helvetica,sans-serif;\">compliance with&nbsp;<a href=\"http://en.wikipedia.org/wiki/Federal_Information_Security_Management_Act_of_2002\">FISMA</a>&nbsp;security guidelines</span></li>\n\t<li><span style=\"font-family:arial,helvetica,sans-serif;\">compliance with&nbsp;<a href=\"http://www.hhs.gov/ocr/privacy/hipaa/administrative/securityrule/\">HIPAA</a>&nbsp;rules for technological privacy&nbsp;safeguards</span></li>\n</ul>\n",
+  "forumId": 17950,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=17950",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 19,
+  "numberOfSubmissions": 1,
+  "phases": [
+    {
+      "type": "Specification Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-07-11T20:47:00.000Z",
+      "actualStartTime": "2013-07-11T20:47:00.000Z",
+      "scheduledEndTime": "2013-07-11T20:48:00.000Z",
+      "actualendTime": "2013-07-11T20:48:00.000Z",
+      "_id": "58a6ae1e5d036c0bbdd5b918"
+    },
+    {
+      "type": "Specification Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-07-11T20:48:00.000Z",
+      "actualStartTime": "2013-07-11T20:48:00.000Z",
+      "scheduledEndTime": "2013-07-11T22:26:00.000Z",
+      "actualendTime": "2013-07-11T22:26:00.000Z",
+      "_id": "58a6ae1e5d036c0bbdd5b917"
+    },
+    {
+      "type": "Registration",
+      "status": "Closed",
+      "scheduledStartTime": "2013-07-11T22:26:00.000Z",
+      "actualStartTime": "2013-07-11T22:26:00.000Z",
+      "scheduledEndTime": "2013-07-13T22:26:00.000Z",
+      "actualendTime": "2013-07-13T22:26:00.000Z",
+      "_id": "58a6ae1e5d036c0bbdd5b916"
+    },
+    {
+      "type": "Submission",
+      "status": "Closed",
+      "scheduledStartTime": "2013-07-11T22:31:00.000Z",
+      "actualStartTime": "2013-07-11T22:31:00.000Z",
+      "scheduledEndTime": "2013-07-16T22:31:00.000Z",
+      "actualendTime": "2013-07-16T22:31:00.000Z",
+      "_id": "58a6ae1e5d036c0bbdd5b915"
+    },
+    {
+      "type": "Screening",
+      "status": "Closed",
+      "scheduledStartTime": "2013-07-16T22:31:00.000Z",
+      "actualStartTime": "2013-07-16T22:31:00.000Z",
+      "scheduledEndTime": "2013-07-17T08:39:00.000Z",
+      "actualendTime": "2013-07-17T08:39:00.000Z",
+      "_id": "58a6ae1e5d036c0bbdd5b914"
+    },
+    {
+      "type": "Review",
+      "status": "Closed",
+      "scheduledStartTime": "2013-07-17T08:39:00.000Z",
+      "actualStartTime": "2013-07-17T08:39:00.000Z",
+      "scheduledEndTime": "2013-07-18T19:16:00.000Z",
+      "actualendTime": "2013-07-18T19:16:00.000Z",
+      "_id": "58a6ae1e5d036c0bbdd5b913"
+    },
+    {
+      "type": "Appeals",
+      "status": "Closed",
+      "scheduledStartTime": "2013-07-18T19:16:00.000Z",
+      "actualStartTime": "2013-07-18T19:16:00.000Z",
+      "scheduledEndTime": "2013-07-18T21:27:00.000Z",
+      "actualendTime": "2013-07-18T21:27:00.000Z",
+      "_id": "58a6ae1e5d036c0bbdd5b912"
+    },
+    {
+      "type": "Appeals Response",
+      "status": "Closed",
+      "scheduledStartTime": "2013-07-18T21:27:00.000Z",
+      "actualStartTime": "2013-07-18T21:27:00.000Z",
+      "scheduledEndTime": "2013-07-19T07:54:00.000Z",
+      "actualendTime": "2013-07-19T07:54:00.000Z",
+      "_id": "58a6ae1e5d036c0bbdd5b911"
+    },
+    {
+      "type": "Aggregation",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-07-19T07:54:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-07-19T19:54:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae1e5d036c0bbdd5b910"
+    },
+    {
+      "type": "Final Fix",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-07-19T19:54:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-07-20T19:54:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae1e5d036c0bbdd5b90f"
+    },
+    {
+      "type": "Final Review",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-07-20T19:54:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-07-21T07:54:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae1e5d036c0bbdd5b90e"
+    },
+    {
+      "type": "Approval",
+      "status": "Scheduled",
+      "scheduledStartTime": "2013-07-21T07:54:00.000Z",
+      "actualStartTime": null,
+      "scheduledEndTime": "2013-07-26T07:54:00.000Z",
+      "actualendTime": null,
+      "_id": "58a6ae1e5d036c0bbdd5b90d"
+    },
+    {
+      "type": "Post-Mortem",
+      "status": "Closed",
+      "scheduledStartTime": "2013-07-19T07:55:00.000Z",
+      "actualStartTime": "2013-07-19T07:55:00.000Z",
+      "scheduledEndTime": "2013-07-20T07:55:00.000Z",
+      "actualendTime": "2013-07-20T07:55:00.000Z",
+      "_id": "58a6ae1e5d036c0bbdd5b90c"
+    }
+  ],
+  "platforms": [],
+  "postingDate": "2013-07-11T22:26:00.000Z",
+  "prize": [
+    1800,
+    900
+  ],
+  "projectId": 6277,
+  "registrants": [
+    {
+      "handle": "AleaActaEst",
+      "reliability": "0%",
+      "registrationDate": "2013-07-11T22:31:00.000Z",
+      "submissionDate": null,
+      "rating": "309",
+      "colorStyle": "color: #999999",
+      "_id": "58a6ae1e5d036c0bbdd5b90b"
+    },
+    {
+      "handle": "argolite",
+      "reliability": "6%",
+      "registrationDate": "2013-07-11T22:34:00.000Z",
+      "submissionDate": null,
+      "rating": "480",
+      "colorStyle": "color: #999999",
+      "_id": "58a6ae1e5d036c0bbdd5b90a"
+    },
+    {
+      "handle": "Standlove",
+      "reliability": "0%",
+      "registrationDate": "2013-07-11T23:55:00.000Z",
+      "submissionDate": null,
+      "rating": "1480",
+      "colorStyle": "color: #6666FF",
+      "_id": "58a6ae1e5d036c0bbdd5b909"
+    },
+    {
+      "handle": "testXuSanping",
+      "reliability": "n/a",
+      "registrationDate": "2013-07-12T04:14:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae1e5d036c0bbdd5b908"
+    },
+    {
+      "handle": "vangavroche",
+      "reliability": "73%",
+      "registrationDate": "2013-07-12T04:49:00.000Z",
+      "submissionDate": null,
+      "rating": "2119",
+      "colorStyle": "color: #DDCC00",
+      "_id": "58a6ae1e5d036c0bbdd5b907"
+    },
+    {
+      "handle": "akhil_bansal",
+      "reliability": "n/a",
+      "registrationDate": "2013-07-12T06:01:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae1e5d036c0bbdd5b906"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2013-07-12T06:29:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae1e5d036c0bbdd5b905"
+    },
+    {
+      "handle": "spandanaz",
+      "reliability": "n/a",
+      "registrationDate": "2013-07-12T07:10:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae1e5d036c0bbdd5b904"
+    },
+    {
+      "handle": "zsudraco",
+      "reliability": "100%",
+      "registrationDate": "2013-07-12T07:42:00.000Z",
+      "submissionDate": "2013-07-15T05:11:00.000Z",
+      "rating": "1235",
+      "colorStyle": "color: #6666FF",
+      "_id": "58a6ae1e5d036c0bbdd5b903"
+    },
+    {
+      "handle": "woodjhon",
+      "reliability": "0%",
+      "registrationDate": "2013-07-12T07:50:00.000Z",
+      "submissionDate": null,
+      "rating": "541",
+      "colorStyle": "color: #999999",
+      "_id": "58a6ae1e5d036c0bbdd5b902"
+    },
+    {
+      "handle": "poundinc_tc",
+      "reliability": "n/a",
+      "registrationDate": "2013-07-12T08:05:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae1e5d036c0bbdd5b901"
+    },
+    {
+      "handle": "BLE",
+      "reliability": "6%",
+      "registrationDate": "2013-07-12T08:06:00.000Z",
+      "submissionDate": null,
+      "rating": "1143",
+      "colorStyle": "color: #00A900",
+      "_id": "58a6ae1e5d036c0bbdd5b900"
+    },
+    {
+      "handle": "bannie2492",
+      "reliability": "n/a",
+      "registrationDate": "2013-07-12T13:12:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae1e5d036c0bbdd5b8ff"
+    },
+    {
+      "handle": "krisjen",
+      "reliability": "n/a",
+      "registrationDate": "2013-07-12T16:23:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae1e5d036c0bbdd5b8fe"
+    },
+    {
+      "handle": "phead",
+      "reliability": "n/a",
+      "registrationDate": "2013-07-13T13:51:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae1e5d036c0bbdd5b8fd"
+    },
+    {
+      "handle": "thientri",
+      "reliability": "n/a",
+      "registrationDate": "2013-07-12T22:34:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae1e5d036c0bbdd5b8fc"
+    },
+    {
+      "handle": "sweetu",
+      "reliability": "n/a",
+      "registrationDate": "2013-07-13T13:48:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae1e5d036c0bbdd5b8fb"
+    },
+    {
+      "handle": "ramakrishnaxii",
+      "reliability": "n/a",
+      "registrationDate": "2013-07-13T20:53:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae1e5d036c0bbdd5b8fa"
+    },
+    {
+      "handle": "budTang",
+      "reliability": "n/a",
+      "registrationDate": "2013-07-13T04:33:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae1e5d036c0bbdd5b8f9"
+    }
+  ],
+  "registrationEndDate": "2013-07-13T22:26:00.000Z",
+  "reliabilityBonus": 360,
+  "reviewScorecardId": 30000430,
+  "reviewType": null,
+  "screeningScorecardId": 30000401,
+  "submissionEndDate": "2013-07-16T22:31:00.000Z",
+  "submissions": [
+    {
+      "handle": "zsudraco",
+      "placement": 1,
+      "screeningScore": 100,
+      "initialScore": 62.01,
+      "finalScore": 62.54,
+      "points": 810,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2013-07-15T05:11:00.000Z",
+      "_id": "58a6ae1e5d036c0bbdd5b919"
+    }
+  ],
+  "technology": [
+    "Java",
+    "XML"
+  ]
+}

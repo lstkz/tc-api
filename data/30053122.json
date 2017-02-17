@@ -1,8 +1,8 @@
 {
   "_id": 30053122,
   "_isComplete": true,
-  "__v": 2523,
-  "_lastUpdate": "2016-11-05T11:06:22.305Z",
+  "__v": 24344,
+  "_lastUpdate": "2017-02-17T08:05:19.368Z",
   "appealsEndDate": "2016-03-01T14:24:00.000Z",
   "challengeCommunity": "develop",
   "challengeName": "Managed Risk - .NET Chart Logic Bug Fix",
@@ -10,7 +10,7 @@
   "checkpointSubmissionEndDate": null,
   "currentPhaseEndDate": "2016-03-30T14:19:00.000Z",
   "currentPhaseName": "Registration",
-  "currentPhaseRemainingTime": -18996358,
+  "currentPhaseRemainingTime": -27967433,
   "currentStatus": "Cancelled - Client Request",
   "detailedRequirements": "<p dir=\"ltr\">The goal of this challenge is to fix the logic for rendering Charts in the Managed Risk ASP.NET application.</p>\n\n<h1 dir=\"ltr\">Challenge Requirements</h1>\n\n<p dir=\"ltr\">The application generate charts when viewing Dashboard, Report Details Page, And Generate Report Flow page. The chart SQL is built at run time based on a predefined set of tables, fields, calculated fields, and fitlers.&nbsp;<span>The problem with chart rendering logic right now is in chart sql builder, it builds the sql query incorrectly, and it is completely invalid for multiple series (multiple Y-Axis fields).</span></p>\n\n<p dir=\"ltr\">i.e. Try this</p>\n\n<p dir=\"ltr\">1. Select Prices, LatestPrices, and TradeData.</p>\n\n<p dir=\"ltr\">2. Select all fields in 2nd step, make Prices.Price aggregation = sum, and TradeData.MTM aggregation to sum</p>\n\n<p dir=\"ltr\">3. In chart data, select Prices.PriceIndexName, Prices.Price, and TradeData.MTM.</p>\n\n<p dir=\"ltr\">The query you will get is this</p>\n\n<p dir=\"ltr\">```</p>\n\n<p dir=\"ltr\">select Prices.PriceIndexID as &#39;Prices_PriceIndexID&#39;, Prices.PriceIndexName as &#39;Prices_PriceIndexName&#39;, Sum(Prices.Price) as &#39;Prices_Price&#39;, Prices.MarketDate as &#39;Prices_MarketDate&#39;, Prices.DeliveryDate as &#39;Prices_DeliveryDate&#39;, TradeData.TradeID as &#39;TradeData_TradeID&#39;, TradeData.BookName as &#39;TradeData_BookName&#39;, TradeData.TradeType as &#39;TradeData_TradeType&#39;, TradeData.CounterPartyName as &#39;TradeData_CounterPartyName&#39;, TradeData.Unit as &#39;TradeData_Unit&#39;, TradeData.PriceIndexName as &#39;TradeData_PriceIndexName&#39;, TradeData.Price as &#39;TradeData_Price&#39;, TradeData.Quantity as &#39;TradeData_Quantity&#39;, TradeData.Notional as &#39;TradeData_Notional&#39;, Sum(TradeData.MtM) as &#39;TradeData_MtM&#39; from LatestPrices, Prices, TradeData where 1=1 and LatestPrices.PriceIndexName = Prices.PriceIndexName and TradeData.PriceIndexName = Prices.PriceIndexName and LatestPrices.PriceIndexName = TradeData.PriceIndexName and Prices.PriceIndexName = TradeData.PriceIndexName and LatestPrices.DeliveryDate = Prices.DeliveryDate and Prices.DeliveryDate = TradeData.ContractMonth and LatestPrices.DeliveryDate = TradeData.ContractMonth group by Prices.PriceIndexID, Prices.PriceIndexName, Prices.Price, Prices.MarketDate, Prices.DeliveryDate, TradeData.TradeID, TradeData.BookName, TradeData.TradeType, TradeData.CounterPartyName, TradeData.Unit, TradeData.PriceIndexName, TradeData.Price, TradeData.Quantity, TradeData.Notional, TradeData.MtM order by &#39;Prices_PriceIndexName&#39; ASC OFFSET 0 ROWS FETCH NEXT 100 ROWS ONLY</p>\n\n<p dir=\"ltr\">```</p>\n\n<p><span>What is wrong in this query :</span></p>\n\n<p dir=\"ltr\">1. We are joining all tables although the chart should only render data from Prices and TradeData table.</p>\n\n<p dir=\"ltr\">2. We are also including all selected fields in step 2 although the chart only need to include the fields that is needed to be rendered in the chart.</p>\n\n<p dir=\"ltr\">3. We are adding the aggregated values in the group-by which causes multiple records to be returned since it will affect the select behavior.</p>\n\n<p dir=\"ltr\">4. We are trying to use a single select statement to pull multiple Y-Axis series data. This is specifically a bug if the Y-Axis are from different tables, because series A might have a value for a given X-Axis value while Series B might not have any value (NULL), and this will make the select statement to skip that X-Axis value because of that. and I believe we need to do outer-join always, and probably we might need to run separate sql statement for each Y-Axis series.</p>\n\n<p dir=\"ltr\">These 4 points combined lead into invalid data rendering in the chart.</p>\n\n<p dir=\"ltr\">We need a solution that fix the 4 points mentioned above.</p>\n\n<p dir=\"ltr\">Also in step 3 we are creating a &lsquo;calculated field&rsquo; that should be included in Y-Axis drop down as an option for the graph chart data, but one limitation about calculated field that we cannot tell if the calculated field is doing aggregation or not, meaning, if you fixed the issues mentioned above (4 points) we would still have an issue with calculated field that if it is included in the Y-Axis, we cannot tell if the new field is aggregated or not, and if not, we cannot tell what are tables/columns involved in that calculated field so we include them in the group by statement.</p>\n\n<p dir=\"ltr\">So here is what you need to do for changes in Step 3 (calculated field), this change for each calculated field:</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Disable the preview field</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Use queue to track what items added to preview input</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Add &#39;remove&#39; button to pop out inserted items one item at a time</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Add aggregation field so that if user want this as aggregation we don&#39;t include it in group by, otherwise, we include the fields used in the preview in the group by.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">We need backend updated for how it handle and store calculated fields so it is easier to understand if we are doing aggregation or not, and what fields are involved in the calculations.</p>\n\t</li>\n</ol>\n\n<p dir=\"ltr\">As for the Grid data, the logic should remain as it is.</p>\n\n<p dir=\"ltr\">Provide Verification Document that show how you test your solution against different scenarios :</p>\n\n<ol>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Build grid/chart from single source (database object) with/without calculated/filter fields.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Build grid/chart from two different database objects with/without calculated/filter fields.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Build grid/chart from three different database objects with/without calculated/filter fields.</p>\n\t</li>\n</ol>\n\n<h1 dir=\"ltr\">Client Data</h1>\n\n<p dir=\"ltr\">Provided in challenge forums the client sql server data that you will use to test your solution. You can import it to SQL server via SQL Server Administrator Tools.</p>\n\n<h1 dir=\"ltr\">Technology overview</h1>\n\n<p dir=\"ltr\">- SQL Server 2012</p>\n\n<p dir=\"ltr\">- C#</p>\n\n<p dir=\"ltr\">- .NET Framework 4.5</p>\n\n<p dir=\"ltr\">- ASP.NET</p>\n\n<p dir=\"ltr\">- DevExpress ASP.NET Chart Control <a href=\"http://demos.devexpress.com/XtraChartsDemos/Default.aspx\">http://demos.devexpress.com/XtraChartsDemos/Default.aspx</a></p>\n\n<h1 dir=\"ltr\">Existing Documents</h1>\n\n<p dir=\"ltr\">Architecture documents provided in challenge forums if you want to understand the overall architecture.</p>\n\n<h1 dir=\"ltr\">GitLab Access</h1>\n\n<p dir=\"ltr\">- You can get access to the Gitlab repo group in this tool <a href=\"https://tc-ragnar.herokuapp.com/ragnar/groups/564783092789620e00fa75d1/290828\">https://tc-ragnar.herokuapp.com/ragnar/groups/564783092789620e00fa75d1/290828</a> &nbsp;. &nbsp;If you are having trouble with the auto registration tool, please ask in the forums.</p>\n\n<p dir=\"ltr\">- Once added to the team, fork the repository and work off this branch &nbsp;</p>\n\n<p dir=\"ltr\"><a href=\"https://gitlab.com/aers-managed-risk/backend\">https://gitlab.com/aers-managed-risk/backend/</a>&nbsp;use develop branch</p>\n\n<h1 dir=\"ltr\">Submission Deliverable</h1>\n\n<ul>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Patch file of your fix.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Text file with notes to reviewers if needed.</p>\n\t</li>\n\t<li dir=\"ltr\">\n\t<p dir=\"ltr\">Verification document.</p>\n\t</li>\n</ul>\n",
   "digitalRunPoints": null,
@@ -35,7 +35,7 @@
       "actualStartTime": "2016-02-29T14:19:00.000Z",
       "scheduledEndTime": "2016-03-30T14:19:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd2e550dfb3b52be3eb3"
+      "_id": "58a6aebf5d036c0bbdd5e627"
     },
     {
       "type": "Iterative Review",
@@ -44,7 +44,7 @@
       "actualStartTime": null,
       "scheduledEndTime": "2016-03-01T14:24:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd2e550dfb3b52be3eb2"
+      "_id": "58a6aebf5d036c0bbdd5e626"
     },
     {
       "type": "Submission",
@@ -53,7 +53,7 @@
       "actualStartTime": "2016-02-29T14:24:00.000Z",
       "scheduledEndTime": "2016-03-30T14:24:00.000Z",
       "actualendTime": null,
-      "_id": "581dbd2e550dfb3b52be3eb1"
+      "_id": "58a6aebf5d036c0bbdd5e625"
     }
   ],
   "platforms": [
@@ -72,7 +72,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd2e550dfb3b52be3eb0"
+      "_id": "58a6aebf5d036c0bbdd5e624"
     },
     {
       "handle": "felipejunges",
@@ -81,7 +81,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd2e550dfb3b52be3eaf"
+      "_id": "58a6aebf5d036c0bbdd5e623"
     },
     {
       "handle": "blu3fox",
@@ -90,7 +90,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd2e550dfb3b52be3eae"
+      "_id": "58a6aebf5d036c0bbdd5e622"
     },
     {
       "handle": "lanchongyizu",
@@ -99,7 +99,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd2e550dfb3b52be3ead"
+      "_id": "58a6aebf5d036c0bbdd5e621"
     },
     {
       "handle": "mulish",
@@ -108,7 +108,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd2e550dfb3b52be3eac"
+      "_id": "58a6aebf5d036c0bbdd5e620"
     },
     {
       "handle": "veshu",
@@ -117,7 +117,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd2e550dfb3b52be3eab"
+      "_id": "58a6aebf5d036c0bbdd5e61f"
     },
     {
       "handle": "ananthhh",
@@ -126,7 +126,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd2e550dfb3b52be3eaa"
+      "_id": "58a6aebf5d036c0bbdd5e61e"
     },
     {
       "handle": "tingyifang",
@@ -135,7 +135,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd2e550dfb3b52be3ea9"
+      "_id": "58a6aebf5d036c0bbdd5e61d"
     },
     {
       "handle": "testXuSanping",
@@ -144,7 +144,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd2e550dfb3b52be3ea8"
+      "_id": "58a6aebf5d036c0bbdd5e61c"
     },
     {
       "handle": "CrazyCoderLZB",
@@ -153,7 +153,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd2e550dfb3b52be3ea7"
+      "_id": "58a6aebf5d036c0bbdd5e61b"
     },
     {
       "handle": "sunbinbrother",
@@ -162,7 +162,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd2e550dfb3b52be3ea6"
+      "_id": "58a6aebf5d036c0bbdd5e61a"
     }
   ],
   "registrationEndDate": "2016-03-30T14:19:00.000Z",

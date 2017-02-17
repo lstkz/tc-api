@@ -1,17 +1,17 @@
 {
   "_id": 30055643,
   "_isComplete": true,
-  "__v": 299,
-  "_lastUpdate": "2016-11-05T11:07:28.118Z",
-  "appealsEndDate": "2016-11-12T02:01:00.000Z",
+  "__v": 21884,
+  "_lastUpdate": "2017-02-17T08:04:16.062Z",
+  "appealsEndDate": "2016-11-14T16:48:00.000Z",
   "challengeCommunity": "develop",
   "challengeName": "Hercules Fog Recorder - Document bitrate adjustment changes",
   "challengeType": "Code",
   "checkpointSubmissionEndDate": null,
-  "currentPhaseEndDate": "2016-11-08T14:01:00.000Z",
-  "currentPhaseName": "Registration",
-  "currentPhaseRemainingTime": 266096,
-  "currentStatus": "Active",
+  "currentPhaseEndDate": null,
+  "currentPhaseName": "Stalled",
+  "currentPhaseRemainingTime": 0,
+  "currentStatus": "Cancelled - Failed Review",
   "detailedRequirements": "<p>The Fog recorder application is a C++ application that allows a user to schedule recordings for TV shows and record live TV. We use this project to test certain functionality of client applications, which are external to just the recorder.</p>\n\n<p>The recorder is a Mac application that can be opened and run in XCode, and it includes Makefiles that can be used on Linux, and there are also ways to build for Windows.<br />\n<br />\nThis challenge will implement some tests and document changes made to a specific class that encompasses an automatic bitrate switcher. &nbsp;This code is complex and has changed quite a bit, and it is going to go to a huge number of devices shortly, so we want to make sure we fully test and understand the most recent fixes.<br />\n<br />\n<strong>VERSION</strong><br />\n<br />\nWe maintain two separate branches of the codebase for this project. &nbsp;This code challenge applies to <strong>master</strong>. &nbsp;Do&nbsp;<strong>not</strong>&nbsp;use the new_build branch. &nbsp;<br />\n<br />\n<strong>CODE</strong></p>\n\n<p>The existing code is here:</p>\n\n<p><a href=\"https://gitlab.com/hercules-fog/Fog-CLI\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); background: 0px 0px; text-decoration: none; outline: 0px; cursor: pointer; transition: all 0.2s ease-in-out; -webkit-tap-highlight-color: transparent; word-wrap: break-word;\">https://gitlab.com/hercules-fog/Fog-CLI/</a></p>\n\n<p>A link will be provided in the forum where you will be able to get access.<br />\n<br />\n<strong>Make sure to use the &quot;master&quot; branch!</strong></p>\n\n<h3>Submission</h3>\n\n<p>Your submission to OR should be a Git patch file that can be applied to see the fixes. Here is documentation on how to generate a Git patch file:</p>\n\n<p><a href=\"https://ariejan.net/2009/10/26/how-to-create-and-apply-a-patch-with-git/\" style=\"padding: 0px; margin: 0px; color: rgb(102, 102, 102); background: 0px 0px; text-decoration: none; outline: 0px; cursor: pointer; transition: all 0.2s ease-in-out; -webkit-tap-highlight-color: transparent; word-wrap: break-word;\">https://ariejan.net/2009/10/26/how-to-create-and-apply-a-patch-with-git/</a></p>\n\n<h3>Requirements</h3>\n<br />\nWe have implemented a number of changes to the application recently, to deal with automatic bitrate switching when network conditions change, particularly to the ABRManager class. &nbsp;This challenge will implement tests and documentation for the changes to the ABRManager class at commit hash&nbsp;e1debfd7ddf5fc7420f449af6cae3abab577ee5f vs the current commit hash of&nbsp;c5ed76c216420c8954c551d5b837f113164cae4b.<br />\n<br />\nFor each change, we need:<br />\n<br />\n1. A unit test proving that the change doesn&#39;t break anything. &nbsp;If a unit test isn&#39;t feasible, we need to ensure we document a way to at least manually test the code.<br />\n2. Documentation of at least a paragraph describing the change and why it was a good change<br />\n<br />\n<strong>Graph generation:</strong><br />\n<br />\nTo help show the improvement to the original algorithm, we want to add the ability, through a small program or script, to generate graphs based on the log output of the Fog client before the changes and the Fog client after. &nbsp;Below is a description of what changes were made and what the observations should be. &nbsp;We want to ensure that we have a way to graphically show to the client how these changes affect the performance of the app for the better. &nbsp;You can recommend Linux libraries to use for bandwidth throttling to test the switching.<br />\n<br />\nPlease target Linux for this generation.&nbsp;&nbsp;<br />\n<br />\nIn summation, what we are really looking for here is a graph generated based on the logs that shows the current bitrate through time, with automated throttling applied and removed at the same point in each recording. &nbsp;We want to be able to compare these to show that our new implementation ramps up more quickly and stays at a higher bitrate (which is preferred), and that it ramps down more quickly when needed.<br />\n&nbsp;\n<p><span style=\"font-family:courier new,courier,monospace\">The original bitrate switching improvement uses level shift and outlier detection. &nbsp;</span><span style=\"font-family:courier new,courier,monospace\">Decreasing the bitrate is done based on the sink buffer length. In original player code the sink buffer length is how many miliseconds of video we have buffered. &nbsp;</span><span style=\"font-family:courier new,courier,monospace\">Fog uses 4*targetDuration - (the number of seconds of video currently being downloaded) as the sink buffer length. &nbsp;</span><span style=\"font-family:courier new,courier,monospace\">In simplification, the bandwidth tracker algorithm decreases the bitrate if the sink buffer is too small. &nbsp;</span><span style=\"font-family:courier new,courier,monospace\">The bandwidth measurements are only used when considering&nbsp;</span><em style=\"font-family:courier new,courier,monospace\">increasing</em><span style=\"font-family:courier new,courier,monospace\">&nbsp;the download bitrate. That is, if the sink buffer is large enough, and we consistently measure that we have enough network bandwidth, we try increasing the bitrate.</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">With the recent changes you should be able to observe this behaviour:</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">Observe in the logs (fog standard output) when the Level shift and outlier detection works. There should be lines like<br />\nlevel shift: 2144600, 2239702, 2306102, 2382648, 2382648, | 1491369, 1491369</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">outliers: 2200496, 2229564, 2048783, 2351722, &lt;3113618&gt;, 2545440,</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">This means that Fog will discard the measurements 2144600, 2239702, 2306102, 2382648, 2382648 in the first case, and 3113618 in the second case.</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">* Observe how when you disable bandwidth throttling, fog detects a level shift, and robustly switches to a higher bitrate stream.</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">* Observe that when you enable bandwidth throttling, fog robustly switches to a lower bitrate stream.</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">* Observe that for fog configured for MODERATE bitrate switching policy, Fog does not immediately go to the lowest bitrate, and instead robustly uses the initially chosen bitrate.</span></p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">* Observe how Fog bases the choice of initial bitrate of a TSB recording on the bandwidth of the previous TSB recording that was being played. That is:</span></p>\n\n<ol>\n\t<li>\n\t<p><span id=\"cke_bm_589S\" style=\"display:none\">&nbsp;</span>* Configure Fog for moderate bitrate switching policy.<br />\n\t* Start a TSB recording, allow the bitrate to stabilize.<br />\n\t* Stop the recording, start a new TSB recording<br />\n\t* Observe how Fog bases the choice of initial bitrate used based on the bandwidth that was availiable in the previous TSB recording.</p>\n\n\t<ul>\n\t</ul>\n\t</li>\n</ol>\n<span style=\"font-family:courier new,courier,monospace\"><span id=\"cke_bm_589E\" style=\"display:none\">&nbsp;</span></span><br />\n<br />\n&nbsp;",
   "digitalRunPoints": null,
   "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30055643",
@@ -20,53 +20,53 @@
   "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=34450",
   "numberOfCheckpointSubmissions": 0,
   "numberOfCheckpointsPrizes": 0,
-  "numberOfRegistrants": 8,
-  "numberOfSubmissions": 0,
+  "numberOfRegistrants": 13,
+  "numberOfSubmissions": 1,
   "phases": [
     {
       "type": "Registration",
-      "status": "Open",
+      "status": "Closed",
       "scheduledStartTime": "2016-11-04T13:01:00.000Z",
       "actualStartTime": "2016-11-04T13:01:00.000Z",
       "scheduledEndTime": "2016-11-08T14:01:00.000Z",
-      "actualendTime": null,
-      "_id": "581dbd70550dfb3b52be43d6"
+      "actualendTime": "2016-11-08T14:01:00.000Z",
+      "_id": "58a6ae805d036c0bbdd5e306"
     },
     {
       "type": "Submission",
-      "status": "Open",
+      "status": "Closed",
       "scheduledStartTime": "2016-11-04T13:06:00.000Z",
       "actualStartTime": "2016-11-04T13:06:00.000Z",
-      "scheduledEndTime": "2016-11-08T14:01:00.000Z",
-      "actualendTime": null,
-      "_id": "581dbd70550dfb3b52be43d5"
+      "scheduledEndTime": "2016-11-09T13:07:00.000Z",
+      "actualendTime": "2016-11-09T13:07:00.000Z",
+      "_id": "58a6ae805d036c0bbdd5e305"
     },
     {
       "type": "Review",
-      "status": "Scheduled",
-      "scheduledStartTime": "2016-11-08T14:01:00.000Z",
-      "actualStartTime": null,
-      "scheduledEndTime": "2016-11-10T14:01:00.000Z",
-      "actualendTime": null,
-      "_id": "581dbd70550dfb3b52be43d4"
+      "status": "Closed",
+      "scheduledStartTime": "2016-11-09T13:07:00.000Z",
+      "actualStartTime": "2016-11-09T13:07:00.000Z",
+      "scheduledEndTime": "2016-11-13T10:23:00.000Z",
+      "actualendTime": "2016-11-13T10:23:00.000Z",
+      "_id": "58a6ae805d036c0bbdd5e304"
     },
     {
       "type": "Appeals",
-      "status": "Scheduled",
-      "scheduledStartTime": "2016-11-10T14:01:00.000Z",
-      "actualStartTime": null,
-      "scheduledEndTime": "2016-11-11T14:01:00.000Z",
-      "actualendTime": null,
-      "_id": "581dbd70550dfb3b52be43d3"
+      "status": "Closed",
+      "scheduledStartTime": "2016-11-13T10:24:00.000Z",
+      "actualStartTime": "2016-11-13T10:24:00.000Z",
+      "scheduledEndTime": "2016-11-14T10:24:00.000Z",
+      "actualendTime": "2016-11-14T10:24:00.000Z",
+      "_id": "58a6ae805d036c0bbdd5e303"
     },
     {
       "type": "Appeals Response",
-      "status": "Scheduled",
-      "scheduledStartTime": "2016-11-11T14:01:00.000Z",
-      "actualStartTime": null,
-      "scheduledEndTime": "2016-11-12T02:01:00.000Z",
-      "actualendTime": null,
-      "_id": "581dbd70550dfb3b52be43d2"
+      "status": "Closed",
+      "scheduledStartTime": "2016-11-14T10:24:00.000Z",
+      "actualStartTime": "2016-11-14T10:24:00.000Z",
+      "scheduledEndTime": "2016-11-14T16:48:00.000Z",
+      "actualendTime": "2016-11-14T16:48:00.000Z",
+      "_id": "58a6ae805d036c0bbdd5e302"
     }
   ],
   "platforms": [
@@ -86,7 +86,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd70550dfb3b52be43d1"
+      "_id": "58a6ae805d036c0bbdd5e301"
     },
     {
       "handle": "blu3fox",
@@ -95,7 +95,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd70550dfb3b52be43d0"
+      "_id": "58a6ae805d036c0bbdd5e300"
     },
     {
       "handle": "gjw99",
@@ -104,16 +104,16 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd70550dfb3b52be43cf"
+      "_id": "58a6ae805d036c0bbdd5e2ff"
     },
     {
       "handle": "code_now",
       "reliability": "n/a",
       "registrationDate": "2016-11-05T04:07:00.000Z",
-      "submissionDate": null,
+      "submissionDate": "2016-11-09T12:58:00.000Z",
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd70550dfb3b52be43ce"
+      "_id": "58a6ae805d036c0bbdd5e2fe"
     },
     {
       "handle": "testXuSanping",
@@ -122,7 +122,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd70550dfb3b52be43cd"
+      "_id": "58a6ae805d036c0bbdd5e2fd"
     },
     {
       "handle": "Msahroib",
@@ -131,16 +131,7 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd70550dfb3b52be43cc"
-    },
-    {
-      "handle": "freegod",
-      "reliability": "n/a",
-      "registrationDate": "2016-11-05T09:36:00.000Z",
-      "submissionDate": null,
-      "rating": null,
-      "colorStyle": "color: #000000",
-      "_id": "581dbd70550dfb3b52be43cb"
+      "_id": "58a6ae805d036c0bbdd5e2fc"
     },
     {
       "handle": "asteroidiv",
@@ -149,15 +140,81 @@
       "submissionDate": null,
       "rating": null,
       "colorStyle": "color: #000000",
-      "_id": "581dbd70550dfb3b52be43ca"
+      "_id": "58a6ae805d036c0bbdd5e2fb"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-06T11:36:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae805d036c0bbdd5e2fa"
+    },
+    {
+      "handle": "trantrungtin",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-06T15:32:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae805d036c0bbdd5e2f9"
+    },
+    {
+      "handle": "vinoh",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T00:59:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae805d036c0bbdd5e2f8"
+    },
+    {
+      "handle": "genycopedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T03:55:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae805d036c0bbdd5e2f7"
+    },
+    {
+      "handle": "wcheung",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T04:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae805d036c0bbdd5e2f6"
+    },
+    {
+      "handle": "billsedison",
+      "reliability": "n/a",
+      "registrationDate": "2016-11-07T08:26:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "58a6ae805d036c0bbdd5e2f5"
     }
   ],
   "registrationEndDate": "2016-11-08T14:01:00.000Z",
   "reviewScorecardId": 30001610,
   "reviewType": "COMMUNITY",
   "screeningScorecardId": null,
-  "submissionEndDate": "2016-11-08T14:01:00.000Z",
-  "submissions": [],
+  "submissionEndDate": "2016-11-09T13:07:00.000Z",
+  "submissions": [
+    {
+      "handle": "code_now",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 75,
+      "finalScore": 77.5,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2016-11-09T12:58:00.000Z",
+      "_id": "58a6ae805d036c0bbdd5e307"
+    }
+  ],
   "technology": [
     "C++"
   ]

@@ -1,0 +1,277 @@
+{
+  "_id": 30044938,
+  "_isComplete": true,
+  "__v": 1,
+  "_lastUpdate": "2016-11-14T16:15:11.722Z",
+  "appealsEndDate": "2014-08-19T15:16:00.000Z",
+  "challengeCommunity": "develop",
+  "challengeName": "Hercules PCDVR iOS App - Collection Cell Refactoring",
+  "challengeType": "First2Finish",
+  "checkpointSubmissionEndDate": null,
+  "currentPhaseEndDate": "2014-09-08T18:37:00.000Z",
+  "currentPhaseName": "Registration",
+  "currentPhaseRemainingTime": -68935001,
+  "currentStatus": "Completed",
+  "detailedRequirements": "<p><strong>Source Code</strong><br />\nAll source code is in a private forum. &nbsp;If you don&rsquo;t have access, you&rsquo;ll need to request access in the forum for this F2F.</p>\n\n<p>More details on this project can be found here:</p>\n\n<p>http://apps.topcoder.com/wiki/display/~ghostar/Hercules+Personal+Content+DVR+Apps</p>\n\n<p><strong>Issue:</strong></p>\n\n<p>This F2F will implement a number of changes to the collection cells in the PCDVR iOS App, greatly reducing redundancy, removing code that is no longer needed, and generally cleaning things up quite a bit to make the implementations of all the different lists a lot cleaner.</p>\n\n<p><strong>Goals:</strong></p>\n\n<ul>\n\t<li>Remove all cell view processing from the view controllers (as much as we can), to avoid redundancy between things like the ForYouController and the CloudLibraryViewController, as an example</li>\n\t<li>Have the cells handle their own thumbnail logic so the view controllers don&#39;t have to</li>\n\t<li>Have the album cells handle some of the deleting and editing and long press logic so the view controllers don&#39;t have to</li>\n</ul>\n\n<p>In general, we are going to have the collection cells handle all the logic for how they are displayed,&nbsp;<strong>not</strong>&nbsp;the view controllers. Right now we have lots of redundant code across the AlbumViewController, FavoritesViewController, the Library screen, Deleted Items, and other places for setting all the various options on the cell for how it should be displayed. &nbsp;Instead of doing that, we are just going to assign the asset directly to the cell itself, and the cell will handle:</p>\n\n<ul>\n\t<li>The display of the correct, latest thumbnail, the overlay (photo or video)</li>\n\t<li>The favorites display</li>\n\t<li>The media status display</li>\n\t<li>Whether or not the cell is uploading, queued, or downloading</li>\n\t<li>The media counts for albums</li>\n\t<li>Displaying the edit and delete on a long press for albums</li>\n</ul>\n\n<p>The view controller will still need to track whether or not the cells are selected when the view controller is in selection mode. &nbsp;The view controller will also still need to track the &quot;View All&quot; links in the For You tab, specifically for Albums and Recent files.</p>\n\n<p>To accomplish this, we will make the following changes to the collection view cells:</p>\n\n<p><strong>Remove old code:</strong></p>\n\n<ul>\n\t<li>Remove CollectionCellDeletedItemsAlbum because it is no longer used</li>\n\t<li>Remove CollectionCellThumbnail because it is no longer used</li>\n\t<li>Consolidate CollectionCellVideo and CollectionCellAlbumVideo into one view, named &quot;VideoCollectionViewCell&quot;</li>\n</ul>\n\n<p><strong>Update CollectionCellAdd</strong></p>\n\n<p>When the CollectionCellAdd cell is tapped, it should raise a notification. &nbsp;This notification should be registered and captured on all screens where the Add cell is shown, and it will be handled to show the video upload screen, the same as if the user tapped the &quot;+&quot; in the upper right hand corner. &nbsp;We should ensure the same code is used for both the &quot;+&quot; handling and the CollectionCellAdd tap notification. &nbsp;The goal here is to have one handler for all the different ways a user can add a file on a screen, to reduce redundant code.</p>\n\n<p><strong>Update CollectionCellAlbum</strong></p>\n\n<p>CollectionCellAlbum will be updated to contain a new &quot;Album&quot; property. &nbsp;When set to an album, this cell will update itself to show the photo and video counts, the thumbnail, the badge for new media, etc... &nbsp;</p>\n\n<p>In addition, the CollectionCellAlbum should define it&#39;s own block for handling the long press. &nbsp;When long pressed the album cell should show or hide the edit and delete controls. &nbsp;In addition, a notification should be raised so that other CollectionCellAlbum instances can handle hiding their own controls when a different cell is long-pressed. &nbsp;Only one album can show the edit and delete controls at one time. &nbsp;</p>\n\n<p>The collection cell album will also handle showing the dialogs for deletion and editing. &nbsp;When an album is deleted through the collection cell, a notification should be raised to alert the view controller so the collection view can be reloaded. &nbsp;When an album is edited through the collection cell, the display on the cell should be immediately updated to the new name chosen. &nbsp;No notification is necessary at this time.</p>\n\n<p>The updated class should have a flag to turn on or off the long press recognizer. &nbsp;This will allow us to use the same cell in Deleted Items as well.</p>\n\n<p><span style=\"line-height:1.6\">The updated CollectionCellAlbum should be used in these 3 view controllers, and all redundant code in these view controllers for managing the album display should be removed and replaced with just the set of the new &quot;Album&quot; property on the cell:</span></p>\n\n<ul>\n\t<li><span style=\"line-height:1.6\">ForYouViewController</span></li>\n\t<li>HomeVideosViewController</li>\n\t<li>DeletedItemsViewController</li>\n</ul>\n\n<p><strong>Update CollectionCellVideo</strong></p>\n\n<div>The CollectionCellVideo will contain the consolidated logic for both the CollectionCellVideo and CollectionCellAlbumVideo. &nbsp;It will also be renamed &quot;VideoCollectionViewCell&quot; (see below).</div>\n\n<div>The new view cell will have a new &quot;Video&quot; property. &nbsp;When set, the view will update according to the logic we currently use in the collection views for a video, including:</div>\n\n<ul>\n\t<li>Showing the thumbnail for the video / photo</li>\n\t<li>Showing the type indicator</li>\n\t<li>Showing the &quot;Favorite&quot; indicator in the upper right</li>\n\t<li>Registering the handler for the upload process and showing the progress bar and queue status appropriately</li>\n\t<li>Showing the correct mediaStatus field (there is a separate F2F open for this).</li>\n</ul>\n\n<p>You can look at this call in AlbumViewController for a good start on the consolidated logic:</p>\n\n<p><span style=\"font-family:courier new,courier,monospace\">- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView&nbsp;<span style=\"line-height:1.6\">cellForItemAtIndexPath:(</span><span style=\"line-height:1.6\">NSIndexPath</span><span style=\"line-height:1.6\"> *)indexPath</span></span></p>\n\n<p>The goal here is to avoid having to use a separate array of assets when a cell is tapped. &nbsp;We can look right at the Video property of the cell, instead of in a separate collection, which should make the processing a little more straightforward.</p>\n\n<p>The uploading and downloading progress updates should be part of the cell as well as the view controller. &nbsp;The view controller will handle updating the metadata view, but the cell itself should know about the uploading and update it&#39;s own progress bar, status (uploading, downloading, paused, etc...), and queue position accordingly.</p>\n\n<p>The cell should have a new &quot;refreshDisplay&quot; call that will be used when the containing element is updated. &nbsp;We can use this after the photo or video thumbnail are edited, or the file is renamed, or it is downloaded to go, etc... &nbsp;When refreshDisplay is called, we need to make sure the cell asks for it&#39;s latest thumbnail from the cache, due to the thumbnail cache changes detailed below.</p>\n\n<p><strong>Renaming</strong></p>\n\n<p>To make more sense of the names, and to be consistent, the following renaming will also be applied:</p>\n\n<ul>\n\t<li>&quot;CollectionCellAdd&quot; --&gt; &quot;AddMediaCollectionViewCell&quot;</li>\n\t<li>&quot;CollectionCellAlbum&quot; --&gt; &quot;AlbumCollectionViewCell&quot;</li>\n\t<li>&quot;CollectionCellVideo&quot; --&gt; &quot;VideoCollectionViewCell&quot;</li>\n</ul>\n\n<p><strong>Thumbnails</strong></p>\n\n<p>The cells will now be in charge of their own thumbnails. &nbsp;This should no longer be done in the view controllers. &nbsp;We have removed the cache logic in the ThumbnailCache class because it was causing problems. &nbsp;We are going to re-enable it and make these changes:</p>\n\n<p>1) The thumbnail cache will allow a lookup of cached data by a given GUID, either an album GUID, or a file GUID. &nbsp;The lookup will be asynchronous and the cache will raise a notification when the file is retrieved, containing the image data. &nbsp;If the image isn&#39;t available in the cache, it will be requested from the server.</p>\n\n<p>The thumbnail cache will need to be updated to store a &quot;lastUpdated&quot; date along with the GUID and file path to the cached image. &nbsp;This will be a new CoreData table.</p>\n\n<p>2) The thumbnail cache will look at the data from the server for the associated GUID, specifically the lastModDate of the element. &nbsp;If the &quot;lastModDate&quot; of the item from the API is&nbsp;<strong>newer</strong>&nbsp;than the lastUpdated date of the cached image, then the cache will make a call to the server for the thumbnail and pull it into the cache, updating the cached file, and the CoreData table with the details of the retrieval.</p>\n\n<p>The goal here is as follows:</p>\n\n<ul>\n\t<li>Remove all thumbnail processing code out of the view controllers</li>\n\t<li>Allow the cells to handle their own thumbnails</li>\n\t<li>Have the cache return the latest thumbnail, using the cache to speed things up if the file or album hasn&#39;t changed</li>\n</ul>\n\n<p>&nbsp;</p>\n",
+  "digitalRunPoints": null,
+  "directUrl": "https://www.topcoder.com/direct/contest/detail.action?projectId=30044938",
+  "finalSubmissionGuidelines": "<p>Please see above</p>\n",
+  "forumId": 24800,
+  "forumLink": "http://apps.topcoder.com/forums/?module=Category&categoryID=24800",
+  "numberOfCheckpointSubmissions": 0,
+  "numberOfCheckpointsPrizes": 0,
+  "numberOfRegistrants": 9,
+  "numberOfSubmissions": 7,
+  "phases": [
+    {
+      "type": "Registration",
+      "status": "Open",
+      "scheduledStartTime": "2014-08-09T18:37:00.000Z",
+      "actualStartTime": "2014-08-09T18:37:00.000Z",
+      "scheduledEndTime": "2014-09-08T18:37:00.000Z",
+      "actualendTime": null,
+      "_id": "5829e30f550dfb3b52329034"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-13T09:45:00.000Z",
+      "actualStartTime": "2014-08-13T09:45:00.000Z",
+      "scheduledEndTime": "2014-08-13T23:38:00.000Z",
+      "actualendTime": "2014-08-13T23:38:00.000Z",
+      "_id": "5829e30f550dfb3b52329033"
+    },
+    {
+      "type": "Submission",
+      "status": "Open",
+      "scheduledStartTime": "2014-08-09T18:42:00.000Z",
+      "actualStartTime": "2014-08-09T18:42:00.000Z",
+      "scheduledEndTime": "2014-09-08T18:42:00.000Z",
+      "actualendTime": null,
+      "_id": "5829e30f550dfb3b52329032"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-13T23:39:00.000Z",
+      "actualStartTime": "2014-08-13T23:39:00.000Z",
+      "scheduledEndTime": "2014-08-13T23:51:00.000Z",
+      "actualendTime": "2014-08-13T23:51:00.000Z",
+      "_id": "5829e30f550dfb3b52329031"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-13T23:52:00.000Z",
+      "actualStartTime": "2014-08-13T23:52:00.000Z",
+      "scheduledEndTime": "2014-08-14T00:07:00.000Z",
+      "actualendTime": "2014-08-14T00:07:00.000Z",
+      "_id": "5829e30f550dfb3b52329030"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-14T08:53:00.000Z",
+      "actualStartTime": "2014-08-14T08:53:00.000Z",
+      "scheduledEndTime": "2014-08-17T02:35:00.000Z",
+      "actualendTime": "2014-08-17T02:35:00.000Z",
+      "_id": "5829e30f550dfb3b5232902f"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-17T02:36:00.000Z",
+      "actualStartTime": "2014-08-17T02:36:00.000Z",
+      "scheduledEndTime": "2014-08-17T02:45:00.000Z",
+      "actualendTime": "2014-08-17T02:45:00.000Z",
+      "_id": "5829e30f550dfb3b5232902e"
+    },
+    {
+      "type": "Iterative Review",
+      "status": "Closed",
+      "scheduledStartTime": "2014-08-17T05:23:00.000Z",
+      "actualStartTime": "2014-08-17T05:23:00.000Z",
+      "scheduledEndTime": "2014-08-19T15:16:00.000Z",
+      "actualendTime": "2014-08-19T15:16:00.000Z",
+      "_id": "5829e30f550dfb3b5232902d"
+    }
+  ],
+  "platforms": [
+    "iOS"
+  ],
+  "postingDate": "2014-08-09T18:37:00.000Z",
+  "prize": [
+    800
+  ],
+  "projectId": 6680,
+  "registrants": [
+    {
+      "handle": "maniek",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-09T21:41:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e30f550dfb3b5232902c"
+    },
+    {
+      "handle": "kinfkong",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-09T21:52:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e30f550dfb3b5232902b"
+    },
+    {
+      "handle": "arshadasif0312",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-10T07:13:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e30f550dfb3b5232902a"
+    },
+    {
+      "handle": "arthurjlp",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-10T07:16:00.000Z",
+      "submissionDate": "2014-08-17T13:14:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e30f550dfb3b52329029"
+    },
+    {
+      "handle": "penpo",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-10T07:44:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e30f550dfb3b52329028"
+    },
+    {
+      "handle": "sunbinbrother",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-10T11:17:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e30f550dfb3b52329027"
+    },
+    {
+      "handle": "cmax",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-11T11:06:00.000Z",
+      "submissionDate": "2014-08-17T05:21:00.000Z",
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e30f550dfb3b52329026"
+    },
+    {
+      "handle": "sylar",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-13T10:28:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e30f550dfb3b52329025"
+    },
+    {
+      "handle": "mhykol",
+      "reliability": "n/a",
+      "registrationDate": "2014-08-14T07:21:00.000Z",
+      "submissionDate": null,
+      "rating": null,
+      "colorStyle": "color: #000000",
+      "_id": "5829e30f550dfb3b52329024"
+    }
+  ],
+  "registrationEndDate": "2014-09-08T18:37:00.000Z",
+  "reviewScorecardId": 30001600,
+  "reviewType": null,
+  "screeningScorecardId": null,
+  "submissionEndDate": "2014-09-08T18:42:00.000Z",
+  "submissions": [
+    {
+      "handle": "cmax",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-08-13T13:51:00.000Z",
+      "_id": "5829e30f550dfb3b5232903b"
+    },
+    {
+      "handle": "cmax",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-08-13T16:00:00.000Z",
+      "_id": "5829e30f550dfb3b5232903a"
+    },
+    {
+      "handle": "arthurjlp",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-08-13T09:43:00.000Z",
+      "_id": "5829e30f550dfb3b52329039"
+    },
+    {
+      "handle": "arthurjlp",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-08-14T08:53:00.000Z",
+      "_id": "5829e30f550dfb3b52329038"
+    },
+    {
+      "handle": "cmax",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 100,
+      "finalScore": 100,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-08-17T05:21:00.000Z",
+      "_id": "5829e30f550dfb3b52329037"
+    },
+    {
+      "handle": "cmax",
+      "placement": 1,
+      "screeningScore": null,
+      "initialScore": 0,
+      "finalScore": 0,
+      "points": 0,
+      "submissionStatus": "Failed Review",
+      "submissionDate": "2014-08-14T09:54:00.000Z",
+      "_id": "5829e30f550dfb3b52329036"
+    },
+    {
+      "handle": "arthurjlp",
+      "placement": null,
+      "screeningScore": null,
+      "initialScore": null,
+      "finalScore": null,
+      "points": 0,
+      "submissionStatus": "Active",
+      "submissionDate": "2014-08-17T13:14:00.000Z",
+      "_id": "5829e30f550dfb3b52329035"
+    }
+  ],
+  "technology": [
+    "iOS"
+  ]
+}
