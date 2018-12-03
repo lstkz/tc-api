@@ -1,5 +1,7 @@
 ## TC API
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/BetterCallSky/tc-api.svg)](https://greenkeeper.io/)
+
 ## Requirements
 * node v6 (https://nodejs.org)
 * mongoDB v3.2 (https://www.mongodb.com/)
